@@ -1,0 +1,38 @@
+<html>
+	<head>
+		<title>Three.js Testbed</title>
+		<style>
+			body { margin: 0; }
+			canvas { width: 100%; height: 100% }
+		</style>
+	</head>
+	<body>
+		<script src="js/three.min.js"></script>
+		<script src="js/controls/TrackballControls.js"></script>
+
+		<script src="sandbox/xacInit.js"></script>
+		
+		<script src="js/STLLoader.js"></script>
+		<script src="sandbox/xacLoadModel.js"></script>
+
+		<script src="sandbox/xacAddLight.js"></script>
+		<script src="sandbox/xacMouseControl.js"></script>
+		<script src="sandbox/xacDrawGrid.js"></script>
+
+		<script>
+			var render = function () {
+			  requestAnimationFrame( render );
+			  // mesh.rotation.z += 0.01;
+			  directionalLight.position.x = Math.sin(angle * Math.PI / 180);
+			  directionalLight.position.z = Math.cos(angle * Math.PI / 180);
+			  angle = (angle + 1) % 360;
+
+			  controls.update();
+
+			  renderer.render(scene, camera);
+			};
+
+			render();
+		</script>
+	</body>
+</html>
