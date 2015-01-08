@@ -1,0 +1,80 @@
+<html>
+	<head>
+		<title>Polka</title>
+		<style>
+			body { margin: 0; }
+			canvas { width: 100%; height: 100% }
+		</style>
+	</head>
+	<body>
+		<!-- vendor code -->
+		<script src="js/three.min.js"></script>
+		<script src="js/stat.min.js"></script>
+		<script src="js/controls/TrackballControls.js"></script>
+		<script src="js/STLLoader.js"></script>
+		<script src="js/OBJLoader.js"></script>
+		<script src="js/threeoctree.min.js"></script>
+
+		<!-- my code -->
+		<script src="sandbox/xacInit.js"></script>
+		<script src="sandbox/xacLoadModel.js"></script>
+
+		<script src="sandbox/xacAddLight.js"></script>
+		
+		<script src="sandbox/xacDrawGrid.js"></script>
+		<script src="sandbox/xacDrawGround.js"></script>
+
+		<script src="sandbox/xacMouseControl.js"></script>
+
+		<script src="sandbox/xacCollisionDetection.js"></script>
+		<script src="sandbox/xacIntersectionDetection.js"></script>
+
+		<script src="sandbox/xacControlPanel.js"></script>
+
+		<script>
+			var stats = new Stats();
+			stats.domElement.style.position = 'absolute';
+			stats.domElement.style.top = '0px';
+			stats.domElement.style.right = '0px';
+			document.body.appendChild( stats.domElement );
+
+			var controlPanel = new ControlPanel();
+			controlPanel.domElement.style.position = 'absolute';
+			controlPanel.domElement.style.top = '0px';
+			document.body.appendChild( controlPanel.domElement);
+
+			// controlPanel.button1.onclick = function(){detectIntersection};
+			controlPanel.button1.onclick = buildOctree;
+			controlPanel.button2.onclick = detectIntersection;
+			controlPanel.button3.onclick = toggleOctreeVisibility;//THREE.Octree.toggleVisibility;
+
+			renderer.setClearColorHex( 0x000000, 1 );
+
+			var render = function () {
+			  requestAnimationFrame( render );
+			  
+			  /* make light moving */
+			  // directionalLight.position.x = Math.sin(angle * Math.PI / 180);
+			  // directionalLight.position.z = Math.cos(angle * Math.PI / 180);
+			  // angle = (angle + 1) % 360;
+
+			  controls.update();
+
+			  /* obselete */
+			  // if(isMouseDown && objects.length == 2) {
+			  	// detectCollision(objects[0], objects[1]);
+			  	// detectIntersection(objects[0], octree);
+			  // }
+
+			  stats.update(); 
+			  
+			  renderer.render(scene, camera);
+
+			  octree.update();
+			  
+			};
+
+			render();
+		</script>
+	</body>
+</html>
