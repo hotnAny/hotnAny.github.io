@@ -605,15 +605,26 @@
 		},
 
 		toggleVisibility: function() {
-			
-			if(this.boxesVisible == false) {
+			// if(this.boxesVisible == false) {
+			// 	this.scene.add(this.boxes);
+			// 	this.boxesVisible = true;
+			// } else if(this.boxesVisible == true){
+			// 	this.scene.remove(this.boxes);
+			// 	this.boxesVisible = false;
+			// }
+
+			this.setVisibility(!this.boxesVisible)
+		},
+
+		setVisibility: function(isVisible) {
+			if(isVisible && this.boxesVisible == false) {
 				this.scene.add(this.boxes);
 				this.boxesVisible = true;
-			} else if(this.boxesVisible == true){
+			} else if(!isVisible && this.boxesVisible == true){
 				this.scene.remove(this.boxes);
 				this.boxesVisible = false;
 			}
-	}
+		}
 		
 	};
 

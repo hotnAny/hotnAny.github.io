@@ -14,17 +14,20 @@ var ringStand = 'things/ring-stand.stl';
 var lucy = 'things/lucy.js';
 
 function loadStl (objName, addToOctree) {
-  stlLoader.load(objName, function (geometry) {
+  return stlLoader.load(objName, function (geometry) {
 
-    geometry.dynamic = true;
+    // geometry.dynamic = true;
 
     var material = new THREE.MeshPhongMaterial( { color: colorNormal} );  
     var object = new THREE.Mesh(geometry, material); 
-    object.matrixAutoUpdate = true;
+
+    ///// manually positioning the objects
+    object.position.set(0, 10 * Math.random(), 0);  
+    object.rotation.y = -Math.PI/2 * Math.random();
     
-    // object.position.set(0, 10, 0);  
-    // object.rotation.x = -Math.PI/2;
     scene.add(object);
+    controlPanel.log(objName + " loaded");
+    controlPanel.log(geometry.vertices.length + " vertices, " + geometry.faces.length + " faces");
     
     objects.push(object);
     objectMoved.push(false);
@@ -34,6 +37,8 @@ function loadStl (objName, addToOctree) {
       // octree.add(object, { useVertices: true });
       octree.add(object, { useFaces: true });
     }
+
+    return object;
   });
 }
 
@@ -103,7 +108,7 @@ if(D_MOUSE) {
 
 
 function addTheBall() {
-  var geometry = new THREE.SphereGeometry( 0.5, 20, 20 );
+  var geometry = new THREE.SphereGeometry( 2, 20, 20 );
   var material = new THREE.MeshBasicMaterial( { color: 0xf0ff00 } );
   ball = new THREE.Mesh( geometry, material );
   
@@ -133,4 +138,27 @@ function addATriangle(v1, v2, v3) {
   var tri = new THREE.Mesh(geometry, material);
 
   scene.add(mesh);
+}
+
+function addABall(x, y, z, clr, radius) {
+  var geometry = new THREE.SphereGeometry( radius, 10, 10 );
+    var material = new THREE.MeshBasicMaterial( { color: clr } );
+  var ball = new THREE.Mesh( geometry, material );
+  ball.position.set(x, y, z);
+  
+  // console.log(ball.position);
+  balls.add(ball);
+ //   scene.add( ball1 );
+ //   ball2 = new THREE.Mesh( geometry, material );
+ //   scene.add( ball2 );
+}
+
+function addALine(v1, v2, clr) {
+  var geometry = new THREE.Geometry();
+  geometry.vertices.push(v1);
+  geometry.vertices.push(v2);
+  var material = new THREE.LineBasicMaterial({color: clr});
+  var line = new THREE.Line(geometry, material);
+
+  scene.add(line);
 }
