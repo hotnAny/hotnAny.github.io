@@ -15,9 +15,13 @@ var lucy = 'things/lucy.js';
 
 function loadStl (objName, addToOctree) {
   stlLoader.load(objName, function (geometry) {
-    
+
+    geometry.dynamic = true;
+
     var material = new THREE.MeshPhongMaterial( { color: colorNormal} );  
     var object = new THREE.Mesh(geometry, material); 
+    object.matrixAutoUpdate = true;
+    
     // object.position.set(0, 10, 0);  
     // object.rotation.x = -Math.PI/2;
     scene.add(object);
@@ -33,6 +37,7 @@ function loadStl (objName, addToOctree) {
   });
 }
 
+/* obselete */
 function loadObj(objName, addToOctree) {
   objLoader.load(objName, function (object) {
     // object.geometry.center();
@@ -54,6 +59,7 @@ function loadObj(objName, addToOctree) {
   });
 }
 
+/* obselete */
 function loadJSON(objName, addToOctree) {
   jsonLoader.load( objName, function ( geometry ) {
         geometry.computeVertexNormals();
@@ -77,13 +83,14 @@ function loadJSON(objName, addToOctree) {
 if(D_MOUSE) {
   addTheBall();
 } else {
-  addTheBall();
-  
+  // addTheBall();
+  // ball.position.set(-4, 0, 0);
+  // addABox(-1, 1, 1, -1, 1, -1, true);
   // loadObj(ring, true);
   // loadJSON(lucy, true);
 
+  loadStl(dodecahedron, false);
   loadStl(ringStand, true);
-  // loadStl(ring, true);
 
   // loadStl(tree, true);
   // loadStl(chess, false);
@@ -104,3 +111,26 @@ function addTheBall() {
   objects.push(ball);
 }
 
+function addABox(l, r, t, b, f, b, addToObjects) {
+  var geometry = new THREE.CubeGeometry(r-l, t-b, f-b);
+  var material = new THREE.MeshBasicMaterial( { color: 0xFF0066, wireframe: true, wireframeLinewidth: 1 } );
+  var box = new THREE.Mesh(geometry, material);
+  box.position.set((l+r)/2, (t+b)/2, (f+b)/2);
+
+  // scene.add(box);
+  if(addToObjects) {
+    objects.push(box);
+  } else {
+    boxes.add(box);
+  }
+}
+
+function addATriangle(v1, v2, v3) {
+  var vs = [v1.x, v1.y, v1.z, v2.x, v2.y, v2.z, v3.x, v3.y, v3.z];
+  var fs = [0, 1, 2];
+  var geometry = new THREE.PolyhedronGeometry(vs, fs, 1, 1);
+  var material = new THREE.MeshBasicMaterial( { color: 0xf0ff00 } );
+  var tri = new THREE.Mesh(geometry, material);
+
+  scene.add(mesh);
+}

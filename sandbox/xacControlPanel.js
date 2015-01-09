@@ -33,6 +33,13 @@ var ControlPanel = function () {
 	container.appendChild( btnAction3 );
 	container.appendChild(document.createElement('br'));
 
+	// button to find mutually bounded
+	var btnAction4 = document.createElement( 'button' );
+	btnAction4.id = 'action4';
+	btnAction4.style.cssText = cssBtn;
+	btnAction4.innerHTML = 'Mutually Bounded';
+	container.appendChild( btnAction4 );
+
 	// button to detect intersection
 	var btnAction2 = document.createElement( 'button' );
 	btnAction2.id = 'action2';
@@ -62,6 +69,8 @@ var ControlPanel = function () {
 		button2: btnAction2,
 
 		button3: btnAction3,
+
+		button4: btnAction4,
 
 		log: function (msg) {
 			outputText.innerHTML += "<br>";

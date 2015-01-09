@@ -6,6 +6,8 @@ var D_COLLISION = false;
 var D_INTERSECTION = true;
 var helpers = new Array();
 
+var boxes = new THREE.Object3D();
+
 // ///////////////
 var ball;
 
@@ -43,11 +45,11 @@ var octree = new THREE.Octree({
           depthMax: Infinity,
 
           // max number of objects before nodes split or merge
-          // objectsThreshold: 1,
+          objectsThreshold: 1,
 
           // percent between 0 and 1 that nodes will overlap each other
           // helps insert objects that lie over more than one node
-          // overlapPct: 0.5,
+          // overlapPct: 0,
 
           // pass the scene to visualize the octree
           scene: scene

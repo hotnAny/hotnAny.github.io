@@ -86,11 +86,20 @@ function onMouseMove( event ) {
 			for (var i = 0; i < selected.length; i++) {
 				var obj = selected[i];
 				if(event.button == 0) {
+					var tx = intersects[0].point.x - obj.position.x;
+					var tz = intersects[0].point.z - obj.position.z;
+					obj.geometry.applyMatrix( new THREE.Matrix4().makeTranslation(tx, 0, tz ) );
+					// console.log(tx + ", " + tz);
+
 					obj.position.x = intersects[0].point.x;
 					obj.position.z = intersects[0].point.z;
+
 				} else if (event.button == 2){
 					obj.position.y = -intersects[0].point.z;
 				}
+
+				// obj.geometry.dynamic = true;
+				
 			}
 		}
 	}

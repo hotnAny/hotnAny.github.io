@@ -13,7 +13,7 @@
 		<script src="js/controls/TrackballControls.js"></script>
 		<script src="js/STLLoader.js"></script>
 		<script src="js/OBJLoader.js"></script>
-		<script src="js/threeoctree.min.js"></script>
+		<script src="js/threeoctree.old.js"></script>
 
 		<!-- my code -->
 		<script src="sandbox/xacInit.js"></script>
@@ -47,10 +47,15 @@
 			controlPanel.button1.onclick = buildOctree;
 			controlPanel.button2.onclick = detectIntersection;
 			controlPanel.button3.onclick = toggleOctreeVisibility;//THREE.Octree.toggleVisibility;
+			controlPanel.button4.onclick = findMutuallyBounded;
 
 			renderer.setClearColorHex( 0x000000, 1 );
 
 			var render = function () {
+			  for(var i=0; i<objects.length; i++) {
+			  	objects[i].geometry.__dirtyVertices = true;
+			  }
+
 			  requestAnimationFrame( render );
 			  
 			  /* make light moving */
