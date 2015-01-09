@@ -19,3 +19,16 @@ function sleep(milliseconds) {
 function log(msg) {
 	controlPanel.log(msg);
 }
+
+function toggleDebugMode() {
+	D_INTERSECTION = controlPanel.checkbox1.checked;
+
+	if(D_INTERSECTION) {
+		log("now in debug mode ...");
+	} else {
+		log("out of debug mode ...");
+		scene.remove(balls);
+		scene.remove(boxes);
+		octree.setVisibility(false);
+	}
+}

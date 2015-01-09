@@ -17,9 +17,9 @@
 
 		<!-- my code -->
 		<script src="sandbox/xacUtilities.js"></script>
-		
+
 		<script src="sandbox/xacInit.js"></script>
-		<script src="sandbox/xacLoadModel.js"></script>
+		
 
 		<script src="sandbox/xacAddLight.js"></script>
 		
@@ -32,6 +32,7 @@
 		<script src="sandbox/xacIntersectionDetection.js"></script>
 
 		<script src="sandbox/xacControlPanel.js"></script>
+		<script src="sandbox/xacLoadModel.js"></script>
 
 		<script>
 			var stats = new Stats();
@@ -50,6 +51,9 @@
 			controlPanel.button2.onclick = detectIntersection;
 			controlPanel.button3.onclick = toggleOctreeVisibility;//THREE.Octree.toggleVisibility;
 			controlPanel.button4.onclick = findMutuallyBounded;
+
+			controlPanel.checkbox1.onchange = toggleDebugMode;
+			controlPanel.checkbox2.onchange = toggleOctreeVisibility;
 
 			renderer.setClearColorHex( 0x000000, 1 );
 

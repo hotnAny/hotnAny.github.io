@@ -26,8 +26,8 @@ function loadStl (objName, addToOctree) {
     object.rotation.y = -Math.PI/2 * Math.random();
     
     scene.add(object);
-    controlPanel.log(objName + " loaded");
-    controlPanel.log(geometry.vertices.length + " vertices, " + geometry.faces.length + " faces");
+    log(objName + " loaded");
+    log(geometry.vertices.length + " vertices, " + geometry.faces.length + " faces");
     
     objects.push(object);
     objectMoved.push(false);

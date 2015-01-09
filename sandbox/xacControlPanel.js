@@ -17,7 +17,34 @@ var ControlPanel = function () {
 	container.appendChild( txtTitle );
 
 	var cssBtn = 'margin-left:5px;margin-top:5px;padding:1px 3px 1px 3px;font-family:Helvetica;border-radius:5px;font-size:10px;line-height:15px;text-align:left;background-color:#ffffff';
+	var cssCb = 'margin-left:2px;margin-top:5px;padding:3px 1px 3px 1px;font-family:Helvetica;font-size:10px;line-height:15px;text-align:left';
 	
+	
+
+	// check boxes
+	var cb1 = document.createElement( 'input' );
+	cb1.id = 'cb1';
+	cb1.setAttribute('type', 'checkbox');
+	cb1.style.cssText = cssCb;
+	cb1.checked = true;
+	container.appendChild( cb1 );
+	var lb1 = document.createElement( 'label' );
+	lb1.innerHTML = 'Debug mode &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+	lb1.style.cssText = cssCb;
+	container.appendChild( lb1 );
+
+	var cb2 = document.createElement( 'input' );
+	cb2.id = 'cb2';
+	cb2.setAttribute('type', 'checkbox');
+	cb2.style.cssText = cssCb;
+	container.appendChild( cb2 );
+	var lb2 = document.createElement( 'label' );
+	lb2.innerHTML = 'Show octree';
+	lb2.style.cssText = cssCb;
+	container.appendChild( lb2 );
+
+	container.appendChild(document.createElement('br'));
+
 	// button to build octree
 	var btnAction1 = document.createElement( 'button' );
 	btnAction1.id = 'action1';
@@ -30,7 +57,7 @@ var ControlPanel = function () {
 	btnAction3.id = 'action3';
 	btnAction3.style.cssText = cssBtn;
 	btnAction3.innerHTML = 'Show/Hide Octree';
-	container.appendChild( btnAction3 );
+	// container.appendChild( btnAction3 );
 	container.appendChild(document.createElement('br'));
 
 	// button to find mutually bounded
@@ -39,6 +66,8 @@ var ControlPanel = function () {
 	btnAction4.style.cssText = cssBtn;
 	btnAction4.innerHTML = 'Mutually Bounded';
 	container.appendChild( btnAction4 );
+
+	container.appendChild(document.createElement('br'));
 
 	// button to detect intersection
 	var btnAction2 = document.createElement( 'button' );
@@ -71,6 +100,10 @@ var ControlPanel = function () {
 		button3: btnAction3,
 
 		button4: btnAction4,
+
+		checkbox1: cb1,
+
+		checkbox2: cb2,
 
 		log: function (msg) {
 			outputText.innerHTML += "<br>";

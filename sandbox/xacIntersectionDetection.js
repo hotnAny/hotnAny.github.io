@@ -49,9 +49,9 @@ function findMutuallyBounded() {
 	scene.updateMatrixWorld();
 	obj2.geometry.computeBoundingBox();
 	var bboxHelper = new THREE.BoundingBoxHelper( obj2, 0xff0000 );
+	bboxHelper.update();
 	// var bboxHelper = buildBoundingBox(obj2);
 	if(D_INTERSECTION) {
-		bboxHelper.update();
 		boxes.add( bboxHelper );
 		// var b = obj2.geometry.boundingBox;
 		// b.min.applyMatrix4(obj2.matrixWorld);
@@ -150,13 +150,13 @@ function detectIntersection() {
 		if(isInside(v1, octree2, obj2)) {
 			
 			isIntersecting = true;
-			
+			numIntersections++;
+
 			if(D_INTERSECTION) {
 				// var vtmp = obj1.geometry.vertices[ mutuallyBounded[i] ];
-				addABall(v1.x, v1.y, v1.z, 0xff0000, 0.5);
-				numIntersections++;
+				addABall(v1.x, v1.y, v1.z, 0xff0000, 0.5);	
 			} else {
-				return;
+				break;
 			}
 		} else {
 			if(D_INTERSECTION) {
@@ -250,5 +250,5 @@ function isInside(v1, octree2, obj) {
 
 function toggleOctreeVisibility() {
 	// controlPanel.log("showing/hiding octree visibility ...");
-	octree.toggleVisibility();
+	octree.setVisibility(controlPanel.checkbox2.checked);
 }
