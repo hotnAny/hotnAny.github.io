@@ -172,7 +172,7 @@ function detectIntersection() {
 		scene.add(boxes);	
 	}
 
-	controlPanel.log("done. " + numIntersections + " intersected nodes found in " + t + " msec");
+	controlPanel.log("done. " + numIntersections + " octree nodes found in " + t + " msec");
 	if(isIntersecting) {
 		controlPanel.log("intersecting");
 	} else {
