@@ -18,8 +18,6 @@ var ControlPanel = function () {
 
 	var cssBtn = 'margin-left:5px;margin-top:5px;padding:1px 3px 1px 3px;font-family:Helvetica;border-radius:5px;font-size:10px;line-height:15px;text-align:left;background-color:#ffffff';
 	var cssCb = 'margin-left:2px;margin-top:5px;padding:3px 1px 3px 1px;font-family:Helvetica;font-size:10px;line-height:15px;text-align:left';
-	
-	
 
 	// check boxes
 	var cb1 = document.createElement( 'input' );
@@ -52,12 +50,6 @@ var ControlPanel = function () {
 	btnAction1.innerHTML = 'Build Octree';
 	container.appendChild( btnAction1 );
 
-	// button to show octree
-	var btnAction3 = document.createElement( 'button' );
-	btnAction3.id = 'action3';
-	btnAction3.style.cssText = cssBtn;
-	btnAction3.innerHTML = 'Show/Hide Octree';
-	// container.appendChild( btnAction3 );
 	container.appendChild(document.createElement('br'));
 
 	// button to find mutually bounded
@@ -76,16 +68,37 @@ var ControlPanel = function () {
 	btnAction2.innerHTML = 'Detect Intersection';
 	container.appendChild( btnAction2 );
 
+	container.appendChild(document.createElement('br'));
+
+	// button to detect overlap
+	var btnAction3 = document.createElement( 'button' );
+	btnAction3.id = 'action3';
+	btnAction3.style.cssText = cssBtn;
+	btnAction3.innerHTML = 'Detect Overlap';
+	container.appendChild( btnAction3 );
+
+	container.appendChild(document.createElement('br'));
+
+	// button to detect interlock
+	var btnAction5 = document.createElement( 'button' );
+	btnAction5.id = 'action5';
+	btnAction5.style.cssText = cssBtn;
+	btnAction5.innerHTML = 'Detect Interlock';
+	container.appendChild( btnAction5 );
+
+	// output area
 	var outputArea = document.createElement( 'div' );
 	outputArea.id = 'outputArea';
 	outputArea.style.cssText = 'width:256px;height:100%;overflow:hidden;';
 	container.appendChild( outputArea );
 
-	var outputText = document.createElement( 'div' );
+	var outputText = document.createElement( 'pre' );
 	outputText.id = 'outputText';
-	outputText.style.cssText = 'margin-left:5px;margin-top:5px;overflow:inherit;color:#ffffff;font-family:Helvetica,Arial,sans-serif;font-size:10px;line-height:15px';
+	outputText.style.cssText = 'margin-left:5px;margin-top:5px;margin-bottom:15px;overflow:inherit;color:#ffffff;font-family:Helvetica,Arial,sans-serif;font-size:10px;line-height:15px;';
 	outputText.innerHTML = '';
 	outputArea.appendChild( outputText );
+
+	outputArea.appendChild(document.createElement('br'));
 
 	return {
 
@@ -101,20 +114,20 @@ var ControlPanel = function () {
 
 		button4: btnAction4,
 
+		button5: btnAction5,
+
 		checkbox1: cb1,
 
 		checkbox2: cb2,
 
 		log: function (msg) {
-			outputText.innerHTML += "<br>";
-			outputText.innerHTML += msg;
+			outputText.innerHTML += msg + '\n';
+			// outputText.innerHTML += "&#13;";
 			outputArea.scrollTop = 1000000;
 		},
 
 		update: function () {
 
 		}
-
 	}
-
 };

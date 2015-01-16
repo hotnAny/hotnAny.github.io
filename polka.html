@@ -30,6 +30,8 @@
 
 		<script src="sandbox/xacCollisionDetection.js"></script>
 		<script src="sandbox/xacIntersectionDetection.js"></script>
+		<script src="sandbox/xacOverlapDetection.js"></script>
+		<script src="sandbox/xacInterlockDetection.js"></script>
 
 		<script src="sandbox/xacControlPanel.js"></script>
 		<script src="sandbox/xacLoadModel.js"></script>
@@ -49,8 +51,9 @@
 			// controlPanel.button1.onclick = function(){detectIntersection};
 			controlPanel.button1.onclick = buildOctree;
 			controlPanel.button2.onclick = detectIntersection;
-			controlPanel.button3.onclick = toggleOctreeVisibility;//THREE.Octree.toggleVisibility;
 			controlPanel.button4.onclick = findMutuallyBounded;
+			controlPanel.button3.onclick = detectOverlap;
+			controlPanel.button5.onclick = detectInterlock;
 
 			controlPanel.checkbox1.onchange = toggleDebugMode;
 			controlPanel.checkbox2.onchange = toggleOctreeVisibility;
@@ -81,7 +84,11 @@
 			  
 			  renderer.render(scene, camera);
 
+			  /* update octrees */
 			  octree.update();
+			  for(var i=0; i<octreesProj.length; i++) {
+			  	octreesProj[i].update();
+			  }
 			  
 			};
 
