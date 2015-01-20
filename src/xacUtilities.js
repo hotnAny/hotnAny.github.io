@@ -35,22 +35,29 @@ function toggleOctreeVisibility() {
 }
 
 function toggleDebugMode() {
-	D_INTERSECTION = controlPanel.checkbox1.checked;
-	if(D_INTERSECTION) {
-		// log("now in debug mode ...");
-	} else {
-		// log("out of debug mode ...");
-		scene.remove(balls);
-		scene.remove(boxes);
-		octree.setVisibility(false);
-	}
 
-	D_OVERLAP = controlPanel.checkbox1.checked;
-	if(D_OVERLAP) {
-		showProjections();
-	} else {
-		hideProjections();
-	}
+	/*
+		no need to display all of it
+	*/
+
+	// D_INTERSECTION = controlPanel.checkbox1.checked;
+	// if(D_INTERSECTION) {
+	// 	// log("now in debug mode ...");
+	// } else {
+	// 	// log("out of debug mode ...");
+	// 	scene.remove(balls);
+	// 	scene.remove(boxes);
+	// 	octree.setVisibility(false);
+	// }
+
+	// D_OVERLAP = controlPanel.checkbox1.checked;
+	// if(D_OVERLAP) {
+	// 	showProjections();
+	// } else {
+	// 	hideProjections();
+	// }
+
+	D_INTERLOCK = controlPanel.checkbox1.checked;
 }
 
 function checkInitialization() {
@@ -69,4 +76,12 @@ function refreshDebugView() {
 function updateDebugView() {
 	scene.add(balls);
 	scene.add(boxes);
+}
+
+function togglePhysics() {
+	usingPhysics = controlPanel.checkbox3.checked;
+
+	if(usingPhysics) {
+		scene.simulate();
+	} 
 }

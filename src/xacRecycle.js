@@ -226,3 +226,99 @@ function loadJSON(objName, isStatic) {
 //  // outside<0 inside>0
 //  return angleToFace < 0;
 // }
+
+
+// var ground_material = Physijs.createMaterial(
+//       new THREE.MeshLambertMaterial({ map: THREE.ImageUtils.loadTexture( 'images/rocks.jpg' ) }),
+//       .8, // high friction
+//       .4 // low restitution
+//     );
+//     ground_material.map.wrapS = ground_material.map.wrapT = THREE.RepeatWrapping;
+//     ground_material.map.repeat.set( 2.5, 2.5 );
+
+//     // Ground
+//     var ground = new Physijs.BoxMesh(
+//       new THREE.CubeGeometry(500, 1, 500),
+//       //new THREE.PlaneGeometry(50, 50),
+//       ground_material,
+//       0 // mass
+//     );
+//     ground.receiveShadow = true;
+//     // scene.add( ground );
+
+
+  // var srcScene =  usingPhysics ? scene : scenePhysics;
+  // var dstScene = !usingPhysics ? scene : scenePhysics;
+
+  // // console.log(srcScene);
+
+  // // var toTransfer = new Array();
+  // // srcScene.traverse(function(object) {
+  // //   if(object instanceof THREE.Mesh || 
+  // //     object instanceof THREE.Line || 
+  // //     object instanceof THREE.DirectionalLight ||
+  // //     object instanceof THREE.AmbientLight) {
+  // //     toTransfer.push(object);
+  // //   }
+  // // });
+
+  // // for(var i=0; i<toTransfer.length; i++) {
+  // //   srcScene.remove(toTransfer[i]);
+  // //   dstScene.add(toTransfer[i]);
+  // // }
+
+  // for(var i=0; i<objects.length; i++) {
+  //  srcScene.remove(objects[i]);
+  //  dstScene.add(objects[i]);
+  // }
+
+  // srcScene.remove(camera);
+  // dstScene.add(camera);
+
+  // console.log(dstScene);
+
+  // console.log(usingPhysics);
+
+    // var material = new THREE.MeshPhongMaterial( { color: 0xFFFFFF} );  
+   //    var object = new Physijs.BoxMesh(new THREE.CubeGeometry( 3, 3, 3 ), material);
+   //    object.position.set(20 * Math.random(), 20 + 10 * Math.random(), 20 * Math.random()); 
+   //        object.rotation.y = -Math.PI/2 * Math.random();
+   //        object.castShadow = true;
+   //    object.receiveShadow = true;
+   //    scenePhysics.add(object); 
+   //    objects.push(object);
+   //    new TWEEN.Tween(object.material).to({opacity: 1}, 500).start();
+//  scene = new Physijs.Scene({ fixedTimeStep: 1 / 120 });
+
+//  scene.add(ground.clone());
+
+//  scene.add( directionalLight.clone() );
+// // scenePhysics.add(directionalLight);
+// // ambient light
+// scene.add( new THREE.AmbientLight( 0x888888 ) );
+// scene.add( line.clone() );
+
+//    scene.setGravity(new THREE.Vector3( 0, -30, 0 ));
+//      scene.addEventListener(
+//        'update',
+//        function() {
+//          if(usingPhysics) {
+//            // if(!isMouseDown) {
+//              // console.log("updating ...");
+//              scene.simulate();
+//            // }
+//            // console.log("physics engine running ... ");
+//          } else {
+//          //  // console.log("physics engine NOT running ... ");
+//          }
+//        }
+//      );
+    
+//    // scene.add(camera);
+
+//    for(var i=0; i<objects.length; i++) {
+//    // srcScene.remove(objects[i]);
+//      scene.add(objects[i].clone());
+//    }
+
+//    addAPhyCube();

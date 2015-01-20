@@ -1,3 +1,4 @@
+
 function detectInterlock() {
 	var isInterlocking = false;
 	var t0 = new Date().getTime();
@@ -10,7 +11,7 @@ function detectInterlock() {
 		}
 	}
 
-	log((isInterlocking ? "" : "not") + " interlocking. found in " + timeElapsed(t0) + " msec");
+	log((isInterlocking ? "" : "not") + " interlocking. computed in " + timeElapsed(t0) + " msec");
 	return isInterlocking;
 }
 

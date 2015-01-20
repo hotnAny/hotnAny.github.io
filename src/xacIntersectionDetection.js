@@ -291,7 +291,7 @@ function detectInsersectionBetweenObjects(objD, objS, octreeStatic, arrMulBounde
 				isIntersecting = true;
 				numIntersections++;
 
-				if(D_INTERSECTION) {
+				if(D_INTERSECTION || D_INTERLOCK) {
 					if(i % 1000 == 0) {
 						/* debug render is in the isCrossing function */
 					}
@@ -361,10 +361,10 @@ function isCrossing(v1, v2, octreeStatic, objS) {
 		/* find out if the intersecting point is i) between v1 and v2; and ii) inside the triangle */
 		if(0 <= r && r <= 1 && isInTriangle(pr, va, vb, vc)) {
 			
-			if(D_INTERSECTION && stopper < 5) {
+			if((D_INTERSECTION && stopper < 5) || D_INTERLOCK) {
 				
-				addALine(v, new THREE.Vector3().addVectors(v, nml), 0x00ff00);
-				addALine(v1, v2, 0xffff00);
+				addALine(v, new THREE.Vector3().addVectors(v, nml), 0x00ff00);					
+				addALine(v1, v2, 0xffff00);														
 				addALine(new THREE.Vector3().addVectors(v1, v2).divideScalar(2), pr, 0xff0000);
 				addATriangle(va, vb, vc, 0xffff00);
 				addABall(pr.x, pr.y, pr.z, 0xff0000, 0.1);

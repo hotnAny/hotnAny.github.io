@@ -19,9 +19,11 @@ function detectOverlapBetweenObjects(objD, objS) {
 
 		makeProjections(objD, projDynamic);
 		// console.log(projDynamic.length);
+		showProjections();
 
 		refreshDebugView();
 		for(var i=0; i<3; i++) {
+			log("checking projection #" + (i+1));
 			var projD = projDynamic[i];
 			var projS = projStatic[i];
 			var octreeProjS = octreesProj[i];		
@@ -35,7 +37,12 @@ function detectOverlapBetweenObjects(objD, objS) {
 				break;
 			}
 		}
-		if(D_OVERLAP) updateDebugView();
+
+		if(D_OVERLAP) {
+			updateDebugView();
+		} else {
+			// hideProjections();
+		}
 	}
 
 	log((isOverlapping ? "overlapping" : "not overlapping") + ". finished in " + timeElapsed(t0) + " msec.");
@@ -48,7 +55,7 @@ function detectOverlapBetweenObjects(objD, objS) {
 }
 
 function showProjections() {
-
+	console.log(projStatic);
 	for(var i=0; i<projStatic.length; i++) {
 		scene.add(projStatic[i]);
 	}
@@ -83,11 +90,11 @@ function makeProjections(obj, array) {
 		var objProj = new THREE.Mesh(objProjGeom, material);
 		// objProj.applyMatrix(obj.matrixWorld);
 		// if(D_OVERLAP) {
-    		var offset = 60;
-    		objProj.position.set(offset * (i==0?1:0), offset * (i==1?1:0), offset * (i==2?1:0));
+		var offset = 60;
+		objProj.position.set(offset * (i==0?1:0), offset * (i==1?1:0), offset * (i==2?1:0));
 
     		// if(D_OVERLAP) 
-    			scene.add(objProj);
+    	scene.add(objProj);
 		// }
 
 		for(var j=0; j<len; j++) {

@@ -476,6 +476,8 @@ THREE.TrackballControls = function ( object, domElement ) {
 
 		if ( _this.enabled === false ) return;
 
+		if(event.clientX < 256) return;
+
 		event.preventDefault();
 		event.stopPropagation();
 

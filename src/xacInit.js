@@ -3,8 +3,11 @@
 var D = false;
 var D_MOUSE = false;
 var D_COLLISION = false;
-var D_INTERSECTION = true;
-var D_OVERLAP = true;
+var D_INTERSECTION = false;
+var D_OVERLAP = false;
+var D_INTERLOCK = true;
+var D_PHYSICS = true;
+
 var helpers = new Array();
 
 var boxes = new THREE.Object3D();
@@ -16,12 +19,9 @@ var objDynamic = null;
 var objStatic = null;
 var objects = new Array();
 
-// projections of obj2
+// projections of objStatic
 var projStatic = new Array();
 var projDynamic = new Array();
-// var obj2XY;
-// var obj2YZ;
-// var obj2ZX;
 
 var objectMoved = new Array();
 var selected = new Array();
@@ -36,7 +36,8 @@ var renderer = new THREE.WebGLRenderer( { antialias: true } );
 renderer.setSize( window.innerWidth, window.innerHeight );
 document.body.appendChild( renderer.domElement );
 
-var scene = new THREE.Scene();
+/* using physijs now */
+var scene = new Physijs.Scene({ fixedTimeStep: 1 / 120 });
 
 var camera = new THREE.PerspectiveCamera( 30, window.innerWidth/window.innerHeight, 1, 10000 );
 camera.position.set(-0, 150, 180);
@@ -70,4 +71,4 @@ var octree = new THREE.Octree({
 
 var octreesProj = new Array();
 
-// var octrees = new Array();
+var usingPhysics = false;

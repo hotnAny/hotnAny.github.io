@@ -37,10 +37,15 @@ function rayCast(x, y, objs) {
 	return rayCaster.intersectObjects( objs );
 }
 
+var _vector = new THREE.Vector3,
+	projector = new THREE.Projector(),
+	selected_block, mouse_position = new THREE.Vector3, block_offset = new THREE.Vector3, _i, _v3 = new THREE.Vector3, intersect_plane;
+
 function onMouseDown( event ) {
 	event.preventDefault();
 
-	// controlPanel.log(objects);
+	usingPhysics = false;
+	controlPanel.checkbox3.checked = usingPhysics;
 
 	var intersects = rayCast(event.clientX, event.clientY, objects);
 
@@ -97,9 +102,6 @@ function onMouseMove( event ) {
 				} else if (event.button == 2){
 					obj.position.y = -intersects[0].point.z;
 				}
-
-				// obj.geometry.dynamic = true;
-				
 			}
 		}
 	}
@@ -108,8 +110,13 @@ function onMouseMove( event ) {
 
 function onMouseUp( event ) {
 	event.preventDefault();
-	isMouseDown = false;
 
-	// detectCollision(objects[0], objects[1]);
+	isMouseDown = false;
+	
+	for(var i=0; i<selected.length; i++) {
+		var obj = selected[i];		// }
+		obj.__dirtyPosition = true;
+		obj.__dirtyRotation = true;
+	}
 }
 

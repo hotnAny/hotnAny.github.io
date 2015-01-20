@@ -17,21 +17,20 @@ function loadStl (objName, isStatic) {
   return stlLoader.load(objName, function (geometry) {
 
     // geometry.dynamic = true;
-
     var material = new THREE.MeshPhongMaterial( { color: colorNormal} );  
     var object = new THREE.Mesh(geometry, material); 
 
-    ///// manually positioning the objects
-    
-    
+    /* manually positioning the objects */
     objects.push(object);
     scene.add(object);
+    // scenePhysics.add(object);
+
     log("#" + objects.length + ": " + objName + " loaded");
     log(geometry.vertices.length + " vertices, " + geometry.faces.length + " faces");
 
     
     if(isStatic) {
-      object.position.set(0, 30, 0); 
+      object.position.set(0, 0, 0); 
 
       /* add to the octree */
       // octree.add(object);
@@ -43,7 +42,7 @@ function loadStl (objName, isStatic) {
 
       var len = projStatic.length;
       for(var i=0; i<len; i++) {
-        console.log(projStatic[i]);
+        // console.log(projStatic[i]);
         var ot = new THREE.Octree({
           undeferred: false,
           depthMax: Infinity,
@@ -51,12 +50,11 @@ function loadStl (objName, isStatic) {
           scene: scene
         });
         ot.add(projStatic[i], { useFaces: true});
-        octreesProj.push(ot);
-
-        
+        octreesProj.push(ot); 
       }
+      // if(!D_OVERLAP) hideProjections();
     } else {
-      object.position.set(20 * Math.random(), 20 * Math.random(), 20 * Math.random()); 
+      object.position.set(20 * Math.random(), 20 + 10 * Math.random(), 20 * Math.random()); 
       object.rotation.y = -Math.PI/2 * Math.random();
     }
 
@@ -74,15 +72,40 @@ if(D_MOUSE) {
   // addATriangle(v1, v2, v3);
   // ball.position.set(-4, 0, 0);
   // addABox(-1, 1, 1, -1, 1, -1, true);
-  loadStl(ringStand, false);
-  loadStl(dodecahedron, true);
+
+  if(D_PHYSICS) {
+    addAPhyCube();
+    addAPhyCube();
+  }
+  else {
+    loadStl(ringStand, false);
+    loadStl(dodecahedron, true);
+    // console.log(scene);
+  }
   
+  // intersect_plane = new THREE.Mesh(
+  //   new THREE.PlaneGeometry( 150, 150 ),
+  //   new THREE.MeshBasicMaterial({ opacity: 0, transparent: true })
+  // );
+  // intersect_plane.rotation.x = Math.PI / -2;
+  // scene.add( intersect_plane );
 }
 
 
 /*
   below are functions that render debugging objects
   */
+
+function addAPhyCube() {
+  var material = new THREE.MeshPhongMaterial( { color: 0xFFFFFF} );  
+  var object = new Physijs.BoxMesh(new THREE.CubeGeometry( 10 * Math.random(), 10 * Math.random(), 10 * Math.random() ), material);
+  object.position.set(20 * Math.random(), 20 + 10 * Math.random(), 20 * Math.random()); 
+  object.rotation.set(-Math.PI/2 * Math.random(), -Math.PI/2 * Math.random(), -Math.PI/2 * Math.random());
+  object.castShadow = true;
+  object.receiveShadow = true;
+  scene.add(object); 
+  objects.push(object);
+}
 
 function addTheBall() {
   var geometry = new THREE.SphereGeometry( 2, 20, 20 );

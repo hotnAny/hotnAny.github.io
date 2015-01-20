@@ -14,4 +14,5 @@ for ( var i = 0; i <= 40; i ++ ) {
 }
 
 var line = new THREE.Line( lineGeometry, lineMaterial, THREE.LinePieces );
+
 scene.add( line );

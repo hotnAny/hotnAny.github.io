@@ -14,29 +14,32 @@
 		<script src="js/STLLoader.js"></script>
 		<script src="js/OBJLoader.js"></script>
 		<script src="js/threeoctree.old.js"></script>
+		<script src="js/physi.js"></script>
+		<script src="js/tween.js"></script>
 
 		<!-- my code -->
-		<script src="sandbox/xacUtilities.js"></script>
+		<script src="src/xacUtilities.js"></script>
 
-		<script src="sandbox/xacInit.js"></script>
+		<script src="src/xacInit.js"></script>
 		
 
-		<script src="sandbox/xacAddLight.js"></script>
+		<script src="src/xacAddLight.js"></script>
 		
-		<script src="sandbox/xacDrawGrid.js"></script>
-		<script src="sandbox/xacDrawGround.js"></script>
+		<script src="src/xacDrawGrid.js"></script>
+		<script src="src/xacDrawGround.js"></script>
 
-		<script src="sandbox/xacMouseControl.js"></script>
+		<script src="src/xacMouseControl.js"></script>
 
-		<script src="sandbox/xacCollisionDetection.js"></script>
-		<script src="sandbox/xacIntersectionDetection.js"></script>
-		<script src="sandbox/xacOverlapDetection.js"></script>
-		<script src="sandbox/xacInterlockDetection.js"></script>
+		<script src="src/xacCollisionDetection.js"></script>
+		<script src="src/xacIntersectionDetection.js"></script>
+		<script src="src/xacOverlapDetection.js"></script>
+		<script src="src/xacInterlockDetection.js"></script>
 
-		<script src="sandbox/xacControlPanel.js"></script>
-		<script src="sandbox/xacLoadModel.js"></script>
+		<script src="src/xacControlPanel.js"></script>
+		<script src="src/xacLoadModel.js"></script>
 
 		<script>
+			/* stats visualization */
 			var stats = new Stats();
 			stats.domElement.style.position = 'absolute';
 			stats.domElement.style.top = '0px';
@@ -48,6 +51,7 @@
 			controlPanel.domElement.style.top = '0px';
 			document.body.appendChild( controlPanel.domElement);
 
+			/* control buttons */
 			// controlPanel.button1.onclick = function(){detectIntersection};
 			controlPanel.button1.onclick = buildOctree;
 			controlPanel.button2.onclick = detectIntersection;
@@ -57,39 +61,53 @@
 
 			controlPanel.checkbox1.onchange = toggleDebugMode;
 			controlPanel.checkbox2.onchange = toggleOctreeVisibility;
+			controlPanel.checkbox3.onchange = togglePhysics;
+
+			/* physics engine set up */
+			Physijs.scripts.worker = 'physijs_worker.js';
+			Physijs.scripts.ammo = 'ammo.js';
+
+			// if(D_PHYSICS) {
+			scene.setGravity(new THREE.Vector3( 0, -30, 0 ));
+			scene.addEventListener(
+				'update',
+				function() {
+					// push new info to the buffer
+					scene.pushBuffered();
+					if(usingPhysics) {
+						// if needed show the simulation
+						scene.simulate();
+					}
+				}
+			);
 
 			renderer.setClearColorHex( 0x000000, 1 );
 
 			var render = function () {
-			  for(var i=0; i<objects.length; i++) {
-			  	objects[i].geometry.__dirtyVertices = true;
-			  }
-
-			  requestAnimationFrame( render );
 			  
-			  /* make light moving */
-			  // directionalLight.position.x = Math.sin(angle * Math.PI / 180);
-			  // directionalLight.position.z = Math.cos(angle * Math.PI / 180);
-			  // angle = (angle + 1) % 360;
+				requestAnimationFrame( render );
 
-			  controls.update();
+				/* make light moving */
+				// directionalLight.position.x = Math.sin(angle * Math.PI / 180);
+				// directionalLight.position.z = Math.cos(angle * Math.PI / 180);
+				// angle = (angle + 1) % 360;
 
-			  /* obselete */
-			  // if(isMouseDown && objects.length == 2) {
-			  	// detectCollision(objects[0], objects[1]);
-			  	// detectIntersection(objects[0], octree);
-			  // }
+				controls.update();
 
-			  stats.update(); 
+				stats.update(); 
 			  
-			  renderer.render(scene, camera);
+				for(var i=0; i<objects.length; i++) {
+					objects[i].geometry.__dirtyVertices = true;
+				}
 
-			  /* update octrees */
-			  octree.update();
-			  for(var i=0; i<octreesProj.length; i++) {
-			  	octreesProj[i].update();
-			  }
-			  
+				renderer.render(scene, camera);
+
+				/* update octrees */
+				octree.update();
+				for(var i=0; i<octreesProj.length; i++) {
+					octreesProj[i].update();
+				}
+			
 			};
 
 			render();
