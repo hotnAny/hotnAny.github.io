@@ -99,6 +99,18 @@ var ControlPanel = function () {
 
 	container.appendChild(document.createElement('br'));
 
+	var slider1 = document.createElement( 'input' );
+	slider1.id = 'sldr1';
+	slider1.type = 'range';
+	// slider1.style.cssText
+	slider1.min = '0';
+	slider1.max = '10';
+	slider1.value = slider1.min;
+	slider1.step = '1';
+	// slider1.onchange = "updateSlider(this.value)";
+	container.appendChild( slider1 );
+
+	container.appendChild(document.createElement('br'));
 	// var btnAction6 = document.createElement( 'button' );
 	// btnAction6.id = 'action6';
 	// btnAction6.style.cssText = cssBtn;
