@@ -1,4 +1,4 @@
-var lineMaterial = new THREE.LineBasicMaterial( { color: 0x606060 } );
+var lineMaterial = new THREE.LineBasicMaterial( { color: 0xaaaaaa } );
 var lineGeometry = new THREE.Geometry();
 var floor = 0;
 var step = 25;

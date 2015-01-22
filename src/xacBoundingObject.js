@@ -34,5 +34,6 @@ function createBoxelizedSphere(radius, numBoxes) {
 
 	bSphere.position.y += height;
 	bSphere.rotation.set(Math.random() * Math.PI / 2, Math.random() * Math.PI / 2, Math.random() * Math.PI / 2);
+	objects.push(bSphere);
 	scene.add(bSphere);
 }
