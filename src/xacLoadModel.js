@@ -76,8 +76,8 @@ if(D_MOUSE) {
   if(D_PHYSICS) {
     // addAPhyCube();
     // addAPhyCube();
-    createBoxelizedSphere(10, 18);
-    createBoxelizedSphere(15, 36);
+    createBoxelizedSphere(7, 18);
+    createBoxelizedSphere(10, 36);
 
   }
   else {

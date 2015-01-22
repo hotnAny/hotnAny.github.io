@@ -8,7 +8,7 @@ function subDivide(obj, subdiv) {
 function createBoxelizedSphere(radius, numBoxes) {
 	var bSphere;
 	var material = new THREE.MeshBasicMaterial( { color: 0xffffff } );
-	var height = (Math.random() + 1) * 2 * radius;
+	var height = (Math.random() + 1) * radius;
 
 	var x0, y0;
 	var dim = 2 * Math.PI * radius / numBoxes;
