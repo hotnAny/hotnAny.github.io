@@ -74,8 +74,11 @@ if(D_MOUSE) {
   // addABox(-1, 1, 1, -1, 1, -1, true);
 
   if(D_PHYSICS) {
-    addAPhyCube();
-    addAPhyCube();
+    // addAPhyCube();
+    // addAPhyCube();
+    createBoxelizedSphere(10, 18);
+    createBoxelizedSphere(15, 36);
+
   }
   else {
     loadStl(ringStand, false);
@@ -148,7 +151,7 @@ function addATriangle(v1, v2, v3, clr) {
 
 function addABall(x, y, z, clr, radius) {
   var geometry = new THREE.SphereGeometry( radius, 10, 10 );
-    var material = new THREE.MeshBasicMaterial( { color: clr } );
+  var material = new THREE.MeshBasicMaterial( { color: clr } );
   var ball = new THREE.Mesh( geometry, material );
   ball.position.set(x, y, z);
   

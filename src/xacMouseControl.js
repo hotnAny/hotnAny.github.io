@@ -42,7 +42,8 @@ var _vector = new THREE.Vector3,
 	selected_block, mouse_position = new THREE.Vector3, block_offset = new THREE.Vector3, _i, _v3 = new THREE.Vector3, intersect_plane;
 
 function onMouseDown( event ) {
-	event.preventDefault();
+	// event.preventDefault();
+	if(event.clientX < 256) return;
 
 	usingPhysics = false;
 	controlPanel.checkbox3.checked = usingPhysics;
@@ -72,7 +73,7 @@ function onMouseDown( event ) {
 }
 
 function onMouseMove( event ) {
-	event.preventDefault();
+	// event.preventDefault();
 
 	if(!isMouseDown) {
 		return;
@@ -109,7 +110,7 @@ function onMouseMove( event ) {
 }
 
 function onMouseUp( event ) {
-	event.preventDefault();
+	// event.preventDefault();
 
 	isMouseDown = false;
 	

@@ -15,7 +15,7 @@
 		<script src="js/OBJLoader.js"></script>
 		<script src="js/threeoctree.old.js"></script>
 		<script src="js/physi.js"></script>
-		<script src="js/tween.js"></script>
+		<script src="js/SubdivisionModifier.js"></script>
 
 		<!-- my code -->
 		<script src="src/xacUtilities.js"></script>
@@ -34,12 +34,15 @@
 		<script src="src/xacIntersectionDetection.js"></script>
 		<script src="src/xacOverlapDetection.js"></script>
 		<script src="src/xacInterlockDetection.js"></script>
+		<script src="src/xacBoundingObject.js"></script>
 
 		<script src="src/xacControlPanel.js"></script>
 		<script src="src/xacLoadModel.js"></script>
 
 		<script>
-			/* stats visualization */
+			/* 
+				stats visualization 
+			*/
 			var stats = new Stats();
 			stats.domElement.style.position = 'absolute';
 			stats.domElement.style.top = '0px';
@@ -51,7 +54,9 @@
 			controlPanel.domElement.style.top = '0px';
 			document.body.appendChild( controlPanel.domElement);
 
-			/* control buttons */
+			/* 
+				control buttons 
+			*/
 			// controlPanel.button1.onclick = function(){detectIntersection};
 			controlPanel.button1.onclick = buildOctree;
 			controlPanel.button2.onclick = detectIntersection;
@@ -62,6 +67,8 @@
 			controlPanel.checkbox1.onchange = toggleDebugMode;
 			controlPanel.checkbox2.onchange = toggleOctreeVisibility;
 			controlPanel.checkbox3.onchange = togglePhysics;
+
+			// controlPanel.slider1.onchange = surfaceSubdivision;
 
 			/* physics engine set up */
 			Physijs.scripts.worker = 'physijs_worker.js';

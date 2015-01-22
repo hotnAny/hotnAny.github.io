@@ -85,3 +85,12 @@ function togglePhysics() {
 		scene.simulate();
 	} 
 }
+
+function surfaceSubdivision() {
+	controlPanel.label4.innerHTML = controlPanel.slider1.value + "%";
+	// console.log(controlPanel.slider1.value);
+	for(var i=0; i<selected.length; i++) {
+		subDivide(selected[i], controlPanel.slider1.value / 100.0);
+		console.log(controlPanel.slider1.value / 100.0);
+	}
+}

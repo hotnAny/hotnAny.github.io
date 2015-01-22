@@ -99,16 +99,21 @@ var ControlPanel = function () {
 
 	container.appendChild(document.createElement('br'));
 
-	var slider1 = document.createElement( 'input' );
-	slider1.id = 'sldr1';
-	slider1.type = 'range';
-	// slider1.style.cssText
-	slider1.min = '0';
-	slider1.max = '10';
-	slider1.value = slider1.min;
-	slider1.step = '1';
-	// slider1.onchange = "updateSlider(this.value)";
-	container.appendChild( slider1 );
+	// var slider1 = document.createElement( 'input' );
+	// slider1.id = 'sldr1';
+	// slider1.setAttribute('type', 'range');
+	// slider1.style.cssText = cssCb;
+	// slider1.min = '0.1';
+	// slider1.max = '200';
+	// slider1.value = '100';
+	// slider1.step = '1';
+	// // slider1.onchange = "updateSlider(this.value)";
+	// container.appendChild( slider1 );
+
+	// var lb4 = document.createElement( 'label' );
+	// lb4.innerHTML = slider1.value + "%";
+	// lb4.style.cssText = cssCb;
+	// container.appendChild( lb4 );
 
 	container.appendChild(document.createElement('br'));
 	// var btnAction6 = document.createElement( 'button' );
@@ -162,6 +167,10 @@ var ControlPanel = function () {
 		checkbox2: cb2,
 
 		checkbox3: cb3,
+
+		// slider1: slider1,
+
+		// label4: lb4,
 
 		log: function (msg) {
 			outputMsg += new Date().toLocaleTimeString() + ": " + msg + '\n';
