@@ -28,9 +28,13 @@ function loadStl (objName, isStatic) {
     log("#" + objects.length + ": " + objName + " loaded");
     log(geometry.vertices.length + " vertices, " + geometry.faces.length + " faces");
 
-    
+    object.geometry.computeBoundingBox();
+    var bbox = object.geometry.boundingBox;
+    object.position.set(20 * Math.random(), (bbox.max.y - bbox.min.y)/2, 20 * Math.random()); 
+    // if(!isStatic)
+
     if(isStatic) {
-      object.position.set(0, 0, 0); 
+      // object.position.set(0, 0, 0); 
 
       /* add to the octree */
       // octree.add(object);
@@ -38,7 +42,7 @@ function loadStl (objName, isStatic) {
       octree.add(object, { useFaces: true });
 
       /* create pre-computed projections and their octrees */
-      makeProjections(object, projStatic);
+      // makeProjections(object, projStatic);
 
       var len = projStatic.length;
       for(var i=0; i<len; i++) {
@@ -54,8 +58,7 @@ function loadStl (objName, isStatic) {
       }
       // if(!D_OVERLAP) hideProjections();
     } else {
-      object.position.set(20 * Math.random(), 20 + 10 * Math.random(), 20 * Math.random()); 
-      object.rotation.y = -Math.PI/2 * Math.random();
+      // object.rotation.y = -Math.PI/2 * Math.random();
     }
 
   });
@@ -76,11 +79,12 @@ if(D_MOUSE) {
   if(D_PHYSICS) {
     // addAPhyCube();
     // addAPhyCube();
-    createBoxelizedSphere(7, 18);
-    createBoxelizedSphere(10, 36);
 
   }
   else {
+    // createBoxelizedSphere(7, 18);
+    // createBoxelizedSphere(10, 36);
+
     loadStl(ringStand, false);
     loadStl(dodecahedron, true);
     // console.log(scene);

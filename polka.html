@@ -35,6 +35,8 @@
 		<script src="src/xacOverlapDetection.js"></script>
 		<script src="src/xacInterlockDetection.js"></script>
 		<script src="src/xacBoundingObject.js"></script>
+		<script src="src/xacVoxelGrid.js"></script>
+		<script src="src/xacPhysics.js"></script>
 
 		<script src="src/xacControlPanel.js"></script>
 		<script src="src/xacLoadModel.js"></script>
@@ -63,6 +65,7 @@
 			controlPanel.button4.onclick = findMutuallyBounded;
 			controlPanel.button3.onclick = detectOverlap;
 			controlPanel.button5.onclick = detectInterlock;
+			controlPanel.button6.onclick = voxelize;
 
 			controlPanel.checkbox1.onchange = toggleDebugMode;
 			controlPanel.checkbox2.onchange = toggleOctreeVisibility;

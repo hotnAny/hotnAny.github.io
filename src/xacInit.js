@@ -6,7 +6,7 @@ var D_COLLISION = false;
 var D_INTERSECTION = false;
 var D_OVERLAP = false;
 var D_INTERLOCK = true;
-var D_PHYSICS = true;
+var D_PHYSICS = false;
 
 var helpers = new Array();
 

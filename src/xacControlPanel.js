@@ -99,6 +99,14 @@ var ControlPanel = function () {
 
 	container.appendChild(document.createElement('br'));
 
+	var btnAction6 = document.createElement( 'button' );
+	btnAction6.id = 'action6';
+	btnAction6.style.cssText = cssBtn;
+	btnAction6.innerHTML = 'Voxelize';
+	container.appendChild( btnAction6 );
+
+	container.appendChild(document.createElement('br'));	
+
 	// var slider1 = document.createElement( 'input' );
 	// slider1.id = 'sldr1';
 	// slider1.setAttribute('type', 'range');
@@ -160,7 +168,7 @@ var ControlPanel = function () {
 
 		button5: btnAction5,
 
-		// button6: btnAction6,
+		button6: btnAction6,
 
 		checkbox1: cb1,
 
