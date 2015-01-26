@@ -6,6 +6,8 @@ function VoxelGrid(dim, obj) {
 		return new VoxelGrid();
 	}	
 
+	this._name = obj.name;
+
 	obj.geometry.computeBoundingBox();
 	this._vmin = obj.geometry.boundingBox.min.clone().applyMatrix4(obj.matrixWorld);
 	this._vmax = obj.geometry.boundingBox.max.clone().applyMatrix4(obj.matrixWorld);
@@ -55,6 +57,8 @@ VoxelGrid.prototype.exportMarkedVoxels = function() {
 	var voxelGroup;
 	var x0 = 0, y0 = 0, z0 = 0;
 
+	timeStamp();
+
 	for(var idx=0; idx < this._markedVoxels.length; idx++) {
 		var geometry = new THREE.CubeGeometry(this._unitSize, this._unitSize, this._unitSize);
 		// var material = new THREE.MeshBasicMaterial( {color: 0xf0ff0f} );
@@ -83,6 +87,6 @@ VoxelGrid.prototype.exportMarkedVoxels = function() {
 		}
 	}
 
-	console.log("effective voxels: " + this._markedVoxels.length);
+	log(this._name + ": " + this._markedVoxels.length + " voxels, computed in " + timeStamp() + " msec");
 	return voxelGroup;
 }

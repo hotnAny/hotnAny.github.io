@@ -13,20 +13,22 @@ var ring = 'things/ring.stl';
 var ringStand = 'things/ring-stand.stl';
 var lucy = 'things/lucy.js';
 
-function loadStl (objName, isStatic) {
-  return stlLoader.load(objName, function (geometry) {
+function loadStl (objPath, objName, isStatic) {
+  return stlLoader.load(objPath, function (geometry) {
 
     // geometry.dynamic = true;
     var material = new THREE.MeshPhongMaterial( { color: colorNormal} );  
     var object = new THREE.Mesh(geometry, material); 
+    object.name = objName;
 
     /* manually positioning the objects */
     objects.push(object);
     scene.add(object);
     // scenePhysics.add(object);
 
-    log("#" + objects.length + ": " + objName + " loaded");
+    log("object #" + objects.length + " " + objName + " loaded");
     log(geometry.vertices.length + " vertices, " + geometry.faces.length + " faces");
+    console.log(object);
 
     object.geometry.computeBoundingBox();
     var bbox = object.geometry.boundingBox;
@@ -85,8 +87,8 @@ if(D_MOUSE) {
     // createBoxelizedSphere(7, 18);
     // createBoxelizedSphere(10, 36);
 
-    loadStl(ringStand, false);
-    loadStl(dodecahedron, true);
+    loadStl(ringStand, "ring", false);
+    loadStl(dodecahedron, "dodecahedron", true);
     // console.log(scene);
   }
   
