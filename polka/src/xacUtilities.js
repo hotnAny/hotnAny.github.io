@@ -83,6 +83,10 @@ function togglePhysics() {
 
 	if(usingPhysics) {
 		scene.simulate();
+		log("using physics ...")
+
+		prevPos = undefined;
+		cntStableFrames = -NUMFRAMESFORSTABILITY;
 	} 
 }
 
@@ -93,4 +97,41 @@ function surfaceSubdivision() {
 		subDivide(selected[i], controlPanel.slider1.value / 100.0);
 		console.log(controlPanel.slider1.value / 100.0);
 	}
+}
+
+function contains(array, elm) {
+
+	if(array instanceof Array) {
+		for(var i=0; i < array.length; i++) {
+			if(array[i] === elm) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+function calCtrMass(obj) {
+	var ctrMass = new THREE.Vector3(0, 0, 0);
+	var numVertices = obj.geometry.vertices.length;
+	for(var i=0; i<numVertices; i++) {
+		ctrMass.add(obj.geometry.vertices[i].clone().applyMatrix4(obj.matrixWorld));
+	}
+
+	ctrMass.divideScalar(numVertices);
+	return ctrMass;
+}
+
+function triangleArea(va, vb, vc) {
+	var ab = vb.clone().sub(va);
+	var ac = vc.clone().sub(va);
+
+	var x1 = ab.x, x2 = ab.y, x3 = ab.z,
+		y1 = ac.x, y2 = ac.y, y3 = ac.z;
+
+	return 0.5 * Math.sqrt(
+			Math.pow((x2*y3 - x3*y2), 2) +
+			Math.pow((x3*y1 - x1*y3), 2) +
+			Math.pow((x1*y2 - x2*y1), 2)
+		);
 }

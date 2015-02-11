@@ -41,8 +41,10 @@ function findMutuallyBounded() {
 
 	refreshDebugView();
 	checkInitialization();
-	findMutuallyBoundedBetweenObjects3D(objDynamic, objStatic, mutuallyBounded);
+	var numMutuallyBounded = findMutuallyBoundedBetweenObjects3D(objDynamic, objStatic, mutuallyBounded);
 	updateDebugView();
+
+	return numMutuallyBounded;
 }
 
 /* 

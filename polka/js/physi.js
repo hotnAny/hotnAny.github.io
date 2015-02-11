@@ -824,6 +824,7 @@ window.Physijs = (function() {
 	};
 
 	Physijs.Scene.prototype.add = function( object ) {
+
 		THREE.Mesh.prototype.add.call( this, object );
 
 		if ( object._physijs ) {
@@ -963,6 +964,7 @@ window.Physijs = (function() {
 		_is_simulating = true;
 
 		for ( object_id in this._objects ) {
+
 			if(updatesBuffered[object_id] instanceof Array && updatesBuffered[object_id].length > 0) {
 				update = updatesBuffered[object_id][0];
 				updatesBuffered[object_id].splice(0, 1);
@@ -983,6 +985,7 @@ window.Physijs = (function() {
 		var object_id;
 
 		for ( object_id in this._objects ) {
+
 			var obj = this._objects[object_id];
 
 			if(updatesBuffered[object_id] == undefined) {
@@ -1036,6 +1039,8 @@ window.Physijs = (function() {
 			linearVelocity: new THREE.Vector3,
 			angularVelocity: new THREE.Vector3
 		};
+
+		// this._staticObjs = new Array();
 	};
 	Physijs.Mesh.prototype = new THREE.Mesh;
 	Physijs.Mesh.prototype.constructor = Physijs.Mesh;

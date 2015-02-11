@@ -18,6 +18,8 @@ var ball;
 var objDynamic = null;
 var objStatic = null;
 var objects = new Array();
+var voxelGrids = new Array();
+var ctrsMass = new Array();
 
 // projections of objStatic
 var projStatic = new Array();
@@ -39,7 +41,7 @@ document.body.appendChild( renderer.domElement );
 /* using physijs now */
 var scene = new Physijs.Scene({ fixedTimeStep: 1 / 120 });
 
-var camera = new THREE.PerspectiveCamera( 30, window.innerWidth/window.innerHeight, 1, 10000 );
+var camera = new THREE.PerspectiveCamera( 45, window.innerWidth/window.innerHeight, 1, 10000 );
 camera.position.set(-0, 150, 180);
 
 var controls = new THREE.TrackballControls( camera ); // for mouse control

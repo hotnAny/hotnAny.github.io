@@ -322,3 +322,151 @@ function loadJSON(objName, isStatic) {
 //    }
 
 //    addAPhyCube();
+
+
+// VoxelGrid.prototype.fillVoxels = function() {
+//  for(var i=0; i<this._dim.x; i++) {
+//    for(var j=0; j<this._dim.y; j++) {
+//      for(var k=0; k<this._dim.z; k++) {
+//        var idx = i * (this._dim.y * this._dim.z) + j * this._dim.z + k;
+
+//        if(this._markedGrid[idx] == 1) continue;
+        
+//        /* test x axis */
+//        var ii;
+//        for(ii = i; ii < this._dim.x && this._markedGrid[ii * (this._dim.y * this._dim.z) + j * this._dim.z + k] == 0; ii++);
+//        if(ii >= this._dim.x) continue;
+
+//        for(ii = i; ii >= 0 && this._markedGrid[ii * (this._dim.y * this._dim.z) + j * this._dim.z + k] == 0; ii--);
+//        if(ii < 0) continue;
+
+//        /* test y axis */
+//        var jj;
+//        for(jj = j; jj < this._dim.y && this._markedGrid[i * (this._dim.y * this._dim.z) + jj * this._dim.z + k] == 0; jj++);
+//        if(jj >= this._dim.y) continue;
+
+//        for(jj = j; jj >= 0 && this._markedGrid[i * (this._dim.y * this._dim.z) + jj * this._dim.z + k] == 0; jj--);
+//        if(jj < 0) continue;
+
+//        /* test z axis */
+//        var kk;
+//        for(kk = k; kk < this._dim.z && this._markedGrid[i * (this._dim.y * this._dim.z) + j * this._dim.z + kk] == 0; kk++);
+//        if(kk >= this._dim.z) continue;
+
+//        for(kk = k; kk >= 0 && this._markedGrid[i * (this._dim.y * this._dim.z) + j * this._dim.z + kk] == 0; kk--);
+//        if(kk < 0) continue;
+
+
+//        this._markedGrid[idx] = 1;
+//      }
+//    }
+//  }
+// }
+
+
+/* 
+    grid based approach 
+  */
+  // var cnt = 0;
+  // for(var i=0; i<this._dim.x; i++) {
+  //  for(var j=0; j<this._dim.y; j++) {
+  //    for(var k=0; k<this._dim.z; k++) {
+  //      var idx = i * (this._dim.y * this._dim.z) + j * this._dim.z + k;
+        
+  //      if(this._markedGrid[idx] == 1) {
+  //        var geometry = new THREE.CubeGeometry(this._unitSize, this._unitSize, this._unitSize);
+  //        var material = new THREE.MeshBasicMaterial( {color: (isStatic ? 0xf00f0f : 0x0ff0f0), transparent: true, opacity: 0.25} );
+  //        var voxel = isStatic ? new Physijs.BoxMesh(geometry, material, 0) : new Physijs.BoxMesh(geometry, material);
+
+  //        var xmin = this._vmin.x + i * this._unitSize;
+  //        var ymin = this._vmin.y + j * this._unitSize;
+  //        var zmin = this._vmin.z + k * this._unitSize;
+
+  //        voxel.position.set(xmin + this._unitSize / 2 - x0, ymin + this._unitSize / 2 - y0, zmin + this._unitSize / 2 - z0);
+
+  //        if(cnt == 0) {
+  //          x0 = voxel.position.x;
+  //          y0 = voxel.position.y;
+  //          z0 = voxel.position.z;
+  //          this._voxelGroup = voxel;
+  //        } else {
+  //          this._voxelGroup.add(voxel);
+  //        }
+
+  //        cnt++;
+  //      }
+  //    }
+  //  }
+  // }
+
+  // log(this._name + ": " + cnt + " voxels, computed in " + timeStamp() + " msec");
+
+  // VoxelGrid.prototype.peelVoxels = function() {
+  
+//  /* find max # of neighbours */
+
+//  // while (true) {
+//    var maxNbrCnt = 0;
+//    var minNbrCnt = 27;
+//    var nbrCntGrid = [];
+//    for(var i=0; i<this._dim.x; i++) {
+//      for(var j=0; j<this._dim.y; j++) {
+//        for(var k=0; k<this._dim.z; k++) {
+//          var idx = i * (this._dim.y * this._dim.z) + j * this._dim.z + k;
+//          nbrCntGrid.push(0);
+
+//          if(this._markedGrid[idx] == 0) {
+//            continue;
+//          }
+
+//          /* counting neighbors */
+//          var nbrCnt = 0;
+//          for(var ii=i-1; ii<=i+1; ii+=1) {
+//            for(var jj=j-1; jj<=j+1; jj+=1) {
+//              for(var kk=k-1; kk<=k+1; kk+=1) {
+                
+//                /* boundary test */
+//                if( ii<0 || ii>=this._dim.x ||
+//                  jj<0 || jj>=this._dim.y ||
+//                  kk<0 || kk>=this._dim.z) {
+//                  continue;
+//                }
+
+//                /* finding neighbors */
+//                var idxNbr = ii * (this._dim.y * this._dim.z) + jj * this._dim.z + kk;
+
+//                if(idxNbr != idx && this._markedGrid[idxNbr] == 1) {
+//                  nbrCnt++;
+//                }
+//              }
+//            }
+//          } /* end of counting neighbors */
+
+//          nbrCntGrid[idx] = nbrCnt;
+//          maxNbrCnt = Math.max(maxNbrCnt, nbrCnt);
+//          minNbrCnt = Math.min(nbrCnt, minNbrCnt);
+//        }
+//      }
+//    }
+
+//    // if(minNbrCnt <= 2) {
+//    //  break;
+//    // }
+
+//    console.log("max # of neighbours: " + maxNbrCnt + "; min: " + minNbrCnt);
+
+//    /* he who has less neighbours than max shall be peeled */
+//    for(var i=0; i<this._dim.x; i++) {
+//      for(var j=0; j<this._dim.y; j++) {
+//        for(var k=0; k<this._dim.z; k++) {
+//          var idx = i * (this._dim.y * this._dim.z) + j * this._dim.z + k;
+
+//          if(nbrCntGrid[idx] > 2) {
+//            this._markedGrid[idx] = 0;
+//          }
+//        }
+//      }
+//    }
+//  // }
+
+// }

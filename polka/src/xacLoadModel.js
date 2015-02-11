@@ -6,12 +6,33 @@ var tree = 'things/xmas-tree-v1.stl';
 var chess = 'things/classic_bishop.stl';
 var bunny = 'things/bunny.stl';
 var dragon = 'things/dragon.stl';
-var dodecahedron = 'things/dodecahedron.stl';
-var key = 'things/key.stl';
+
+var key = 'things/keyxac.stl';
+var key2 = 'things/key2.stl';
+var key3 = 'things/key3.stl';
+var key4 = 'things/key4.stl';
 
 var ring = 'things/ring.stl';
+var ring3 = 'things/ring2.stl';
+
+/* key chain */
 var ringStand = 'things/ring-stand.stl';
+var dodecahedron = 'things/dodecahedron.stl';
+
+/* random */
 var lucy = 'things/lucy.js';
+var baymax = 'things/baymax.stl';
+
+/* making bracelets */
+var diamond = 'things/diamond2.stl';
+var cross = 'things/cross.stl';
+
+var mug = 'things/mug.stl';
+
+var bracelet = 'things/bracelet.stl';
+var heart = 'things/heart.stl';
+
+var scissors = 'things/scissors.stl';
 
 function loadStl (objPath, objName, isStatic) {
   return stlLoader.load(objPath, function (geometry) {
@@ -24,7 +45,6 @@ function loadStl (objPath, objName, isStatic) {
     /* manually positioning the objects */
     objects.push(object);
     scene.add(object);
-    // scenePhysics.add(object);
 
     log("object #" + objects.length + " " + objName + " loaded");
     log(geometry.vertices.length + " vertices, " + geometry.faces.length + " faces");
@@ -32,8 +52,9 @@ function loadStl (objPath, objName, isStatic) {
 
     object.geometry.computeBoundingBox();
     var bbox = object.geometry.boundingBox;
-    object.position.set(20 * Math.random(), (bbox.max.y - bbox.min.y)/2, 20 * Math.random()); 
+    object.position.set(20 * Math.random(), (bbox.max.y - bbox.min.y), 20 * Math.random()); 
     // if(!isStatic)
+    object.isStatic = isStatic;
 
     if(isStatic) {
       // object.position.set(0, 0, 0); 
@@ -60,8 +81,12 @@ function loadStl (objPath, objName, isStatic) {
       }
       // if(!D_OVERLAP) hideProjections();
     } else {
-      // object.rotation.y = -Math.PI/2 * Math.random();
+      object.rotation.x = -Math.PI/2;
     }
+
+    // ctrsMass.push(calCtrMass(object));
+    // object.rotation.z = -Math.PI/2;
+    // object.ctrMass = calCtrMass(object);
 
   });
 }
@@ -79,16 +104,38 @@ if(D_MOUSE) {
   // addABox(-1, 1, 1, -1, 1, -1, true);
 
   if(D_PHYSICS) {
-    // addAPhyCube();
-    // addAPhyCube();
+    addAPhyCube();
+    addAPhyCube();
 
   }
   else {
+    // console.log(triangleArea(new THREE.Vector3(0, 0, 0), new THREE.Vector3(10, 0, 0), new THREE.Vector3(0, 10, 0)));
     // createBoxelizedSphere(7, 18);
     // createBoxelizedSphere(10, 36);
 
-    loadStl(ringStand, "ring", false);
-    loadStl(dodecahedron, "dodecahedron", true);
+    // loadStl(ringStand, "ring", false);
+    // loadStl(mug, "mug", true);
+
+    /*
+      example #1 key + ring
+    */
+    loadStl(ring3, "ring", false);
+    loadStl(key, "key", true);    
+
+    // loadStl(ringStand, "ring", false);
+    // loadStl(dodecahedron, "dodecahedron2", true);
+
+    // addTheBall();
+
+    /* 
+      exampe #2 heart+bracelet
+    */
+    // loadStl(heart, "heart", false);
+    // loadStl(bracelet, "bracelet", true);
+    
+
+    // loadStl(scissors, "scissors", false);
+
     // console.log(scene);
   }
   
@@ -117,7 +164,7 @@ function addAPhyCube() {
 }
 
 function addTheBall() {
-  var geometry = new THREE.SphereGeometry( 2, 20, 20 );
+  var geometry = new THREE.SphereGeometry( 5, 20, 20 );
   var material = new THREE.MeshBasicMaterial( { color: 0xf0ff00 } );
   ball = new THREE.Mesh( geometry, material );
   
@@ -138,6 +185,8 @@ function addABox(l, r, t, b, f, b, addToObjects) {
   } else {
     boxes.add(box);
   }
+
+  return box;
 }
 
 function addATriangle(v1, v2, v3, clr) {

@@ -46,34 +46,6 @@ var ControlPanel = function () {
 
 	container.appendChild(document.createElement('br'));
 
-	var cb3 = document.createElement( 'input' );
-	cb3.id = 'cb3';
-	cb3.setAttribute('type', 'checkbox');
-	cb3.style.cssText = cssCb;
-	container.appendChild( cb3 );
-	var lb3 = document.createElement( 'label' );
-	lb3.innerHTML = 'Apply physics';
-	lb3.style.cssText = cssCb;
-	container.appendChild( lb3 );
-
-	container.appendChild(document.createElement('br'));
-
-	// button to build octree
-	var btnAction1 = document.createElement( 'button' );
-	btnAction1.id = 'action1';
-	btnAction1.style.cssText = cssBtn;
-	btnAction1.innerHTML = 'Build Octree';
-	// container.appendChild( btnAction1 );
-	// container.appendChild(document.createElement('br'));
-
-	// button to find mutually bounded
-	var btnAction4 = document.createElement( 'button' );
-	btnAction4.id = 'action4';
-	btnAction4.style.cssText = cssBtn;
-	btnAction4.innerHTML = 'Mutually Bounded';
-	// container.appendChild( btnAction4 );
-	// container.appendChild(document.createElement('br'));
-
 	// button to detect intersection
 	var btnAction2 = document.createElement( 'button' );
 	btnAction2.id = 'action2';
@@ -106,6 +78,50 @@ var ControlPanel = function () {
 	container.appendChild( btnAction6 );
 
 	container.appendChild(document.createElement('br'));	
+
+	var cb3 = document.createElement( 'input' );
+	cb3.id = 'cb3';
+	cb3.setAttribute('type', 'checkbox');
+	cb3.style.cssText = cssCb;
+	container.appendChild( cb3 );
+	var lb3 = document.createElement( 'label' );
+	lb3.innerHTML = 'Apply physics';
+	lb3.style.cssText = cssCb;
+	container.appendChild( lb3 );
+
+	container.appendChild(document.createElement('br'));
+
+	var btnAction1 = document.createElement( 'button' );
+	btnAction1.id = 'action1';
+	btnAction1.style.cssText = cssBtn;
+	btnAction1.innerHTML = 'Slice';
+	container.appendChild( btnAction1 );
+
+	container.appendChild(document.createElement('br'));
+
+	var btnAction8 = document.createElement( 'button' );
+	btnAction8.id = 'action8';
+	btnAction8.style.cssText = cssBtn;
+	btnAction8.innerHTML = 'Change gravity';
+	container.appendChild( btnAction8 );
+
+	container.appendChild(document.createElement('br'));
+
+	// button to find mutually bounded
+	var btnAction4 = document.createElement( 'button' );
+	btnAction4.id = 'action4';
+	btnAction4.style.cssText = cssBtn;
+	btnAction4.innerHTML = 'Get pause point';
+	container.appendChild( btnAction4 );
+	container.appendChild(document.createElement('br'));
+
+	// var btnAction7 = document.createElement( 'button' );
+	// btnAction7.id = 'action7';
+	// btnAction7.style.cssText = cssBtn;
+	// btnAction7.innerHTML = 'Peel voxels';
+	// container.appendChild( btnAction7 );
+
+	// container.appendChild(document.createElement('br'));
 
 	// var slider1 = document.createElement( 'input' );
 	// slider1.id = 'sldr1';
@@ -141,7 +157,7 @@ var ControlPanel = function () {
 	// output area
 	var outputArea = document.createElement( 'div' );
 	outputArea.id = 'outputArea';
-	outputArea.style.cssText = 'position:fixed;height:100%;left:3px;right:3px;top:120px;bottom:3px;overflow-x:hidden;overflow-y:scroll;';
+	outputArea.style.cssText = 'position:fixed;height:100%;left:3px;right:3px;top:200;bottom:3px;overflow-x:hidden;overflow-y:scroll;';
 	container.appendChild( outputArea );
 
 	var outputText = document.createElement( 'textarea' );
@@ -169,6 +185,10 @@ var ControlPanel = function () {
 		button5: btnAction5,
 
 		button6: btnAction6,
+
+		// button7: btnAction7,
+
+		button8: btnAction8,
 
 		checkbox1: cb1,
 

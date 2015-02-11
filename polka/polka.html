@@ -60,12 +60,15 @@
 				control buttons 
 			*/
 			// controlPanel.button1.onclick = function(){detectIntersection};
-			controlPanel.button1.onclick = buildOctree;
+			
 			controlPanel.button2.onclick = detectIntersection;
-			controlPanel.button4.onclick = findMutuallyBounded;
 			controlPanel.button3.onclick = detectOverlap;
 			controlPanel.button5.onclick = detectInterlock;
 			controlPanel.button6.onclick = voxelize;
+			controlPanel.button1.onclick = slice;
+			controlPanel.button8.onclick = changeGravity;
+			controlPanel.button4.onclick = computeLayerToPause;
+			// controlPanel.button7.onclick = peelObjVoxels;
 
 			controlPanel.checkbox1.onchange = toggleDebugMode;
 			controlPanel.checkbox2.onchange = toggleOctreeVisibility;
@@ -78,7 +81,7 @@
 			Physijs.scripts.ammo = 'ammo.js';
 
 			// if(D_PHYSICS) {
-			scene.setGravity(new THREE.Vector3( 0, -30, 0 ));
+			scene.setGravity(new THREE.Vector3(0, gravityDir * GRAVITYSCALE, 0));
 			scene.addEventListener(
 				'update',
 				function() {
@@ -108,7 +111,13 @@
 			  
 				for(var i=0; i<objects.length; i++) {
 					objects[i].geometry.__dirtyVertices = true;
+					// if(objects[i].ctrMass != undefined) {
+					// 	console.log(objects[i].ctrMass);
+					// 	// objects[i].ctrMass.applyMatrix4(objects[i].matrixWorld))
+					// }
 				}
+
+				updatePositions();
 
 				renderer.render(scene, camera);
 

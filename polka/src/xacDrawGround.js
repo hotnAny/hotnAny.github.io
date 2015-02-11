@@ -13,6 +13,7 @@ var ground = new Physijs.BoxMesh(
       0 // mass
     );
 ground.receiveShadow = true;
-ground.position.y -= 0.5;
+ground.position.y -= 0.5
+;
 
 scene.add(ground);

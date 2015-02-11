@@ -1,3 +1,0 @@
-GOLLUM_USER=gollum
-GOLLUM_BASE=/home/gollum/wiki
-GOLLUM_OPTS="--config /home/gollum/config.rb"
