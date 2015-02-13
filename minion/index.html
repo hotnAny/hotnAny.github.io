@@ -1,0 +1,65 @@
+<html>
+	<head>
+		<title>Minion Generator</title>
+	</head>
+	<body onload="loadMinion()">
+		<!-- <button onclick="loadMinion()"> Load </button> -->
+		<div oncontextmenu="return false;" id="viewer"></div>
+		<div id="parametersdiv"></div>
+		<div id="statusdiv"></div>
+		<div id="errordiv"></div>
+
+		<script src="csg.js"></script>
+		<script src="lightgl.js"></script>
+		<script src="openscad.js"></script>
+		<script src="openjscad.js"></script>
+		<script src="openscad-openjscad-translator.js"></script>
+		<script src="underscore.js"></script>
+		<script src="jquery/jquery-1.9.1.js"></script>
+		<script src="jquery/jquery-ui.js"></script>
+		<script src="jquery/jquery.hammer.js"></script>
+		<script>
+			var gProcessor;
+			var minionSrc = ":)";
+			var gMemFs = [];
+			var me = document.location.toString().match(/^file:/)?'web-offline':'web-online';
+			var _includePath = './';
+
+			function readTextFile(filePath)
+			{
+			    var rawFile = new XMLHttpRequest();
+			    rawFile.open("GET", filePath, false);
+			    rawFile.onreadystatechange = function ()
+			    {
+			        if(rawFile.readyState === 4)
+			        {
+			            if(rawFile.status === 200 || rawFile.status == 0)
+			            {
+			                minionSrc = rawFile.responseText;
+			                // alert(allText);
+			            }
+			        }
+			    }
+			    // return undefined;
+			    return rawFile.send(null);
+			}
+
+			function loadMinion() {
+				// console.log(document.getElementById("viewer"));
+				gProcessor = new OpenJsCad.Processor(document.getElementById("viewer"));
+				var minionSrcPath = "minion.jscad";
+				console.log(minionSrcPath);
+				readTextFile(minionSrcPath);
+				// if(!minionSrc.match(/^\/\/!OpenSCAD/i)) {
+	   //             minionSrc = "//!OpenSCAD\n"+minionSrc;
+	   //             console.log(minionSrc);
+	   //          }
+				// var src = openscadOpenJscadParser.parse(minionSrc);
+				console.log(minionSrc);
+				gProcessor.setJsCad(minionSrc);
+			}
+
+		</script>
+
+		
+</body>
