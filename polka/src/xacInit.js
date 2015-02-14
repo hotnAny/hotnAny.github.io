@@ -5,7 +5,7 @@ var D_MOUSE = false;
 var D_COLLISION = false;
 var D_INTERSECTION = false;
 var D_OVERLAP = false;
-var D_INTERLOCK = true;
+var D_INTERLOCK = false;
 var D_PHYSICS = false;
 
 var helpers = new Array();
@@ -74,3 +74,48 @@ var octree = new THREE.Octree({
 var octreesProj = new Array();
 
 var usingPhysics = false;
+
+/*
+     models
+*/
+
+var stlLoader = new THREE.STLLoader();
+var objLoader = new THREE.OBJLoader();
+var jsonLoader = new THREE.JSONLoader();
+
+var tree = 'things/xmas-tree-v1.stl';
+var chess = 'things/classic_bishop.stl';
+var bunny = 'things/bunny.stl';
+var dragon = 'things/dragon.stl';
+
+var key = 'things/keyxac.stl';
+var key2 = 'things/key2.stl';
+var key3 = 'things/key3.stl';
+var key4 = 'things/key4.stl';
+
+var ring = 'things/ring.stl';
+var ring3 = 'things/ring2.stl';
+
+/* key chain */
+var ringStand = 'things/ring-stand.stl';
+var dodecahedron = 'things/dodecahedron.stl';
+
+/* random */
+var lucy = 'things/lucy.js';
+var baymax = 'things/baymax.stl';
+
+/* making bracelets */
+var diamond = 'things/diamond2.stl';
+var cross = 'things/cross.stl';
+
+var mug = 'things/mug.stl';
+
+var bracelet = 'things/bracelet.stl';
+var heart = 'things/heart.stl';
+
+var scissors = 'things/scissors.stl';
+
+var meshBall = 'things/shell-gD.stl';
+
+var tetra = 'things/tetra.stl';
+var ringSmall = 'things/ring-small.stl';

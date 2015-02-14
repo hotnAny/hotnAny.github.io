@@ -89,6 +89,8 @@ VoxelGrid.prototype.exportMarkedVoxels = function(isStatic) {
 
 		var voxel = isStatic ? new Physijs.BoxMesh(geometry, material, 0) : new Physijs.BoxMesh(geometry, material, 10);
 
+		voxel.setDamping(100, 100);
+
 		var i = this._markedVoxels[idx].x;
 		var j = this._markedVoxels[idx].y;
 		var k = this._markedVoxels[idx].z;
@@ -112,8 +114,8 @@ VoxelGrid.prototype.exportMarkedVoxels = function(isStatic) {
 
 	log(this._name + ": " + this._markedVoxels.length + " voxels, computed in " + timeStamp() + " msec");
 
-	console.log(this._voxelGroup);
-	console.log(this._voxelGroup.children[0]);
+	// console.log(this._voxelGroup);
+	// console.log(this._voxelGroup.children[0]);
 
 	return this._voxelGroup;
 }
@@ -130,7 +132,7 @@ VoxelGrid.prototype.sliceToHeight = function(height) {
 	// var voxelGroupNew;// = this._voxelGroup.clone();
 	// voxelGroupNew.children.splice[0, voxelGroupNew.children.length];
 	
-	var childrenTooHigh = new Array();
+	var childrenBelow = new Array();
 	for(var j=0; j<this._voxelGroup.children.length; j++) {
 		
 		var pos = new THREE.Vector3().getPositionFromMatrix(this._voxelGroup.children[j].matrixWorld);//.add(this._voxelGroup.position);
@@ -138,7 +140,7 @@ VoxelGrid.prototype.sliceToHeight = function(height) {
 		// console.log(pos);
 		if(pos.y + this._unitSize / 2 <= height ) {
 
-			childrenTooHigh.push(this._voxelGroup.children[j]);
+			childrenBelow.push(this._voxelGroup.children[j]);
 			this._voxelGroup.children[j].material = new THREE.MeshBasicMaterial( {color: 0xf0ff0f, transparent: true, opacity: 0.50} );
 
 			// this._voxelGroup.children[j].position.y += 10;
@@ -158,12 +160,12 @@ VoxelGrid.prototype.sliceToHeight = function(height) {
 	// this._voxelGroup.children.splice(0, this._voxelGroup.children.length);
 	// console.log(this._voxelGroup.children.length);
 
-	for(var i=0; i<childrenTooHigh.length; i++) {
-		// var idx = childrenTooHigh[i];
+	for(var i=0; i<childrenBelow.length; i++) {
+		// var idx = childrenBelow[i];
 		// this._voxelGroup.children[idx].material = new THREE.MeshBasicMaterial( {color: 0x00ff00, transparent: true, opacity: 0.25} );
-		// this._voxelGroup.remove(childrenTooHigh[i]);
-		// scene.remove(childrenTooHigh[i]);
-		voxelGroupNew.add(childrenTooHigh[i]);
+		// this._voxelGroup.remove(childrenBelow[i]);
+		// scene.remove(childrenBelow[i]);
+		voxelGroupNew.add(childrenBelow[i]);
 	}
 
 	scene.remove(this._voxelGroup);

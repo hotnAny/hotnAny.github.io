@@ -5,6 +5,13 @@
 var stuffingNewLines = '\n\n\n\n\n\n\n\n\n\n\n';
 var outputMsg = '';
 
+// function ddOption (txt, val) {
+// 	var opt = document.createElement('option');
+// 	opt.innerHTML = txt;
+// 	opt.value = val;
+// 	return opt;
+// }
+
 var ControlPanel = function () {
 
 	var container = document.createElement( 'div' );
@@ -20,14 +27,15 @@ var ControlPanel = function () {
 	container.appendChild( txtTitle );
 
 	var cssBtn = 'margin-left:3px;margin-top:5px;padding:1px 3px 1px 3px;font-family:Helvetica;border-radius:5px;font-size:10px;line-height:15px;text-align:left;background-color:#ffffff';
-	var cssCb = 'margin-left:3px;margin-top:5px;padding:3px 1px 3px 1px;font-family:Helvetica;font-size:10px;line-height:15px;text-align:left';
+	var cssCb = 'margin-left:3px;margin-top:5px;padding:3px 1px 3px 1px;font-family:Helvetica;font-size:10px;line-height:25px;text-align:left';
+	var cssLb = 'margin-left:3px;margin-top:5px;padding:5px 5px 5px 5px;font-family:Helvetica;font-size:10px;line-height:25px;text-align:left';
 
 	// check boxes
 	var cb1 = document.createElement( 'input' );
 	cb1.id = 'cb1';
 	cb1.setAttribute('type', 'checkbox');
 	cb1.style.cssText = cssCb;
-	cb1.checked = true;
+	cb1.checked = false;
 	container.appendChild( cb1 );
 	var lb1 = document.createElement( 'label' );
 	lb1.innerHTML = 'Debug mode &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
@@ -43,6 +51,26 @@ var ControlPanel = function () {
 	lb2.innerHTML = 'Show octree';
 	lb2.style.cssText = cssCb;
 	container.appendChild( lb2 );
+
+	container.appendChild(document.createElement('br'));
+
+	var lb5 = document.createElement( 'label' );
+	lb5.innerHTML = 'Object to print:  ';
+	lb5.style.cssText = cssLb;
+	container.appendChild( lb5 );
+
+	var dd1 = document.createElement( 'select' );
+	container.appendChild(dd1);
+
+	container.appendChild(document.createElement('br'));
+
+	var lb6 = document.createElement( 'label' );
+	lb6.innerHTML = 'Existing object: ';
+	lb6.style.cssText = cssLb;
+	container.appendChild( lb6 );
+
+	var dd2 = document.createElement( 'select' );
+	container.appendChild(dd2);
 
 	container.appendChild(document.createElement('br'));
 
@@ -71,13 +99,52 @@ var ControlPanel = function () {
 
 	container.appendChild(document.createElement('br'));
 
+	var slider1 = document.createElement( 'input' );
+	slider1.id = 'sldr1';
+	slider1.setAttribute('type', 'range');
+	slider1.style.cssText = cssCb;
+	slider1.min = '0';
+	slider1.max = '360';
+	slider1.value = '0';
+	slider1.step = '1';
+	// slider1.onchange = "updateSlider(this.value)";
+	container.appendChild( slider1 );
+
+	container.appendChild(document.createElement('br'));
+
+	var slider2 = document.createElement( 'input' );
+	slider2.id = 'sldr2';
+	slider2.setAttribute('type', 'range');
+	slider2.style.cssText = cssCb;
+	slider2.min = '0';
+	slider2.max = '360';
+	slider2.value = '0';
+	slider2.step = '1';
+	// slider2.onchange = "updateSlider(this.value)";
+	container.appendChild( slider2 );
+
+	container.appendChild(document.createElement('br'));
+
+	var slider3 = document.createElement( 'input' );
+	slider3.id = 'sldr3';
+	slider3.setAttribute('type', 'range');
+	slider3.style.cssText = cssCb;
+	slider3.min = '0';
+	slider3.max = '360';
+	slider3.value = '0';
+	slider3.step = '1';
+	// slider3.onchange = "updateSlider(this.value)";
+	container.appendChild( slider3 );
+
+	container.appendChild(document.createElement('br'));
+
 	var btnAction6 = document.createElement( 'button' );
 	btnAction6.id = 'action6';
 	btnAction6.style.cssText = cssBtn;
 	btnAction6.innerHTML = 'Voxelize';
 	container.appendChild( btnAction6 );
 
-	container.appendChild(document.createElement('br'));	
+	container.appendChild(document.createTextNode( '\u00A0\u00A0' ));
 
 	var cb3 = document.createElement( 'input' );
 	cb3.id = 'cb3';
@@ -97,7 +164,8 @@ var ControlPanel = function () {
 	btnAction1.innerHTML = 'Slice';
 	container.appendChild( btnAction1 );
 
-	container.appendChild(document.createElement('br'));
+	// container.appendChild(document.createElement('br'));
+	container.appendChild(document.createTextNode( '\u00A0\u00A0' ));
 
 	var btnAction8 = document.createElement( 'button' );
 	btnAction8.id = 'action8';
@@ -105,7 +173,8 @@ var ControlPanel = function () {
 	btnAction8.innerHTML = 'Change gravity';
 	container.appendChild( btnAction8 );
 
-	container.appendChild(document.createElement('br'));
+	// container.appendChild(document.createElement('br'));
+	container.appendChild(document.createTextNode( '\u00A0\u00A0' ));
 
 	// button to find mutually bounded
 	var btnAction4 = document.createElement( 'button' );
@@ -115,6 +184,7 @@ var ControlPanel = function () {
 	container.appendChild( btnAction4 );
 	container.appendChild(document.createElement('br'));
 
+
 	// var btnAction7 = document.createElement( 'button' );
 	// btnAction7.id = 'action7';
 	// btnAction7.style.cssText = cssBtn;
@@ -123,16 +193,7 @@ var ControlPanel = function () {
 
 	// container.appendChild(document.createElement('br'));
 
-	// var slider1 = document.createElement( 'input' );
-	// slider1.id = 'sldr1';
-	// slider1.setAttribute('type', 'range');
-	// slider1.style.cssText = cssCb;
-	// slider1.min = '0.1';
-	// slider1.max = '200';
-	// slider1.value = '100';
-	// slider1.step = '1';
-	// // slider1.onchange = "updateSlider(this.value)";
-	// container.appendChild( slider1 );
+	
 
 	// var lb4 = document.createElement( 'label' );
 	// lb4.innerHTML = slider1.value + "%";
@@ -157,7 +218,7 @@ var ControlPanel = function () {
 	// output area
 	var outputArea = document.createElement( 'div' );
 	outputArea.id = 'outputArea';
-	outputArea.style.cssText = 'position:fixed;height:100%;left:3px;right:3px;top:200;bottom:3px;overflow-x:hidden;overflow-y:scroll;';
+	outputArea.style.cssText = 'position:fixed;height:100%;left:3px;right:3px;top:280;bottom:3px;overflow-x:hidden;overflow-y:scroll;';
 	container.appendChild( outputArea );
 
 	var outputText = document.createElement( 'textarea' );
@@ -196,9 +257,17 @@ var ControlPanel = function () {
 
 		checkbox3: cb3,
 
-		// slider1: slider1,
+		slider1: slider1,
+
+		slider2: slider2,
+
+		slider3: slider3,
 
 		// label4: lb4,
+
+		dd1: dd1,
+
+		dd2: dd2,
 
 		log: function (msg) {
 			outputMsg += new Date().toLocaleTimeString() + ": " + msg + '\n';
@@ -207,10 +276,13 @@ var ControlPanel = function () {
 			// outputText.innerHTML += "&#13;";
 			outputArea.scrollTop = 1000000;
 			outputText.scrollTop = 1000000;
-		},
+		}, 
 
-		update: function () {
-
+		ddOption: function (txt, val) {
+			var opt = document.createElement('option');
+			opt.innerHTML = txt;
+			opt.value = val;
+			return opt;
 		}
 	}
 };

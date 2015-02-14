@@ -470,3 +470,12 @@ function loadJSON(objName, isStatic) {
 //  // }
 
 // }
+
+// if(i == 0 && j > 16) {
+              //  // addALine(ctr, pr, 0xffff00);
+              //  addATriangle(va, vb, vc, 0xffff00);
+              //  console.log(va);
+              //  console.log(vb);
+              //  console.log(vc);
+              //  console.log(" ========= "); 
+              // }

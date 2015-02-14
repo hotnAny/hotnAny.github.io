@@ -18,6 +18,15 @@ controls.dynamicDampingFactor = 0.3;
 
 var isMouseDown = false;
 
+var prevX;
+var prevY;
+var prevZ;
+
+var rateY = 0.5;
+var rateXZ = 0.9;
+
+var rateRot = 0.1;
+
 document.addEventListener( 'mousedown', onMouseDown, false );
 document.addEventListener( 'mousemove', onMouseMove, false );
 document.addEventListener( 'mouseup', onMouseUp, false );
@@ -63,7 +72,7 @@ function onMouseDown( event ) {
 		var obj = intersects[i].object;
 
 		var idx = selected.indexOf(obj);
-		if(idx < 0) {
+		if(idx < 0 && obj.isStatic != true) {
 			selected.push(obj);
 			obj.material.color.setHex(colorSelected);
 		}
@@ -97,15 +106,30 @@ function onMouseMove( event ) {
 					// obj.geometry.applyMatrix( new THREE.Matrix4().makeTranslation(tx, 0, tz ) );
 					// console.log(tx + ", " + tz);
 
-					obj.position.x = intersects[0].point.x;
-					obj.position.z = intersects[0].point.z;
+					rateXZ = Math.min(1.0, Math.max(Math.abs(obj.position.x - intersects[0].point.x), 
+						Math.abs(obj.position.z - intersects[0].point.z)) / 100);
+					obj.position.x = obj.position.x * rateXZ + intersects[0].point.x * (1 - rateXZ);
+					obj.position.z = obj.position.z * rateXZ + intersects[0].point.z * (1 - rateXZ);
 
 				} else if (event.button == 2){
-					obj.position.y = -intersects[0].point.z;
+					// obj.position.y = -intersects[0].point.z;
+					if(prevY != undefined) {
+						var deltaScreenY = event.clientY - prevY;
+						obj.position.y -= rateY * deltaScreenY;
+					}
+				} else if (event.button == 1) {
+					if(prevX != undefined && prevY != undefined) {
+						obj.rotation.x += (event.clientY - prevY) * rateRot;
+						obj.rotation.z += (event.clientX - prevX) * rateRot;
+					}
 				}
 			}
+
 		}
 	}
+
+	prevX = event.clientX;
+	prevY = event.clientY;
 	
 }
 

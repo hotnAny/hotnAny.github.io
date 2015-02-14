@@ -1,45 +1,12 @@
-var stlLoader = new THREE.STLLoader();
-var objLoader = new THREE.OBJLoader();
-var jsonLoader = new THREE.JSONLoader();
-
-var tree = 'things/xmas-tree-v1.stl';
-var chess = 'things/classic_bishop.stl';
-var bunny = 'things/bunny.stl';
-var dragon = 'things/dragon.stl';
-
-var key = 'things/keyxac.stl';
-var key2 = 'things/key2.stl';
-var key3 = 'things/key3.stl';
-var key4 = 'things/key4.stl';
-
-var ring = 'things/ring.stl';
-var ring3 = 'things/ring2.stl';
-
-/* key chain */
-var ringStand = 'things/ring-stand.stl';
-var dodecahedron = 'things/dodecahedron.stl';
-
-/* random */
-var lucy = 'things/lucy.js';
-var baymax = 'things/baymax.stl';
-
-/* making bracelets */
-var diamond = 'things/diamond2.stl';
-var cross = 'things/cross.stl';
-
-var mug = 'things/mug.stl';
-
-var bracelet = 'things/bracelet.stl';
-var heart = 'things/heart.stl';
-
-var scissors = 'things/scissors.stl';
-
 function loadStl (objPath, objName, isStatic) {
   return stlLoader.load(objPath, function (geometry) {
+
+    THREE.GeometryUtils.center(geometry);
 
     // geometry.dynamic = true;
     var material = new THREE.MeshPhongMaterial( { color: colorNormal} );  
     var object = new THREE.Mesh(geometry, material); 
+
     object.name = objName;
 
     /* manually positioning the objects */
@@ -48,12 +15,40 @@ function loadStl (objPath, objName, isStatic) {
 
     log("object #" + objects.length + " " + objName + " loaded");
     log(geometry.vertices.length + " vertices, " + geometry.faces.length + " faces");
-    console.log(object);
+    // console.log(object);
 
     object.geometry.computeBoundingBox();
     var bbox = object.geometry.boundingBox;
-    object.position.set(20 * Math.random(), (bbox.max.y - bbox.min.y), 20 * Math.random()); 
-    // if(!isStatic)
+    // console.log(bbox);
+    object.position.set(20 * Math.random(), (bbox.max.y - bbox.min.y) / 2, 20 * Math.random());
+
+    var maxDimExisting = 0;
+    maxDimExisting = Math.max(maxDimExisting, Math.abs(bbox.max.x - bbox.min.x));
+    maxDimExisting = Math.max(maxDimExisting, Math.abs(bbox.max.y - bbox.min.y));
+    maxDimExisting = Math.max(maxDimExisting, Math.abs(bbox.max.z - bbox.min.z));
+
+    object.maxDimExisting = maxDimExisting;
+
+    if(!isStatic) {
+      for(var i=0; i<objects.length; i++) {
+        if(objects[i].isStatic) {
+          objects[i].geometry.computeBoundingBox();
+          var bboxStatic = objects[i].geometry.boundingBox;
+
+          var dy = maxDimExisting + objects[i].maxDimExisting / 2 - objects[i].position.y;
+          objects[i].position.y += Math.max(dy, 0);
+
+          var cubeHeight = maxDimExisting;
+          var geometry = new THREE.CubeGeometry(5, cubeHeight, 5);
+          var material = new THREE.MeshBasicMaterial( { color: 0x22FF66 } );
+          var box = new Physijs.BoxMesh(geometry, material, 0);
+          // box.position.y -= (cubeHeight + objects[i].maxDimExisting) / 2
+          box.position.set(objects[i].position.x, cubeHeight/2, objects[i].position.z)
+          // objects[i].add(box);
+          scene.add(box);
+        }
+      }
+    }
     object.isStatic = isStatic;
 
     if(isStatic) {
@@ -81,17 +76,80 @@ function loadStl (objPath, objName, isStatic) {
       }
       // if(!D_OVERLAP) hideProjections();
     } else {
-      object.rotation.x = -Math.PI/2;
+      // object.rotation.x = -Math.PI/2;
     }
 
-    // ctrsMass.push(calCtrMass(object));
     // object.rotation.z = -Math.PI/2;
     // object.ctrMass = calCtrMass(object);
-
   });
 }
 
 /* loading the objects */
+function loadObjToPrint() {
+  // console.log(controlPanel.dd1.options[controlPanel.dd1.selectedIndex].value);
+  cleanObjects(true);
+
+  loadStl(controlPanel.dd1.options[controlPanel.dd1.selectedIndex].value, 
+    controlPanel.dd1.options[controlPanel.dd1.selectedIndex].text, true);
+}
+
+function loadExistingObj() {
+  var staticObjLoaded = false;
+
+  for(var i=0; i<objects.length; i++) {
+    if(objects[i].isStatic) {
+      staticObjLoaded = true;
+      break;
+    }
+  }
+
+  if(!staticObjLoaded) {
+    alert("Load an object to print first");
+    controlPanel.dd2.selectedIndex = 0;
+    return;
+  }
+
+  cleanObjects(false);
+
+  loadStl(controlPanel.dd2.options[controlPanel.dd2.selectedIndex].value,
+    controlPanel.dd2.options[controlPanel.dd2.selectedIndex].text, false);
+
+  // console.log(objects.length);
+
+  /* update the height of the object to print */
+  // var maxDimExisting = 0;
+  // for(var i=0; i<objects.length; i++) {
+  //   if(!objects[i].isStatic) {
+  //     objects[i].geometry.computeBoundingBox();
+  //     var bbox = objects[i].geometry.boundingBox;
+  //     console.log(bbox);
+  //     maxDimExisting = Math.max(maxDimExisting, Math.abs(bbox.max.x - bbox.min.x));
+  //     maxDimExisting = Math.max(maxDimExisting, Math.abs(bbox.max.y - bbox.min.y));
+  //     maxDimExisting = Math.max(maxDimExisting, Math.abs(bbox.max.z - bbox.min.z));
+  //   }
+  // }
+
+  
+
+}
+
+function cleanObjects(isStatic) {
+  var objsToRemove = new Array();
+  for(var i=0; i<objects.length; i++) {
+    if(objects[i].isStatic == isStatic) {
+      objsToRemove.push(i);
+      break;
+    }
+  }
+
+  for(var i=0; i<objsToRemove.length; i++) {
+    scene.remove(objects[objsToRemove[i]]);
+    objects.splice(objsToRemove[i], 1);
+  }
+}
+
+
+/* below is legacy code */
 if(D_MOUSE) {
   addTheBall();
 } else {
@@ -119,11 +177,13 @@ if(D_MOUSE) {
     /*
       example #1 key + ring
     */
-    loadStl(ring3, "ring", false);
-    loadStl(key, "key", true);    
+    // loadStl(ring3, "ring", false);
+    // loadStl(key, "key", true);
 
-    // loadStl(ringStand, "ring", false);
-    // loadStl(dodecahedron, "dodecahedron2", true);
+    // loadStl(ringStand, "ring", true);
+    // loadStl(dodecahedron, "dodecahedron1", false);
+    // loadStl(dodecahedron, "dodecahedron2", false);
+    // loadStl(meshBall, "meshBall", true);
 
     // addTheBall();
 
@@ -146,7 +206,6 @@ if(D_MOUSE) {
   // intersect_plane.rotation.x = Math.PI / -2;
   // scene.add( intersect_plane );
 }
-
 
 /*
   below are functions that render debugging objects

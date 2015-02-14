@@ -1,6 +1,6 @@
 
 function detectInterlock() {
-	var isInterlocking = false;
+	var isInterlocking = true;
 	var t0 = new Date().getTime();
 
 	/* obselete */
@@ -28,6 +28,8 @@ function detectInterlock() {
 		// 		isInterlocking = false;
 		// 	}
 		// }
+	} else {
+		isInterlocking = false;
 	}
 
 	log((isInterlocking ? "" : "not") + " interlocking. computed in " + timeElapsed(t0) + " msec");

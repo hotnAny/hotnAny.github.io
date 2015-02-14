@@ -2,11 +2,53 @@
 	<head>
 		<title>Minion Generator</title>
 	</head>
-	<body onload="loadMinion()">
+	<body onload="loadMinion()" style="position: relative; font-family: 'Arial', sans-serif; font-size: 12px">
+		<link href='http://fonts.googleapis.com/css?family=Cabin' rel='stylesheet' type='text/css'>
+
 		<!-- <button onclick="loadMinion()"> Load </button> -->
-		<div oncontextmenu="return false;" id="viewer"></div>
+		<div id="title" style="z-index: 1; position: absolute; left: 5px; top: 5px">
+			<b>Minion Generator</b> &nbsp; &nbsp; 
+			by &nbsp; <a href='http://xiangchen.me'>Xiang 'Anthony' Chen</a>
+		</div>
+
+		<div id="statusdiv" style="z-index: 1; position: absolute; left: 5px; top: 30px"></div>
+		<div id="control" style="z-index: 1; position: absolute; left: 5px; top: 60px">
+			<table style="font-family: 'Arial', sans-serif; font-size: 12px">
+				<tr>
+					<td># of eyes: </td>
+					<td><input id='sldrEyes' type='range' min='1' max='3' value='2' step='1' oninput='updateParams()'/></td>
+					<td><label id='lbEyes'></label></td>
+				</tr>	
+				<tr>
+					<td>Body height: </td>
+					<td><input id='sldrHeight' type='range' min='15' max='35' value='20' step='5' oninput='updateParams()'/></td>
+					<td><label id='lbHeight'></label></td>
+				</tr>
+				<tr>
+					<td>Body width: </td>
+					<td><input id='sldrWidth' type='range' min='15' max='40' value='25' step='5' oninput='updateParams()'/></td>
+					<td><label id='lbWidth'></label></td>
+				</tr>
+				<tr>
+					<td>Arm length: </td>
+					<td><input id='sldrArm' type='range' min='15' max='25' value='20' step='5' oninput='updateParams()'/></td>
+					<td><label id='lbArm'></label></td>
+				</tr>
+				<tr>
+					<td>Foot size: </td>
+					<td><input id='sldrLeg' type='range' min='5' max='10' value='5' step='1' oninput='updateParams()'/></td>
+					<td><label id='lbLeg'></label></td>
+				</tr>
+			</table>			
+			
+			<br>
+			<!-- <input id='sldrEyes' type='range' min='1' max='3' value='2' onchange='updateParams()'/> -->
+			<button id='btnUpdate' onclick='updateMinion()'>Update minion</button>
+		</div>
+
+		<div oncontextmenu="return false;" id="viewer" ></div>
 		<div id="parametersdiv"></div>
-		<div id="statusdiv"></div>
+		
 		<div id="errordiv"></div>
 
 		<script src="csg.js"></script>
@@ -19,6 +61,13 @@
 		<script src="jquery/jquery-ui.js"></script>
 		<script src="jquery/jquery.hammer.js"></script>
 		<script>
+
+			var numEyes;
+			var bodyHeight;
+			var bodyWidth;
+			var armLength;
+			var legLength;
+
 			var gProcessor;
 			var minionSrc = ":)";
 			var gMemFs = [];
@@ -45,18 +94,44 @@
 			}
 
 			function loadMinion() {
+				// console.log("started loading minion ...");
 				// console.log(document.getElementById("viewer"));
 				gProcessor = new OpenJsCad.Processor(document.getElementById("viewer"));
 				var minionSrcPath = "minion.jscad";
-				console.log(minionSrcPath);
+				// console.log(minionSrcPath);
 				readTextFile(minionSrcPath);
-				// if(!minionSrc.match(/^\/\/!OpenSCAD/i)) {
-	   //             minionSrc = "//!OpenSCAD\n"+minionSrc;
-	   //             console.log(minionSrc);
-	   //          }
-				// var src = openscadOpenJscadParser.parse(minionSrc);
-				console.log(minionSrc);
-				gProcessor.setJsCad(minionSrc);
+				
+				updateParams();
+				updateMinion();
+				status("Loading minion ...  <img id=busy src='imgs/busy.gif'>");
+				// console.log("loaded");
+			}
+
+			function updateParams() {
+				numEyes = document.getElementById('sldrEyes').value;
+				document.getElementById('lbEyes').innerHTML = numEyes;// + " eye" + (numEyes > 1 ? "s" : "");
+				
+				bodyHeight = document.getElementById('sldrHeight').value;
+				document.getElementById('lbHeight').innerHTML = bodyHeight;
+
+				bodyWidth = document.getElementById('sldrWidth').value;
+				document.getElementById('lbWidth').innerHTML = bodyWidth;
+				
+				armLength = document.getElementById('sldrArm').value;
+				document.getElementById('lbArm').innerHTML = armLength;
+
+				legLength = document.getElementById('sldrLeg').value;
+				document.getElementById('lbLeg').innerHTML = legLength;
+			}
+
+			function updateMinion() {
+				var paramText = "var NUMEYES = " + numEyes + "\n" + 
+								"var BODYHEIGHT = " + bodyHeight + "\n" +
+								"var BODYWIDTH = " + bodyWidth + "\n" + 
+								"var ARMLENGTH = " + armLength + "\n" +
+								"var LEGLENGTH = " + legLength + "\n";
+				// console.log(paramText);
+				gProcessor.setJsCad(paramText + minionSrc);
 			}
 
 		</script>

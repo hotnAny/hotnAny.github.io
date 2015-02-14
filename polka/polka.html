@@ -21,15 +21,9 @@
 		<script src="src/xacUtilities.js"></script>
 
 		<script src="src/xacInit.js"></script>
-		
 
-		<script src="src/xacAddLight.js"></script>
-		
-		<script src="src/xacDrawGrid.js"></script>
-		<script src="src/xacDrawGround.js"></script>
-
+		<!-- capability js -->
 		<script src="src/xacMouseControl.js"></script>
-
 		<script src="src/xacCollisionDetection.js"></script>
 		<script src="src/xacIntersectionDetection.js"></script>
 		<script src="src/xacOverlapDetection.js"></script>
@@ -37,9 +31,15 @@
 		<script src="src/xacBoundingObject.js"></script>
 		<script src="src/xacVoxelGrid.js"></script>
 		<script src="src/xacPhysics.js"></script>
-
 		<script src="src/xacControlPanel.js"></script>
+
+		<!-- action js -->
+		<script src="src/xacAddLight.js"></script>
+		<script src="src/xacDrawGrid.js"></script>
+		<script src="src/xacDrawGround.js"></script>
 		<script src="src/xacLoadModel.js"></script>
+		<script src="src/xacConfigUI.js"></script>
+		
 
 		<script>
 			/* 
@@ -50,31 +50,6 @@
 			stats.domElement.style.top = '0px';
 			stats.domElement.style.right = '0px';
 			document.body.appendChild( stats.domElement );
-
-			var controlPanel = new ControlPanel();
-			controlPanel.domElement.style.position = 'absolute';
-			controlPanel.domElement.style.top = '0px';
-			document.body.appendChild( controlPanel.domElement);
-
-			/* 
-				control buttons 
-			*/
-			// controlPanel.button1.onclick = function(){detectIntersection};
-			
-			controlPanel.button2.onclick = detectIntersection;
-			controlPanel.button3.onclick = detectOverlap;
-			controlPanel.button5.onclick = detectInterlock;
-			controlPanel.button6.onclick = voxelize;
-			controlPanel.button1.onclick = slice;
-			controlPanel.button8.onclick = changeGravity;
-			controlPanel.button4.onclick = computeLayerToPause;
-			// controlPanel.button7.onclick = peelObjVoxels;
-
-			controlPanel.checkbox1.onchange = toggleDebugMode;
-			controlPanel.checkbox2.onchange = toggleOctreeVisibility;
-			controlPanel.checkbox3.onchange = togglePhysics;
-
-			// controlPanel.slider1.onchange = surfaceSubdivision;
 
 			/* physics engine set up */
 			Physijs.scripts.worker = 'physijs_worker.js';
@@ -131,5 +106,7 @@
 
 			render();
 		</script>
+
+		
 	</body>
 </html>

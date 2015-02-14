@@ -105,14 +105,6 @@ function voxelizeObject(obj) {
 
 							voxelGrid.mark(i, j, k);
 
-							// if(i == 0 && j > 16) {
-							// 	// addALine(ctr, pr, 0xffff00);
-							// 	addATriangle(va, vb, vc, 0xffff00);
-							// 	console.log(va);
-							// 	console.log(vb);
-							// 	console.log(vc);
-							// 	console.log(" ========= ");	
-							// }
 							break;
 						}
 					}
@@ -125,6 +117,16 @@ function voxelizeObject(obj) {
 	// console.log(voxels.length);
 	scene.remove(obj);
 	voxelGrid.exportMarkedVoxels(obj.isStatic);
+	for(var i=0; i < obj.children.length; i++) {
+		// obj.children[i].position.sub(voxelGrid._voxelGroup.position);
+		// obj.children[i].position.x -= voxelGrid._voxelGroup.position.x;
+		// obj.children[i].position.z -= voxelGrid._voxelGroup.position.z;
+		// voxelGrid._voxelGroup.add(obj.children[i]);
+		// console.log("++++++");
+		//.position.sub());
+
+		scene.add(obj.children[i]);
+	}
 	scene.add(voxelGrid._voxelGroup);
 	// for(var idx=0; idx < voxels.length; idx++) {
 	// 	scene.add(voxels[idx]);
@@ -134,9 +136,29 @@ function voxelizeObject(obj) {
 }
 
 function slice() {
+	var boundedMaxHeight = -1000;
+
+	for(var i=0; i<objects.length; i++) {
+		if(!objects[i].isStatic) {
+			objects[i].updateMatrixWorld();
+			for(var j=0; j<mutuallyBounded.length; j++) {
+				var f = objects[i].geometry.faces[mutuallyBounded[j]];
+				var va = objects[i].geometry.vertices[f.a].clone().applyMatrix4(objects[i].matrixWorld);
+				var vb = objects[i].geometry.vertices[f.b].clone().applyMatrix4(objects[i].matrixWorld);
+				var vc = objects[i].geometry.vertices[f.c].clone().applyMatrix4(objects[i].matrixWorld);
+
+				boundedMaxHeight = Math.max(boundedMaxHeight, va.y);
+
+				// addATriangle(va, vb, vc, 0xffff00);
+
+				// console.log(f);
+			}
+		}
+	}
+	
 	for(var i=0; i<voxelGrids.length; i++) {
 		if(voxelGrids[i]._isStatic) {
-			voxelGrids[i].sliceToHeight(maxHeight);
+			voxelGrids[i].sliceToHeight(mutuallyBounded.length <= 0 ? maxHeight : boundedMaxHeight);
 			break;
 		}
 	}

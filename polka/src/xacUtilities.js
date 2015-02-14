@@ -61,8 +61,9 @@ function toggleDebugMode() {
 }
 
 function checkInitialization() {
-	if(objStatic == null) objStatic = objects[0];
-	if(objDynamic == null) objDynamic = objects[1];
+
+	if(objStatic == null) objStatic = objects[0].isStatic ? objects[0] : objects[1];
+	if(objDynamic == null) objDynamic = objects[1].isStatic ? objects[0] : objects[1];
 }
 
 function refreshDebugView() {
@@ -134,4 +135,31 @@ function triangleArea(va, vb, vc) {
 			Math.pow((x3*y1 - x1*y3), 2) +
 			Math.pow((x1*y2 - x2*y1), 2)
 		);
+}
+
+function rotateObjectX() {
+	for(var i=0; i<objects.length; i++) {
+		if(!objects[i].isStatic) {
+			// var center = new THREE.Vector3(0, 0, 0);
+    		// objects[i].position.set( center.x, center.y, center.z );
+			objects[i].rotation.x = controlPanel.slider1.value * Math.PI / 180;
+			// objects[i].geometry.applyMatrix(new THREE.Matrix4().makeTranslation( -center.x, -center.y, -center.z ) );
+		}
+	}
+}
+
+function rotateObjectY() {
+	for(var i=0; i<objects.length; i++) {
+		if(!objects[i].isStatic) {
+			objects[i].rotation.y = controlPanel.slider2.value * Math.PI / 180;
+		}
+	}
+}
+
+function rotateObjectZ() {
+	for(var i=0; i<objects.length; i++) {
+		if(!objects[i].isStatic) {
+			objects[i].rotation.z = controlPanel.slider3.value * Math.PI / 180;
+		}
+	}
 }

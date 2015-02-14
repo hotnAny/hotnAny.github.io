@@ -1,3 +1,19 @@
+var 
+	// BODYWIDTH = 25.0,
+	// BODYHEIGHT = 15.0,
+	HEADWIDTH = BODYWIDTH,
+	HEADHEIGHT = BODYHEIGHT / 5,
+	// NUMEYES = 1,
+	BUTTWIDTH = BODYWIDTH,
+	ARMWIDTH = 15,
+	// ARMLENGTH = 20,
+	LEGWIDTH = 3.0,
+	// LEGLENGTH = 5.0,
+	FOOTLENGTH = LEGLENGTH * 1.25 + LEGWIDTH * 0.8,
+	FOOTHEIGHT = FOOTLENGTH * 0.625;
+	FEETOPENANGLE = 60,
+	HANDSIZE = 10;
+	
 var objs = new Array();
 
 function head(radius, height) {
@@ -60,13 +76,16 @@ function body(radius, height) {
 function arm(length, width) {
 	var rArm = width / 8;
 	var rFist = rArm;
+
+	var scaleFactor = (ARMLENGTH - 5) / 10.0;
+
 	return union(
 				intersection(
 					torus({ ri: rArm, ro: rArm + width / 2 }),
 					cube({size: rArm * 2 + width}).translate([0, 0, -rArm - width/2])
 				),
-				sphere({r: rFist}).scale([1/1.5, 1/0.5, 1/0.5]).translate([0, (width + rFist)/2, 0])
-		).scale([1.5, 0.5, 0.5]);
+				sphere({r: rFist}).scale([1/scaleFactor, 1/0.5, 1/0.5]).translate([0, (width + rFist)/2, 0])
+		).scale([scaleFactor, 0.5, 0.5]);
 }
 
 function arms(length, width, bodyWidth, bodyHeight) {
@@ -138,21 +157,6 @@ function makeMinion(){
 		).translate([0, 0, 10])
 	);
 }
-
-var BODYWIDTH = 25.0,
-	BODYHEIGHT = 15.0,
-	HEADWIDTH = BODYWIDTH,
-	HEADHEIGHT = 2.5,
-	NUMEYES = 1,
-	BUTTWIDTH = BODYWIDTH,
-	ARMWIDTH = 15,
-	ARMLENGTH = 20,
-	LEGWIDTH = 3.0,
-	LEGLENGTH = 5.0,
-	FOOTLENGTH = LEGLENGTH * 1.25 + LEGWIDTH * 0.8,
-	FOOTHEIGHT = FOOTLENGTH * 0.625;
-	FEETOPENANGLE = 60,
-	HANDSIZE = 10;
 
 function main() {
 	makeMinion();

@@ -1255,7 +1255,7 @@ OpenJsCad.Processor.prototype = {
     this.setError("");
     this.clearViewer();
     this.processing = true;
-    this.statusspan.innerHTML = "Rendering code, please wait <img id=busy src='imgs/busy.gif'>";
+    this.statusspan.innerHTML = "Generating minion, grab a banana ... <img id=busy src='imgs/busy.gif'>";
     this.enableItems();
     var that = this;
     var paramValues = this.getParamValues();
@@ -1278,7 +1278,7 @@ OpenJsCad.Processor.prototype = {
           else
           {
             that.setCurrentObject(obj);
-            that.statusspan.innerHTML = "Ready.";
+            that.statusspan.innerHTML = "Minion ready!";
           }
           that.enableItems();
           if(that.onchange) that.onchange();
@@ -1459,7 +1459,7 @@ OpenJsCad.Processor.prototype = {
     // create a random directory name:
     var dirname = "OpenJsCadOutput1_"+parseInt(Math.random()*1000000000, 10)+"."+extension;
     var extension = this.selectedFormatInfo().extension;
-    var filename = "output."+extension;
+    var filename = "minion."+extension;
     var that = this;
     window.requestFileSystem(TEMPORARY, 20*1024*1024, function(fs){
         fs.root.getDirectory(dirname, {create: true, exclusive: true}, function(dirEntry) {
