@@ -154,7 +154,7 @@ function makeMinion(){
 
 			arms(ARMLENGTH, ARMWIDTH, BODYWIDTH, BODYHEIGHT)
 
-		).translate([0, 0, 10])
+		).translate([0, 0, 20])
 	);
 }
 
