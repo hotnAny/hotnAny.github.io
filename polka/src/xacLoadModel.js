@@ -19,6 +19,7 @@ function loadStl (objPath, objName, isStatic) {
 
     object.geometry.computeBoundingBox();
     var bbox = object.geometry.boundingBox;
+    object.bbox = bbox;
     // console.log(bbox);
     object.position.set(20 * Math.random(), (bbox.max.y - bbox.min.y) / 2, 20 * Math.random());
 
@@ -32,20 +33,26 @@ function loadStl (objPath, objName, isStatic) {
     if(!isStatic) {
       for(var i=0; i<objects.length; i++) {
         if(objects[i].isStatic) {
-          objects[i].geometry.computeBoundingBox();
-          var bboxStatic = objects[i].geometry.boundingBox;
+          // objects[i].geometry.computeBoundingBox();
+          // var bboxStatic = objects[i].geometry.boundingBox;
 
           var dy = maxDimExisting + objects[i].maxDimExisting / 2 - objects[i].position.y;
           objects[i].position.y += Math.max(dy, 0);
+          objects[i].needRebuildOctree = true;
+          // var cubeHeight = maxDimExisting;
+          // var geometry = new THREE.CubeGeometry(
+          //   Math.max(2, Math.abs(objects[i].bbox.max.x - objects[i].bbox.min.x)), 
+          //   2, 
+          //   Math.max(2, Math.abs(objects[i].bbox.max.z - objects[i].bbox.min.z))
+          // );
+          // var material = new THREE.MeshBasicMaterial( { color: 0x22FF66 } );
+          // var box = new Physijs.BoxMesh(geometry, material, 0);
+          // // box.position.y -= (cubeHeight + objects[i].maxDimExisting) / 2
+          // box.position.set(objects[i].position.x, cubeHeight/2, objects[i].position.z)
+          // // objects[i].add(box);
+          // scene.add(box);
 
-          var cubeHeight = maxDimExisting;
-          var geometry = new THREE.CubeGeometry(5, cubeHeight, 5);
-          var material = new THREE.MeshBasicMaterial( { color: 0x22FF66 } );
-          var box = new Physijs.BoxMesh(geometry, material, 0);
-          // box.position.y -= (cubeHeight + objects[i].maxDimExisting) / 2
-          box.position.set(objects[i].position.x, cubeHeight/2, objects[i].position.z)
-          // objects[i].add(box);
-          scene.add(box);
+          generateSupport(objects[i]);
         }
       }
     }
@@ -62,18 +69,18 @@ function loadStl (objPath, objName, isStatic) {
       /* create pre-computed projections and their octrees */
       // makeProjections(object, projStatic);
 
-      var len = projStatic.length;
-      for(var i=0; i<len; i++) {
-        // console.log(projStatic[i]);
-        var ot = new THREE.Octree({
-          undeferred: false,
-          depthMax: Infinity,
-          objectsThreshold: 1,
-          scene: scene
-        });
-        ot.add(projStatic[i], { useFaces: true});
-        octreesProj.push(ot); 
-      }
+      // var len = projStatic.length;
+      // for(var i=0; i<len; i++) {
+      //   // console.log(projStatic[i]);
+      //   var ot = new THREE.Octree({
+      //     undeferred: false,
+      //     depthMax: Infinity,
+      //     objectsThreshold: 1,
+      //     scene: scene
+      //   });
+      //   ot.add(projStatic[i], { useFaces: true});
+      //   octreesProj.push(ot); 
+      // }
       // if(!D_OVERLAP) hideProjections();
     } else {
       // object.rotation.x = -Math.PI/2;
@@ -146,6 +153,43 @@ function cleanObjects(isStatic) {
     scene.remove(objects[objsToRemove[i]]);
     objects.splice(objsToRemove[i], 1);
   }
+}
+
+function generateSupport(obj) {
+  var material = new THREE.MeshBasicMaterial( { color: 0x22FF66 } );
+
+  /* making the base */
+  var minBaseDim = 2;
+  var baseDimX = Math.max(minBaseDim, Math.abs(obj.bbox.max.x - obj.bbox.min.x)),
+      baseDimY = minBaseDim,
+      baseDimZ = Math.max(minBaseDim, Math.abs(obj.bbox.max.z - obj.bbox.min.z));
+  var geomBase = new THREE.CubeGeometry(baseDimX, baseDimY, baseDimZ);
+  
+  var base = new Physijs.BoxMesh(geomBase, material, 0);
+  base.position.set(obj.position.x, obj.position.y - (obj.bbox.max.y - obj.bbox.min.y) / 2 - minBaseDim / 2, obj.position.z);
+  scene.add(base);
+  supports.push(base);
+
+  /* making pillars */
+  base.geometry.computeBoundingBox();
+  var bbox = base.geometry.boundingBox;
+
+  var heightPillar = base.position.y - minBaseDim/2;
+  var geomPillar = new THREE.CubeGeometry(minBaseDim, heightPillar, minBaseDim);
+
+  for(var i=-1; i<=1; i+=2) {
+    for(var j=-1; j<=1; j+=2) {
+      var pillar = new Physijs.BoxMesh(geomPillar, material, 0);
+      pillar.position.set(
+        obj.position.x + i * baseDimX / 2 - i * minBaseDim / 2, 
+        heightPillar/2, 
+        obj.position.z + j * baseDimZ / 2 - j * minBaseDim / 2
+        );
+      scene.add(pillar);
+      supports.push(pillar);
+    }
+  }
+
 }
 
 
@@ -259,6 +303,7 @@ function addATriangle(v1, v2, v3, clr) {
   geometry.faces.push(new THREE.Face3(0, 1, 2));
   var material = new THREE.MeshBasicMaterial( { color: clr } );
   var tri = new THREE.Mesh(geometry, material);
+  tri.material.side = THREE.DoubleSide
 
   scene.add(tri);
 }

@@ -117,16 +117,16 @@ function voxelizeObject(obj) {
 	// console.log(voxels.length);
 	scene.remove(obj);
 	voxelGrid.exportMarkedVoxels(obj.isStatic);
-	for(var i=0; i < obj.children.length; i++) {
-		// obj.children[i].position.sub(voxelGrid._voxelGroup.position);
-		// obj.children[i].position.x -= voxelGrid._voxelGroup.position.x;
-		// obj.children[i].position.z -= voxelGrid._voxelGroup.position.z;
-		// voxelGrid._voxelGroup.add(obj.children[i]);
-		// console.log("++++++");
-		//.position.sub());
+	// for(var i=0; i < obj.children.length; i++) {
+	// 	// obj.children[i].position.sub(voxelGrid._voxelGroup.position);
+	// 	// obj.children[i].position.x -= voxelGrid._voxelGroup.position.x;
+	// 	// obj.children[i].position.z -= voxelGrid._voxelGroup.position.z;
+	// 	// voxelGrid._voxelGroup.add(obj.children[i]);
+	// 	// console.log("++++++");
+	// 	//.position.sub());
 
-		scene.add(obj.children[i]);
-	}
+	// 	scene.add(obj.children[i]);
+	// }
 	scene.add(voxelGrid._voxelGroup);
 	// for(var idx=0; idx < voxels.length; idx++) {
 	// 	scene.add(voxels[idx]);
@@ -272,7 +272,7 @@ function computeLayerAtHeight(height) {
 			var bbMin = objects[i].geometry.boundingBox.min.applyMatrix4(objects[i].matrixWorld);
 			var bbMax = objects[i].geometry.boundingBox.max.applyMatrix4(objects[i].matrixWorld);
 			var top = Math.max(bbMin.y, bbMax.y);
-			var btm = Math.min(bbMin.y, bbMax.y);
+			var btm = 0;// Math.min(bbMin.y, bbMax.y);
 			if(height > top || height < btm) {
 				log("out of bound");
 			} else {

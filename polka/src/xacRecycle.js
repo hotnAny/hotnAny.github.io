@@ -479,3 +479,92 @@ function loadJSON(objName, isStatic) {
               //  console.log(vc);
               //  console.log(" ========= "); 
               // }
+
+/* 
+        
+        ref: http://geomalgorithms.com/a06-_intersect-2.html
+      */
+
+      // var v = f.centroid.clone();
+      // v.applyMatrix4(objD.matrixWorld);
+      // // addABall(v.x, v.y, v.z, 0xff0000, 1);
+      // // console.log(v.x + ", " + v.y + ", " + v.z);
+
+      // var nml = f.normal.clone();
+      
+      // var xs = [bboxHelper.box.min.x, bboxHelper.box.max.x];
+      // var ys = [bboxHelper.box.min.y, bboxHelper.box.max.y];
+      // var zs = [bboxHelper.box.min.z, bboxHelper.box.max.z];
+
+      // for(var ix=0; ix<2; ix++) {
+      //  for(var iy=0; iy<2; iy++) {
+      //    for(var iz=0; iz<2; iz++) {
+      //      var ctr = new THREE.Vector3(xs[ix], ys[iy], zs[iz]);
+      //      // addABall(ctr.x, ctr.y, ctr.z, 0xff0000, 1);
+      //      // ctr.applyMatrix4(objS.matrixWorld);
+
+      //      if(isShadowingTriangle(ctr, nml, v, va, vb, vc, bboxHelper.box)) {
+      //        if(D_INTERSECTION) {
+      //          if(i % 10 == 0) addATriangle(va, vb, vc, 0x00ffff);
+      //        }
+      //        arrMulBounded.push(i);
+
+      //        break;
+      //      }
+      //    }
+      //  }
+      // }
+
+      
+      // addATriangle(va, vb, vc, 0xffff00);
+      // break;
+      // // if(0)
+      // // {
+      // //   if(D_INTERSECTION) {
+      // //     if(i % 10 == 0) addATriangle(va, vb, vc, 0x00ffff);
+      // //   }
+      // //   arrMulBounded.push(i);
+      // // }
+
+      // // console.log(va + ", " + vb + ", " + vc);
+      
+      // // return;
+
+
+      /* if any of the triangle's verext is in the bounding box */
+      /* UPDATE: this alone doesn't work for very big triangle */
+      
+      // if(isInBoundingBox(va, bboxHelper.box) 
+      //  || isInBoundingBox(vb, bboxHelper.box)
+      //  || isInBoundingBox(vc, bboxHelper.box)) {
+
+      //  if(D_INTERSECTION) {
+      //    if(i % 10 == 0) addATriangle(va, vb, vc, 0x00ffff);
+      //  }
+
+      //  arrMulBounded.push(i);
+      //  continue;
+      // }
+
+
+// function isShadowingTriangle(ctr, nml, v, va, vb, vc, bbox) {
+//  var v1 = ctr.clone();
+//  var v2 = ctr.clone().add(nml);
+//  var denominator = nml.dot(new THREE.Vector3().subVectors(v2, v1));
+
+//  if(denominator == 0) {
+//    return false;
+//  }
+
+//  var r = nml.dot(new THREE.Vector3().subVectors(v, v1)) / denominator;
+//  var pr = v1.clone().add(new THREE.Vector3().subVectors(v2, v1).multiplyScalar(r));
+
+//  addALine(ctr, pr, 0x66aaff);
+//  addABall(pr.x, pr.y, pr.z, 0xff0000, 1);
+
+//  /* find out if the intersecting point is i) between v1 and v2; and ii) inside the triangle */
+//  if(isInTriangle(pr, va, vb, vc) && isInBoundingBox(pr, bbox)) {
+//    return true;
+//  }
+//  return false;
+// }

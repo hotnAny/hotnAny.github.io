@@ -41,6 +41,7 @@ function findMutuallyBounded() {
 
 	refreshDebugView();
 	checkInitialization();
+	checkOctreeValidity();
 	var numMutuallyBounded = findMutuallyBoundedBetweenObjects3D(objDynamic, objStatic, mutuallyBounded);
 	updateDebugView();
 
@@ -68,19 +69,23 @@ function findMutuallyBoundedBetweenObjects3D(objD, objS, arrMulBounded) {
 	
 	// scene.updateMatrixWorld();
 	objD.updateMatrixWorld();
+	objD.geometry.computeFaceNormals();
+	objD.geometry.computeCentroids();
 	objS.geometry.computeBoundingBox();
 	
 	/* 
 		calculating bounding box 
 	*/
 	var bboxHelper = new THREE.BoundingBoxHelper( objS, 0xff0000 );
+	// var ctr = bboxHelper.box.center().clone();
+	// ctr.applyMatrix4(objS.matrixWorld);
 	bboxHelper.update();
 	if(D_INTERSECTION) {
 		boxes.add( bboxHelper );
 	}
 
 	/* 
-		find objD's points that are contained in objS's bounding box
+		find objD's points/triangles that are contained in objS's bounding box
 	*/
 	var len = USINGVERTICES ? objD.geometry.vertices.length : objD.geometry.faces.length;
 	// objD.material.color.setHex(colorCollided);
@@ -110,16 +115,13 @@ function findMutuallyBoundedBetweenObjects3D(objD, objS, arrMulBounded) {
 			var vb = objD.geometry.vertices[f.b].clone().applyMatrix4(objD.matrixWorld);
 			var vc = objD.geometry.vertices[f.c].clone().applyMatrix4(objD.matrixWorld);
 
-			/* if any of the triangle's verext is in the bounding box */
-			if(isInBoundingBox(va, bboxHelper.box) 
-				|| isInBoundingBox(vb, bboxHelper.box)
-				|| isInBoundingBox(vc, bboxHelper.box)) {
-
+			var nml = f.normal.clone();
+			if(testTriBoxIntersection(va, vb, vc, nml, bboxHelper.box)) {
 				if(D_INTERSECTION) {
 					if(i % 10 == 0) addATriangle(va, vb, vc, 0x00ffff);
 				}
-
 				arrMulBounded.push(i);
+				console.log("intersecting");
 			}
 		}
 	}
@@ -133,6 +135,81 @@ function findMutuallyBoundedBetweenObjects3D(objD, objS, arrMulBounded) {
 	// }
 
 	return arrMulBounded.length;
+}
+
+/* 
+	based on saparating axis theorem
+	ref: http://fileadmin.cs.lth.se/cs/Personal/Tomas_Akenine-Moller/pubs/tribox.pdf
+*/
+function testTriBoxIntersection(va, vb, vc, nml, bbox) {
+
+	var minmax;
+
+	/* test the 3 box normals */
+	var boxNormals = [new THREE.Vector3(1, 0, 0), new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, 0, 1)];
+	var boxMin = [bbox.min.x, bbox.min.y, bbox.min.z];
+	var boxMax = [bbox.max.x, bbox.max.y, bbox.max.z];
+
+	for (var i = 0; i < 3; i++) {
+		minmax = project([va, vb, vc], boxNormals[i]);
+		if(minmax[1] < boxMin[i] || minmax[0] > boxMax[i]) {
+			return false;
+		}
+	}
+
+
+	/* test the 1 triangle normal */
+	var boxVertices = new Array();
+	var xs = [bbox.min.x, bbox.max.x];
+	var ys = [bbox.min.y, bbox.max.y];
+	var zs = [bbox.min.z, bbox.max.z];
+
+	for(var ix=0; ix<2; ix++) {
+		for(var iy=0; iy<2; iy++) {
+			for(var iz=0; iz<2; iz++) {
+				boxVertices.push(new THREE.Vector3(xs[ix], ys[iy], zs[iz]));
+			}
+		}
+	}
+
+	var triOffset = nml.dot(va);
+	minmax = project(boxVertices, nml);
+	if(minmax[1] < triOffset || minmax[0] > triOffset) {
+		return false;
+	}
+
+
+	/* test the 9 edge cross products */
+	var triEdges = [new THREE.Vector3().subVectors(va, vb),
+					new THREE.Vector3().subVectors(vb, vc),
+					new THREE.Vector3().subVectors(vc, va)];
+
+	for (var i = 0; i < 3; i++) {
+    	for (var j = 0; j < 3; j++)
+    	{
+    		var axis = new THREE.Vector3().crossVectors(triEdges[i], boxNormals[j]);
+    		var boxMinmax = project(boxVertices, axis);
+    		var triMinmax = project([va, vb, vc], axis);
+    		if(boxMinmax[1] < triMinmax[0] || boxMinmax[0] > triMinmax[1]) {
+    			return false;
+    		}
+    	}
+    }
+
+    return true;
+}
+
+function project(points, axis) {
+	var min = 1000;
+	var max = -1000;
+
+	for(var i=0; i<points.length; i++) {
+		var val = axis.dot(points[i]);
+		min = Math.min(min, val);
+		max = Math.max(val, max);
+	}
+
+	return [min, max];
 }
 
 /*

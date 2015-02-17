@@ -185,13 +185,13 @@ var ControlPanel = function () {
 	container.appendChild(document.createElement('br'));
 
 
-	// var btnAction7 = document.createElement( 'button' );
-	// btnAction7.id = 'action7';
-	// btnAction7.style.cssText = cssBtn;
-	// btnAction7.innerHTML = 'Peel voxels';
-	// container.appendChild( btnAction7 );
+	var btnAction7 = document.createElement( 'button' );
+	btnAction7.id = 'action7';
+	btnAction7.style.cssText = cssBtn;
+	btnAction7.innerHTML = 'Save STL';
+	container.appendChild( btnAction7 );
 
-	// container.appendChild(document.createElement('br'));
+	container.appendChild(document.createElement('br'));
 
 	
 
@@ -218,7 +218,7 @@ var ControlPanel = function () {
 	// output area
 	var outputArea = document.createElement( 'div' );
 	outputArea.id = 'outputArea';
-	outputArea.style.cssText = 'position:fixed;height:100%;left:3px;right:3px;top:280;bottom:3px;overflow-x:hidden;overflow-y:scroll;';
+	outputArea.style.cssText = 'position:fixed;height:100%;left:3px;right:3px;top:300;bottom:3px;overflow-x:hidden;overflow-y:scroll;';
 	container.appendChild( outputArea );
 
 	var outputText = document.createElement( 'textarea' );
@@ -247,7 +247,7 @@ var ControlPanel = function () {
 
 		button6: btnAction6,
 
-		// button7: btnAction7,
+		button7: btnAction7,
 
 		button8: btnAction8,
 

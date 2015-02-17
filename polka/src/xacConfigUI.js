@@ -15,7 +15,7 @@ controlPanel.button6.onclick = voxelize;
 controlPanel.button1.onclick = slice;
 controlPanel.button8.onclick = changeGravity;
 controlPanel.button4.onclick = computeLayerToPause;
-// controlPanel.button7.onclick = peelObjVoxels;
+controlPanel.button7.onclick = savePrintObj;
 
 controlPanel.checkbox1.onchange = toggleDebugMode;
 controlPanel.checkbox2.onchange = toggleOctreeVisibility;

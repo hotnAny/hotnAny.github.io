@@ -66,6 +66,15 @@ function checkInitialization() {
 	if(objDynamic == null) objDynamic = objects[1].isStatic ? objects[0] : objects[1];
 }
 
+function checkOctreeValidity() {
+	checkInitialization();
+	if(objStatic.needRebuildOctree) {
+		octree.rebuild();
+		log("Octree updated.");
+		objStatic.needRebuildOctree = false;
+	}
+}
+
 function refreshDebugView() {
 	octree.setVisibility(false);
 	scene.remove(balls);
@@ -160,6 +169,35 @@ function rotateObjectZ() {
 	for(var i=0; i<objects.length; i++) {
 		if(!objects[i].isStatic) {
 			objects[i].rotation.z = controlPanel.slider3.value * Math.PI / 180;
+		}
+	}
+}
+
+function savePrintObj() {
+	for(var i=0; i < objects.length; i++) {
+		if(objects[i].isStatic) {
+			// console.log(objects[i].geometry);
+			// saveSTL(objects[i].geometry, "things/" + objects[i].name + "_polka");
+			objects[i].updateMatrixWorld();
+			var mergedGeom = objects[i].geometry.clone();
+			mergedGeom.applyMatrix(objects[i].matrixWorld);
+
+			// var stlStr = stlFromGeometry( objects[i].geometry);
+			// var stlStrSupport = new Arra;
+			// var stlArray = new Array();
+			for(var i=0; i<supports.length; i++) {
+				supports[i].updateMatrixWorld();
+				// console.log(supports[i].matrixWorld);
+				var supportGeom = supports[i].geometry.clone();
+				supportGeom.applyMatrix(supports[i].matrixWorld);
+				THREE.GeometryUtils.merge(mergedGeom, supportGeom);
+				// stlArray.push(stlFromGeometry( supports[i].geometry));
+			}
+			// var blob = new Blob([stlStr], {type: 'text/plain'});
+			var stlStr = stlFromGeometry( mergedGeom );
+			var blob = new Blob([stlStr], {type: 'text/plain'});
+  			saveAs(blob, name + '.stl');
+			break;
 		}
 	}
 }

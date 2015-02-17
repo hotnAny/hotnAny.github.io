@@ -22,10 +22,13 @@ var prevX;
 var prevY;
 var prevZ;
 
-var rateY = 0.5;
+var rateY = 0.9;
 var rateXZ = 0.9;
 
 var rateRot = 0.1;
+
+var prevGrndX;
+var prevGrndZ;
 
 document.addEventListener( 'mousedown', onMouseDown, false );
 document.addEventListener( 'mousemove', onMouseMove, false );
@@ -79,6 +82,8 @@ function onMouseDown( event ) {
 	}
 
 	isMouseDown = true;
+	prevGrndX = undefined;
+	prevGrndZ = undefined;
 }
 
 function onMouseMove( event ) {
@@ -88,7 +93,7 @@ function onMouseMove( event ) {
 		return;
 	}
 
-	var intersects = rayCast(event.clientX, event.clientY, [ground]);
+	// var intersects = rayCast(event.clientX, event.clientY, [ground]);
 
 	if(D_MOUSE) {
 		if(intersects.length == 1) {
@@ -97,35 +102,67 @@ function onMouseMove( event ) {
 		}
 	} else {
 		// move selected objects
-		if(intersects.length == 1) {
+		// if(intersects.length == 1) {
 			for (var i = 0; i < selected.length; i++) {
 				var obj = selected[i];
+				
+				/* left button */
 				if(event.button == 0) {
+					var intersects = rayCast(event.clientX, event.clientY, [ground]);
+					if(intersects.length <= 0) {
+						continue;
+					}
+
+					// console.log(intersects[0]);
 					var tx = intersects[0].point.x - obj.position.x;
 					var tz = intersects[0].point.z - obj.position.z;
 					// obj.geometry.applyMatrix( new THREE.Matrix4().makeTranslation(tx, 0, tz ) );
 					// console.log(tx + ", " + tz);
 
-					rateXZ = Math.min(1.0, Math.max(Math.abs(obj.position.x - intersects[0].point.x), 
-						Math.abs(obj.position.z - intersects[0].point.z)) / 100);
-					obj.position.x = obj.position.x * rateXZ + intersects[0].point.x * (1 - rateXZ);
-					obj.position.z = obj.position.z * rateXZ + intersects[0].point.z * (1 - rateXZ);
+					// rateXZ = Math.min(1.0, Math.max(Math.abs(obj.position.x - intersects[0].point.x), 
+					// 	Math.abs(obj.position.z - intersects[0].point.z)) / 100);
+					// rateXZ = 0.9;
+					// obj.position.x = obj.position.x * rateXZ + intersects[0].point.x * (1 - rateXZ);
+					// obj.position.z = obj.position.z * rateXZ + intersects[0].point.z * (1 - rateXZ);
 
-				} else if (event.button == 2){
-					// obj.position.y = -intersects[0].point.z;
-					if(prevY != undefined) {
+					if(prevGrndX != undefined && prevGrndZ != undefined) {
+						obj.position.x += (intersects[0].point.x - prevGrndX);
+						obj.position.z += (intersects[0].point.z - prevGrndZ);
+					}
+					
+					prevGrndX = intersects[0].point.x;
+					prevGrndZ = intersects[0].point.z;
+
+				} 
+				/* right button */
+				else if (event.button == 2){
+					
+					/* approach 1: use mouse coordinates */
+					// if(prevY != undefined) {
+					// 	var deltaScreenY = event.clientY - prevY;
+					// 	obj.position.y -= rateY * deltaScreenY;
+					// }
+
+					/* approach 2: use object's y */
+					var intersects = rayCast(event.clientX, event.clientY, [obj]);
+					if(intersects.length > 0) {
+						obj.position.y = obj.position.y * rateY + intersects[0].point.y * (1 - rateY);
+					} else {
 						var deltaScreenY = event.clientY - prevY;
 						obj.position.y -= rateY * deltaScreenY;
 					}
-				} else if (event.button == 1) {
-					if(prevX != undefined && prevY != undefined) {
-						obj.rotation.x += (event.clientY - prevY) * rateRot;
-						obj.rotation.z += (event.clientX - prevX) * rateRot;
-					}
-				}
+
+					
+				} 
+				// else if (event.button == 1) {
+				// 	if(prevX != undefined && prevY != undefined) {
+				// 		obj.rotation.x += (event.clientY - prevY) * rateRot;
+				// 		obj.rotation.z += (event.clientX - prevX) * rateRot;
+				// 	}
+				// }
 			}
 
-		}
+		// }
 	}
 
 	prevX = event.clientX;

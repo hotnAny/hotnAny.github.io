@@ -3,16 +3,8 @@ function detectInterlock() {
 	var isInterlocking = true;
 	var t0 = new Date().getTime();
 
-	/* obselete */
-	// if(detectOverlap() == true) {
-	// 	findMutuallyBounded();
-	// 	if(!detectIntersection()) {
-			
-	// 		isInterlocking = true;
-	// 	}
-	// }
-
 	/* new algorithm (based on topology definition) */
+	// ??
 
 	/* step 0: if there is any mutually bounded points */
 	if(findMutuallyBounded() > 0) {

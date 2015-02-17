@@ -19,7 +19,8 @@ var objDynamic = null;
 var objStatic = null;
 var objects = new Array();
 var voxelGrids = new Array();
-var ctrsMass = new Array();
+var supports = new Array();
+// var ctrsMass = new Array();
 
 // projections of objStatic
 var projStatic = new Array();
