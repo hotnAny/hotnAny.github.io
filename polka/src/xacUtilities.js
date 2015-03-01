@@ -1,5 +1,9 @@
 var ts = new Date().getTime();
 
+function now() {
+	return new Date().getTime();
+}
+
 function timeStamp() {
 	var now = new Date().getTime();
 	var elapsed = now - ts;
@@ -92,6 +96,8 @@ function togglePhysics() {
 	usingPhysics = controlPanel.checkbox3.checked;
 
 	if(usingPhysics) {
+		scene.setGravity(gravity);
+		
 		scene.simulate();
 		log("using physics ...")
 
@@ -147,28 +153,38 @@ function triangleArea(va, vb, vc) {
 }
 
 function rotateObjectX() {
-	for(var i=0; i<objects.length; i++) {
-		if(!objects[i].isStatic) {
-			// var center = new THREE.Vector3(0, 0, 0);
-    		// objects[i].position.set( center.x, center.y, center.z );
-			objects[i].rotation.x = controlPanel.slider1.value * Math.PI / 180;
-			// objects[i].geometry.applyMatrix(new THREE.Matrix4().makeTranslation( -center.x, -center.y, -center.z ) );
+	for(var i=0; i<selected.length; i++) {
+		if(!selected[i].isStatic || staticObjLocked == false) {
+			selected[i].rotation.x = controlPanel.slider1.value * Math.PI / 180;
 		}
 	}
+	updateSliderLabel();
 }
 
 function rotateObjectY() {
-	for(var i=0; i<objects.length; i++) {
-		if(!objects[i].isStatic) {
-			objects[i].rotation.y = controlPanel.slider2.value * Math.PI / 180;
+	for(var i=0; i<selected.length; i++) {
+		if(!selected[i].isStatic || staticObjLocked == false) {
+			selected[i].rotation.y = controlPanel.slider2.value * Math.PI / 180;
 		}
 	}
+	updateSliderLabel();
 }
 
 function rotateObjectZ() {
-	for(var i=0; i<objects.length; i++) {
-		if(!objects[i].isStatic) {
-			objects[i].rotation.z = controlPanel.slider3.value * Math.PI / 180;
+	for(var i=0; i<selected.length; i++) {
+		if(!selected[i].isStatic || staticObjLocked == false) {
+			selected[i].rotation.z = controlPanel.slider3.value * Math.PI / 180;
+		}
+	}
+	updateSliderLabel();
+}
+
+function updateSliderLabel() {
+	for(var i=0; i<selected.length; i++) {
+		if(!selected[i].isStatic || staticObjLocked == false) {
+			controlPanel.label7.innerHTML = "orientation. " + "X: " + (selected[i].rotation.x * 180 / Math.PI).toFixed(1) + ", " 
+															+ "Y: " + (selected[i].rotation.y * 180 / Math.PI).toFixed(1) + ", "
+															+ "Z: " + (selected[i].rotation.z * 180 / Math.PI).toFixed(1);
 		}
 	}
 }
@@ -194,10 +210,73 @@ function savePrintObj() {
 				// stlArray.push(stlFromGeometry( supports[i].geometry));
 			}
 			// var blob = new Blob([stlStr], {type: 'text/plain'});
+			var m = new THREE.Matrix4();
+			m.makeRotationX(Math.PI/2);
+			mergedGeom.applyMatrix(m);
+
 			var stlStr = stlFromGeometry( mergedGeom );
 			var blob = new Blob([stlStr], {type: 'text/plain'});
   			saveAs(blob, name + '.stl');
 			break;
 		}
 	}
+}
+
+function saveBothObjs() {
+	var mergedGeom;
+	for(var i=0; i < objects.length; i++) {
+		var objGeom = objects[i].geometry.clone();
+		objGeom.applyMatrix(objects[i].matrixWorld);
+		if(mergedGeom == undefined) {
+			mergedGeom = objGeom;
+		} else {
+			THREE.GeometryUtils.merge(mergedGeom, objGeom);
+		}
+	}
+
+	var stlStr = stlFromGeometry( mergedGeom );
+	var blob = new Blob([stlStr], {type: 'text/plain'});
+	saveAs(blob, name + '.stl');
+}
+
+
+
+function lockObjToPrint() {
+	staticObjLocked = controlPanel.checkbox4.checked;
+}
+
+var raisedY;
+function toggleSupport() {
+	var maxDimExisting;
+
+	for(var i=0; i < objects.length; i++) {
+		objects[i].geometry.computeBoundingBox();
+		var bbox = objects[i].geometry.boundingBox;
+		objects[i].bbox = bbox;
+
+		objects[i].maxDim = 0;
+		objects[i].maxDim = Math.max(objects[i].maxDim, Math.abs(bbox.max.x - bbox.min.x));
+		objects[i].maxDim = Math.max(objects[i].maxDim, Math.abs(bbox.max.y - bbox.min.y));
+		objects[i].maxDim = Math.max(objects[i].maxDim, Math.abs(bbox.max.z - bbox.min.z));
+		
+		if(!objects[i].isStatic) {
+			maxDimExisting = objects[i].maxDim;
+		}
+	}
+
+	for(var i=0; i < objects.length; i++) {
+		if(objects[i].isStatic) {
+			if(withoutSupport) {
+				raisedY = maxDimExisting + objects[i].maxDim / 2 - objects[i].position.y;
+				objects[i].position.y += Math.max(raisedY, 0);
+				generateSupport(objects[i]);
+			} else {
+				objects[i].position.y -= Math.max(raisedY, 0);;
+				removeSupport();
+			}
+			objects[i].needRebuildOctree = true;
+		}
+	}
+
+	withoutSupport = !withoutSupport;
 }

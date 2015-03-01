@@ -1,6 +1,6 @@
-var lineMaterial = new THREE.LineBasicMaterial( { color: 0xaaaaaa } );
+var lineMaterial = new THREE.LineBasicMaterial( { color: 0xaaaaaa} );
 var lineGeometry = new THREE.Geometry();
-var floor = 0;
+var floor = -50 + 0.5;
 var step = 25;
 
 for ( var i = 0; i <= 40; i ++ ) {

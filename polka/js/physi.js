@@ -947,7 +947,7 @@ window.Physijs = (function() {
 	// 		}
 	// 	}
 		
-	// 	this.execute( 'simulate', { timeStep: timeStep, maxSubSteps: maxSubSteps } );
+	// 	this.execute( 'simulate', { timeStep: 1/60, maxSubSteps: maxSubSteps } );
 
 	// 	return true;
 	// };
@@ -968,10 +968,12 @@ window.Physijs = (function() {
 			if(updatesBuffered[object_id] instanceof Array && updatesBuffered[object_id].length > 0) {
 				update = updatesBuffered[object_id][0];
 				updatesBuffered[object_id].splice(0, 1);
+				console.log(update);
 				this.execute( 'updateTransform', update );
 			}
 		}
 		
+		// console.log("simulating!");
 		this.execute( 'simulate', { timeStep: timeStep, maxSubSteps: maxSubSteps } );
 
 		return true;
@@ -982,6 +984,7 @@ window.Physijs = (function() {
 	/* ----  ----  ----  ----  ----  ----  ----  ----  ----  ----  ----  ----  ---- */
 	/* buffering newly updated object spatial info */
 	Physijs.Scene.prototype.pushBuffered = function() {
+
 		var object_id;
 
 		for ( object_id in this._objects ) {

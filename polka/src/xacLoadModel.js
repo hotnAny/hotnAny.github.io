@@ -1,62 +1,63 @@
-function loadStl (objPath, objName, isStatic) {
+function loadStl (objPath, objName, isStatic, addToObjects) {
   return stlLoader.load(objPath, function (geometry) {
 
     THREE.GeometryUtils.center(geometry);
 
     // geometry.dynamic = true;
     var material = new THREE.MeshPhongMaterial( { color: colorNormal} );  
+    // material.side = THREE.DoubleSide;
     var object = new THREE.Mesh(geometry, material); 
 
     object.name = objName;
 
-    /* manually positioning the objects */
-    objects.push(object);
     scene.add(object);
 
+    if(addToObjects == undefined || addToObjects == true) {
+      objects.push(object);  
+    } else {
+      legends.push(object);
+      object.position.set(0, 50, 100);
+      return;
+    }
+    
     log("object #" + objects.length + " " + objName + " loaded");
     log(geometry.vertices.length + " vertices, " + geometry.faces.length + " faces");
     // console.log(object);
 
-    object.geometry.computeBoundingBox();
-    var bbox = object.geometry.boundingBox;
-    object.bbox = bbox;
+    // object.geometry.computeBoundingBox();
+    // var bbox = object.geometry.boundingBox;
+    // object.bbox = bbox;
     // console.log(bbox);
-    object.position.set(20 * Math.random(), (bbox.max.y - bbox.min.y) / 2, 20 * Math.random());
+    // object.position.set(20 * Math.random(), 0, 20 * Math.random());
+    // (bbox.max.y - bbox.min.y) / 2 + 30 * Math.random()
+    // var maxDimExisting = 0;
+    // maxDimExisting = Math.max(maxDimExisting, Math.abs(bbox.max.x - bbox.min.x));
+    // maxDimExisting = Math.max(maxDimExisting, Math.abs(bbox.max.y - bbox.min.y));
+    // maxDimExisting = Math.max(maxDimExisting, Math.abs(bbox.max.z - bbox.min.z));
 
-    var maxDimExisting = 0;
-    maxDimExisting = Math.max(maxDimExisting, Math.abs(bbox.max.x - bbox.min.x));
-    maxDimExisting = Math.max(maxDimExisting, Math.abs(bbox.max.y - bbox.min.y));
-    maxDimExisting = Math.max(maxDimExisting, Math.abs(bbox.max.z - bbox.min.z));
+    // object.maxDimExisting = maxDimExisting;
 
-    object.maxDimExisting = maxDimExisting;
+    /*
+      temperarily disabled  
+    */
 
-    if(!isStatic) {
-      for(var i=0; i<objects.length; i++) {
-        if(objects[i].isStatic) {
-          // objects[i].geometry.computeBoundingBox();
-          // var bboxStatic = objects[i].geometry.boundingBox;
+    // if(!isStatic) {
+    //   for(var i=0; i<objects.length; i++) {
+    //     if(objects[i].isStatic) {
+    //       // objects[i].geometry.computeBoundingBox();
+    //       // var bboxStatic = objects[i].geometry.boundingBox;
 
-          var dy = maxDimExisting + objects[i].maxDimExisting / 2 - objects[i].position.y;
-          objects[i].position.y += Math.max(dy, 0);
-          objects[i].needRebuildOctree = true;
-          // var cubeHeight = maxDimExisting;
-          // var geometry = new THREE.CubeGeometry(
-          //   Math.max(2, Math.abs(objects[i].bbox.max.x - objects[i].bbox.min.x)), 
-          //   2, 
-          //   Math.max(2, Math.abs(objects[i].bbox.max.z - objects[i].bbox.min.z))
-          // );
-          // var material = new THREE.MeshBasicMaterial( { color: 0x22FF66 } );
-          // var box = new Physijs.BoxMesh(geometry, material, 0);
-          // // box.position.y -= (cubeHeight + objects[i].maxDimExisting) / 2
-          // box.position.set(objects[i].position.x, cubeHeight/2, objects[i].position.z)
-          // // objects[i].add(box);
-          // scene.add(box);
+    //       var dy = maxDimExisting + objects[i].maxDimExisting / 2 - objects[i].position.y;
+    //       objects[i].position.y += Math.max(dy, 0);
+    //       objects[i].needRebuildOctree = true;
 
-          generateSupport(objects[i]);
-        }
-      }
-    }
+    //       generateSupport(objects[i]);
+    //     }
+    //   }
+    // }
     object.isStatic = isStatic;
+
+    voxelizeObject(object);
 
     if(isStatic) {
       // object.position.set(0, 0, 0); 
@@ -65,29 +66,19 @@ function loadStl (objPath, objName, isStatic) {
       // octree.add(object);
       // octree.add(object, { useVertices: true });
       octree.add(object, { useFaces: true });
-
-      /* create pre-computed projections and their octrees */
-      // makeProjections(object, projStatic);
-
-      // var len = projStatic.length;
-      // for(var i=0; i<len; i++) {
-      //   // console.log(projStatic[i]);
-      //   var ot = new THREE.Octree({
-      //     undeferred: false,
-      //     depthMax: Infinity,
-      //     objectsThreshold: 1,
-      //     scene: scene
-      //   });
-      //   ot.add(projStatic[i], { useFaces: true});
-      //   octreesProj.push(ot); 
-      // }
-      // if(!D_OVERLAP) hideProjections();
-    } else {
-      // object.rotation.x = -Math.PI/2;
-    }
+      object.ot = octree;
+      controlPanel.checkbox4.checked = staticObjLocked;
+      // object.rotation.set(Math.PI / 2 * Math.random(), Math.PI / 2 * Math.random(), Math.PI / 2 * Math.random());
+      
+    } 
+    // else {
+    //   // object.rotation.x = -Math.PI/2;
+    // }
 
     // object.rotation.z = -Math.PI/2;
     // object.ctrMass = calCtrMass(object);
+
+    
   });
 }
 
@@ -98,6 +89,7 @@ function loadObjToPrint() {
 
   loadStl(controlPanel.dd1.options[controlPanel.dd1.selectedIndex].value, 
     controlPanel.dd1.options[controlPanel.dd1.selectedIndex].text, true);
+
 }
 
 function loadExistingObj() {
@@ -121,6 +113,8 @@ function loadExistingObj() {
   loadStl(controlPanel.dd2.options[controlPanel.dd2.selectedIndex].value,
     controlPanel.dd2.options[controlPanel.dd2.selectedIndex].text, false);
 
+  // voxelize();
+
   // console.log(objects.length);
 
   /* update the height of the object to print */
@@ -141,10 +135,20 @@ function loadExistingObj() {
 }
 
 function cleanObjects(isStatic) {
+
+  if(objectPair != undefined) {
+    scene.remove(objectPair);
+    objectPair.children.splice(0, objectPair.children.length);
+    objectPair = undefined;
+  }
+
   var objsToRemove = new Array();
   for(var i=0; i<objects.length; i++) {
     if(objects[i].isStatic == isStatic) {
       objsToRemove.push(i);
+      // if(objectPair != undefined) {
+      //   objectPair.remove(objects[i]);
+      // }
       break;
     }
   }
@@ -192,6 +196,12 @@ function generateSupport(obj) {
 
 }
 
+function removeSupport() {
+  for(var i=0; i<supports.length; i++) {
+    scene.remove(supports[i]);
+  }
+}
+
 
 /* below is legacy code */
 if(D_MOUSE) {
@@ -211,36 +221,7 @@ if(D_MOUSE) {
 
   }
   else {
-    // console.log(triangleArea(new THREE.Vector3(0, 0, 0), new THREE.Vector3(10, 0, 0), new THREE.Vector3(0, 10, 0)));
-    // createBoxelizedSphere(7, 18);
-    // createBoxelizedSphere(10, 36);
-
-    // loadStl(ringStand, "ring", false);
-    // loadStl(mug, "mug", true);
-
-    /*
-      example #1 key + ring
-    */
-    // loadStl(ring3, "ring", false);
-    // loadStl(key, "key", true);
-
-    // loadStl(ringStand, "ring", true);
-    // loadStl(dodecahedron, "dodecahedron1", false);
-    // loadStl(dodecahedron, "dodecahedron2", false);
-    // loadStl(meshBall, "meshBall", true);
-
-    // addTheBall();
-
-    /* 
-      exampe #2 heart+bracelet
-    */
-    // loadStl(heart, "heart", false);
-    // loadStl(bracelet, "bracelet", true);
-    
-
-    // loadStl(scissors, "scissors", false);
-
-    // console.log(scene);
+    // loadStl(arrow, 'arrow', false, false);
   }
   
   // intersect_plane = new THREE.Mesh(
@@ -303,7 +284,7 @@ function addATriangle(v1, v2, v3, clr) {
   geometry.faces.push(new THREE.Face3(0, 1, 2));
   var material = new THREE.MeshBasicMaterial( { color: clr } );
   var tri = new THREE.Mesh(geometry, material);
-  tri.material.side = THREE.DoubleSide
+  tri.material.side = THREE.DoubleSide;
 
   scene.add(tri);
 }

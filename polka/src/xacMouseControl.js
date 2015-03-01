@@ -57,7 +57,7 @@ function onMouseDown( event ) {
 	// event.preventDefault();
 	if(event.clientX < 256) return;
 
-	usingPhysics = false;
+	// usingPhysics = false;
 	controlPanel.checkbox3.checked = usingPhysics;
 
 	var intersects = rayCast(event.clientX, event.clientY, objects);
@@ -75,9 +75,13 @@ function onMouseDown( event ) {
 		var obj = intersects[i].object;
 
 		var idx = selected.indexOf(obj);
-		if(idx < 0 && obj.isStatic != true) {
+		if(idx < 0 && (obj.isStatic != true || staticObjLocked == false)) {
 			selected.push(obj);
 			obj.material.color.setHex(colorSelected);
+			controlPanel.slider1.value = obj.rotation.x * 180 / Math.PI;
+			controlPanel.slider2.value = obj.rotation.y * 180 / Math.PI;
+			controlPanel.slider3.value = obj.rotation.z * 180 / Math.PI;
+			break;
 		}
 	}
 

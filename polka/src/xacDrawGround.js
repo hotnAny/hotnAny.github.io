@@ -12,8 +12,10 @@ var ground = new Physijs.BoxMesh(
       groundMaterial,
       0 // mass
     );
+// var df = 0.0;
+// ground.setDamping([df, df, df], [df, df, df]);
 ground.receiveShadow = true;
-ground.position.y -= 0.5
+ground.position.y -= 50;
 ;
 
 scene.add(ground);

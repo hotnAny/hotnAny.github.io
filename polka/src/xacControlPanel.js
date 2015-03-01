@@ -42,15 +42,31 @@ var ControlPanel = function () {
 	lb1.style.cssText = cssCb;
 	container.appendChild( lb1 );
 
+	/*
+		show octree
+	*/
 	var cb2 = document.createElement( 'input' );
 	cb2.id = 'cb2';
 	cb2.setAttribute('type', 'checkbox');
 	cb2.style.cssText = cssCb;
-	container.appendChild( cb2 );
+	// container.appendChild( cb2 );
 	var lb2 = document.createElement( 'label' );
 	lb2.innerHTML = 'Show octree';
 	lb2.style.cssText = cssCb;
-	container.appendChild( lb2 );
+	// container.appendChild( lb2 );
+
+	/*
+		lock static object
+	*/
+	var cb4 = document.createElement( 'input' );
+	cb4.id = 'cb4';
+	cb4.setAttribute('type', 'checkbox');
+	cb4.style.cssText = cssCb;
+	container.appendChild( cb4 );
+	var lb4 = document.createElement( 'label' );
+	lb4.innerHTML = 'Lock object to print';
+	lb4.style.cssText = cssCb;
+	container.appendChild( lb4 );
 
 	container.appendChild(document.createElement('br'));
 
@@ -90,13 +106,16 @@ var ControlPanel = function () {
 	// container.appendChild( btnAction3 );
 	// container.appendChild(document.createElement('br'));
 
-	// button to detect interlock
-	var btnAction5 = document.createElement( 'button' );
-	btnAction5.id = 'action5';
-	btnAction5.style.cssText = cssBtn;
-	btnAction5.innerHTML = 'Detect Interlock';
-	container.appendChild( btnAction5 );
 
+
+
+	/*
+		orientation sliders
+	*/
+	var lb7 = document.createElement( 'label' );
+	lb7.innerHTML = 'Orientation';
+	lb7.style.cssText = cssCb;
+	container.appendChild( lb7 );
 	container.appendChild(document.createElement('br'));
 
 	var slider1 = document.createElement( 'input' );
@@ -138,14 +157,35 @@ var ControlPanel = function () {
 
 	container.appendChild(document.createElement('br'));
 
+
+
+	/*
+		detect interlock
+	*/
+	var btnAction5 = document.createElement( 'button' );
+	btnAction5.id = 'action5';
+	btnAction5.style.cssText = cssBtn;
+	btnAction5.innerHTML = 'Detect Interlock';
+	container.appendChild( btnAction5 );
+
+
+
+	/*
+		voxelize
+	*/
 	var btnAction6 = document.createElement( 'button' );
 	btnAction6.id = 'action6';
 	btnAction6.style.cssText = cssBtn;
 	btnAction6.innerHTML = 'Voxelize';
-	container.appendChild( btnAction6 );
+	// container.appendChild( btnAction6 );
 
 	container.appendChild(document.createTextNode( '\u00A0\u00A0' ));
 
+
+
+	/*
+		apply physics
+	*/
 	var cb3 = document.createElement( 'input' );
 	cb3.id = 'cb3';
 	cb3.setAttribute('type', 'checkbox');
@@ -156,35 +196,98 @@ var ControlPanel = function () {
 	lb3.style.cssText = cssCb;
 	container.appendChild( lb3 );
 
-	container.appendChild(document.createElement('br'));
+	// container.appendChild(document.createElement('br'));
+	container.appendChild(document.createTextNode( '\u00A0\u00A0' ));
 
+
+
+	/*
+		slice
+	*/
 	var btnAction1 = document.createElement( 'button' );
 	btnAction1.id = 'action1';
 	btnAction1.style.cssText = cssBtn;
 	btnAction1.innerHTML = 'Slice';
-	container.appendChild( btnAction1 );
+	// container.appendChild( btnAction1 );
 
-	// container.appendChild(document.createElement('br'));
-	container.appendChild(document.createTextNode( '\u00A0\u00A0' ));
+	container.appendChild(document.createElement('br'));
 
+
+
+	/*
+		change gravity
+	*/
 	var btnAction8 = document.createElement( 'button' );
 	btnAction8.id = 'action8';
 	btnAction8.style.cssText = cssBtn;
 	btnAction8.innerHTML = 'Change gravity';
-	container.appendChild( btnAction8 );
 
-	// container.appendChild(document.createElement('br'));
-	container.appendChild(document.createTextNode( '\u00A0\u00A0' ));
+	// container.appendChild( btnAction8 );
+	// container.appendChild(document.createTextNode( '\u00A0\u00A0' ));
 
-	// button to find mutually bounded
+
+
+	/*
+		get pause point
+	*/
 	var btnAction4 = document.createElement( 'button' );
 	btnAction4.id = 'action4';
 	btnAction4.style.cssText = cssBtn;
 	btnAction4.innerHTML = 'Get pause point';
-	container.appendChild( btnAction4 );
+
+	// container.appendChild( btnAction4 );
+	// container.appendChild(document.createElement('br'));
+	// container.appendChild(document.createTextNode( '\u00A0\u00A0' ));
+
+
+
+	/*
+		toggle support
+	*/
+	var btnAction11 = document.createElement( 'button' );
+	btnAction11.id = 'action7';
+	btnAction11.style.cssText = cssBtn;
+	btnAction11.innerHTML = 'Toggle support';
+	container.appendChild( btnAction11 );
+
+	container.appendChild(document.createTextNode( '\u00A0\u00A0' ));
+
+
+	/*
+		make printable
+	*/
+	var btnAction10 = document.createElement( 'button' );
+	btnAction10.id = 'action10';
+	btnAction10.style.cssText = cssBtn;
+	btnAction10.innerHTML = 'Make it printable';
+	container.appendChild( btnAction10 );
+
+	// container.appendChild(document.createTextNode( '\u00A0\u00A0' ));
 	container.appendChild(document.createElement('br'));
 
+	// var lb4 = document.createElement( 'label' );
+	// lb4.innerHTML = slider1.value + "%";
+	// lb4.style.cssText = cssCb;
+	// container.appendChild( lb4 );
 
+	/*
+		restore objects
+	*/
+	var btnAction9 = document.createElement( 'button' );
+	btnAction9.id = 'action9';
+	btnAction9.style.cssText = cssBtn;
+	btnAction9.innerHTML = 'Restore objects';
+
+	container.appendChild( btnAction9 );
+	container.appendChild(document.createTextNode( '\u00A0\u00A0' ));
+	// container.appendChild(document.createElement('br'));
+
+	
+
+
+	/*
+		save stl
+	*/
 	var btnAction7 = document.createElement( 'button' );
 	btnAction7.id = 'action7';
 	btnAction7.style.cssText = cssBtn;
@@ -192,22 +295,7 @@ var ControlPanel = function () {
 	container.appendChild( btnAction7 );
 
 	container.appendChild(document.createElement('br'));
-
 	
-
-	// var lb4 = document.createElement( 'label' );
-	// lb4.innerHTML = slider1.value + "%";
-	// lb4.style.cssText = cssCb;
-	// container.appendChild( lb4 );
-
-	container.appendChild(document.createElement('br'));
-	// var btnAction6 = document.createElement( 'button' );
-	// btnAction6.id = 'action6';
-	// btnAction6.style.cssText = cssBtn;
-	// btnAction6.innerHTML = 'Apply physics';
-	// container.appendChild( btnAction6 );
-
-	// container.appendChild(document.createElement('br'));
 
 	// var outputLabel = document.createElement('label');
 	// outputLabel.style.cssText = cssCb;
@@ -251,11 +339,19 @@ var ControlPanel = function () {
 
 		button8: btnAction8,
 
+		button9: btnAction9,
+
+		button10: btnAction10,
+
+		button11: btnAction11,
+
 		checkbox1: cb1,
 
 		checkbox2: cb2,
 
 		checkbox3: cb3,
+
+		checkbox4: cb4,
 
 		slider1: slider1,
 
@@ -264,6 +360,7 @@ var ControlPanel = function () {
 		slider3: slider3,
 
 		// label4: lb4,
+		label7: lb7,
 
 		dd1: dd1,
 

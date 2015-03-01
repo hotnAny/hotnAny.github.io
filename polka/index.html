@@ -14,10 +14,9 @@
 		<script src="js/stat.min.js"></script>
 		<script src="js/controls/TrackballControls.js"></script>
 		<script src="js/STLLoader.js"></script>
-		<script src="js/OBJLoader.js"></script>
 		<script src="js/threeoctree.old.js"></script>
 		<script src="js/physi.js"></script>
-		<script src="js/SubdivisionModifier.js"></script>
+		
 		<script type="text/javascript" charset="utf-8" src="js/THREE2STL.js"></script>
 
 		<script src="js/FileSaver.min.js"></script>
@@ -32,7 +31,6 @@
 
 		<!-- capability js -->
 		<script src="src/xacMouseControl.js"></script>
-		<script src="src/xacCollisionDetection.js"></script>
 		<script src="src/xacIntersectionDetection.js"></script>
 		<script src="src/xacOverlapDetection.js"></script>
 		<script src="src/xacInterlockDetection.js"></script>
@@ -59,7 +57,10 @@
 			stats.domElement.style.right = '0px';
 			document.body.appendChild( stats.domElement );
 
-			/* physics engine set up */
+			
+			/* 
+				physics engine set up 
+			*/
 			Physijs.scripts.worker = 'physijs_worker.js';
 			Physijs.scripts.ammo = 'ammo.js';
 
@@ -77,6 +78,10 @@
 				}
 			);
 
+
+			/*
+				render set up
+			*/
 			renderer.setClearColorHex( 0x000000, 1 );
 
 			var render = function () {
@@ -94,10 +99,6 @@
 			  
 				for(var i=0; i<objects.length; i++) {
 					objects[i].geometry.__dirtyVertices = true;
-					// if(objects[i].ctrMass != undefined) {
-					// 	console.log(objects[i].ctrMass);
-					// 	// objects[i].ctrMass.applyMatrix4(objects[i].matrixWorld))
-					// }
 				}
 
 				updatePositions();
@@ -115,6 +116,5 @@
 			render();
 		</script>
 
-		
 	</body>
 </html>

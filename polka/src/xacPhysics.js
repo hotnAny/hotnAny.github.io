@@ -1,17 +1,32 @@
-var DIMVOXELS = 32;
-var GRAVITYSCALE = 16;
-var gravityDir = -1;
+/* 
+	physics specific variables
+*/
 
-var prevVel;
+var DIMVOXELS = 16;
+var GRAVITYSCALE = 640;
+var gravityDir = -1;
+var gravity = new THREE.Vector3(0, gravityDir * GRAVITYSCALE, 0);
+
+// var prevVel;
 var prevPos;
 
 // for the non static object
-var minHeight = 1000;
-var maxHeight = -1000;
+var minHeight = INFINITY;
+var maxHeight = -INFINITY;
 
-
-var NUMFRAMESFORSTABILITY = 80;
+var NUMFRAMESPERSIMULATION = 60 * 5;
+var NUMFRAMESFORSTABILITY = 60 * 1;
 var cntStableFrames = -NUMFRAMESFORSTABILITY;
+var cntFramesPerSimulation = 0;
+
+
+var lowerHeights = new Array();
+var higherHeights = new Array();
+
+var BOUND = 2000;
+
+// var numsVoxels = new Array();
+
 
 /*
 	voxelizing predefined objects
@@ -20,123 +35,65 @@ function voxelize() {
 	for(var i=0; i<objects.length; i++) {
 		voxelizeObject(objects[i]);
 	}
-	// voxelizeObject(objects[1]);
 }
+
 
 /*
 	voxelizing an object, using cubes to represent the surface
 */
 function voxelizeObject(obj) {
-
-	var voxels = new Array();
-
-	/* building a voxel grid */
 	var voxelGrid = new VoxelGrid(DIMVOXELS, obj);
-	voxelGrid._isStatic = obj.isStatic;
-
-	console.log(obj.name + "\'s voxel dimension: ")
-	console.log(voxelGrid._dim);
-
-	/* building an octree */
-	var ot = new THREE.Octree({
-          undeferred: false,
-          depthMax: Infinity,
-          scene: scene
-        });
-	ot.add(obj, { useFaces: true });
-	ot.update();
-	// ot.setVisibility(true);
-
-	/* surface-in-cude test */
-	obj.geometry.computeFaceNormals();
-	for(var i=0; i<voxelGrid._dim.x; i++) {
-		for(var j=0; j<voxelGrid._dim.y; j++) {
-			for(var k=0; k<voxelGrid._dim.z; k++) {
-
-				var ctr = voxelGrid.getVoxelCentroid(i, j, k);
-				// console.log(ctr);
-				var elms = ot.search(ctr, 0.5);
-				// console.log(elms.length);
-				// if(elms.length > 0) {
-				// 	voxelGrid.mark(i, j, k);
-				// }
-
-				for(var h=0; h<elms.length; h++) {
-					
-					/* face centroid */
-					var v = elms[h].faces.centroid.clone();
-					v.applyMatrix4(obj.matrixWorld);
-
-					/* if a face center is in this voxel, include this voxel */
-					if(voxelGrid.isInThisVoxel(v, i, j, k)) {
-						voxelGrid.mark(i, j, k);
-						break;
-					} 
-					/* otherwise test the case where a triangle might span multiple voxels */
-					else {
-						/* faces and their vertices */
-						var f = elms[h].faces;
-						var va = obj.geometry.vertices[f.a].clone().applyMatrix4(obj.matrixWorld);
-						var vb = obj.geometry.vertices[f.b].clone().applyMatrix4(obj.matrixWorld);
-						var vc = obj.geometry.vertices[f.c].clone().applyMatrix4(obj.matrixWorld);
-
-						if(triangleArea(va, vb, vc) < 1) {
-							continue;
-						}
-
-						/* 
-							calculating the intersecting point between |v1v2| and the plane of the elms[i].face 
-							ref: http://geomalgorithms.com/a06-_intersect-2.html
-						*/
-						var nml = f.normal.clone();
-						var v1 = ctr.clone();
-						var v2 = ctr.clone().add(nml);
-						var denominator = nml.dot(new THREE.Vector3().subVectors(v2, v1));
-
-						if(denominator == 0) {
-							continue;
-						}
-
-						var r = nml.dot(new THREE.Vector3().subVectors(v, v1)) / denominator;
-						var pr = v1.clone().add(new THREE.Vector3().subVectors(v2, v1).multiplyScalar(r));
-
-						/* find out if the intersecting point is i) between v1 and v2; and ii) inside the triangle */
-						if(isInTriangle(pr, va, vb, vc) && ctr.distanceTo(pr) < voxelGrid._unitSize / 4) {
-
-							voxelGrid.mark(i, j, k);
-
-							break;
-						}
-					}
-				} /* end of octree search */
-			}
-		}
-	}
-
-	// var voxels = voxelGrid.exportMarkedVoxels();
-	// console.log(voxels.length);
-	scene.remove(obj);
-	voxelGrid.exportMarkedVoxels(obj.isStatic);
-	// for(var i=0; i < obj.children.length; i++) {
-	// 	// obj.children[i].position.sub(voxelGrid._voxelGroup.position);
-	// 	// obj.children[i].position.x -= voxelGrid._voxelGroup.position.x;
-	// 	// obj.children[i].position.z -= voxelGrid._voxelGroup.position.z;
-	// 	// voxelGrid._voxelGroup.add(obj.children[i]);
-	// 	// console.log("++++++");
-	// 	//.position.sub());
-
-	// 	scene.add(obj.children[i]);
-	// }
-	scene.add(voxelGrid._voxelGroup);
-	// for(var idx=0; idx < voxels.length; idx++) {
-	// 	scene.add(voxels[idx]);
-	// }
-	
+	voxelGrid.voxelizeSurface(obj);
 	voxelGrids.push(voxelGrid);
 }
 
+
+/*
+	optionally removing voxels, definitely restoring meshes
+*/
+function restoreObjects(toRemoveVoxels) {
+	if(toRemoveVoxels) {
+		for(var i=0; i<voxelGrids.length; i++) {
+			voxelGrids[i].selfRemove();
+		}
+		voxelGrids.splice(0, voxelGrids.length);
+
+		for(var i=0; i<voxelGroupsDyn.length; i++) {
+			scene.remove(voxelGroupsDyn[i]);
+		}
+	}
+	
+	if(objectPair != undefined) {
+		scene.add(objectPair);
+	} else {
+		for(var i=0; i<objects.length; i++) {
+			scene.add(objects[i]);
+		}
+	}
+}
+
+
+/*
+	removing voxels, restoring meshes
+*/
+function removeObjects() {
+	if(objectPair != undefined) {
+		scene.remove(objectPair);
+	} else {
+		for(var i=0; i<objects.length; i++) {
+			scene.remove(objects[i]);
+		}
+	}
+}
+
+
+/* 
+	slice the object to print up to a specific height 
+*/
 function slice() {
-	var boundedMaxHeight = -1000;
+	
+	/* only care about the max height of the overlapping part*/
+	var boundedMaxHeight = -INFINITY;
 
 	for(var i=0; i<objects.length; i++) {
 		if(!objects[i].isStatic) {
@@ -148,46 +105,123 @@ function slice() {
 				var vc = objects[i].geometry.vertices[f.c].clone().applyMatrix4(objects[i].matrixWorld);
 
 				boundedMaxHeight = Math.max(boundedMaxHeight, va.y);
-
-				// addATriangle(va, vb, vc, 0xffff00);
-
-				// console.log(f);
+				boundedMaxHeight = Math.max(boundedMaxHeight, vb.y);
+				boundedMaxHeight = Math.max(boundedMaxHeight, vc.y);
 			}
 		}
 	}
 	
+	/* slice the object to print */
+	var sliceHeight = mutuallyBounded.length <= 0 ? maxHeight : boundedMaxHeight;
 	for(var i=0; i<voxelGrids.length; i++) {
 		if(voxelGrids[i]._isStatic) {
-			voxelGrids[i].sliceToHeight(mutuallyBounded.length <= 0 ? maxHeight : boundedMaxHeight);
+			/* replacing static object with sliced layers */
+			voxelGroupsDyn[i] = sliceToHeight(voxelGroupsDyn[i], sliceHeight);
 			break;
 		}
 	}
-	computeLayerAtHeight(maxHeight);
+
+	/* get the pausing point based on slicing */
+	computeLayerAtHeight(sliceHeight);
 }
 
-function changeGravity() {
-	// gravity.applyAxisAngle(new THREE.Vector3(0, 0, 1), Math.PI / 2);
-	gravityDir *= -1;
-	var gravity = new THREE.Vector3(0, gravityDir * GRAVITYSCALE, 0)
-	console.log(gravity);
-	scene.setGravity(gravity);
 
-	usingPhysics = true;
-	controlPanel.checkbox3.checked = usingPhysics;
-	scene.simulate();
+function sliceToHeight (voxelGroup, height) {
+
+	scene.updateMatrixWorld();
+	voxelGroup.updateMatrixWorld();
+
+	var geometry = new THREE.CubeGeometry(0, 0, 0);
+	var material = new THREE.MeshBasicMaterial( {color: 0xffff00, transparent: true, opacity: 0.25} );
+	var voxelGroupSliced = new Physijs.BoxMesh(geometry, material, 0);
+	voxelGroupSliced.position = voxelGroup.position;
+	voxelGroupSliced.applyMatrix(voxelGroup.matrixWorld);
 	
-	// reset variables
-	cntStableFrames = -NUMFRAMESFORSTABILITY;
-	minHeight = 1000;
-	maxHeight = -1000;
+	var childrenToKeep = new Array();
+	for(var j=0; j<voxelGroup.children.length; j++) {
+		
+		var pos = new THREE.Vector3().getPositionFromMatrix(voxelGroup.children[j].matrixWorld);//.add(voxelGroup.position);
+		
+		if(pos.y + voxelGrids[0]._unitSize / 2 <= height ) {
+
+			childrenToKeep.push(voxelGroup.children[j]);
+		} 
+	}
+
+	// voxelGroup.children.splice(0, voxelGroup.children.length);
+	scene.remove(voxelGroup);
+	// console.log("childre to keep: " + childrenToKeep.length);
+	for(var i=0; i<childrenToKeep.length; i++) {
+		voxelGroupSliced.add(childrenToKeep[i]);
+	}
+	scene.add(voxelGroupSliced);
+	return voxelGroupSliced;
 }
 
+
+
+/*
+	reverse the gravity to gauge printability
+*/
+
+var gravityReversed = false;
+
+function reverseGravity() {
+	var minusGravity = gravity.clone().multiplyScalar(-1);
+	scene.setGravity(minusGravity);
+	initPhysics();
+	gravityReversed = true;
+}
+
+
+// function switchGravity() {
+
+// 	var axisX = new THREE.Vector3(1, 0, 0);
+// 	rotateGravity(axisX, rotX);
+
+// 	var axisZ = new THREE.Vector3(0, 0, 1);
+// 	rotateGravity(axisZ, rotZ);
+
+// 	log("Range of height: [" + minHeight + ", " + maxHeight + "]");
+// 	gravityReversed = false;
+// 	cntFramesPerSimulation = 0;
+// }
+
+function initPhysics() {
+	cntStableFrames = -NUMFRAMESFORSTABILITY;
+	cntFramesPerSimulation = 0;
+	minHeight = INFINITY;
+	maxHeight = -INFINITY;
+	prevPos = undefined;
+}
+
+
+// function rotateGravity(axis, angle) {
+// 	gravity.applyAxisAngle(axis, angle);
+
+// 	for(var i=0; i<legends.length; i++) {
+// 		if(legends[i].name == 'arrow') {
+// 			legends[i].rotateOnAxis(axis, angle);
+// 		}
+// 	}
+// }
+
+
+
+/*
+	keep track of objects min/max y position as one drops
+	run per update cycle
+*/
 function updatePositions() {
 	if(!usingPhysics) {
 		return;
 	}
 
-	// console.log("updating positions ...");
+	if(cntFramesPerSimulation == 0) {
+		timeStamp();
+	}
+
+	++cntFramesPerSimulation;
 
 	for(var i=0; i<voxelGrids.length; i++) {
 		if(voxelGrids[i]._isStatic) {
@@ -201,39 +235,30 @@ function updatePositions() {
 		// var delta = 1000;
 		var vel;
 		if(prevPos != undefined) {
-			vel = voxelGrids[i]._voxelGroup.position.y - prevPos;
+			vel = voxelGrids[i]._voxelGroup.position.y/*dot(gravity)*/ - prevPos;
 		}
 
 		// console.log(delta);
 
-		if(Math.abs(vel) < 0.1 || Math.abs(voxelGrids[i]._voxelGroup.position.y) > 200) {
+		/* if object is pausing || it has gone away too far */
+		if(Math.abs(vel) < 0.1 || !isOutOfBound(voxelGrids[i]._voxelGroup.position, BOUND)) {// Math.abs(voxelGrids[i]._voxelGroup.position.y) > 200) {
 			scene.updateMatrixWorld();
 
-			minHeight = 1000;
-			maxHeight = -1000;
+			minHeight = INFINITY;
+			maxHeight = -INFINITY;
 			
-			for(var j=0; j<voxelGrids[i]._voxelGroup.children.length; j++) {
-				voxelGrids[i]._voxelGroup.updateMatrixWorld();
-				var pos = new THREE.Vector3().getPositionFromMatrix(voxelGrids[i]._voxelGroup.children[j].matrixWorld);
+			/* traverse all the voxels to obtain the extremes */
+			// for(var j=0; j<voxelGrids[i]._voxelGroup.children.length; j++) {
+			for(var j=0; j<voxelGroupDynamic.children.length; j++) {	
+				// voxelGrids[i]._voxelGroup.updateMatrixWorld();
+				voxelGroupDynamic.updateMatrixWorld();
+
+				// var pos = new THREE.Vector3().getPositionFromMatrix(voxelGrids[i]._voxelGroup.children[j].matrixWorld);
+				var pos = new THREE.Vector3().getPositionFromMatrix(voxelGroupDynamic.children[j].matrixWorld);
+
 				minHeight = Math.min(pos.y, minHeight);
 				maxHeight = Math.max(pos.y, maxHeight);
-				// minHeight = Math.min(voxelGrids[i]._voxelGroup.children[j].position.y, minHeight);
-				// maxHeight = Math.max(voxelGrids[i]._voxelGroup.children[j].position.y, maxHeight);
 			}
-
-			// console.log(minHeight + ", " + maxHeight);
-
-			// var deltaMinMax = 1000;
-			// if(preMinHeight != undefined && preMaxHeight != undefined) {
-			// 	deltaMinMax = Math.max(Math.abs(maxHeight - preMaxHeight), Math.abs(minHeight - preMinHeight));
-			// }
-			// preMinHeight = minHeight;
-			// preMaxHeight = maxHeight;
-
-			// if(deltaMinMax < 0.0001) {
-			// 	usingPhysics = false;
-			// 	controlPanel.checkbox3.checked = usingPhysics;
-			// }
 
 			cntStableFrames++;
 
@@ -242,25 +267,61 @@ function updatePositions() {
 		}
 
 
-		if(cntStableFrames >= NUMFRAMESFORSTABILITY || Math.abs(voxelGrids[i]._voxelGroup.position.y) > 200) {
-			usingPhysics = false;
-			controlPanel.checkbox3.checked = usingPhysics;
+		/* if object has been relatively static for a few frames || or it has gone too far*/
+		// 
+		// cntStableFrames >= NUMFRAMESFORSTABILITY || Math.abs(voxelGrids[i]._voxelGroup.position.y) > 200) {
+		//
+		prevPos = voxelGrids[i]._voxelGroup.position.y;//.dot(gravity);
+
+		if(cntStableFrames >= NUMFRAMESFORSTABILITY || cntFramesPerSimulation > NUMFRAMESPERSIMULATION 
+			|| isOutOfBound(voxelGrids[i]._voxelGroup.position, BOUND)) {
+			console.log(cntStableFrames + ", " + cntFramesPerSimulation);
 
 			log("Range of height: [" + minHeight + ", " + maxHeight + "]");
 
+			log("Time elapsed: " + timeStamp() + " msec");
+			if(gravityReversed) {
+				
+				higherHeights[0] = minHeight;
+				higherHeights[1] = maxHeight;
+
+				if(higherHeights[0] < lowerHeights[1]) {
+					// restoreObjects();
+					gravityReversed = false;
+
+					if(withoutSupport) {
+						makeItPrintable();
+					} else {
+						usingPhysics = false;
+						restoreObjects(false);
+						objectPair = undefined;
+					}
+				} else {
+					usingPhysics = false;
+					log("Search time: " + (now() - tSearchStart) + " msec");
+				}
+
+				controlPanel.checkbox3.checked = usingPhysics;
+			} else {
+				lowerHeights[0] = minHeight;
+				lowerHeights[1] = maxHeight;
+
+				slice();
+				reverseGravity();
+			}
 		}
-
-		// else {
-		// 	usingPhysics = true;
-		// 	controlPanel.checkbox3.checked = usingPhysics;
-		// }
-
-		prevPos = voxelGrids[i]._voxelGroup.position.y;
-		// prevVel = vel;
-		// console.log(i + ": " + voxelGrids[i]._isStatic + ": " + voxelGrids[i]._voxelGroup.position.y + "\r");
 	}	
 }
 
+function isOutOfBound(pos, perimeter) {
+	return Math.abs(pos.x) > perimeter || Math.abs(pos.y) > perimeter || Math.abs(pos.z) > perimeter;
+}
+
+
+
+/*
+	compute which layer (to pause, shown in %) at a given height
+*/
 function computeLayerToPause() {
 	computeLayerAtHeight(minHeight);
 }
@@ -272,7 +333,10 @@ function computeLayerAtHeight(height) {
 			var bbMin = objects[i].geometry.boundingBox.min.applyMatrix4(objects[i].matrixWorld);
 			var bbMax = objects[i].geometry.boundingBox.max.applyMatrix4(objects[i].matrixWorld);
 			var top = Math.max(bbMin.y, bbMax.y);
-			var btm = 0;// Math.min(bbMin.y, bbMax.y);
+
+			/* updated: we are actually considering the height from ground zero */
+			// var btm = 0;// Math.min(bbMin.y, bbMax.y);
+			var btm = Math.min(bbMin.y, bbMax.y);
 			if(height > top || height < btm) {
 				log("out of bound");
 			} else {

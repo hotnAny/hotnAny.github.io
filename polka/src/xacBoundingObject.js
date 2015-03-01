@@ -1,9 +1,6 @@
-// function subDivide(obj, subdiv) {
-// 	var modifier = new THREE.SubdivisionModifier( subdiv );
-// 	modifier.modify(obj.geometry);
-
-//     log("simplified: " + obj.geometry.vertices.length + " vertices, " + obj.geometry.faces.length + " faces");
-// }
+/*
+	only for testing the physics engine
+*/
 
 function createBoxelizedSphere(radius, numBoxes) {
 	var bSphere;

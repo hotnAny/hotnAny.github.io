@@ -10,18 +10,24 @@ var D_PHYSICS = false;
 
 var helpers = new Array();
 
+var balls = new THREE.Object3D();
 var boxes = new THREE.Object3D();
 
 // ///////////////
+var INFINITY = 10e9;
+// var SIZEZERO = 
 var ball;
 
 var objDynamic = null;
 var objStatic = null;
 var objects = new Array();
+var legends = new Array();
+var octrees = new Array();
 var voxelGrids = new Array();
 var supports = new Array();
-// var ctrsMass = new Array();
+var objectPair;// = new THREE.Object3D();
 
+// #obselete
 // projections of objStatic
 var projStatic = new Array();
 var projDynamic = new Array();
@@ -42,7 +48,7 @@ document.body.appendChild( renderer.domElement );
 /* using physijs now */
 var scene = new Physijs.Scene({ fixedTimeStep: 1 / 120 });
 
-var camera = new THREE.PerspectiveCamera( 45, window.innerWidth/window.innerHeight, 1, 10000 );
+var camera = new THREE.PerspectiveCamera( 60, window.innerWidth/window.innerHeight, 1, 10000 );
 camera.position.set(-0, 150, 180);
 
 var controls = new THREE.TrackballControls( camera ); // for mouse control
@@ -76,47 +82,53 @@ var octreesProj = new Array();
 
 var usingPhysics = false;
 
-/*
+var staticObjLocked = true;
+
+var withoutSupport = true;
+
+/*-----------------------------------------------------------------------------------------------
+     
      models
-*/
+
+-----------------------------------------------------------------------------------------------*/
 
 var stlLoader = new THREE.STLLoader();
-var objLoader = new THREE.OBJLoader();
-var jsonLoader = new THREE.JSONLoader();
-
-var tree = 'things/xmas-tree-v1.stl';
-var chess = 'things/classic_bishop.stl';
-var bunny = 'things/bunny.stl';
-var dragon = 'things/dragon.stl';
 
 var key = 'things/keyxac.stl';
-var key2 = 'things/key2.stl';
-var key3 = 'things/key3.stl';
-var key4 = 'things/key4.stl';
+// var key2 = 'things/key2.stl';
+// var key3 = 'things/key3.stl';
+// var key4 = 'things/key4.stl';
 
 var ring = 'things/ring.stl';
 var ring3 = 'things/ring2.stl';
 
-/* key chain */
+/* key + ring */
 var ringStand = 'things/ring-stand.stl';
 var dodecahedron = 'things/dodecahedron.stl';
-
-/* random */
-var lucy = 'things/lucy.js';
-var baymax = 'things/baymax.stl';
 
 /* making bracelets */
 var diamond = 'things/diamond2.stl';
 var cross = 'things/cross.stl';
 
-var mug = 'things/mug.stl';
-
+/* bracelet + heart */
 var bracelet = 'things/bracelet.stl';
 var heart = 'things/heart.stl';
 
-var scissors = 'things/scissors.stl';
-
-var meshBall = 'things/shell-gD.stl';
-
+/* tetra keychain */
 var tetra = 'things/tetra.stl';
 var ringSmall = 'things/ring-small.stl';
+
+var cube = 'things/cube.stl';
+var nervos = 'things/nervos.stl';
+var cylinder = 'things/cylinder.stl';
+var trisqr = 'things/trisqr.stl';
+var arrow = 'things/arrow.stl';
+var frame = 'things/frame2.stl';
+var skull = 'things/skull.stl';
+var meshouter = 'things/deltoidalIcositetrahedron-outer.stl';
+var meshinner = 'things/deltoidalIcositetrahedron-inner.stl';
+
+var tetraSmall = 'things/tetra-small.stl';
+
+var ballOuter = 'things/ball-outer.stl';
+var ballInner = 'things/ball-inner.stl';
