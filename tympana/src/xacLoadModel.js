@@ -4,7 +4,9 @@ function loadStl (objPath, objName, isStatic, addToObjects) {
     THREE.GeometryUtils.center(geometry);
 
     // geometry.dynamic = true;
-    var material = new THREE.MeshLambertMaterial( { color: colorNormal} );  
+    // var material = new THREE.MeshLambertMaterial( { color: colorNormal, transparent: true, opacity: 0.5} );  
+    var material= new THREE.MeshBasicMaterial( { color: colorNormal, shading: THREE.FlatShading, vertexColors: THREE.VertexColors, transparent: true, opacity: 0.75} );
+    // var material = new THREE.MeshBasicMaterial( { vertexColors: THREE.VertexColors } );
     // material.side = THREE.DoubleSide;
     var object = new THREE.Mesh(geometry, material); 
 
@@ -237,78 +239,3 @@ if(D_MOUSE) {
   below are functions that render debugging objects
   */
 
-function addAPhyCube() {
-  var material = new THREE.MeshPhongMaterial( { color: 0xFFFFFF} );  
-  var object = new Physijs.BoxMesh(new THREE.CubeGeometry( 10 * Math.random(), 10 * Math.random(), 10 * Math.random() ), material);
-  object.position.set(20 * Math.random(), 20 + 10 * Math.random(), 20 * Math.random()); 
-  object.rotation.set(-Math.PI/2 * Math.random(), -Math.PI/2 * Math.random(), -Math.PI/2 * Math.random());
-  object.castShadow = true;
-  object.receiveShadow = true;
-  scene.add(object); 
-  objects.push(object);
-}
-
-function addTheBall() {
-  var geometry = new THREE.SphereGeometry( 5, 20, 20 );
-  var material = new THREE.MeshBasicMaterial( { color: 0xf0ff00 } );
-  ball = new THREE.Mesh( geometry, material );
-  
-  scene.add( ball );
-  objects.push(ball);
-}
-
-function addABox(l, r, t, b, f, b, addToObjects) {
-  var geometry = new THREE.CubeGeometry(r-l, t-b, f-b);
-  console.log(geometry);
-  var material = new THREE.MeshBasicMaterial( { color: 0xFF0066, wireframe: true, wireframeLinewidth: 1 } );
-  var box = new THREE.Mesh(geometry, material);
-  box.position.set((l+r)/2, (t+b)/2, (f+b)/2);
-
-  // scene.add(box);
-  if(addToObjects) {
-    objects.push(box);
-  } else {
-    boxes.add(box);
-  }
-
-  return box;
-}
-
-function addATriangle(v1, v2, v3, clr) {
-  var vs = [v1.x, v1.y, v1.z, v2.x, v2.y, v2.z, v3.x, v3.y, v3.z];
-  var fs = new THREE.Face3(0, 1, 2);
-
-  var geometry = new THREE.Geometry(); //PolyhedronGeometry(vs, fs, 1, 1);
-  geometry.vertices.push(v1);
-  geometry.vertices.push(v2);
-  geometry.vertices.push(v3);
-  geometry.faces.push(new THREE.Face3(0, 1, 2));
-  var material = new THREE.MeshBasicMaterial( { color: clr } );
-  var tri = new THREE.Mesh(geometry, material);
-  tri.material.side = THREE.DoubleSide;
-
-  scene.add(tri);
-}
-
-function addABall(x, y, z, clr, radius) {
-  var geometry = new THREE.SphereGeometry( radius, 10, 10 );
-  var material = new THREE.MeshBasicMaterial( { color: clr } );
-  var ball = new THREE.Mesh( geometry, material );
-  ball.position.set(x, y, z);
-  
-  // console.log(ball.position);
-  balls.add(ball);
- //   scene.add( ball1 );
- //   ball2 = new THREE.Mesh( geometry, material );
- //   scene.add( ball2 );
-}
-
-function addALine(v1, v2, clr) {
-  var geometry = new THREE.Geometry();
-  geometry.vertices.push(v1);
-  geometry.vertices.push(v2);
-  var material = new THREE.LineBasicMaterial({color: clr});
-  var line = new THREE.Line(geometry, material);
-
-  scene.add(line);
-}

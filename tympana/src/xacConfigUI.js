@@ -32,13 +32,9 @@ controlPanel.slider3.oninput = rotateObjectZ;
 /* populating objects into lists */
 controlPanel.dd1.appendChild(controlPanel.ddOption("-----------", undefined));
 controlPanel.dd1.appendChild(controlPanel.ddOption("Teddy", teddy));
-controlPanel.dd1.appendChild(controlPanel.ddOption("Tetra", tetra));
-controlPanel.dd1.appendChild(controlPanel.ddOption("Ball", ball));
-// controlPanel.dd1.appendChild(controlPanel.ddOption("Mesh", meshouter));
-// controlPanel.dd1.appendChild(controlPanel.ddOption("Small ring", ringSmall));
-// controlPanel.dd1.appendChild(controlPanel.ddOption("Nervos", nervos));
-// controlPanel.dd1.appendChild(controlPanel.ddOption("Frame", frame));
-// controlPanel.dd1.appendChild(controlPanel.ddOption("Big ball", ballOuter));
+controlPanel.dd1.appendChild(controlPanel.ddOption("Wrench", wrench));
+controlPanel.dd1.appendChild(controlPanel.ddOption("Mug", mug));
+
 controlPanel.dd1.onchange = loadObjToPrint;
 
 // controlPanel.dd2.appendChild(controlPanel.ddOption("-----------", undefined));

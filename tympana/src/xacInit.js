@@ -44,6 +44,7 @@ var colorsBold = [0xff0000, 0x00ff00, 0x0000ff];
 
 var renderer = new THREE.WebGLRenderer( { antialias: true } );
 renderer.setSize( window.innerWidth, window.innerHeight );
+// renderer.setPixelRatio( window.devicePixelRatio );
 document.body.appendChild( renderer.domElement );
 
 /* using physijs now */
@@ -97,5 +98,5 @@ var withoutSupport = true;
 var stlLoader = new THREE.STLLoader();
 
 var teddy = 'things/teddy.stl';
-var tetra = 'things/tetra.stl';
-var ball = 'things/ball-outer.stl';
+var wrench = 'things/wrench.stl';
+var mug = 'things/mug.stl';

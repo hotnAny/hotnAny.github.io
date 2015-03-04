@@ -280,3 +280,118 @@ function toggleSupport() {
 
 	withoutSupport = !withoutSupport;
 }
+
+function addAPhyCube() {
+  var material = new THREE.MeshPhongMaterial( { color: 0xFFFFFF} );  
+  var object = new Physijs.BoxMesh(new THREE.CubeGeometry( 10 * Math.random(), 10 * Math.random(), 10 * Math.random() ), material);
+  object.position.set(20 * Math.random(), 20 + 10 * Math.random(), 20 * Math.random()); 
+  object.rotation.set(-Math.PI/2 * Math.random(), -Math.PI/2 * Math.random(), -Math.PI/2 * Math.random());
+  object.castShadow = true;
+  object.receiveShadow = true;
+  scene.add(object); 
+  objects.push(object);
+}
+
+function addTheBall() {
+  var geometry = new THREE.SphereGeometry( 5, 20, 20 );
+  var material = new THREE.MeshBasicMaterial( { color: 0xf0ff00 } );
+  ball = new THREE.Mesh( geometry, material );
+  
+  scene.add( ball );
+  objects.push(ball);
+}
+
+function addABox(l, r, t, b, f, b, addToObjects) {
+  var geometry = new THREE.CubeGeometry(r-l, t-b, f-b);
+  console.log(geometry);
+  var material = new THREE.MeshBasicMaterial( { color: 0xFF0066, wireframe: true, wireframeLinewidth: 1 } );
+  var box = new THREE.Mesh(geometry, material);
+  box.position.set((l+r)/2, (t+b)/2, (f+b)/2);
+
+  // scene.add(box);
+  if(addToObjects) {
+    objects.push(box);
+  } else {
+    boxes.add(box);
+  }
+
+  return box;
+}
+
+function addATriangle(v1, v2, v3, clr) {
+  var vs = [v1.x, v1.y, v1.z, v2.x, v2.y, v2.z, v3.x, v3.y, v3.z];
+  var fs = new THREE.Face3(0, 1, 2);
+
+  var geometry = new THREE.Geometry(); //PolyhedronGeometry(vs, fs, 1, 1);
+  geometry.vertices.push(v1);
+  geometry.vertices.push(v2);
+  geometry.vertices.push(v3);
+  geometry.faces.push(new THREE.Face3(0, 1, 2));
+  var material = new THREE.MeshBasicMaterial( { color: clr, transparent: true, opacity: 0.5} );
+  var tri = new THREE.Mesh(geometry, material);
+  tri.material.side = THREE.DoubleSide;
+
+  scene.add(tri);
+}
+
+function addABall(x, y, z, clr, radius) {
+  var geometry = new THREE.SphereGeometry( radius, 10, 10 );
+  var material = new THREE.MeshBasicMaterial( { color: clr } );
+  var ball = new THREE.Mesh( geometry, material );
+  ball.position.set(x, y, z);
+  
+  // console.log(ball.position);
+  balls.add(ball);
+ //   scene.add( ball1 );
+ //   ball2 = new THREE.Mesh( geometry, material );
+ //   scene.add( ball2 );
+}
+
+function addALine(v1, v2, clr) {
+  var geometry = new THREE.Geometry();
+  geometry.vertices.push(v1);
+  geometry.vertices.push(v2);
+  var material = new THREE.LineBasicMaterial({color: clr});
+  var line = new THREE.Line(geometry, material);
+
+  scene.add(line);
+}
+
+
+function addAColorfulCube() {
+	// this material causes a mesh to use colors assigned to vertices
+	var vertexColorMaterial = new THREE.MeshBasicMaterial( { vertexColors: THREE.VertexColors } );
+
+	var color, point, face, numberOfSides, vertexIndex;
+
+	// faces are indexed using characters
+	var faceIndices = [ 'a', 'b', 'c', 'd' ];
+
+	var size = 100;
+	var cubeGeometry = new THREE.CubeGeometry( size, size, size );
+
+	// first, assign colors to vertices as desired
+	for ( var i = 0; i < cubeGeometry.vertices.length; i++ ) 
+	{
+	    point = cubeGeometry.vertices[ i ];
+	    color = new THREE.Color( 0xffffff );
+	    color.setRGB( 0.5 + point.x / size, 0.5 + point.y / size, 0.5 + point.z / size );
+	    cubeGeometry.colors[i] = color; // use this array for convenience
+	}
+
+	// copy the colors to corresponding positions 
+	//     in each face's vertexColors array.
+	for ( var i = 0; i < cubeGeometry.faces.length; i++ ) 
+	{
+	    face = cubeGeometry.faces[ i ];
+	    numberOfSides = ( face instanceof THREE.Face3 ) ? 3 : 4;
+	    for( var j = 0; j < numberOfSides; j++ ) 
+	    {
+	        vertexIndex = face[ faceIndices[ j ] ];
+	        face.vertexColors[ j ] = cubeGeometry.colors[ vertexIndex ];
+	    }
+	}
+
+	cube = new THREE.Mesh( cubeGeometry, vertexColorMaterial );
+	scene.add(cube);
+}

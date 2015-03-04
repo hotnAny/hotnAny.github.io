@@ -74,15 +74,81 @@ function onMouseDown( event ) {
 	for (var i = 0; i < intersects.length; i++) {
 		var obj = intersects[i].object;
 
+
+
+		/* ----------------------------------------------------------------------------- 
+			for debugging neighbor finding
+		*/
+		var radiusHandle = 5;
+
+		var f = intersects[i].face;
+		var va = obj.geometry.vertices[f.a].clone().applyMatrix4(obj.matrixWorld);
+		var vb = obj.geometry.vertices[f.b].clone().applyMatrix4(obj.matrixWorld);
+		var vc = obj.geometry.vertices[f.c].clone().applyMatrix4(obj.matrixWorld);
+
+		addATriangle(va, vb, vc, 0x0000ff);
+
+		var ctr = new THREE.Vector3().addVectors(va, vb).add(vc).divideScalar(3);
+		neighbors = [f]; // need to check if this f is out of bound
+		findNeighbors(obj, f, ctr, radiusHandle, neighbors, 2);
+		/* ----------------------------------------------------------------------------- */
+
+
+
+
+		/* -----------------------------------------------------------------------------
+			for debugging flatness assessment
+		*/
+
+		var nmlStats = assessFlatness(obj, neighbors);
+		// var nmlSd = nmlStats.sd;
+		console.log("normal sd: " + nmlStats.sd);
+
+		addALine(ctr, new THREE.Vector3().addVectors(ctr, nmlStats.mean.clone().multiplyScalar(2)), 0x0000ff);
+
+		/* ----------------------------------------------------------------------------- */
+
+
+
+		/* ----------------------------------------------------------------------------- 
+			for debugging occlusion assessment
+		*/
+		var percUnsup = assessStability(obj, neighbors, radiusHandle);
+		console.log("percentage unsupported: " + percUnsup);
+
+		/* ----------------------------------------------------------------------------- */
+
+
+
+		/* ----------------------------------------------------------------------------- 
+			for debugging occlusion assessment
+		*/
+		var yUp = new THREE.Vector3(0, 1, 0);
+		var angleToRotate = nmlStats.mean.angleTo(yUp);
+		var axisToRotate = new THREE.Vector3().crossVectors(nmlStats.mean, yUp).normalize();
+
+		// var objWithVisual = new THREE.Object3D();
+		// obj.rotateOnAxis(axisToRotate, angleToRotate);
+		var theta = 15 * Math.PI / 180;
+		var percOccl = assessOcclusion(obj, neighbors, axisToRotate, angleToRotate, theta);
+		console.log("percentage occluded: " + percOccl);
+		/* ----------------------------------------------------------------------------- */
+
+
+
+
+		/* set orientation sliders to match the object selected */
 		var idx = selected.indexOf(obj);
 		if(idx < 0 && (obj.isStatic != true || staticObjLocked == false)) {
 			selected.push(obj);
-			obj.material.color.setHex(colorSelected);
+			// obj.material.color.setHex(colorSelected);
 			controlPanel.slider1.value = obj.rotation.x * 180 / Math.PI;
 			controlPanel.slider2.value = obj.rotation.y * 180 / Math.PI;
 			controlPanel.slider3.value = obj.rotation.z * 180 / Math.PI;
 			break;
 		}
+
+
 	}
 
 	isMouseDown = true;
