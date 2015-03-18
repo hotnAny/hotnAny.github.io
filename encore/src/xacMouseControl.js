@@ -18,6 +18,9 @@ controls.dynamicDampingFactor = 0.3;
 
 var isMouseDown = false;
 
+/* for visual feedback */
+var visualMark;
+
 /* for ADHERE */
 var angleToRotate;
 var axisToRotate;
@@ -39,8 +42,6 @@ document.addEventListener( 'mousedown', onMouseDown, false );
 document.addEventListener( 'mousemove', onMouseMove, false );
 document.addEventListener( 'mouseup', onMouseUp, false );
 
-// for strapping
-var strokePoints = [];
 
 /*
  *	function for performing raycasting
@@ -57,10 +58,6 @@ function rayCast(x, y, objs) {
 	return rayCaster.intersectObjects( objs );
 }
 
-// var _vector = new THREE.Vector3,
-// 	projector = new THREE.Projector(),
-// 	selected_block, mouse_position = new THREE.Vector3, block_offset = new THREE.Vector3, _i, _v3 = new THREE.Vector3, intersect_plane;
-
 
 function onMouseDown( event ) {
 	// event.preventDefault();
@@ -68,7 +65,6 @@ function onMouseDown( event ) {
 	// TODO: fix the hardcoding
 	if(event.clientX < 256) return;
 
-	// usingPhysics = false;
 	controlPanel.checkbox3.checked = usingPhysics;
 
 	var intersects = rayCast(event.clientX, event.clientY, objects);
@@ -92,70 +88,25 @@ function onMouseDown( event ) {
 		var vb = obj.geometry.vertices[f.b].clone().applyMatrix4(obj.matrixWorld);
 		var vc = obj.geometry.vertices[f.c].clone().applyMatrix4(obj.matrixWorld);
 
-		// TODO: standardize the color
-		if(attachmentMethod != undefined) {
-			addATriangle(va, vb, vc, 0x0000ff);	
+		var ctr = new THREE.Vector3().addVectors(va, vb).add(vc).divideScalar(3);
+		var nmlFace = new THREE.Vector3().crossVectors(
+						new THREE.Vector3().subVectors(vb, va),
+						new THREE.Vector3().subVectors(vc, va));
+
+		if(visualMark != undefined) {
+			scene.remove(visualMark);
 		}
+		visualMark = addACircle(ctr, 0.5, 0xdd4411);
+
+		var yUp = new THREE.Vector3(0, 1, 0);
+		var angleMark = yUp.angleTo(nmlFace);
+		var axisMark = new THREE.Vector3().crossVectors(yUp, nmlFace).normalize();
+		visualMark.rotateOnAxis(axisMark, angleMark);
+		visualMark.position.add(nmlFace.multiplyScalar(0.1));
 
 		if(attachmentMethod == ADHERE && staticObjLocked == true) {
-
-			// TODO reset collected marks
-
-			/* ----------------------------------------------------------------------------- 
-				for debugging neighbor finding
-			*/
-			// var radiusHandle = 5;
-
 			faceSelected.push(f);
-			
-			// var ctr = new THREE.Vector3().addVectors(va, vb).add(vc).divideScalar(3);
-			// neighbors = [f]; // need to check if this f is out of bound
-			// findNeighbors(obj, f, ctr, radiusHandle * 1.5, neighbors);
-			
-			/* ----------------------------------------------------------------------------- */
-
-
-
-			/* -----------------------------------------------------------------------------
-				for debugging flatness assessment
-			*/
-
-			// var nmlStats = assessFlatness(obj, neighbors);
-			// var nmlSd = nmlStats.sd;
-			// console.log("normal sd: " + nmlStats.sd);
-
-			// addALine(ctr, new THREE.Vector3().addVectors(ctr, nmlStats.mean.clone().multiplyScalar(2)), 0x0000ff);
-
-			/* ----------------------------------------------------------------------------- */
-
-
-
-			/* ----------------------------------------------------------------------------- 
-				for debugging occlusion assessment
-			*/
-			// var percUnsup = assessStability(obj, neighbors, radiusPrinthead);
-			// console.log("percentage unsupported: " + percUnsup);
-
-			/* ----------------------------------------------------------------------------- */
-
-
-
-			/* ----------------------------------------------------------------------------- 
-				TODO: rethink about it
-
-				for debugging occlusion assessment
-			*/
-			// var yUp = new THREE.Vector3(0, 1, 0);
-			// angleToRotate = nmlStats.mean.angleTo(yUp);
-			// axisToRotate = new THREE.Vector3().crossVectors(nmlStats.mean, yUp).normalize();
-
-			// // var objWithVisual = new THREE.Object3D();
-			// // obj.rotateOnAxis(axisToRotate, angleToRotate);
-			// var theta = 15 * Math.PI / 180;
-			// var percOccl = assessOcclusion(obj, neighbors, axisToRotate, angleToRotate, theta);
-			// console.log("percentage occluded: " + percOccl);
-			/* ----------------------------------------------------------------------------- */
-
+			// addATriangle(va, vb, vc, 0x0000ff);	
 		} else if(attachmentMethod == STRAP) {
 			strokePoints = [];
 		}
@@ -168,7 +119,7 @@ function onMouseDown( event ) {
 			controlPanel.slider2.value = obj.rotation.y * 180 / Math.PI;
 			controlPanel.slider3.value = obj.rotation.z * 180 / Math.PI;
 
-			addATriangle(va, vb, vc, 0x0000ff);	
+			// addATriangle(va, vb, vc, 0x0000ff);	
 			break;
 		}
 	}
@@ -187,56 +138,57 @@ function onMouseMove( event ) {
 
 	// var intersects = rayCast(event.clientX, event.clientY, [ground]);
 
-	if(attachmentMethod == INTERLOCK) {
-		for (var i = 0; i < selected.length; i++) {
-			var obj = selected[i];
-			
-			/* 
-				for interlocking, positioning the objects 
-			*/
-			
-				/* left button */
-			if(event.button == 0) {
-				var intersects = rayCast(event.clientX, event.clientY, [ground]);
-				if(intersects.length <= 0) {
-					continue;
-				}
-
-				var tx = intersects[0].point.x - obj.position.x;
-				var tz = intersects[0].point.z - obj.position.z;
-
-				if(prevGrndX != undefined && prevGrndZ != undefined) {
-					obj.position.x += (intersects[0].point.x - prevGrndX);
-					obj.position.z += (intersects[0].point.z - prevGrndZ);
-				}
-				
-				prevGrndX = intersects[0].point.x;
-				prevGrndZ = intersects[0].point.z;
-
+	// if(attachmentMethod == INTERLOCK) {
+	for (var i = 0; i < selected.length; i++) {
+		var obj = selected[i];
+		
+		/* 
+			for interlocking, positioning the objects 
+		*/
+		
+		/* left button */
+		if(event.button == 0) {
+			var intersects = rayCast(event.clientX, event.clientY, [ground]);
+			if(intersects.length <= 0) {
+				continue;
 			}
 
-			/* right button */
-			else if (event.button == 2){
-				
-				/* approach 1: use mouse coordinates */
-				// if(prevY != undefined) {
-				// 	var deltaScreenY = event.clientY - prevY;
-				// 	obj.position.y -= rateY * deltaScreenY;
-				// }
+			var tx = intersects[0].point.x - obj.position.x;
+			var tz = intersects[0].point.z - obj.position.z;
 
-				/* approach 2: use object's y */
-				var intersects = rayCast(event.clientX, event.clientY, [obj]);
-				if(intersects.length > 0) {
-					obj.position.y = obj.position.y * rateY + intersects[0].point.y * (1 - rateY);
-				} else {
-					var deltaScreenY = event.clientY - prevY;
-					obj.position.y -= rateY * deltaScreenY;
-				}
+			if(prevGrndX != undefined && prevGrndZ != undefined) {
+				obj.position.x += (intersects[0].point.x - prevGrndX);
+				obj.position.z += (intersects[0].point.z - prevGrndZ);
+			}
+			
+			prevGrndX = intersects[0].point.x;
+			prevGrndZ = intersects[0].point.z;
+
+		}
+
+		/* right button */
+		else if (event.button == 2){
+			
+			/* approach 1: use mouse coordinates */
+			// if(prevY != undefined) {
+			// 	var deltaScreenY = event.clientY - prevY;
+			// 	obj.position.y -= rateY * deltaScreenY;
+			// }
+
+			/* approach 2: use object's y */
+			var intersects = rayCast(event.clientX, event.clientY, [obj]);
+			if(intersects.length > 0) {
+				obj.position.y = obj.position.y * rateY + intersects[0].point.y * (1 - rateY);
+			} else {
+				var deltaScreenY = event.clientY - prevY;
+				obj.position.y -= rateY * deltaScreenY;
 			}
 		}
 	}
+	// }
 
-	else if(attachmentMethod == STRAP) {
+	// else 
+	if(attachmentMethod == STRAP) {
 		if(event.button == 0) {
 			var intersects = rayCast(event.clientX, event.clientY, objects);
 			for (var i = 0; i < intersects.length; i++) {
@@ -248,10 +200,11 @@ function onMouseMove( event ) {
 
 			// 	// addATriangle(va, vb, vc, 0x0000ff);
 			// }
-				strokePoints.push(intersects[i].point);
-				addABall(intersects[i].point.x, intersects[i].point.y, intersects[i].point.z, 
-					0xff8844, 0.5);
-				break;
+			strokePoints.push(intersects[i].point);
+		    strokes.push(addABall(intersects[i].point.x, 
+		    	intersects[i].point.y, intersects[i].point.z, 
+				0xff8844, 0.5));
+			break;
 			}
 		}
 	} 
@@ -265,7 +218,7 @@ function onMouseUp( event ) {
 	// event.preventDefault();
 
 	isMouseDown = false;
-	
+
 	var obj;
 	var intersects = rayCast(event.clientX, event.clientY, objects);
 	for(var i=0; i<intersects.length; i++) {
@@ -276,7 +229,7 @@ function onMouseUp( event ) {
 		break;
 	}
 
-	if(obj != undefined) {
+	if(obj != undefined && event.button == 0) {
 		// console.log(obj);
 		if(attachmentMethod == STRAP) {
 
@@ -317,6 +270,8 @@ function onMouseUp( event ) {
 
 			// addATriangle(v0, v1, v2, 0xffff00);
 
+			// find intersecting triangles
+			// ref: http://mathworld.wolfram.com/Point-PlaneDistance.html
 			for(var i=0; i<obj.geometry.faces.length; i++) {
 				var f = obj.geometry.faces[i];
 
@@ -333,20 +288,23 @@ function onMouseUp( event ) {
 							1) close to the cutting plane
 							2) close to the firstly selected points
 					*/
-					if(dist > radiusHandle || v.distanceTo(ctr) > 2 * scale) {
+					if(dist > radiusHandle * 2 || v.distanceTo(ctr) > 2 * scale) {
 						faceInRange = false;
 						break;
 					}
 				}
 
 				if(faceInRange) {
+					facesToStrapOn.push(f);
 					addATriangle(vertices[0], vertices[1], vertices[2], 0xff8844);
 				}
 
 			}
-			// find intersecting triangles
 
-			// ref: http://mathworld.wolfram.com/Point-PlaneDistance.html
+			for (var i = 0; i < strokes.length; i++) {
+				scene.remove(strokes[i]);
+			}
+			
 		}
 	}
 }

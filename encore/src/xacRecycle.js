@@ -1684,3 +1684,179 @@ function distanceToSegment(ctr, p0, p1) {
   // console.log("dist to seg: " + Math.pow(v0.length(), 2) + ", "+ Math.pow(v0.dot(v1), 2));
   return Math.sqrt(Math.pow(v0.length(), 2) - Math.pow(v0.dot(v1.clone().normalize()), 2));
 }
+
+
+  // addABall(ctrMass.x, ctrMass.y, ctrMass.z, 0xff0000, 1);
+  // addABall(lowestPoint.x, lowestPoint.y, lowestPoint.z, 0x00ff00, 1);
+
+  // var rayCaster = new THREE.Raycaster();
+  // var direction = new THREE.Vector3(0, -1, 0);
+  // rayCaster.ray.set(ctrMass, direction.normalize());
+  // var intersects = rayCaster.intersectObjects( [obj] );
+
+  // if(intersects.length > 0) {
+  //  ctrMass.y = intersects[0].point.y;
+  //  console.log("intersected!");
+  // }
+
+  // var highestPoint = new THREE.Vector3(0, ctrMass.y, 0);
+  // var ctrMassXZ = ctrMass.clone();
+  // ctrMassXZ.y = 0;
+  // for(var i=0; i<obj.geometry.vertices.length; i++) {
+  //  var v = obj.geometry.vertices[i].clone().applyMatrix4(obj.matrixWorld);
+
+  //  var vXZ = v.clone();
+  //  vXZ.y = 0;
+  //  if(vXZ.distanceTo(ctrMassXZ) < 2.5 && v.y < highestPoint.y) {
+  //    highestPoint = v.clone();
+  //  }
+  // }
+  // // addABall(highestPoint.x, highestPoint.y, highestPoint.z, 0x0000ff, 1);
+
+  // // var stableHeight = ctrMass.y * 1.25;
+
+
+  // var vec = new THREE.Vector3().subVectors(highestPoint, lowestPoint);
+  // var scaleFactor = [1, 0.0, 0.1];
+  // vec.x *= scaleFactor[0];
+  // vec.y *= scaleFactor[1];
+  // vec.z *= scaleFactor[2];
+
+  // lowestPoint.sub(vec);
+  // highestPoint.add(vec);
+
+  // addABall(ctrMass.x, ctrMass.y, ctrMass.z, 0x00ff00, 2);
+  // addABall(ctrMass.x, ctrMass.y, ctrMass.z, 0x0000ff, 2);
+
+  // var indices = [f.a, f.b, f.c];
+    // for(var j=0; j<indices.length; j++) {
+    //  var v = obj.geometry.vertices[indices[j]].clone().applyMatrix4(obj.matrixWorld);
+      
+    //  if(v.y < ctrMass.y || v.y > scaffoldHeight) {
+    //    break;
+    //  }
+
+    //  if(v.x < xbound[0].x) {
+    //    xbound[0] = v.clone();
+    //  }
+
+    //  if(v.x > xbound[1].x) {
+    //    xbound[1] = v.clone();
+    //  }
+
+    //  if(v.z < zbound[0].z) {
+    //    zbound[0] = v.clone();
+    //  }
+
+    //  if(v.z > zbound[1].z) {
+    //    zbound[1] = v.clone();
+    //  }
+    // }
+
+    // addABall(bounds[i].x, xbound[i].y, xbound[i].z, 0xff0000 + 0x00ff00 * i, 0.1);
+    // addALine(xbound[i], xbound[i].clone().add(xnml[i]), 0xff0000 + 0x00ff00 * i);
+    // addABall(zbound[i].x, zbound[i].y, zbound[i].z, 0x0000ff + 0x00ff00 * i, 0.1);
+    // addALine(zbound[i], zbound[i].clone().add(znml[i]), 0x0000ff + 0x00ff00 * i);
+
+
+// // addABall(ctrMass.x, ctrMass.y, ctrMass.z, 0xff0000, 1);
+  // // addABall(lowestPoint.x, lowestPoint.y, lowestPoint.z, 0x00ff00, 1);
+
+  // var geometry = new THREE.CubeGeometry(max.x-min.x, max.y-min.y, max.z-min.z);
+  // var material = new THREE.MeshPhongMaterial( { color: 0x0faaf0, transparent: true, opacity: 0.5} );
+  // var base = new THREE.Mesh(geometry, material);
+  // base.position.set((min.x+max.x)/2, (min.y+max.y)/2, (min.z+max.z)/2);
+  
+
+  // // console.log("base made");
+  
+  // /* subtraction */
+  // var baseCSG = new ThreeBSP(base);
+  // var objCSG = new ThreeBSP(obj);
+
+  // var subBase = baseCSG.subtract(objCSG);
+
+  // base = subBase.toMesh(material);
+  // scene.add(base);
+
+
+// function areNeighbors(f1, f2) {
+//  for(var i=0; i<f1.neighbors.length; i++) {
+//    if(f1.neighbors[i] == f2) {
+//      return true;''
+//    }
+//  }
+
+//  return false;
+// }
+
+
+// function findOcclusionFreeNeighbors(f, group) {
+//  for(var i=0; i<f.neighbors.length; i++) {
+//    if(f.neighbors[i].collected == true && 
+//      f.neighbors[i].grouped == undefined &&
+//      f.neighbors[i].occluding != true) {
+
+//      group.push(f.neighbors[i]);
+//      f.neighbors[i].grouped = true;
+      
+//      findOcclusionFreeNeighbors(f.neighbors[i], group);
+//    }
+//  }
+// }
+
+// TODO reset collected marks
+
+      /* ----------------------------------------------------------------------------- 
+        for debugging neighbor finding
+      */
+      // var radiusHandle = 5;
+
+      
+      // var ctr = new THREE.Vector3().addVectors(va, vb).add(vc).divideScalar(3);
+      // neighbors = [f]; // need to check if this f is out of bound
+      // findNeighbors(obj, f, ctr, radiusHandle * 1.5, neighbors);
+      
+      /* ----------------------------------------------------------------------------- */
+
+
+
+      /* -----------------------------------------------------------------------------
+        for debugging flatness assessment
+      */
+
+      // var nmlStats = assessFlatness(obj, neighbors);
+      // var nmlSd = nmlStats.sd;
+      // console.log("normal sd: " + nmlStats.sd);
+
+      // addALine(ctr, new THREE.Vector3().addVectors(ctr, nmlStats.mean.clone().multiplyScalar(2)), 0x0000ff);
+
+      /* ----------------------------------------------------------------------------- */
+
+
+
+      /* ----------------------------------------------------------------------------- 
+        for debugging occlusion assessment
+      */
+      // var percUnsup = assessStability(obj, neighbors, radiusPrinthead);
+      // console.log("percentage unsupported: " + percUnsup);
+
+      /* ----------------------------------------------------------------------------- */
+
+
+
+      /* ----------------------------------------------------------------------------- 
+        TODO: rethink about it
+
+        for debugging occlusion assessment
+      */
+      // var yUp = new THREE.Vector3(0, 1, 0);
+      // angleToRotate = nmlStats.mean.angleTo(yUp);
+      // axisToRotate = new THREE.Vector3().crossVectors(nmlStats.mean, yUp).normalize();
+
+      // // var objWithVisual = new THREE.Object3D();
+      // // obj.rotateOnAxis(axisToRotate, angleToRotate);
+      // var theta = 15 * Math.PI / 180;
+      // var percOccl = assessOcclusion(obj, neighbors, axisToRotate, angleToRotate, theta);
+      // console.log("percentage occluded: " + percOccl);
+      /* ----------------------------------------------------------------------------- */

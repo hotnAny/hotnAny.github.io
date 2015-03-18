@@ -27,7 +27,11 @@ function loadStl (objPath, objName, isStatic, addToObjects) {
     
     object.isStatic = isStatic;
 
-    voxelizeObject(object);
+    if(attachmentMethod != INTERLOCK) {
+      object.isVoxelized = false;
+    } else {
+      voxelizeObject(object);
+    }
     // to be added: computeMedialAxis
 
     if(isStatic) {
@@ -40,8 +44,9 @@ function loadStl (objPath, objName, isStatic, addToObjects) {
       object.ot = octree;
       controlPanel.checkbox4.checked = staticObjLocked;
       // object.rotation.set(Math.PI / 2 * Math.random(), Math.PI / 2 * Math.random(), Math.PI / 2 * Math.random());
-      scene.add(object);
-    } 
+    }
+
+    scene.add(object); 
   });
 }
 

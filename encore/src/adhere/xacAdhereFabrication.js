@@ -1,26 +1,34 @@
 var faceSelected = [];
+var pillars = [];
+var connector;
 
-/*
-	occlusion
-	cross sectinoal strength
-	slant
-	supportive area
-*/
+/************************************************************************************
+
+	major process of calculating object rotation and handle placement to make object adherable
+
+	factors of printability:
+	- occlusion
+	- cross sectinoal strength
+	- slant
+	- supportive area
+
+************************************************************************************/
+
 function makeAdherePrintable(obj) {
 	
 	var OCCLUSION = 1;
 	var NOTENOUGHSUPPORT = 2;
 	var TOOMUCHDROP = 3;
-	var STRUCTTOOTHIN = 4;
+	var CONNECTORTOOTHIN = 4;
 	var UNKNOWN = 0;
 
 	var REASONMESSAGES 
-	= ['unknown', 'occlusion', 'not enough support', 'too much drop', 'struct too thin'];
+		= ['unknown', 'occlusion', 'not enough support', 'too much drop', 'connector too thin'];
 	var unprintableReason = UNKNOWN;
 
 
 	var shrinkRatio = 0.9;
-	var radiusPrintable;
+	var rConnector;
 
 	if(angleToRotate != undefined && axisToRotate != undefined) {
 		obj.rotateOnAxis(axisToRotate, -angleToRotate);	
@@ -38,6 +46,7 @@ function makeAdherePrintable(obj) {
 				new THREE.Vector3().subVectors(vb, va),
 				new THREE.Vector3().subVectors(vc, va));
 
+	var ctrConnector;
 	for(var r=radiusHandle; r>radiusMinimum; r*=shrinkRatio) {
 		/* 
 			find the neighbors and the actual radius
@@ -51,7 +60,7 @@ function makeAdherePrintable(obj) {
 		findNeighbors(obj, faceSelected[0], ctr, r*1.5, neighbors);
 
 		if(neighbors.length <= 0) {
-			unprintableReason = STRUCTTOOTHIN;
+			unprintableReason = CONNECTORTOOTHIN;
 			break;
 		}
 
@@ -201,9 +210,10 @@ function makeAdherePrintable(obj) {
 		*/
 		if(isOccluding == false) {
 			addACircle(ctr2, r, 0x0faaf0);
-			ctr2.y -= distToRaise;
-			addACircle(ctr2, r, 0xf0aa0f);
-			radiusPrintable = r;
+			// ctr2.y -= distToRaise;
+			// addACircle(ctr2, r, 0xf0aa0f);
+			ctrConnector = ctr2;
+			rConnector = r;
 			break;
 		} else {
 			unprintableReason = OCCLUSION;
@@ -216,34 +226,42 @@ function makeAdherePrintable(obj) {
 	}
 
 
-	console.log(radiusPrintable == undefined ? 
+	log(rConnector == undefined ? 
 		("unprintable") :
-		("handle radius: " + radiusPrintable));
+		("handle radius: " + rConnector));
 
 	/*
 		cleaning up
 	*/
-	if(radiusPrintable == undefined) {
+	if(rConnector == undefined) {
 		angleToRotate = undefined;
 		axisToRotate = undefined;
 
-		console.log("reason: " + REASONMESSAGES[unprintableReason]);
+		log("reason: " + REASONMESSAGES[unprintableReason]);
 		return false;
+	} else {
+		makeConnector(ctrConnector, rConnector, rConnector * 2);
 	}
 
 	return true;
 }
 
 
-function makeSupport(obj) {
 
-	/* 
-		calculate the right size and position of a base 
-	*/
+/************************************************************************************
+
+	making support material to hold the existing object
+
+**************************************************************************************/
+
+function makeSupport(obj) {
 
 	obj.updateMatrixWorld();
 
-	/* calculate center of mass and lowest point */
+
+	/* 
+		calculate center of mass and lowest point 
+	*/
 	var ctrMass = new THREE.Vector3();
 	var lowestPoint = new THREE.Vector3(0, INFINITY, 0);
 	for(var i=0; i<obj.geometry.vertices.length; i++) {
@@ -256,59 +274,23 @@ function makeSupport(obj) {
 	}
 
 	ctrMass.divideScalar(obj.geometry.vertices.length);
-
-	var scaffoldRange = 3;
-
-
 	
-	// addABall(ctrMass.x, ctrMass.y, ctrMass.z, 0xff0000, 1);
-	// addABall(lowestPoint.x, lowestPoint.y, lowestPoint.z, 0x00ff00, 1);
-
-	// var rayCaster = new THREE.Raycaster();
-	// var direction = new THREE.Vector3(0, -1, 0);
-	// rayCaster.ray.set(ctrMass, direction.normalize());
-	// var intersects = rayCaster.intersectObjects( [obj] );
-
-	// if(intersects.length > 0) {
-	// 	ctrMass.y = intersects[0].point.y;
-	// 	console.log("intersected!");
-	// }
-
-	// var highestPoint = new THREE.Vector3(0, ctrMass.y, 0);
-	// var ctrMassXZ = ctrMass.clone();
-	// ctrMassXZ.y = 0;
-	// for(var i=0; i<obj.geometry.vertices.length; i++) {
-	// 	var v = obj.geometry.vertices[i].clone().applyMatrix4(obj.matrixWorld);
-
-	// 	var vXZ = v.clone();
-	// 	vXZ.y = 0;
-	// 	if(vXZ.distanceTo(ctrMassXZ) < 2.5 && v.y < highestPoint.y) {
-	// 		highestPoint = v.clone();
-	// 	}
-	// }
-	// // addABall(highestPoint.x, highestPoint.y, highestPoint.z, 0x0000ff, 1);
-
-	// // var stableHeight = ctrMass.y * 1.25;
 
 
-	// var vec = new THREE.Vector3().subVectors(highestPoint, lowestPoint);
-	// var scaleFactor = [1, 0.0, 0.1];
-	// vec.x *= scaleFactor[0];
-	// vec.y *= scaleFactor[1];
-	// vec.z *= scaleFactor[2];
-
-	// lowestPoint.sub(vec);
-	// highestPoint.add(vec);
-
-	// addABall(ctrMass.x, ctrMass.y, ctrMass.z, 0x00ff00, 2);
-	// addABall(ctrMass.x, ctrMass.y, ctrMass.z, 0x0000ff, 2);
-
+	/*
+		finding the bounds: lf, lr, ul, ur
+	*/
 	var bounds = [new THREE.Vector3(INFINITY, INFINITY, INFINITY), 
 				  new THREE.Vector3(-INFINITY, -INFINITY, -INFINITY),
 				  new THREE.Vector3(INFINITY, INFINITY, INFINITY), 
 				  new THREE.Vector3(-INFINITY, -INFINITY, -INFINITY)];
-	// var znml = [];
-	// var xnml = [];
+	
+	// lowest point within a certain xz range of the center of mass
+	var lowestCtrMass = new THREE.Vector3(0, INFINITY, 0);
+
+	var ctrMassXZ = ctrMass.clone();
+	ctrMassXZ.y = 0;
+	var rClose = 2;
 
 	for(var i=0; i<obj.geometry.faces.length; i++) {
 		var f = obj.geometry.faces[i];
@@ -318,94 +300,70 @@ function makeSupport(obj) {
 		var vc = obj.geometry.vertices[f.c].clone().applyMatrix4(obj.matrixWorld);
 		
 		var ctr = new THREE.Vector3().addVectors(va, vb).add(vc).divideScalar(3);
-		// addABall(ctr.x, ctr.y, ctr.z, 0xff0000, 2);
+
 		var nmlFace = new THREE.Vector3().crossVectors(
 					new THREE.Vector3().subVectors(vb, va),
 					new THREE.Vector3().subVectors(vc, va)).normalize();
 
 		var yUp = new THREE.Vector3(0, 1, 0);
 
-		// console.log(nmlFace.angleTo(yUp) * 180 / Math.PI);
+		/* this is how we decide if a triangle is facing up or down */
 		if(Math.abs(nmlFace.angleTo(yUp)) < Math.PI * 2 / 3) {
 			continue;
 		}
 
-		// console.log("facing down");
-
+		/* update the bounds */
 		var v = ctr;
-		// if(Math.abs(v.y - ctrMass.y) > scaffoldRange / 2) {
-		// 	continue;
-		// }
+		if(v.x < bounds[0].x) bounds[0] = v.clone();
+		if(v.x > bounds[1].x) bounds[1] = v.clone();
+		if(v.z < bounds[2].z) bounds[2] = v.clone();
+		if(v.z > bounds[3].z) bounds[3] = v.clone();
 
-		if(v.x < bounds[0].x) {
-			bounds[0] = v.clone();
-			// xnml[0] = nmlFace;
-		}
-
-		if(v.x > bounds[1].x) {
-			bounds[1] = v.clone();
-			// xnml[1] = nmlFace;
-		}
-
-		if(v.z < bounds[2].z) {
-			bounds[2] = v.clone();
-			// znml[0] = nmlFace;
-		}
-
-		if(v.z > bounds[3].z) {
-			bounds[3] = v.clone();
-			// znml[1] = nmlFace;
-		}
-
-		// var indices = [f.a, f.b, f.c];
-		// for(var j=0; j<indices.length; j++) {
-		// 	var v = obj.geometry.vertices[indices[j]].clone().applyMatrix4(obj.matrixWorld);
-			
-		// 	if(v.y < ctrMass.y || v.y > scaffoldHeight) {
-		// 		break;
-		// 	}
-
-		// 	if(v.x < xbound[0].x) {
-		// 		xbound[0] = v.clone();
-		// 	}
-
-		// 	if(v.x > xbound[1].x) {
-		// 		xbound[1] = v.clone();
-		// 	}
-
-		// 	if(v.z < zbound[0].z) {
-		// 		zbound[0] = v.clone();
-		// 	}
-
-		// 	if(v.z > zbound[1].z) {
-		// 		zbound[1] = v.clone();
-		// 	}
-		// }
-
+		/* update the lowest ctr of mass */
+		var ctrXZ = ctr.clone();
+		ctrXZ.y = 0;
 		
+		if(ctrXZ.distanceTo(ctrMassXZ) < rClose) {
+			if(ctr.y < lowestCtrMass.y) {
+				lowestCtrMass = ctr.clone();
+			}
+		}
 	}
 
-	var pillars = [];
-	// var material = new THREE.MeshBasicMaterial( {color: 0x888008} );
-	var material = new THREE.MeshPhongMaterial( { color: 0x888008, transparent: true, opacity: 0.5} );
-	var margin = 0.5;
-	var supportRadius = 2.5;
-	for(var i=0; i<bounds.length; i++) {
-		// addABall(bounds[i].x, xbound[i].y, xbound[i].z, 0xff0000 + 0x00ff00 * i, 0.1);
-		// addALine(xbound[i], xbound[i].clone().add(xnml[i]), 0xff0000 + 0x00ff00 * i);
-		// addABall(zbound[i].x, zbound[i].y, zbound[i].z, 0x0000ff + 0x00ff00 * i, 0.1);
-		// addALine(zbound[i], zbound[i].clone().add(znml[i]), 0x0000ff + 0x00ff00 * i);
+	/* if there exists a lowest ctr mass at all */
+	if(lowestCtrMass.y < INFINITY) {
+		bounds.push(lowestCtrMass);
+	}
 
+
+
+	/*
+		building the supporting pillars
+	*/
+	pillars = [];
+	var material = new THREE.MeshPhongMaterial( { color: 0x888008, transparent: true, opacity: 0.5} );
+	
+	/* how much the pillars go into the object to ensure some support coverage */
+	var margin = 0.5;
+	
+	for(var i=0; i<bounds.length; i++) {
+		
 		var h = bounds[i].y + margin - lowestPoint.y;
-		var geometry = new THREE.CylinderGeometry( supportRadius, supportRadius, h, 16 );
+		var geometry = new THREE.CylinderGeometry( radiusSupport, radiusSupport, h, 16 );
 		var cylinder = new THREE.Mesh( geometry, material );
 		cylinder.position.set(bounds[i].x, bounds[i].y + margin - h / 2, bounds[i].z );
 
 		pillars.push(cylinder);
-		// scene.add(cylinder);
 	}
 
-	// csg ref: http://learningthreejs.com/blog/2011/12/10/constructive-solid-geometry-with-csg-js/
+
+
+	/*
+		doing subtraction from existing object using constructive solid geometry
+		
+		csg ref: http://learningthreejs.com/blog/2011/12/10/conconnectorive-solid-geometry-with-csg-js/
+		TODO: merge the pillars and only perform subtraction once
+	*/
 	
 	var objCSG = new ThreeBSP(obj);
 	for(var i=0; i<pillars.length; i++) {
@@ -414,52 +372,31 @@ function makeSupport(obj) {
 		pillars[i] = subPillar.toMesh(material);
 		scene.add(pillars[i]);
 	}
-	// // addABall(ctrMass.x, ctrMass.y, ctrMass.z, 0xff0000, 1);
-	// // addABall(lowestPoint.x, lowestPoint.y, lowestPoint.z, 0x00ff00, 1);
-
-	// var geometry = new THREE.CubeGeometry(max.x-min.x, max.y-min.y, max.z-min.z);
-	// var material = new THREE.MeshPhongMaterial( { color: 0x0faaf0, transparent: true, opacity: 0.5} );
-	// var base = new THREE.Mesh(geometry, material);
-	// base.position.set((min.x+max.x)/2, (min.y+max.y)/2, (min.z+max.z)/2);
-	
-
-	// // console.log("base made");
-	
-	// /* subtraction */
-	// var baseCSG = new ThreeBSP(base);
-	// var objCSG = new ThreeBSP(obj);
-
-	// var subBase = baseCSG.subtract(objCSG);
-
-	// base = subBase.toMesh(material);
-	// scene.add(base);
 }
 
 
-function areNeighbors(f1, f2) {
-	for(var i=0; i<f1.neighbors.length; i++) {
-		if(f1.neighbors[i] == f2) {
-			return true;''
-		}
-	}
 
-	return false;
+/************************************************************************************
+
+	make a connector between the existing object and the attachment
+
+************************************************************************************/
+
+function makeConnector(ctr, r, h) {
+	var material = new THREE.MeshPhongMaterial( { color: 0x080888, transparent: true, opacity: 0.5} );
+	var geometry = new THREE.CylinderGeometry( r, r, h, 16 );
+	connector= new THREE.Mesh( geometry, material );
+	connector.position.set(ctr.x, ctr.y + h / 2, ctr.z);
+
+	scene.add(connector);
+	return connector;
 }
 
-function findOcclusionFreeNeighbors(f, group) {
-	for(var i=0; i<f.neighbors.length; i++) {
-		if(f.neighbors[i].collected == true && 
-			f.neighbors[i].grouped == undefined &&
-			f.neighbors[i].occluding != true) {
 
-			group.push(f.neighbors[i]);
-			f.neighbors[i].grouped = true;
-			
-			findOcclusionFreeNeighbors(f.neighbors[i], group);
-		}
-	}
-}
 
+/*
+	get the projection coordinates of a point on a given plane parameterized by ax+by+cz+d=0
+*/
 function getProjection(v, a, b, c, d) {
 	var t = -(a*v.x + b*v.y + c*v.z + d) / (a*a + b*b + c*c);
 	return new THREE.Vector3(v.x + a*t, v.y + b*t, v.z + c*t);

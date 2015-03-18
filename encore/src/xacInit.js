@@ -111,12 +111,13 @@ var staticObjLocked = true;
 
 var withoutSupport = true;
 
-var radiusHandle = 5;
+var radiusHandle = 2.5;
 var radiusPrinthead = 7.5;
 var heightPrinthead = 50;
-var radiusMinimum = 1.5;
+var radiusMinimum = 1;
 var maxDropDistance = 1;
 var supportiveness = 0.75;
+var radiusSupport = 2.5;
 
 /*-----------------------------------------------------------------------------------------------
      
@@ -168,13 +169,16 @@ var ballInner = 'things/ball-inner.stl';
 
 var teddy = 'things/teddy.stl';
 var wrench = 'things/wrench.stl';
-var mug = 'things/mug.stl';
+var goblet = 'things/goblet.stl';
+var cup = 'things/cup.stl';
 
-// var bottle = 'things/bottle.stl';
-var bottle = 'things/coke.stl';
+var bottle = 'things/bottle.stl';
+// var coke = 'things/coke.stl';
 var can = 'things/soda_can.stl';
 
 var zipperPull = 'things/zipper-pull.stl';
 var house = 'things/house.stl';
+
+var smallHandle = 'things/small-handle.stl';
 
 // pikachui

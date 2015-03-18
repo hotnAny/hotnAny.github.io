@@ -15,7 +15,7 @@ controlPanel.button6.onclick = voxelize;
 controlPanel.button1.onclick = slice;
 controlPanel.button8.onclick = reverseGravity;
 controlPanel.button4.onclick = computeLayerToPause;
-controlPanel.button7.onclick = savePrintObj; //saveBothObjs;
+controlPanel.button7.onclick = saveObjects; //saveBothObjs;
 controlPanel.button9.onclick = restoreObjects;
 controlPanel.button10.onclick = makeItPrintable;
 controlPanel.button11.onclick = toggleSupport;
@@ -43,7 +43,7 @@ controlPanel.dd1.appendChild(controlPanel.ddOption("Bottle", bottle));
 controlPanel.dd1.appendChild(controlPanel.ddOption("Zipper pull", zipperPull));
 controlPanel.dd1.appendChild(controlPanel.ddOption("Teddy", teddy));
 controlPanel.dd1.appendChild(controlPanel.ddOption("Wrench", wrench));
-// controlPanel.dd1.appendChild(controlPanel.ddOption("Mug", mug));
+controlPanel.dd1.appendChild(controlPanel.ddOption("Cup", cup));
 controlPanel.dd1.appendChild(controlPanel.ddOption("House", house));
 controlPanel.dd1.onchange = loadObjToPrint;
 
@@ -55,7 +55,7 @@ controlPanel.dd2.appendChild(controlPanel.ddOption("Big ring", ringBig));
 controlPanel.dd2.appendChild(controlPanel.ddOption("Small ring", ringSmall));
 controlPanel.dd2.appendChild(controlPanel.ddOption("Tetra", tetra));
 // controlPanel.dd2.appendChild(controlPanel.ddOption("Mesh", meshinner));
-controlPanel.dd2.appendChild(controlPanel.ddOption("Small ball", ballInner));
+controlPanel.dd2.appendChild(controlPanel.ddOption("Small handle", smallHandle));
 controlPanel.dd2.appendChild(controlPanel.ddOption("Heart", heart));
 
 controlPanel.dd2.onchange = loadExistingObj;

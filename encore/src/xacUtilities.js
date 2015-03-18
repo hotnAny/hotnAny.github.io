@@ -246,6 +246,40 @@ function saveBothObjs() {
 }
 
 
+function saveAdhereObjects() {
+	/* the attachment */
+	var mergedGeom = getTransformedGeometry(objDynamic);
+
+	/* the connector */
+	var connectorGeom = getTransformedGeometry(connector);
+	THREE.GeometryUtils.merge(mergedGeom, connectorGeom);
+
+	for(var i=0; i<pillars.length; i++) {
+		var supportGeom = pillars[i].geometry.clone();
+		supportGeom.applyMatrix(pillars[i].matrixWorld);
+
+		// if(i==0) {
+		// 	mergedGeom = supportGeom.clone();
+		// } else {
+			THREE.GeometryUtils.merge(mergedGeom, supportGeom);
+		// }
+	}
+
+	var m = new THREE.Matrix4();
+	m.makeRotationX(Math.PI/2);
+	mergedGeom.applyMatrix(m);
+
+	var stlStr = stlFromGeometry( mergedGeom );
+	var blob = new Blob([stlStr], {type: 'text/plain'});
+	saveAs(blob, name + '.stl');
+}
+
+function getTransformedGeometry(obj) {
+	var geom = obj.geometry;
+	geom.applyMatrix(obj.matrixWorld);
+	return geom;
+}
+
 
 function lockObjToPrint() {
 	staticObjLocked = controlPanel.checkbox4.checked;
@@ -346,16 +380,14 @@ function addATriangle(v1, v2, v3, clr) {
 }
 
 function addABall(x, y, z, clr, radius) {
-  var geometry = new THREE.SphereGeometry( radius, 10, 10 );
-  var material = new THREE.MeshBasicMaterial( { color: clr } );
-  var ball = new THREE.Mesh( geometry, material );
-  ball.position.set(x, y, z);
+ var geometry = new THREE.SphereGeometry( radius, 10, 10 );
+ var material = new THREE.MeshBasicMaterial( { color: clr } );
+ var ball = new THREE.Mesh( geometry, material );
+ ball.position.set(x, y, z);
   
-  // console.log(ball.position);
-  // balls.add(ball);
-   scene.add( ball );
- //   ball2 = new THREE.Mesh( geometry, material );
- //   scene.add( ball2 );
+ scene.add( ball );
+ 
+ return ball;
 }
 
 function addALine(v1, v2, clr) {
@@ -377,4 +409,5 @@ function addACircle(ctr, r, clr) {
 	circle.position.copy(ctr);
 
 	scene.add(circle);
+	return circle;
 }

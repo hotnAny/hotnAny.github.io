@@ -23,7 +23,7 @@ var ControlPanel = function () {
 	var txtTitle = document.createElement( 'div' );
 	txtTitle.id = 'title';
 	txtTitle.style.cssText = 'margin-left:3px;margin-top:5px;overflow:inherit;color:#ffffff;font-family:Helvetica,Arial,sans-serif;font-size:10px;line-height:15px';
-	txtTitle.innerHTML = '<b>Bashau &#25226;&#25163;</b>';
+	txtTitle.innerHTML = '<b>Encore</b>';
 	container.appendChild( txtTitle );
 
 	var cssBtn = 'margin-left:3px;margin-top:5px;padding:1px 3px 1px 3px;font-family:Helvetica;border-radius:5px;font-size:10px;line-height:15px;text-align:left;background-color:#ffffff';

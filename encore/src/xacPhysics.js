@@ -44,6 +44,7 @@ function voxelize() {
 function voxelizeObject(obj) {
 	var voxelGrid = new VoxelGrid(DIMVOXELS, obj);
 	voxelGrid.voxelizeSurface(obj);
+	obj.isVoxelized = true;
 	// voxelGrid.voxelizeInterior(obj);
 	// scene.add(voxelGrid._voxelGroup);
 
