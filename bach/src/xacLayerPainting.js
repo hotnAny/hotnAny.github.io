@@ -9,6 +9,9 @@ var layerThickness = 0.1;
 var layerRanges = [];
 
 function computeRangesLayers() {
+	if(minz == undefined || maxz == undefined) {
+		return;
+	}
 	// console.log(minz + ", " + maxz);
 	for(var z=minz; z<=maxz; z+=layerThickness) {
 		var layerRange = new Object();

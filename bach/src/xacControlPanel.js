@@ -140,6 +140,7 @@ var ControlPanel = function () {
 	aDownload.style.cssText = cssLb;
 	aDownload.innerHTML = 'Save data';
 	container.appendChild( aDownload );	
+	aDownload.style.color = '#ffffff';
 
 	container.appendChild(document.createElement('br'));
 
