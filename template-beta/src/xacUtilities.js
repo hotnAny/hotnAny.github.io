@@ -66,14 +66,8 @@ function toggleDebugMode() {
 
 function checkInitialization() {
 
-	if(objStatic == null && objects[0] != undefined) {
-		objStatic = objects[0].isStatic ? objects[0] : objects[1];
-	}
-	if(objDynamic == null && objects[1] != undefined) {
-		objDynamic = objects[1].isStatic ? objects[0] : objects[1];
-	}
-
-	// console.log(objStatic);
+	if(objStatic == null) objStatic = objects[0].isStatic ? objects[0] : objects[1];
+	if(objDynamic == null) objDynamic = objects[1].isStatic ? objects[0] : objects[1];
 }
 
 function checkOctreeValidity() {
@@ -246,40 +240,6 @@ function saveBothObjs() {
 }
 
 
-function saveAdhereObjects() {
-	/* the attachment */
-	var mergedGeom = getTransformedGeometry(objDynamic);
-
-	/* the connector */
-	var connectorGeom = getTransformedGeometry(connector);
-	THREE.GeometryUtils.merge(mergedGeom, connectorGeom);
-
-	for(var i=0; i<pillars.length; i++) {
-		var supportGeom = pillars[i].geometry.clone();
-		supportGeom.applyMatrix(pillars[i].matrixWorld);
-
-		// if(i==0) {
-		// 	mergedGeom = supportGeom.clone();
-		// } else {
-			THREE.GeometryUtils.merge(mergedGeom, supportGeom);
-		// }
-	}
-
-	var m = new THREE.Matrix4();
-	m.makeRotationX(Math.PI/2);
-	mergedGeom.applyMatrix(m);
-
-	var stlStr = stlFromGeometry( mergedGeom );
-	var blob = new Blob([stlStr], {type: 'text/plain'});
-	saveAs(blob, name + '.stl');
-}
-
-function getTransformedGeometry(obj) {
-	var geom = obj.geometry;
-	geom.applyMatrix(obj.matrixWorld);
-	return geom;
-}
-
 
 function lockObjToPrint() {
 	staticObjLocked = controlPanel.checkbox4.checked;
@@ -321,11 +281,6 @@ function toggleSupport() {
 	withoutSupport = !withoutSupport;
 }
 
-
-/*
-  below are functions that render debugging objects
-  */
-
 function addAPhyCube() {
   var material = new THREE.MeshPhongMaterial( { color: 0xFFFFFF} );  
   var object = new Physijs.BoxMesh(new THREE.CubeGeometry( 10 * Math.random(), 10 * Math.random(), 10 * Math.random() ), material);
@@ -348,7 +303,7 @@ function addTheBall() {
 
 function addABox(l, r, t, b, f, b, addToObjects) {
   var geometry = new THREE.CubeGeometry(r-l, t-b, f-b);
-  // console.log(geometry);
+  console.log(geometry);
   var material = new THREE.MeshBasicMaterial( { color: 0xFF0066, wireframe: true, wireframeLinewidth: 1 } );
   var box = new THREE.Mesh(geometry, material);
   box.position.set((l+r)/2, (t+b)/2, (f+b)/2);
@@ -380,14 +335,16 @@ function addATriangle(v1, v2, v3, clr) {
 }
 
 function addABall(x, y, z, clr, radius) {
- var geometry = new THREE.SphereGeometry( radius, 10, 10 );
- var material = new THREE.MeshBasicMaterial( { color: clr } );
- var ball = new THREE.Mesh( geometry, material );
- ball.position.set(x, y, z);
+  var geometry = new THREE.SphereGeometry( radius, 10, 10 );
+  var material = new THREE.MeshBasicMaterial( { color: clr } );
+  var ball = new THREE.Mesh( geometry, material );
+  ball.position.set(x, y, z);
   
- scene.add( ball );
- 
- return ball;
+  // console.log(ball.position);
+  balls.add(ball);
+ //   scene.add( ball1 );
+ //   ball2 = new THREE.Mesh( geometry, material );
+ //   scene.add( ball2 );
 }
 
 function addALine(v1, v2, clr) {
@@ -400,25 +357,41 @@ function addALine(v1, v2, clr) {
   scene.add(line);
 }
 
-function addACircle(ctr, r, clr) {
-	var material = new THREE.MeshBasicMaterial({color: clr, transparent:true, opacity:0.5});
-	material.side = THREE.DoubleSide;
-	var circleGeometry = new THREE.CircleGeometry( r, 32 );				
-	var circle = new THREE.Mesh( circleGeometry, material );
-	circle.rotation.x += Math.PI/2;
-	circle.position.copy(ctr);
 
-	scene.add(circle);
-	return circle;
-}
+function addAColorfulCube() {
+	// this material causes a mesh to use colors assigned to vertices
+	var vertexColorMaterial = new THREE.MeshBasicMaterial( { vertexColors: THREE.VertexColors } );
 
-/*
-	subtract obj1 from obj0
-*/
-function csgSubtract(obj0, obj1, material) {
-	var obj0CSG = new ThreeBSP(obj0);
-	var obj1CSG = new ThreeBSP(obj1);
+	var color, point, face, numberOfSides, vertexIndex;
 
-	var resultCSG = obj0CSG.subtract(obj1CSG);
-	return resultCSG.toMesh(material);
+	// faces are indexed using characters
+	var faceIndices = [ 'a', 'b', 'c', 'd' ];
+
+	var size = 100;
+	var cubeGeometry = new THREE.CubeGeometry( size, size, size );
+
+	// first, assign colors to vertices as desired
+	for ( var i = 0; i < cubeGeometry.vertices.length; i++ ) 
+	{
+	    point = cubeGeometry.vertices[ i ];
+	    color = new THREE.Color( 0xffffff );
+	    color.setRGB( 0.5 + point.x / size, 0.5 + point.y / size, 0.5 + point.z / size );
+	    cubeGeometry.colors[i] = color; // use this array for convenience
+	}
+
+	// copy the colors to corresponding positions 
+	//     in each face's vertexColors array.
+	for ( var i = 0; i < cubeGeometry.faces.length; i++ ) 
+	{
+	    face = cubeGeometry.faces[ i ];
+	    numberOfSides = ( face instanceof THREE.Face3 ) ? 3 : 4;
+	    for( var j = 0; j < numberOfSides; j++ ) 
+	    {
+	        vertexIndex = face[ faceIndices[ j ] ];
+	        face.vertexColors[ j ] = cubeGeometry.colors[ vertexIndex ];
+	    }
+	}
+
+	cube = new THREE.Mesh( cubeGeometry, vertexColorMaterial );
+	scene.add(cube);
 }
