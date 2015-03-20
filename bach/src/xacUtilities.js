@@ -395,3 +395,8 @@ function addAColorfulCube() {
 	cube = new THREE.Mesh( cubeGeometry, vertexColorMaterial );
 	scene.add(cube);
 }
+
+
+function loadModelFromFile() {
+	console.log(controlPanel.button2.value);
+}

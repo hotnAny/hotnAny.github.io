@@ -56,11 +56,15 @@ var ControlPanel = function () {
 	container.appendChild( lb5 );
 
 	var dd1 = document.createElement( 'select' );
-	container.appendChild(dd1);
+	// container.appendChild(dd1);
+
+	
+
+	var btnAction2 = document.createElement('input');
+	btnAction2.type = 'file';
+	container.appendChild( btnAction2 );
 
 	container.appendChild(document.createElement('br'));
-
-
 
 	/*
 		orientation sliders
@@ -165,6 +169,8 @@ var ControlPanel = function () {
 		domElement: container,
 
 		button1: btnAction1,
+
+		button2: btnAction2,
 
 		button7: btnAction7,
 

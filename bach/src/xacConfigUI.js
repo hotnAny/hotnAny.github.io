@@ -8,22 +8,9 @@ document.body.appendChild( controlPanel.domElement);
 */
 // controlPanel.button1.onclick = analyzePrintability;
 
-// controlPanel.button2.onclick = detectIntersection;
-// controlPanel.button3.onclick = detectOverlap;
-// controlPanel.button5.onclick = detectInterlock;
-// controlPanel.button6.onclick = voxelize;
-// controlPanel.button1.onclick = slice;
-// controlPanel.button8.onclick = reverseGravity;
-// controlPanel.button4.onclick = computeLayerToPause;
-controlPanel.button7.onclick = savePrintObj; //saveBothObjs;
-// controlPanel.button9.onclick = restoreObjects;
-// controlPanel.button10.onclick = makeItPrintable;
-// controlPanel.button11.onclick = toggleSupport;
 
 controlPanel.checkbox1.onchange = toggleDebugMode;
-// controlPanel.checkbox2.onchange = toggleOctreeVisibility;
-// controlPanel.checkbox3.onchange = togglePhysics;
-// controlPanel.checkbox4.onchange = lockObjToPrint;
+controlPanel.button2.onchange = loadModelFromFile;
 
 controlPanel.slider1.oninput = rotateObjectX;
 controlPanel.slider2.oninput = rotateObjectY;
