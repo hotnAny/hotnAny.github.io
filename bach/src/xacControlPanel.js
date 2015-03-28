@@ -56,13 +56,13 @@ var ControlPanel = function () {
 	container.appendChild( lb5 );
 
 	var dd1 = document.createElement( 'select' );
-	// container.appendChild(dd1);
+	container.appendChild(dd1);
 
 	
 
 	var btnAction2 = document.createElement('input');
 	btnAction2.type = 'file';
-	container.appendChild( btnAction2 );
+	// container.appendChild( btnAction2 );
 
 	container.appendChild(document.createElement('br'));
 

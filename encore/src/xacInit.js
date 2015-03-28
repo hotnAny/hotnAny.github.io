@@ -73,8 +73,8 @@ document.body.appendChild( renderer.domElement );
 /* using physijs now */
 var scene = new Physijs.Scene({ fixedTimeStep: 1 / 120 });
 
-var camera = new THREE.PerspectiveCamera( 60, window.innerWidth/window.innerHeight, 1, 10000 );
-camera.position.set(-0, 60, 90);
+var camera = new THREE.PerspectiveCamera( 45, window.innerWidth/window.innerHeight, 1, 10000 );
+camera.position.set(-0, 30, 90);
 
 var controls = new THREE.TrackballControls( camera ); // for mouse control
 
@@ -119,6 +119,9 @@ var maxDropDistance = 1;
 var supportiveness = 0.75;
 var radiusSupport = 2.5;
 
+var radiusMinimumStrap = 3;
+var radiusHandleStrap = 5;
+
 /*-----------------------------------------------------------------------------------------------
      
      models
@@ -128,11 +131,6 @@ var radiusSupport = 2.5;
 var stlLoader = new THREE.STLLoader();
 
 var key = 'things/keyxac.stl';
-// var key2 = 'things/key2.stl';
-// var key3 = 'things/key3.stl';
-// var key4 = 'things/key4.stl';
-
-// var ring = 'things/ring.stl';
 var ringBig = 'things/ring-big.stl';
 var ringSmall = 'things/ring-small.stl';
 

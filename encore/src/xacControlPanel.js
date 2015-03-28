@@ -27,8 +27,8 @@ var ControlPanel = function () {
 	container.appendChild( txtTitle );
 
 	var cssBtn = 'margin-left:3px;margin-top:5px;padding:1px 3px 1px 3px;font-family:Helvetica;border-radius:5px;font-size:10px;line-height:15px;text-align:left;background-color:#ffffff';
-	var cssCb = 'margin-left:3px;margin-top:5px;padding:3px 1px 3px 1px;font-family:Helvetica;font-size:10px;line-height:25px;text-align:left';
-	var cssLb = 'margin-left:3px;margin-top:5px;padding:5px 5px 5px 5px;font-family:Helvetica;font-size:10px;line-height:25px;text-align:left';
+	var cssCb = 'margin-left:3px;margin-top:5px;padding:3px 1px 3px 1px;vertical-align:top;font-family:Helvetica;font-size:10px;line-height:25px;text-align:left';
+	var cssLb = 'margin-left:3px;margin-top:7px;padding:5px 1px 3px 1px;vertical-align:middle;font-family:Helvetica;font-size:10px;line-height:25px;text-align:left';
 
 	// check boxes
 	var cb1 = document.createElement( 'input' );
@@ -39,7 +39,7 @@ var ControlPanel = function () {
 	container.appendChild( cb1 );
 	var lb1 = document.createElement( 'label' );
 	lb1.innerHTML = 'Debug mode &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-	lb1.style.cssText = cssCb;
+	lb1.style.cssText = cssLb;
 	container.appendChild( lb1 );
 
 	/*
@@ -52,7 +52,7 @@ var ControlPanel = function () {
 	// container.appendChild( cb2 );
 	var lb2 = document.createElement( 'label' );
 	lb2.innerHTML = 'Show octree';
-	lb2.style.cssText = cssCb;
+	lb2.style.cssText = cssLb;
 	// container.appendChild( lb2 );
 
 
@@ -144,53 +144,75 @@ var ControlPanel = function () {
 
 
 
+	
+
 	/*
 		orientation sliders
 	*/
 	var lb7 = document.createElement( 'label' );
 	lb7.innerHTML = 'Orientation';
 	lb7.style.cssText = cssCb;
-	container.appendChild( lb7 );
-	container.appendChild(document.createElement('br'));
+	// container.appendChild( lb7 );
+	// container.appendChild(document.createElement('br'));
+
+	var lbSld1 = document.createElement( 'label' );
+	lbSld1.innerHTML = 'X:';
+	lbSld1.style.cssText = cssLb;
+	container.appendChild( lbSld1 );
 
 	var slider1 = document.createElement( 'input' );
 	slider1.id = 'sldr1';
 	slider1.setAttribute('type', 'range');
 	slider1.style.cssText = cssCb;
 	slider1.min = '0';
-	slider1.max = '360';
+	slider1.max = '180';
 	slider1.value = '0';
 	slider1.step = '1';
+	slider1.style.cssText += 'width: 64px;';
 	// slider1.onchange = "updateSlider(this.value)";
 	container.appendChild( slider1 );
 
-	container.appendChild(document.createElement('br'));
+	// container.appendChild(document.createElement('br'));
+
+	var lbSld2 = document.createElement( 'label' );
+	lbSld2.innerHTML = 'Y:';
+	lbSld2.style.cssText = cssLb;
+	container.appendChild( lbSld2 );
 
 	var slider2 = document.createElement( 'input' );
 	slider2.id = 'sldr2';
 	slider2.setAttribute('type', 'range');
 	slider2.style.cssText = cssCb;
 	slider2.min = '0';
-	slider2.max = '360';
+	slider2.max = '180';
 	slider2.value = '0';
 	slider2.step = '1';
+	slider2.style.cssText += 'width: 64px';
 	// slider2.onchange = "updateSlider(this.value)";
 	container.appendChild( slider2 );
 
-	container.appendChild(document.createElement('br'));
+	// container.appendChild(document.createElement('br'));
+
+	var lbSld3 = document.createElement( 'label' );
+	lbSld3.innerHTML = 'Z:';
+	lbSld3.style.cssText = cssLb;
+	container.appendChild( lbSld3 );
 
 	var slider3 = document.createElement( 'input' );
 	slider3.id = 'sldr3';
 	slider3.setAttribute('type', 'range');
 	slider3.style.cssText = cssCb;
 	slider3.min = '0';
-	slider3.max = '360';
+	slider3.max = '180';
 	slider3.value = '0';
 	slider3.step = '1';
+	slider3.style.cssText += 'width: 64px';
 	// slider3.onchange = "updateSlider(this.value)";
 	container.appendChild( slider3 );
 
 	container.appendChild(document.createElement('br'));
+
+
 
 
 
@@ -225,14 +247,83 @@ var ControlPanel = function () {
 	cb3.id = 'cb3';
 	cb3.setAttribute('type', 'checkbox');
 	cb3.style.cssText = cssCb;
-	container.appendChild( cb3 );
+	// container.appendChild( cb3 );
 	var lb3 = document.createElement( 'label' );
 	lb3.innerHTML = 'Apply physics';
 	lb3.style.cssText = cssCb;
-	container.appendChild( lb3 );
+	// container.appendChild( lb3 );
 
 	// container.appendChild(document.createElement('br'));
-	container.appendChild(document.createTextNode( '\u00A0\u00A0' ));
+	// container.appendChild(document.createTextNode( '\u00A0\u00A0' ));
+
+	
+	
+
+	/*
+		orientation sliders
+	*/
+	// var lb7 = document.createElement( 'label' );
+	// lb7.innerHTML = 'Orientation';
+	// lb7.style.cssText = cssCb;
+	// container.appendChild( lb7 );
+	// container.appendChild(document.createElement('br'));
+
+	var lbSld4 = document.createElement( 'label' );
+	lbSld4.innerHTML = 'Attachability: ';
+	lbSld4.style.cssText = cssLb;
+	container.appendChild( lbSld4 );
+	
+	var slider4 = document.createElement( 'input' );
+	slider4.id = 'sldr4';
+	slider4.setAttribute('type', 'range');
+	slider4.style.cssText = cssCb;
+	slider4.min = '0';
+	slider4.max = '99';
+	slider4.value = '50';
+	slider4.step = '1';
+	// slider1.onchange = "updateSlider(this.value)";
+	container.appendChild( slider4 );
+
+	container.appendChild(document.createElement('br'));
+
+	var slider5 = document.createElement( 'input' );
+	slider5.id = 'sldr5';
+	slider5.setAttribute('type', 'range');
+	slider5.style.cssText = cssCb;
+	slider5.min = '0';
+	slider5.max = '99';
+	slider5.value = '25';
+	slider5.step = '1';
+	// slider2.onchange = "updateSlider(this.value)";
+	container.appendChild( slider5 );
+
+	container.appendChild(document.createElement('br'));
+
+	var slider6 = document.createElement( 'input' );
+	slider6.id = 'sldr3';
+	slider6.setAttribute('type', 'range');
+	slider6.style.cssText = cssCb;
+	slider6.min = '0';
+	slider6.max = '99';
+	slider6.value = '25';
+	slider6.step = '1';
+	// slider3.onchange = "updateSlider(this.value)";
+	container.appendChild( slider6 );
+
+	container.appendChild(document.createElement('br'));
+
+
+	/* 
+		analyze 
+	*/
+	var btnAction12 = document.createElement( 'button' );
+	btnAction12.id = 'action12';
+	btnAction12.style.cssText = cssBtn;
+	btnAction12.innerHTML = 'Analyze';
+	container.appendChild( btnAction12 );
+	
+	container.appendChild(document.createElement('br'));
+
 
 
 
@@ -245,7 +336,7 @@ var ControlPanel = function () {
 	btnAction1.innerHTML = 'Slice';
 	// container.appendChild( btnAction1 );
 
-	container.appendChild(document.createElement('br'));
+	// container.appendChild(document.createElement('br'));
 
 
 
@@ -380,6 +471,8 @@ var ControlPanel = function () {
 
 		button11: btnAction11,
 
+		button12: btnAction12,
+
 		checkbox1: cb1,
 
 		checkbox2: cb2,
@@ -393,6 +486,12 @@ var ControlPanel = function () {
 		slider2: slider2,
 
 		slider3: slider3,
+
+		slider4: slider4,
+
+		slider5: slider5,
+
+		slider6: slider6,
 
 		// label4: lb4,
 		label7: lb7,

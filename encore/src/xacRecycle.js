@@ -1812,7 +1812,7 @@ function distanceToSegment(ctr, p0, p1) {
       */
       // var radiusHandle = 5;
 
-      
+
       // var ctr = new THREE.Vector3().addVectors(va, vb).add(vc).divideScalar(3);
       // neighbors = [f]; // need to check if this f is out of bound
       // findNeighbors(obj, f, ctr, radiusHandle * 1.5, neighbors);
@@ -1860,3 +1860,590 @@ function distanceToSegment(ctr, p0, p1) {
       // var percOccl = assessOcclusion(obj, neighbors, axisToRotate, angleToRotate, theta);
       // console.log("percentage occluded: " + percOccl);
       /* ----------------------------------------------------------------------------- */
+function makeStrapPrintableOld (obj) {
+  /* 
+    find the size and position of the connector
+  */
+  var OCCLUSION = 1;
+  var NOTENOUGHSUPPORT = 2;
+  var TOOMUCHDROP = 3;
+  var CONNECTORTOOTHIN = 4;
+  var UNKNOWN = 0;
+
+  var REASONMESSAGES 
+    = ['unknown', 'occlusion', 'not enough support', 'too much drop', 'connector too thin'];
+  var unprintableReason = UNKNOWN;
+
+  var ctrConnector;
+  var rConnector;
+  var nmlConnector;
+  // var neighborhoodConnector;
+
+  var ctrStrap = new THREE.Vector3();
+  var dimStrap;
+
+  for(var r=radiusHandle; r>radiusMinimum; r*=shrinkRatio) {
+    obj.updateMatrixWorld();
+    var strappableFace;
+    var minSd = INFINITY;
+    var v0, v1, v2;
+    
+    var minStrap = new THREE.Vector3(INFINITY, INFINITY, INFINITY);
+    var maxStrap = new THREE.Vector3(-INFINITY, -INFINITY, -INFINITY);
+
+    for(var i=0; i<facesToStrapOn.length; i++) {
+      var f = facesToStrapOn[i];
+      neighbors = [];
+
+      var va = obj.geometry.vertices[f.a].clone().applyMatrix4(obj.matrixWorld);
+      var vb = obj.geometry.vertices[f.b].clone().applyMatrix4(obj.matrixWorld);
+      var vc = obj.geometry.vertices[f.c].clone().applyMatrix4(obj.matrixWorld);
+      
+      var ctr = new THREE.Vector3().addVectors(va, vb).add(vc).divideScalar(3);
+      // ctrStrap.add(ctr);
+
+      minStrap.x = Math.min(minStrap.x, ctr.x);
+      minStrap.y = Math.min(minStrap.y, ctr.y);
+      minStrap.z = Math.min(minStrap.z, ctr.z);
+
+      maxStrap.x = Math.max(maxStrap.x, ctr.x);
+      maxStrap.y = Math.max(maxStrap.y, ctr.y);
+      maxStrap.z = Math.max(maxStrap.z, ctr.z);
+
+      var nmlFace = new THREE.Vector3().crossVectors(
+            new THREE.Vector3().subVectors(vb, va),
+            new THREE.Vector3().subVectors(vc, va));
+
+      /* finding the neighbors */
+      findNeighbors(obj, f, ctr, r*1.5, neighbors);
+      for(var i=0; i<neighbors.length; i++) {
+        neighbors[i].collected = false;
+      }
+
+      if(neighbors.length <= 0) {
+        continue;
+      }
+
+      var nmlStats = assessFlatness(obj, neighbors);
+      if(Math.abs(nmlStats.sd) < minSd) {
+        ctrConnector = ctr;
+        nmlConnector = nmlStats.mean.normalize();
+
+        /*for debugging*/
+        strappableFace = f;
+        // neighborhoodConnector = neighbors;
+        minSd = nmlStats.sd;
+        v0 = va;
+        v1 = vb;
+        v2 = vc;
+      }
+    }
+
+    if(facesToStrapOn.length > 0) {
+      // ctrStrap.divideScalar(facesToStrapOn.length);
+      ctrStrap = new THREE.Vector3().addVectors(minStrap, maxStrap).divideScalar(2);
+      rStrap = minStrap.distanceTo(maxStrap) / 2;
+      // dimStrap = new THREE.Vector3().subVectors(maxStrap, minStrap);
+      addALine(minStrap, maxStrap, 0xff0000);
+      addABall(ctrStrap.x, ctrStrap.y, ctrStrap.z, 0xff0000, 0.5);
+    }
+    
+    if(strappableFace != undefined) {
+      rConnector = r;
+
+      /*for debugging*/
+      addATriangle(v0, v1, v2, 0xffff00);
+      break;
+    }
+  }
+
+
+  /* 
+    adding a connector & perform csg
+  */
+  var matConnector = new THREE.MeshPhongMaterial( { color: 0x080888, transparent: true, opacity: 0.5} );
+  var connector = makeConnector(ctrConnector, rConnector, rConnector * 2, nmlConnector);
+  // connector.position.add(nmlConnector.multiplyScalar(0.5));
+  connector.updateMatrixWorld();
+  var subConnector = csgSubtract(connector, obj, matConnector);
+
+  scene.add(subConnector);
+
+  /* 
+    dig a tunnel in the connector for the strap 
+      - straight tunnel
+      - curvy tunnel
+  */
+
+  /*find the centers*/
+  var matTunnel = new THREE.MeshPhongMaterial( { color: 0x888008, transparent: true, opacity: 0.5} );
+  subConnector.updateMatrixWorld();
+  var ctrSubConnector = new THREE.Vector3();
+  var minSubConnector = new THREE.Vector3(INFINITY, INFINITY, INFINITY);
+  var maxSubConnector= new THREE.Vector3(-INFINITY, -INFINITY, -INFINITY);
+  for (var i = 0; i < subConnector.geometry.vertices.length; i++) {
+    var v = subConnector.geometry.vertices[i].clone().applyMatrix4(subConnector.matrixWorld);
+
+    minSubConnector.x = Math.min(minSubConnector.x, v.x);
+    minSubConnector.y = Math.min(minSubConnector.y, v.y);
+    minSubConnector.z = Math.min(minSubConnector.z, v.z);
+
+    maxSubConnector.x = Math.max(maxSubConnector.x, v.x);
+    maxSubConnector.y = Math.max(maxSubConnector.y, v.y);
+    maxSubConnector.z = Math.max(maxSubConnector.z, v.z);
+
+    // ctrSubConnector.add(v);
+  };
+  // ctrSubConnector.divideScalar(subConnector.geometry.vertices.length);
+  ctrSubConnector = new THREE.Vector3().addVectors(minSubConnector, maxSubConnector).divideScalar(2);
+
+  // TODO: this raise can be calculated
+  // ctrSubConnector.add(nmlConnector.multiplyScalar(0.25));
+
+
+  // console.log(ctrSubConnector);
+  addABall(ctrSubConnector.x, ctrSubConnector.y, ctrSubConnector.z, 0x00ff00, 0.5);
+
+  /*make two cylinder*/
+  // var rStubOuter = Math.abs(new THREE.Vector3().subVectors(ctrSubConnector, ctrStrap).dot(nmlConnector));
+  var rStubOuter = rStrap; //Math.abs(dimStrap.dot(nmlConnector)) / 2;
+  // rStubOuter *= 1.1;
+  var ctrStubs = ctrSubConnector.clone().sub(nmlConnector.multiplyScalar(rStubOuter));
+  // rStubOuter += widthStrap;
+  var stubOuter = makeStub(ctrStubs, rStubOuter, lengthStrap, nmlConnector);
+  scene.add(stubOuter);
+
+  var rStubInner = rStubOuter - widthStrap;
+  var stubInner = makeStub(ctrStubs, rStubInner, lengthStrap, nmlConnector);
+  scene.add(stubInner);
+
+  var strap = csgSubtract(stubOuter, stubInner, matTunnel);
+  // strap.position.add(nmlConnector.multiplyScalar(0.5));
+  scene.add(strap);
+  scene.remove(stubOuter);
+  scene.remove(stubInner);
+}
+
+// /*
+    //  add an interpolation routine
+    // */
+    // for(var i=0; i<obj.geometry.faces.length; i++) {
+
+    //  var f = obj.geometry.faces[i];
+
+    //  /* assign color to each vertex of current face */
+    //  var rInterpolation = 10;
+    //  for( var j = 0; j < 3; j++ ) {
+    //    var weightTotal = 1;
+    //    var score = f.score;
+
+    //    var v = f.verticesTemp[j];
+    //    for(var k=0; k<f.neighbors.length; k++) {
+    //      var ff = f.neighbors[k];
+    //      for(var h=0; h<3; h++) {
+    //        var dist = v.distanceTo(ff.verticesTemp[h]);
+    //        var w = Math.max(0, 1 - dist/rInterpolation);
+    //        score += ff.score * w;
+    //        weightTotal += w;
+    //      } 
+    //    }
+
+    //    // f.vertexColors[j].divideScalar(weightTotal);
+    //    // color.setHex(color.getHex() / weightTotal);
+    //    score /= weightTotal;
+    //    f.vertexColorsBuffer[j] = getColorFromScore(score, maxScore);
+    //  }
+    // }
+    // console.log(obj.geometry.colors);
+
+  // var colorSchemes = [0xd7191c, 0xfdae61, 0xffffbf, 0xa6d96a, 0x1a9641];
+    // var colorSchemes = [0x1a9850, 0x91cf60, 0xd9ef8b, 0xffffbf, 0xfee08b, 0xfc8d59, 0xd73027];
+
+
+    // var color = new THREE.Color( 0xffffff );
+      // f.color = color;
+
+      // var neighborWeight = 0.25;
+      // var scoreNeighbors = 0;
+      // var score = f.score;
+      // var color = getColorFromScore(score, maxScore);
+
+      /* average the value from its neighbors */
+      // for(var k=0; k<f.neighbors.length; k++) {
+      //  scoreNeighbors += f.neighbors[k].score;
+      // }
+      // score = (1 - neighborWeight) * f.score + neighborWeight * scoreNeighbors / f.neighbors.length;
+
+      // for(var j=0; j<colorSchemes.length; j++) { 
+      //  if(score <= maxScore * (j+1) / colorSchemes.length) {
+      //    color.setHex(colorSchemes[j]);
+      //    break;
+      //  } 
+      // }
+
+  // f.vertexColorsBuffer = new Array();
+
+      // var faceIndices = ['a', 'b', 'c', 'd'];  
+      // var numberOfSides = ( f instanceof THREE.Face3 ) ? 3 : 4;
+
+      // /* assign color to each vertex of current face */
+      // for( var j = 0; j < numberOfSides; j++ )  
+      // {
+      //     // f.vertexColorsBuffer[j] = color;
+      //     // f.vertexColorsBuffer[j] = score;
+      //     // f.vertexColors[j] = getColorFromScore(score, maxScore);
+      // }
+
+      // var subNeighbors = [];
+      // findNeighbors(obj, f, f.ctrTemp, radiusHandle * 2, subNeighbors);
+      // for(var j=0; j<subNeighbors.length; j++) {
+      //  subNeighbors[j].collected = false;
+      // }
+
+      // console.log("subNeighbors: " + subNeighbors.length);
+
+
+    /*
+      more smoothing
+    */
+    // 
+    // for(var i=0; i<obj.geometry.faces.length; i++) {
+    //  var f = obj.geometry.faces[i];
+      
+    //  /* assign color to each vertex of current face */
+      
+    //  for( var j = 0; j < 3; j++ ) {
+    //    var weightTotal = 1;
+    //    var color = f.vertexColorsBuffer[j];
+
+    //    var v = f.verticesTemp[j];
+    //    for(var k=0; k<f.neighbors.length; k++) {
+    //      var ff = f.neighbors[k];
+    //      for(var h=0; h<3; h++) {
+    //        var dist = v.distanceTo(ff.verticesTemp[h]);
+    //        var w = Math.max(0, 1 - dist/100);
+
+    //        color.setHex(color.getHex() + w * ff.vertexColorsBuffer[h].getHex());
+    //        weightTotal += w;
+    //      }
+    //    }
+
+    //    color.setHex(color.getHex() / weightTotal);
+    //    // console.log(color);
+    //    f.vertexColors[j] = color.clone();
+    //  }
+    //  // console.log(i);
+    // }
+
+    // neighbors = [f]; // need to check if this f is out of bound
+    // findNeighbors(obj, f, ctr, radiusHandle, neighbors);
+
+    // for(var j=0; j<neighbors.length; j++) {
+    //  neighbors[j].collected = false;
+    // }
+
+    // f.flatness = flatness;
+    // f.stability = stability;
+    // f.occlusion = occlusion;
+
+    function makeAdherePrintable(obj, faceSelected) {
+  
+  var OCCLUSION = 1;
+  var NOTENOUGHSUPPORT = 2;
+  var TOOMUCHDROP = 3;
+  var CONNECTORTOOTHIN = 4;
+  var UNKNOWN = 0;
+
+  var REASONMESSAGES 
+    = ['unknown', 'occlusion', 'not enough support', 'too much drop', 'connector too thin'];
+  var unprintableReason = UNKNOWN;
+
+
+  var shrinkRatio = 0.9;
+  var rConnector;
+
+  if(angleToRotate != undefined && axisToRotate != undefined) {
+    obj.rotateOnAxis(axisToRotate, -angleToRotate); 
+  }
+  
+  
+  obj.updateMatrixWorld();
+  var va = obj.geometry.vertices[faceSelected.a].clone().applyMatrix4(obj.matrixWorld);
+  var vb = obj.geometry.vertices[faceSelected.b].clone().applyMatrix4(obj.matrixWorld);
+  var vc = obj.geometry.vertices[faceSelected.c].clone().applyMatrix4(obj.matrixWorld);
+  
+  var ctr = new THREE.Vector3().addVectors(va, vb).add(vc).divideScalar(3);
+  // addABall(ctr.x, ctr.y, ctr.z, 0xff0000, 2);
+  var nmlFace = new THREE.Vector3().crossVectors(
+        new THREE.Vector3().subVectors(vb, va),
+        new THREE.Vector3().subVectors(vc, va));
+
+  var ctrConnector;
+  for(var r=radiusHandle; r>radiusMinimum; r*=shrinkRatio) {
+    /* 
+      find the neighbors and the actual radius
+    */
+
+    /* important: make sure the object's matrix is up to date */
+    obj.updateMatrixWorld();
+
+    neighbors = [];
+    /* when searching, use 1.5 times of r to include more possible triangles*/
+    findNeighbors(obj, faceSelected, ctr, r*1.5, neighbors);
+
+    if(neighbors.length <= 0) {
+      unprintableReason = CONNECTORTOOTHIN;
+      break;
+    }
+
+    /* clean up the masks used for searching */
+    for(var i=0; i<neighbors.length; i++) {
+      neighbors[i].collected = false;
+    }
+
+    
+    /* 
+      find the commonly shared plane 
+    */
+    var points = [];
+    for(var i=0; i<neighbors.length; i++) {
+      var f = neighbors[i];
+      var indices = [f.a, f.b, f.c];
+      var vertices = [];
+      for(var j=0; j<indices.length; j++) {
+        var v = obj.geometry.vertices[indices[j]].clone().applyMatrix4(obj.matrixWorld);
+        points.push(v);
+        vertices.push(v);
+      }
+
+      f.verts = vertices;
+    }
+
+    var planeParams = findPlaneToFitPoints(points);
+    var a = planeParams.A;
+    var b = planeParams.B;
+    var c = planeParams.C;
+    var d = planeParams.D;
+
+
+    /* 
+      measure coverage 
+      s: project the neighbors onto the plane, cal the sum of their area
+      S: the plane's area (circle)
+      coverage = s/S
+    */
+    var actualArea = 0;
+    var projections = [];
+    for(var i=0; i<neighbors.length; i++) {
+      var f = neighbors[i];
+      var proj = [];
+      for(var j=0; j<f.verts.length; j++) {
+        var p = getProjection(f.verts[j], a, b, c, d);
+        proj.push(p);
+        projections.push(p);
+      }
+
+      // addATriangle(projections[0], projections[1], projections[2], 0x00ff00);
+      actualArea += triangleArea(proj[0], proj[1], proj[2]);
+    }
+
+    var coverage = actualArea / (Math.PI * r * r);
+
+    // console.log("supporting " + coverage.toFixed(4)*100 + "%");
+    if(coverage < supportiveness) {
+      unprintableReason = NOTENOUGHSUPPORT;
+      continue;
+    }
+
+
+    /* 
+      rotate the object 
+    */
+    var yUp = new THREE.Vector3(0, 1, 0);
+    var nml = new THREE.Vector3(a, b, c).normalize();
+
+    if(Math.abs(nml.angleTo(nmlFace)) > Math.PI / 2) {
+      nml.multiplyScalar(-1);
+    }
+
+    angleToRotate = nml.angleTo(yUp);
+    axisToRotate = new THREE.Vector3().crossVectors(nml, yUp).normalize();
+
+    obj.rotateOnAxis(axisToRotate, angleToRotate);
+    obj.updateMatrixWorld();
+
+
+
+    /* 
+      set up the supporting plane 
+    */
+    var maxNegDist = 0; // max dist 'below' the plane
+    var maxPosDist = 0; // max dist 'above' the plane
+
+    /* note that points are the vertices BEFORE rotating the object */
+    for(var i=0; i<points.length; i++) {
+      var v = points[i];
+
+      /* there are points from the extended search that actually fall out of r */
+      if(projections[i].distanceTo(ctr) > r) {
+        continue;
+      }
+
+      var dist = (a*v.x + b*v.y + c*v.z + d) / Math.sqrt(a*a + b*b + c*c);
+
+      maxNegDist = Math.min(dist, maxNegDist);
+      maxPosDist = Math.max(dist, maxPosDist);
+    }
+    // console.log("maxPosDist:" + maxPosDist + ", maxNegDist: " + maxNegDist);
+    // ctr2.y += Math.min(maxDropDistance, -maxNegDist);
+
+    /* if highest possible drop exceeds the threshold */
+    if(Math.abs(maxPosDist) + Math.abs(maxNegDist) > maxDropDistance) {
+      obj.rotateOnAxis(axisToRotate, -angleToRotate);
+      unprintableReason = TOOMUCHDROP;
+      continue;
+    }
+    var distToRaise = Math.abs(angleToRotate) > Math.PI/2 ? -maxNegDist : maxPosDist;
+
+    var ctr2 = ctr.clone().applyMatrix4(obj.matrixWorld);//new THREE.Vector3().addVectors(va, vb).add(vc).divideScalar(3);
+    ctr2.y += distToRaise;
+
+
+
+    /* 
+      test for occlusion 
+    */
+    var isOccluding = false;
+    var ctrXZ = ctr2.clone();
+    ctrXZ.y = 0;
+    for(var i=0; i<obj.geometry.faces.length && isOccluding == false; i++) {
+      var f = obj.geometry.faces[i];
+      var indices = [f.a, f.b, f.c];
+      for(var j=0; j<indices.length; j++) {
+        var v = obj.geometry.vertices[indices[j]].clone().applyMatrix4(obj.matrixWorld);
+        
+        /* ignore points y-below the plane */
+        if(v.y < ctr2.y) {
+          break;
+        }
+
+        /* for points above the plane, test if it's in the cylinder */
+        v.y = 0;
+        if(v.distanceTo(ctrXZ) < r + radiusPrinthead) {
+          isOccluding = true;
+          break;
+        }
+      }
+    }
+    
+
+    /*
+      escape when finding printable radius
+    */
+    if(isOccluding == false) {
+      addACircle(ctr2, r, 0x0faaf0);
+      // ctr2.y -= distToRaise;
+      // addACircle(ctr2, r, 0xf0aa0f);
+      ctrConnector = ctr2;
+      rConnector = r;
+      break;
+    } else {
+      unprintableReason = OCCLUSION;
+    }
+
+    /* 
+      rotate the object back 
+    */
+    obj.rotateOnAxis(axisToRotate, -angleToRotate);
+  }
+
+
+  log(rConnector == undefined ? 
+    ("unprintable") :
+    ("handle radius: " + rConnector));
+
+  /*
+    cleaning up
+  */
+  if(rConnector == undefined) {
+    angleToRotate = undefined;
+    axisToRotate = undefined;
+
+    log("reason: " + REASONMESSAGES[unprintableReason]);
+    return false;
+  } else {
+    makeConnector(ctrConnector, rConnector, rConnector * 2);
+  }
+
+  return true;
+}
+
+
+// var rayCaster = new THREE.Raycaster();
+  // rayCaster.ray.set( ctrSelected, nmlSelected );
+  // var intersects = rayCaster.intersectObjects([bbox]);
+
+  // if(intersects.length > 0) {
+  //  var pnt = intersects[0].point;
+  //  addABall(pnt.x, pnt.y, pnt.z, 0x0000ff, 0.25);
+  //  console.log("point!")
+  // }
+
+  // var k;
+  // var p = new THREE.Vector3();
+  // var minDist = INFINITY;
+
+  // k = (bbox.min.x - ctr.x) / nml.x;
+  // p.x = bbox.min.x;
+  // p.y = ctr.y + k * nml.y;
+  // p.z = ctr.z + k * nml.z;
+  // minDist = Math.min(minDist, p.distanceTo(ctr));
+
+  // k = (bbox.max.x - ctr.x) / nml.x;
+  // p.x = bbox.max.x;
+  // p.y = ctr.y + k * nml.y;
+  // p.z = ctr.z + k * nml.z;
+  // minDist = Math.min(minDist, p.distanceTo(ctr));
+
+  // var attachPoint = ctr.clone().add(nml.multiplyScalar(0.5));
+  // var proxy = addABall(ctr.x, ctr.y, ctr.z, 0xff0000, 1);
+  // var codeName = Math.random();
+  // proxy.codeName = codeName;
+
+
+  // /* -----------------------------------------------------------------------------
+    //  flatness assessment
+    // */
+    // if(f.flatness == undefined) {
+    //  var nmlStats = assessFlatness(obj, f.neighbors1R);
+    //  f.flatness = nmlStats.sd / 180; // normalize
+    //  f.flatness = Math.max(0, 1 - f.flatness);
+    // }
+    
+
+    // /* ----------------------------------------------------------------------------- 
+    //  stability assessment
+    // */
+    // if(f.stability == undefined) {
+    //  f.stability = assessStability(obj, f.neighbors1R, radiusHandle);    // percentage unsupported
+    //  f.stability = Math.max(0, 1 - f.stability);
+    // }
+    
+    
+    // /* ----------------------------------------------------------------------------- 
+    //  for occlusion assessment
+    // */
+    // if(f.occlusion == undefined) {
+    //  var yUp = new THREE.Vector3(0, 1, 0);
+    //  var angleToRotate = nmlStats.mean.angleTo(yUp);
+    //  var axisToRotate = new THREE.Vector3().crossVectors(nmlStats.mean, yUp).normalize();
+
+    //  var theta = 15 * Math.PI / 180;
+    //  f.occlusion = assessOcclusion(obj, f.neighbors1R, axisToRotate, angleToRotate, theta);
+    //  f.occlusion = Math.max(0, 1 - f.occlusion);
+    // }
+
+    // wocc = (1 - wflaNew) * wfla / (1 - wfla);
+  // wsta = (1 - wflaNew) * wsta / (1 - wfla);
+  // wfla = wflaNew;
+  // updateAllWeightSliders();

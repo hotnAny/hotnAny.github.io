@@ -377,6 +377,8 @@ function addATriangle(v1, v2, v3, clr) {
   tri.material.side = THREE.DoubleSide;
 
   scene.add(tri);
+
+  return tri;
 }
 
 function addABall(x, y, z, clr, radius) {

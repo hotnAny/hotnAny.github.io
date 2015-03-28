@@ -14,7 +14,7 @@ var connector;
 
 ************************************************************************************/
 
-function makeAdherePrintable(obj) {
+function makeAdherePrintable(obj, faceSelected) {
 	
 	var OCCLUSION = 1;
 	var NOTENOUGHSUPPORT = 2;
@@ -36,9 +36,9 @@ function makeAdherePrintable(obj) {
 	
 	
 	obj.updateMatrixWorld();
-	var va = obj.geometry.vertices[faceSelected[0].a].clone().applyMatrix4(obj.matrixWorld);
-	var vb = obj.geometry.vertices[faceSelected[0].b].clone().applyMatrix4(obj.matrixWorld);
-	var vc = obj.geometry.vertices[faceSelected[0].c].clone().applyMatrix4(obj.matrixWorld);
+	var va = obj.geometry.vertices[faceSelected.a].clone().applyMatrix4(obj.matrixWorld);
+	var vb = obj.geometry.vertices[faceSelected.b].clone().applyMatrix4(obj.matrixWorld);
+	var vc = obj.geometry.vertices[faceSelected.c].clone().applyMatrix4(obj.matrixWorld);
 	
 	var ctr = new THREE.Vector3().addVectors(va, vb).add(vc).divideScalar(3);
 	// addABall(ctr.x, ctr.y, ctr.z, 0xff0000, 2);
@@ -57,7 +57,7 @@ function makeAdherePrintable(obj) {
 
 		neighbors = [];
 		/* when searching, use 1.5 times of r to include more possible triangles*/
-		findNeighbors(obj, faceSelected[0], ctr, r*1.5, neighbors);
+		findNeighbors(obj, faceSelected, ctr, r*1.5, neighbors);
 
 		if(neighbors.length <= 0) {
 			unprintableReason = CONNECTORTOOTHIN;

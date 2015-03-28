@@ -10,7 +10,8 @@ document.body.appendChild( controlPanel.domElement);
 
 
 controlPanel.checkbox1.onchange = toggleDebugMode;
-controlPanel.button2.onchange = loadModelFromFile;
+controlPanel.dd1.onchange = loadObjToPrint;
+// controlPanel.button2.onchange = loadModelFromFile;
 
 controlPanel.slider1.oninput = rotateObjectX;
 controlPanel.slider2.oninput = rotateObjectY;
@@ -21,6 +22,7 @@ controlPanel.dd1.appendChild(controlPanel.ddOption("-----------", undefined));
 controlPanel.dd1.appendChild(controlPanel.ddOption("Teddy", teddy));
 controlPanel.dd1.appendChild(controlPanel.ddOption("Wrench", wrench));
 controlPanel.dd1.appendChild(controlPanel.ddOption("Mug", mug));
+controlPanel.dd1.appendChild(controlPanel.ddOption("Troll", troll));
 
 controlPanel.dd1.onchange = loadObjToPrint;
 

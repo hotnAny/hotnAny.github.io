@@ -25,7 +25,10 @@ var visualMark;
 var angleToRotate;
 var axisToRotate;
 
-/* for INTERLOCK */
+/* for general manipulation */
+var downX;
+var downY;
+
 var prevX;
 var prevY;
 var prevZ;
@@ -66,6 +69,9 @@ function onMouseDown( event ) {
 	if(event.clientX < 256) return;
 
 	controlPanel.checkbox3.checked = usingPhysics;
+
+	downX = event.clientX;
+	downY = event.clientY;
 
 	var intersects = rayCast(event.clientX, event.clientY, objects);
 
@@ -109,6 +115,8 @@ function onMouseDown( event ) {
 			// addATriangle(va, vb, vc, 0x0000ff);	
 		} else if(attachmentMethod == STRAP) {
 			strokePoints = [];
+			// facesToStrapOn = [];
+			// verticesToStrapOn = [];
 		}
 
 		var idx = selected.indexOf(obj);
@@ -184,12 +192,39 @@ function onMouseMove( event ) {
 				obj.position.y -= rateY * deltaScreenY;
 			}
 		}
+
+		/* wheel */
+		// else if(event.button == 1) {
+		// 	var intersects = rayCast(event.clientX, event.clientY, [obj]);
+		// 	// if(intersects.length > 0) {
+		// 	// 	obj.rotation.x = obj.rotation.x * rateXZ + intersects[0].point.x * (1 - rateXZ);
+		// 	// 	obj.rotation.z = obj.rotation.z * rateY + intersects[0].point.y * (1 - rateY);
+		// 	// } else {
+			
+		// 	// TODO: fix this code
+		// 	if(prevX != undefined && prevY != undefined) {
+
+		// 		var offsetX = Math.abs(event.clientX - downX);
+		// 		var offsetY = Math.abs(event.clientY - downY);
+
+		// 		var dx = event.clientX - prevX;
+		// 		var dy = event.clientY - prevY;
+
+		// 		if(offsetX > 32 && offsetY > 32) {
+		// 			obj.rotation.y += rateY * 0.1 * Math.sqrt(dx*dx + dy*dy);
+		// 		} else if(offsetX > 32) {
+		// 			obj.rotation.z += rateXZ * 0.1 * dx;
+		// 		} else {
+		// 			obj.rotation.x += rateXZ * 0.1 * dy;
+		// 		}
+		// 	}
+		// }
 	}
 	// }
 
 	// else 
 	if(attachmentMethod == STRAP) {
-		if(event.button == 0) {
+		if(event.button == 0 && staticObjLocked == true) {
 			var intersects = rayCast(event.clientX, event.clientY, objects);
 			for (var i = 0; i < intersects.length; i++) {
 			// 	var obj = intersects[i].object;
@@ -229,9 +264,10 @@ function onMouseUp( event ) {
 		break;
 	}
 
+	// TODO make the conditional loogic consistent
 	if(obj != undefined && event.button == 0) {
 		// console.log(obj);
-		if(attachmentMethod == STRAP) {
+		if(attachmentMethod == STRAP && strokePoints.length > 0) {
 
 			// find out the 'scale' of the specified cross section
 			var min = new THREE.Vector3(INFINITY, INFINITY, INFINITY);
@@ -296,7 +332,8 @@ function onMouseUp( event ) {
 
 				if(faceInRange) {
 					facesToStrapOn.push(f);
-					addATriangle(vertices[0], vertices[1], vertices[2], 0xff8844);
+					// verticesToStrapOn.push(addATriangle(vertices[0], vertices[1], vertices[2], 0xff8844));
+					verticesToStrapOn.push(vertices);
 				}
 
 			}
@@ -305,6 +342,7 @@ function onMouseUp( event ) {
 				scene.remove(strokes[i]);
 			}
 			
+			analyzeStrapMethod(obj, facesToStrapOn);
 		}
 	}
 }

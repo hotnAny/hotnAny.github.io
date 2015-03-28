@@ -91,8 +91,8 @@ function onMouseDown( event ) {
 	}
 
 	isMouseDown = true;
-	minz = INFINITY;
-	maxz = -INFINITY;
+	miny = INFINITY;
+	maxy = -INFINITY;
 	prevGrndX = undefined;
 	prevGrndZ = undefined;
 }
@@ -107,8 +107,8 @@ function onMouseMove( event ) {
 	if(event.button == 0) {
 		var intersects = rayCast(event.clientX, event.clientY, objects);
 		for (var i = 0; i < intersects.length; i++) {
-			minz = Math.min(intersects[i].point.z, minz);
-			maxz = Math.max(intersects[i].point.z, maxz);
+			miny = Math.min(intersects[i].point.y, miny);
+			maxy = Math.max(intersects[i].point.y, maxy);
 			strokePoints.push(intersects[i].point);
 			strokeFaces.push(intersects[i].face);
 		    strokes.push(addABall(intersects[i].point.x, 

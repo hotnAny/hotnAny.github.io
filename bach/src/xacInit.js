@@ -98,3 +98,4 @@ var stlLoader = new THREE.STLLoader();
 var teddy = 'things/teddy.stl';
 var wrench = 'things/wrench.stl';
 var mug = 'things/mug.stl';
+var troll = 'things/troll.stl';

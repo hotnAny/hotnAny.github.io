@@ -398,5 +398,9 @@ function addAColorfulCube() {
 
 
 function loadModelFromFile() {
-	console.log(controlPanel.button2.value);
+	// console.log(controlPanel.button2.value.replace("C:\\fakepath\\", ""));
+	var modelName = controlPanel.button2.value.replace("C:\\fakepath\\", "");
+	var modelPath = 'things/' + modelName;
+	loadStl(modelPath, modelName, true);
+
 }

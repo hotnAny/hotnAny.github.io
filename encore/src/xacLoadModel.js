@@ -5,8 +5,10 @@ function loadStl (objPath, objName, isStatic, addToObjects) {
 
     // geometry.dynamic = true;
     // var material = new THREE.MeshPhongMaterial( { color: colorNormal });
-    var material = new THREE.MeshPhongMaterial( { color: colorNormal, transparent: true, opacity: 0.5} );  
+    var material = new THREE.MeshPhongMaterial( { color: colorNormal, transparent: true, opacity: 0.75, vertexColors: THREE.VertexColors} );  
     // material.side = THREE.DoubleSide;
+    // geometry.materials.push(material);
+    // geometry.materials.push(new THREE.MeshBasicMaterial( { vertexColors: THREE.VertexColors} ));
     var object = new THREE.Mesh(geometry, material); 
 
     object.name = objName;
@@ -46,7 +48,9 @@ function loadStl (objPath, objName, isStatic, addToObjects) {
       // object.rotation.set(Math.PI / 2 * Math.random(), Math.PI / 2 * Math.random(), Math.PI / 2 * Math.random());
     }
 
-    scene.add(object); 
+    // if(!TOSHOWHEATMAP) {
+      scene.add(object); 
+    // }
   });
 }
 

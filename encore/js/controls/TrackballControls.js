@@ -6,7 +6,7 @@
 THREE.TrackballControls = function ( object, domElement ) {
 
 	var _this = this;
-	var STATE = { NONE: -1, ROTATE: 2, ZOOM: 1, PAN: 0, TOUCH_ROTATE: 3, TOUCH_ZOOM_PAN: 4 };
+	var STATE = { NONE: -1, ROTATE: 0, ZOOM: 1, PAN: 2, TOUCH_ROTATE: 3, TOUCH_ZOOM_PAN: 4 };
 
 	this.object = object;
 	this.domElement = ( domElement !== undefined ) ? domElement : document;
@@ -399,6 +399,9 @@ THREE.TrackballControls = function ( object, domElement ) {
 
 	function mousedown( event ) {
 
+		var intersects = rayCast(event.clientX, event.clientY, objects);
+		_this.enabled = intersects.length == 0;
+		
 		if ( _this.enabled === false ) return;
 
 		// event.preventDefault();
@@ -436,7 +439,7 @@ THREE.TrackballControls = function ( object, domElement ) {
 
 	function mousemove( event ) {
 
-		if ( _this.enabled === false ) return;
+		if ( _this.enabled === false || selected.length > 0 || event.clientX < 255) return;
 
 		if(event.clientX > 255) {
 			event.preventDefault();

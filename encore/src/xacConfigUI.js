@@ -19,6 +19,7 @@ controlPanel.button7.onclick = saveObjects; //saveBothObjs;
 controlPanel.button9.onclick = restoreObjects;
 controlPanel.button10.onclick = makeItPrintable;
 controlPanel.button11.onclick = toggleSupport;
+controlPanel.button12.onclick = analyze;
 
 controlPanel.checkbox1.onchange = toggleDebugMode;
 controlPanel.checkbox2.onchange = toggleOctreeVisibility;
@@ -28,6 +29,15 @@ controlPanel.checkbox4.onchange = lockObjToPrint;
 controlPanel.slider1.oninput = rotateObjectX;
 controlPanel.slider2.oninput = rotateObjectY;
 controlPanel.slider3.oninput = rotateObjectZ;
+
+
+controlPanel.slider4.onchange = adjustAttachabilityWeight;
+controlPanel.slider5.onchange = adjustUsabilityWeight;
+controlPanel.slider6.onchange = adjustStrengthWeight;
+
+// controlPanel.slider4.onchange = analyzeAttachmentMethod();
+// controlPanel.slider5.onchange = analyzeAttachmentMethod();
+// controlPanel.slider6.onchange = analyzeAttachmentMethod();
 
 /* 
 	populating objects into lists 
