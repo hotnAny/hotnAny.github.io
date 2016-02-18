@@ -345,7 +345,7 @@ function computeLayerAtHeight(height) {
 			if(height > top || height < btm) {
 				log("out of bound");
 			} else {
-				var heightRatio = (height - btm) / (top - btm);
+				var heightRatio = (height - btm + raisedHeight) / (top - btm + raisedHeight);
 				log("pause at " + (heightRatio * 100) + "%");
 			}
 			break;

@@ -17,9 +17,10 @@ controls.dynamicDampingFactor = 0.3;
  */
 
 var isMouseDown = false;
+var isMouseDownOnObject = false;
 
 /* for visual feedback */
-var visualMark;
+var visualMarks = [];
 
 /* for ADHERE */
 var angleToRotate;
@@ -73,6 +74,8 @@ function onMouseDown( event ) {
 	downX = event.clientX;
 	downY = event.clientY;
 
+	// need to click on an object to stroke
+	isMouseDownOnObject = false;
 	var intersects = rayCast(event.clientX, event.clientY, objects);
 
 	// deselect selected objects
@@ -83,10 +86,24 @@ function onMouseDown( event ) {
 	}
 	selected.splice(0, selected.length);
 
-	faceSelected.splice(0, faceSelected.length);
-	// }
+	/* deal with multiple selection */
+	if(intersects.length > 0) {
+		if(isKeyHeld && lastPressedKey == CMDKEYCODE) {
+			
+		} else {
+			for (var i = 0; i < visualMarks.length; i++) {
+				scene.remove(visualMarks[i]);
+			}
+			visualMarks.splice(0, visualMarks.length);
+			facesSelected.splice(0, facesSelected.length);
+		}
+	}
+	
+
 	// selecting objects
 	for (var i = 0; i < intersects.length; i++) {
+		isMouseDownOnObject = true;
+
 		var obj = intersects[i].object;
 
 		var f = intersects[i].face;
@@ -99,21 +116,17 @@ function onMouseDown( event ) {
 						new THREE.Vector3().subVectors(vb, va),
 						new THREE.Vector3().subVectors(vc, va));
 
-		if(visualMark != undefined) {
-			scene.remove(visualMark);
-		}
-		visualMark = addACircle(ctr, 0.5, 0xdd4411);
-
-		var yUp = new THREE.Vector3(0, 1, 0);
-		var angleMark = yUp.angleTo(nmlFace);
-		var axisMark = new THREE.Vector3().crossVectors(yUp, nmlFace).normalize();
-		visualMark.rotateOnAxis(axisMark, angleMark);
-		visualMark.position.add(nmlFace.multiplyScalar(0.1));
+		
+		// visualMarks.push(addABall(intersects[i].point.x, intersects[i].point.y, intersects[i].point.z, 
+			// 0xffffff, 1));
 
 		if(attachmentMethod == ADHERE && staticObjLocked == true) {
-			faceSelected.push(f);
+			f.actualPoint = intersects[i].point;
+			facesSelected.push(f);
 			// addATriangle(va, vb, vc, 0x0000ff);	
-		} else if(attachmentMethod == STRAP) {
+		} else if(attachmentMethod == STRAP || attachmentMethod == ADHESIVE) {
+			f.actualPoint = intersects[i].point;
+			facesSelected.push(f);
 			strokePoints = [];
 			// facesToStrapOn = [];
 			// verticesToStrapOn = [];
@@ -223,23 +236,34 @@ function onMouseMove( event ) {
 	// }
 
 	// else 
-	if(attachmentMethod == STRAP) {
+	if(attachmentMethod == STRAP || attachmentMethod == ADHESIVE) {
 		if(event.button == 0 && staticObjLocked == true) {
-			var intersects = rayCast(event.clientX, event.clientY, objects);
-			for (var i = 0; i < intersects.length; i++) {
-			// 	var obj = intersects[i].object;
-			// 	var f = intersects[i].face;
-			// 	var va = obj.geometry.vertices[f.a].clone().applyMatrix4(obj.matrixWorld);
-			// 	var vb = obj.geometry.vertices[f.b].clone().applyMatrix4(obj.matrixWorld);
-			// 	var vc = obj.geometry.vertices[f.c].clone().applyMatrix4(obj.matrixWorld);
 
-			// 	// addATriangle(va, vb, vc, 0x0000ff);
-			// }
-			strokePoints.push(intersects[i].point);
-		    strokes.push(addABall(intersects[i].point.x, 
-		    	intersects[i].point.y, intersects[i].point.z, 
-				0xff8844, 0.5));
-			break;
+			for (var i = 0; i < visualMarks.length; i++) {
+				scene.remove(visualMarks[i]);
+			}
+			visualMarks.splice(0, visualMarks.length);
+
+			var intersects = rayCast(event.clientX, event.clientY, objects);
+
+			if(isMouseDownOnObject) {
+				for (var i = 0; i < intersects.length; i++) {
+				
+				// 	var obj = intersects[i].object;
+				// 	var f = intersects[i].face;
+				// 	var va = obj.geometry.vertices[f.a].clone().applyMatrix4(obj.matrixWorld);
+				// 	var vb = obj.geometry.vertices[f.b].clone().applyMatrix4(obj.matrixWorld);
+				// 	var vc = obj.geometry.vertices[f.c].clone().applyMatrix4(obj.matrixWorld);
+
+				// 	// addATriangle(va, vb, vc, 0x0000ff);
+				// }
+
+					strokePoints.push(intersects[i].point);
+				  //   strokes.push(addABall(intersects[i].point.x, 
+				  //   	intersects[i].point.y, intersects[i].point.z, 
+						// 0xffffff, 1));
+					break;
+				}
 			}
 		}
 	} 
@@ -267,81 +291,10 @@ function onMouseUp( event ) {
 	// TODO make the conditional loogic consistent
 	if(obj != undefined && event.button == 0) {
 		// console.log(obj);
-		if(attachmentMethod == STRAP && strokePoints.length > 0) {
+		if((attachmentMethod == STRAP || attachmentMethod == ADHESIVE) && strokePoints.length > 0) {
 
-			// find out the 'scale' of the specified cross section
-			var min = new THREE.Vector3(INFINITY, INFINITY, INFINITY);
-			var max = new THREE.Vector3(-INFINITY, -INFINITY, -INFINITY);
-			for(var i=0; i<strokePoints.length; i++) {
-				var p = strokePoints[i];
-				
-				min.x = Math.min(min.x, p.x);
-				min.y = Math.min(min.y, p.y);
-				min.z = Math.min(min.z, p.z);
+			gatherStrappableFaces(obj, strokePoints);
 
-				max.x = Math.max(max.x, p.x);
-				max.y = Math.max(max.y, p.y);
-				max.z = Math.max(max.z, p.z);
-			}
-
-			var scale = min.distanceTo(max);
-			var ctr = new THREE.Vector3().addVectors(min, max).divideScalar(2);
-			console.log("scale:" + scale);
-
-			// calculate intersection plane
-			var planeParams = findPlaneToFitPoints(strokePoints);
-			var a = planeParams.A;
-			var b = planeParams.B;
-			var c = planeParams.C;
-			var d = planeParams.D;
-			
-			// console.log(planeParams);
-
-			/*
-				for debugging the plane
-			*/
-			// var v0 = new THREE.Vector3(0, 0, -d/c);
-			// var v1 = new THREE.Vector3(0, -d/b, 0);
-			// var v2 = new THREE.Vector3(-d/a, 0, 0);
-
-			// addATriangle(v0, v1, v2, 0xffff00);
-
-			// find intersecting triangles
-			// ref: http://mathworld.wolfram.com/Point-PlaneDistance.html
-			for(var i=0; i<obj.geometry.faces.length; i++) {
-				var f = obj.geometry.faces[i];
-
-				var indices = [f.a, f.b, f.c];
-				var vertices = [];
-				var faceInRange = true;
-				for(var j=0; j<indices.length; j++) {
-					var v = obj.geometry.vertices[indices[j]].clone().applyMatrix4(obj.matrixWorld);
-					vertices.push(v);
-					var dist = Math.abs(a*v.x + b*v.y + c*v.z + d) / Math.sqrt(a*a + b*b + c*c);
-
-					/*
-						for faces to be included they need to be
-							1) close to the cutting plane
-							2) close to the firstly selected points
-					*/
-					if(dist > radiusHandle * 2 || v.distanceTo(ctr) > 2 * scale) {
-						faceInRange = false;
-						break;
-					}
-				}
-
-				if(faceInRange) {
-					facesToStrapOn.push(f);
-					// verticesToStrapOn.push(addATriangle(vertices[0], vertices[1], vertices[2], 0xff8844));
-					verticesToStrapOn.push(vertices);
-				}
-
-			}
-
-			for (var i = 0; i < strokes.length; i++) {
-				scene.remove(strokes[i]);
-			}
-			
 			analyzeStrapMethod(obj, facesToStrapOn);
 		}
 	}

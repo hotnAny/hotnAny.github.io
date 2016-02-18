@@ -28,7 +28,7 @@ function buildThisOctree(ot) {
 	log("octree (re)built in " + timeStamp() + " msec");
 
 	if(D_INTERSECTION) {
-		ot.setVisibility(true);
+		// ot.setVisibility(true);
 		// controlPanel.checkbox2.checked = true;
 	}
 }
@@ -81,7 +81,7 @@ function findMutuallyBoundedBetweenObjects3D(objD, objS, arrMulBounded) {
 	// ctr.applyMatrix4(objS.matrixWorld);
 	bboxHelper.update();
 	if(D_INTERSECTION) {
-		boxes.add( bboxHelper );
+		// boxes.add( bboxHelper );
 	}
 
 	/* 
@@ -100,7 +100,7 @@ function findMutuallyBoundedBetweenObjects3D(objD, objS, arrMulBounded) {
 			if(isInBoundingBox(v, bboxHelper.box) == true) {	
 				
 				if(D_INTERSECTION) {
-					if(i % 10 == 0) addABall(v.x, v.y, v.z, 0x00ffff, 0.2);
+					// if(i % 10 == 0) addABall(v.x, v.y, v.z, 0x00ffff, 0.2);
 				}
 
 				arrMulBounded.push(i);
@@ -118,7 +118,8 @@ function findMutuallyBoundedBetweenObjects3D(objD, objS, arrMulBounded) {
 			var nml = f.normal.clone();
 			if(testTriBoxIntersection(va, vb, vc, nml, bboxHelper.box)) {
 				if(D_INTERSECTION) {
-					if(i % 10 == 0) addATriangle(va, vb, vc, 0x00ffff);
+					// if(i % 10 == 0) 
+						// addATriangle(va, vb, vc, 0x00ffff);
 				}
 				arrMulBounded.push(i);
 				console.log("intersecting");
@@ -253,7 +254,7 @@ function findMutuallyBoundedBetweenObjects2D(objD, objS, arrMulBounded) {
 		if(isInBoundingBox(v, box) == true) {	
 			
 			if(D_INTERSECTION) {
-				if(i % 100 == 0) addABall(v.x, v.y, v.z, 0x00ffff * Math.random(), 0.2);
+				// if(i % 100 == 0) addABall(v.x, v.y, v.z, 0x00ffff * Math.random(), 0.2);
 			}
 
 			arrMulBounded.push(i);
@@ -281,7 +282,11 @@ function isInBoundingBox(v, b) {
 // STEP THREE: detect intersection based on mutually bounded elements
 
 function detectIntersection() {
+	findMutuallyBounded();
+	checkInitialization();
 	var octreeStatic = octree;
+	// console.log(octree);
+	// console.log(objStatic);
 	return detectInsersectionBetweenObjects3D(objDynamic, objStatic, octreeStatic, mutuallyBounded);
 }
 
@@ -330,7 +335,7 @@ function detectInsersectionBetweenObjects(objD, objS, octreeStatic, arrMulBounde
 				numIntersections++;
 
 				if(D_INTERSECTION) {
-					if(i % 1000 == 0) addABall(v1.x, v1.y, v1.z, 0xff0000, 0.5);	
+					// if(i % 1000 == 0) addABall(v1.x, v1.y, v1.z, 0xff0000, 0.5);	
 				} else {
 					break;
 				}
@@ -427,13 +432,13 @@ function isCrossing(v1, v2, octreeStatic, objS) {
 		/* find out if the intersecting point is i) between v1 and v2; and ii) inside the triangle */
 		if(0 <= r && r <= 1 && isInTriangle(pr, va, vb, vc)) {
 			
-			if((D_INTERSECTION && stopper < 5) || D_INTERLOCK) {
+			if(D_INTERSECTION) {//} && stopper < 5) || D_INTERLOCK) {
 				
-				addALine(v, new THREE.Vector3().addVectors(v, nml), 0x00ff00);					
-				addALine(v1, v2, 0xffff00);														
-				addALine(new THREE.Vector3().addVectors(v1, v2).divideScalar(2), pr, 0xff0000);
+				// addALine(v, new THREE.Vector3().addVectors(v, nml), 0x00ff00);					
+				// addALine(v1, v2, 0xffff00);														
+				// addALine(new THREE.Vector3().addVectors(v1, v2).divideScalar(2), pr, 0xff0000);
 				addATriangle(va, vb, vc, 0xffff00);
-				addABall(pr.x, pr.y, pr.z, 0xff0000, 0.1);
+				// addABall(pr.x, pr.y, pr.z, 0xff0000, 0.1);
 				
 				stopper++;
 

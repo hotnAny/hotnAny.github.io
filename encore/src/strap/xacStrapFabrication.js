@@ -1,172 +1,146 @@
+
+/**********************************************************************************************
+
+	for fabricating strapped handle
+
+**********************************************************************************************/
+
 var strokes = [];
 var strokePoints = [];
 var facesToStrapOn = [];
 var verticesToStrapOn = [];
 
-var minMargin = 1.5;
-var heightStrap = 4	;
-var widthStrap = 2.5;
+var minMargin = 0.5;
+var heightStrap = 3//4;
+var widthStrap = 1.5//2.5;
 
 var angleStrap;
 var axisStrap;
 
 var connectors = [];
 
-function makeStrapPrintable(obj) {
+var radiusMinimumStrap = 3;
+var radiusHandleStrap = 5;
+
+var geometryHandle;
+
+function makeStrapPrintable(obj, faceSelected) {
+
+	radiusHandleStrap = attachmentMethod == ADHESIVE ? 6 : 3;
 
 	/*
-		clean up some visuals
+		some variables used
 	*/
-	for (var i = 0; i < visualsStrap.length; i++) {
-		scene.remove(visualsStrap[i]);
-	};
-
-	/* 
-		find the size and position of the connector
-	*/
-	var OCCLUSION = 1;
-	var NOTENOUGHSUPPORT = 2;
-	var TOOMUCHDROP = 3;
-	var CONNECTORTOOTHIN = 4;
-	var UNKNOWN = 0;
-
-	var REASONMESSAGES 
-		= ['unknown', 'occlusion', 'not enough support', 'too much drop', 'connector too thin'];
-	var unprintableReason = UNKNOWN;
-
-	var strappableFace;
+	// var strappableFace;
 	var ctrConnector;
 	var rConnector;
 	var nmlConnector;
 
 	var ctrStrap = new THREE.Vector3();
-	var dimStrap;
+	var rStrap;
+	// var dimStrap;
 
-	for(var r=radiusHandleStrap; r>radiusMinimumStrap; r*=shrinkRatio) {
-		obj.updateMatrixWorld();
+
+	obj.updateMatrixWorld();
+
+
+	// log("")
+	/*
+		computing connector info + rotating the object
+	*/
+
+	var va = obj.geometry.vertices[faceSelected.a].clone().applyMatrix4(obj.matrixWorld);
+	var vb = obj.geometry.vertices[faceSelected.b].clone().applyMatrix4(obj.matrixWorld);
+	var vc = obj.geometry.vertices[faceSelected.c].clone().applyMatrix4(obj.matrixWorld);
 		
-		var minSd = INFINITY;
-		var v0, v1, v2;
-		
-		var minStrap = new THREE.Vector3(INFINITY, INFINITY, INFINITY);
-		var maxStrap = new THREE.Vector3(-INFINITY, -INFINITY, -INFINITY);
+	var ctr = new THREE.Vector3().addVectors(va, vb).add(vc).divideScalar(3);
 
-		for(var i=0; i<facesToStrapOn.length; i++) {
-			var f = facesToStrapOn[i];
-			neighbors = [];
+	var strapNeighbors = [faceSelected];
+	var k = EVALUATIONMODE ? 0.75 : 1.5;
+	findNeighbors(obj, faceSelected, ctr, Math.min(5, radiusHandleStrap*k), strapNeighbors);
+	cleanUpNeighbors(strapNeighbors);
 
-			var va = obj.geometry.vertices[f.a].clone().applyMatrix4(obj.matrixWorld);
-			var vb = obj.geometry.vertices[f.b].clone().applyMatrix4(obj.matrixWorld);
-			var vc = obj.geometry.vertices[f.c].clone().applyMatrix4(obj.matrixWorld);
-			
-			var ctr = new THREE.Vector3().addVectors(va, vb).add(vc).divideScalar(3);
-			// ctrStrap.add(ctr);
+	var nmlStats = assessFlatness(obj, strapNeighbors);
+	ctrConnector = EVALUATIONMODE ? faceSelected.actualPoint : ctr;
+	nmlConnector = nmlStats.mean.normalize();
 
-			minStrap.x = Math.min(minStrap.x, ctr.x);
-			minStrap.y = Math.min(minStrap.y, ctr.y);
-			minStrap.z = Math.min(minStrap.z, ctr.z);
+	var yUp = new THREE.Vector3(0, 1, 0);
+	var v = new THREE.Vector3().crossVectors(yUp, nmlConnector);
+	var u = nmlConnector;
 
-			maxStrap.x = Math.max(maxStrap.x, ctr.x);
-			maxStrap.y = Math.max(maxStrap.y, ctr.y);
-			maxStrap.z = Math.max(maxStrap.z, ctr.z);
+	var a = u.y*v.z - u.z*v.y;
+	var b = u.z*v.x - u.x*v.z;
+	var c = u.x*v.y - u.y*v.x;
+	var d = -a*ctr.x - b*ctr.y - c*ctr.z;
 
-			var nmlFace = new THREE.Vector3().crossVectors(
-						new THREE.Vector3().subVectors(vb, va),
-						new THREE.Vector3().subVectors(vc, va));
+	var v0 = new THREE.Vector3(0, 0, -d/c);
+	var v1 = new THREE.Vector3(0, -d/b, 0);
+	var v2 = new THREE.Vector3(-d/a, 0, 0);
 
-			/* finding the neighbors */
-			findNeighbors(obj, f, ctr, r*1.5, neighbors);
-			if(neighbors.length <= 0) {
-				continue;
-			}
-			for(var j=0; j<neighbors.length; j++) {
-				neighbors[j].collected = false;
-			}
+	// addATriangle(v0, v1, v2, 0xffff00);
 
-			
-			var nmlStats = assessFlatness(obj, neighbors);
-			if(Math.abs(nmlStats.sd) < minSd) {
-				ctrConnector = ctr;
-				nmlConnector = nmlStats.mean.normalize();
+	var matConnector = new THREE.MeshPhongMaterial( { color: 0x080888, transparent: true, opacity: 0.5} );
+	matConnector.DoubleSide = true;
 
-				/*for debugging*/
-				strappableFace = f;
-				minSd = nmlStats.sd;
-				v0 = va;
-				v1 = vb;
-				v2 = vc;
-			}
-		}
+	if(attachmentMethod == ADHESIVE) {
 
-		if(facesToStrapOn.length > 0) {
-			// ctrStrap.divideScalar(facesToStrapOn.length);
-			ctrStrap = new THREE.Vector3().addVectors(minStrap, maxStrap).divideScalar(2);
-			rStrap = minStrap.distanceTo(maxStrap) / 2;
-			// dimStrap = new THREE.Vector3().subVectors(maxStrap, minStrap);
-			// addALine(minStrap, maxStrap, 0xff0000);
-			// addABall(ctrStrap.x, ctrStrap.y, ctrStrap.z, 0xff0000, 0.5);
-		}
-		
-		if(strappableFace != undefined) {
-			rConnector = r;
+		/* carefully compute how tall/long the connector needs to be */
+		ctrConnector.y += radiusHandleStrap;
+		var connector = makeStrapConnector(ctrConnector, radiusHandleStrap, 
+			// Math.max(rConnector * 2, (widthStrap + minMargin * 2) * 2), nmlConnector);
+			radiusHandleStrap * 2,
+			nmlConnector);
 
-			/*for debugging*/
-			addATriangle(v0, v1, v2, 0xffff00);
-			break;
-		}
+		// connector.position.add(nmlConnector.multiplyScalar(0.5));
+		connector.updateMatrixWorld();
+		var subConnector = csgSubtract(connector, obj, matConnector);
+
+		scene.add(subConnector);
+		connectors.push(subConnector);
+		return;
 	}
 
-	/*
-		assess strappability
-	*/
-	assessStrappability(obj, strappableFace, nmlConnector);
+	var nmlPlane = new THREE.Vector3(a, b, c);
+	var angleToRotateObj = nmlPlane.angleTo(yUp);
+	var axisToRotateObj = nmlPlane.clone().cross(yUp).normalize();
+	obj.rotateOnAxis(axisToRotateObj, angleToRotateObj);
 
-	
-	/* 
-		adding a connector & perform csg
-	*/
-	var matConnector = new THREE.MeshPhongMaterial( { color: 0x080888, transparent: true, opacity: 0.5} );
-	var connector = makeConnector(ctrConnector, rConnector, 
-		Math.max(rConnector * 2, (widthStrap + minMargin * 2) * 2), nmlConnector);
-	// connector.position.add(nmlConnector.multiplyScalar(0.5));
-	connector.updateMatrixWorld();
-	var subConnector = csgSubtract(connector, obj, matConnector);
+	obj.updateMatrixWorld();
+	rStrap = faceSelected.rCrossSection;
 
-	
+	rConnector = Math.min(rStrap, radiusHandleStrap);
 
 	/* 
 		digging a tunnel 
 	*/
 
-	/* find a common plane */
-	neighbors = [];
-	findNeighbors(obj, strappableFace, ctrConnector, rConnector*2, neighbors);
-	var points = [];
-	for(var i=0; i<neighbors.length; i++) {
-		neighbors[i].collected = false;
+	/* find a common plane i 2xr neighborhood */
+	strapNeighbors = [];
+	findNeighbors(obj, faceSelected, ctrConnector, rConnector*2, strapNeighbors);
+	cleanUpNeighbors(strapNeighbors);
+	if(strapNeighbors.length > 0) {
+		var points = [];
+		for(var i=0; i<strapNeighbors.length; i++) {
+			strapNeighbors[i].collected = false;
 
-		var f = neighbors[i];
-		var va = obj.geometry.vertices[f.a].clone().applyMatrix4(obj.matrixWorld);
-		var vb = obj.geometry.vertices[f.b].clone().applyMatrix4(obj.matrixWorld);
-		var vc = obj.geometry.vertices[f.c].clone().applyMatrix4(obj.matrixWorld);
+			var f = strapNeighbors[i];
+			var va = obj.geometry.vertices[f.a].clone().applyMatrix4(obj.matrixWorld);
+			var vb = obj.geometry.vertices[f.b].clone().applyMatrix4(obj.matrixWorld);
+			var vc = obj.geometry.vertices[f.c].clone().applyMatrix4(obj.matrixWorld);
 
-		// addATriangle(va, vb, vc, 0xff0ff0);
-		points.push(va);
-		points.push(vb);
-		points.push(vc);
+			// addATriangle(va, vb, vc, 0xff0ff0);
+			points.push(va);
+			points.push(vb);
+			points.push(vc);
+		}
+
+		var planeParams = findPlaneToFitPoints(points);
+		a = planeParams.A;
+		b = planeParams.B;
+		c = planeParams.C;
+		d = planeParams.D;
 	}
 
-	var planeParams = findPlaneToFitPoints(points);
-	var a = planeParams.A;
-	var b = planeParams.B;
-	var c = planeParams.C;
-	var d = planeParams.D;
-
-	// var v0 = new THREE.Vector3(0, 0, -d/c);
-	// var v1 = new THREE.Vector3(0, -d/b, 0);
-	// var v2 = new THREE.Vector3(-d/a, 0, 0);
-
-	// addATriangle(v0, v1, v2, 0xffff00);
 
 	/* compute the raise distance */
 	var maxDist = -INFINITY;
@@ -177,22 +151,23 @@ function makeStrapPrintable(obj) {
 		if(getProjection(v, a, b, c, d).distanceTo(ctrConnector) > rConnector) {
 			continue;
 		}
-
 		var dist = Math.abs(a*v.x + b*v.y + c*v.z + d) / Math.sqrt(a*a + b*b + c*c);
 
 		maxDist = Math.max(dist, maxDist);
 	}
 
-	/* dig tunnerl at that distance */
-	var ctrTunnel = ctrConnector.clone().add(nmlConnector.clone().multiplyScalar(maxDist + minMargin + widthStrap/2));
+	/* dig tunnerl at that distance so it does not intersect with the object */
+	var ctrTunnel = ctrConnector.clone().add(
+		nmlConnector.clone().multiplyScalar(maxDist + minMargin + widthStrap/2));
+	console.log(nmlConnector);
 	// addABall(ctrTunnel.x, ctrTunnel.y, ctrTunnel.z, 0xf00fff, 1);
 	// var tunnel = makeTunnel(ctrTunnel, widthStrap, heightStrap, rConnector * 2);
 	// scene.add(tunnel);
 
 	var matTunnel = new THREE.MeshPhongMaterial( { color: 0x888008, transparent: true, opacity: 0.5} );
-	var rStubOuter = rStrap; //Math.abs(dimStrap.dot(nmlConnector)) / 2;
+	var rStubOuter = rStrap + widthStrap; //Math.abs(dimStrap.dot(nmlConnector)) / 2;
 	// rStubOuter *= 1.1;
-	var ctrStubs = ctrTunnel.clone().sub(nmlConnector.multiplyScalar(rStubOuter));
+	var ctrStubs = ctrTunnel.clone().sub(nmlConnector.multiplyScalar(rStubOuter - widthStrap/2));
 	// rStubOuter += widthStrap;
 	var stubOuter = makeStub(ctrStubs, rStubOuter, heightStrap, nmlConnector);
 	scene.add(stubOuter);
@@ -203,22 +178,63 @@ function makeStrapPrintable(obj) {
 
 	var strap = csgSubtract(stubOuter, stubInner, matTunnel);
 	// strap.position.add(nmlConnector.multiplyScalar(0.5));
+
+	// strap.applyMatrix(obj.matrixWorld);
+	// var yUp = new THREE.Vector3(0, 1, 0);
+	// var vecStrap = ctrTunnel.clone().sub(ctrStubs);
+	// var angleToRotateStrap = Math.PI/2 - vecStrap.angleTo(yUp);
+	// console.log(angleToRotateStrap * 180/Math.PI);
+	// var axisToRotateStrap = vecStrap.clone().cross(yUp).normalize();
+	// strap.rotateOnAxis(axisToRotateStrap, angleToRotateStrap);
+
 	scene.add(strap);
 	scene.remove(stubOuter);
 	scene.remove(stubInner);
+
+
+	// return;
+
+	/* 
+		adding a connector & perform csg
+	*/
+
+	var matConnector = new THREE.MeshPhongMaterial( { color: 0x080888, transparent: true, opacity: 0.5} );
+
+	/* carefully compute how tall/long the connector needs to be */
+	var connector = makeStrapConnector(ctrConnector, rConnector, 
+		// Math.max(rConnector * 2, (widthStrap + minMargin * 2) * 2), nmlConnector);
+		Math.max(rConnector * 2, (rStubOuter - ctrConnector.distanceTo(ctrStubs)) * 2 + minMargin), 
+		nmlConnector);
+
+	// connector.position.add(nmlConnector.multiplyScalar(0.5));
+	connector.updateMatrixWorld();
+	var subConnector = csgSubtract(connector, obj, matConnector);
+
 
 	subConnector = csgSubtract(subConnector, strap, matConnector);
 	scene.remove(strap);
 	scene.add(subConnector);
 
 	connectors.push(subConnector);
+
 }
 
 
 
-function makeConnector(ctr, r, h, nml) {
-	var geometry = new THREE.CylinderGeometry( r, r, h, 32 );
+function makeStrapConnector(ctr, r, h, nml) {
+	var geometry = new THREE.CylinderGeometry( r, r, h, 16 );
+
+	if(EVALUATIONMODE) {
+		geometryHandle = new THREE.TorusGeometry(7.25, 2, 16, 100);
+		var m1 = new THREE.Matrix4();
+		m1.makeRotationX( Math.PI/2 );
+		m1.makeTranslation(0, h + 7.25/2 - 2*2 + h, 0);
+		geometryHandle.applyMatrix(m1);
+		// THREE.GeometryUtils.merge(geometry, geometryHandle);
+	}
+
 	var connector= new THREE.Mesh( geometry );
+
 
 	var yUp = new THREE.Vector3(0, 1, 0);
 	angleStrap = yUp.angleTo(nml);
@@ -232,7 +248,8 @@ function makeConnector(ctr, r, h, nml) {
 
 function makeStub(ctr, r, h, tilt) {
 	var material = new THREE.MeshPhongMaterial( { color: 0x888008, transparent: true, opacity: 0.5} );
-	var geometry = new THREE.CylinderGeometry( r, r, h, 32 );
+	var geometry = new THREE.CylinderGeometry( r, r, h, 16 );
+	
 	var stub = new THREE.Mesh( geometry, material);
 
 	var yUp = new THREE.Vector3(0, 1, 0);
@@ -259,17 +276,28 @@ function makeTunnel(ctr, w, h, l, nml) {
 
 function saveStrapObjects() {
 
-	var mergedGeom = getTransformedGeometry(objDynamic);
+	var mergedGeom = objDynamic == undefined ? 
+		undefined : getTransformedGeometry(objDynamic);
+
+	// if(EVALUATIONMODE) {
+	// 	mergedGeom = getTransformedGeometry(objStatic);
+	// }
+
+	if(EVALUATIONMODE && attachmentMethod == ADHESIVE) {
+		geometryHandle.applyMatrix(connectors[0].matrixWorld);
+		mergedGeom = geometryHandle;
+	}
 
 	for(var i=0; i<connectors.length; i++) {
 	// console.log(mergedGeom);
 		var connectorGeom = connectors[i].geometry.clone();
 		connectorGeom.applyMatrix(connectors[i].matrixWorld);
 
-		// if(i==0) {
-		// 	mergedGeom = supportGeom.clone();
-		// } else {
-		THREE.GeometryUtils.merge(mergedGeom, connectorGeom);
+		if(mergedGeom == undefined) {
+			mergedGeom = connectorGeom;
+		} else {
+			THREE.GeometryUtils.merge(mergedGeom, connectorGeom);
+		}
 	}
 
 	var m = new THREE.Matrix4();

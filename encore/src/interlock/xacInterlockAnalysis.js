@@ -166,7 +166,7 @@ function transferVoxels() {
 			/* creating a voxel identical to the original voxel group*/
 
 			// var voxel = new Physijs.BoxMesh(geometry, material, voxelGrids[i].obj.isStatic ? 0 : 10);
-			var voxel = new Physijs.SphereMesh(geometry, material, voxelGrids[i].obj.isStatic ? 0 : 10);
+			var voxel = new Physijs.SphereMesh(geometry, material, voxelGrids[i].obj.isStatic ? 10 : 0);
 			
 			voxel.position = voxelGrids[i]._voxelGroup.children[j].position;
 			voxelGroupNew.add(voxel);

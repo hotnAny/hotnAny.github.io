@@ -1,16 +1,87 @@
 
-// function preprocessStrapping (obj) {
+function gatherStrappableFaces(obj, strokePoints) {
+
+	// find out the 'scale' of the specified cross section
+	var min = new THREE.Vector3(INFINITY, INFINITY, INFINITY);
+	var max = new THREE.Vector3(-INFINITY, -INFINITY, -INFINITY);
+	for(var i=0; i<strokePoints.length; i++) {
+		var p = strokePoints[i];
+		
+		min.x = Math.min(min.x, p.x);
+		min.y = Math.min(min.y, p.y);
+		min.z = Math.min(min.z, p.z);
+
+		max.x = Math.max(max.x, p.x);
+		max.y = Math.max(max.y, p.y);
+		max.z = Math.max(max.z, p.z);
+	}
+
+	var scale = min.distanceTo(max);
+	var ctr = new THREE.Vector3().addVectors(min, max).divideScalar(2);
+	console.log("scale:" + scale);
+
+	// calculate intersection plane
+	var planeParams = findPlaneToFitPoints(strokePoints);
+	var a = planeParams.A;
+	var b = planeParams.B;
+	var c = planeParams.C;
+	var d = planeParams.D;
 	
-// 	for(var i=0; i<obj.geometry.faces.length; i++) {
+	// console.log(planeParams);
 
-// 		/* no printability */
+	/*
+		for debugging the plane
+		NEVER DELETE IT EVER
+	*/
+	// var v0 = new THREE.Vector3(0, 0, -d/c);
+	// var v1 = new THREE.Vector3(0, -d/b, 0);
+	// var v2 = new THREE.Vector3(-d/a, 0, 0);
 
-// 		/* compute attachability */
+	// addATriangle(v0, v1, v2, 0xffff00);
 
-// 		/* compute usability */
-// 	}
+	// find intersecting triangles
+	// ref: http://mathworld.wolfram.com/Point-PlaneDistance.html
+	for(var i=0; i<obj.geometry.faces.length; i++) {
+		var f = obj.geometry.faces[i];
 
-// }
+		var indices = [f.a, f.b, f.c];
+		var vertices = [];
+		var faceInRange = true;
+		for(var j=0; j<indices.length; j++) {
+			var v = obj.geometry.vertices[indices[j]].clone().applyMatrix4(obj.matrixWorld);
+			vertices.push(v);
+			var dist = Math.abs(a*v.x + b*v.y + c*v.z + d) / Math.sqrt(a*a + b*b + c*c);
+
+			/*
+				for faces to be included they need to be
+					1) close to the cutting plane
+					2) close to the firstly selected points
+			*/
+			if(dist > radiusHandleStrap * 2 || v.distanceTo(ctr) > 2 * scale) {
+				faceInRange = false;
+				break;
+			}
+		}
+
+		if(faceInRange) {
+			facesToStrapOn.push(f);
+			// verticesToStrapOn.push(addATriangle(vertices[0], vertices[1], vertices[2], 0xff8844));
+			verticesToStrapOn.push(vertices);
+		}
+
+	}
+
+	for (var i = 0; i < strokes.length; i++) {
+		scene.remove(strokes[i]);
+	}
+	
+	var yUp = new THREE.Vector3(0, 1, 0);
+	var nmlPlane = new THREE.Vector3(a, b, c);
+	var angleToRotateObj = nmlPlane.angleTo(yUp);
+	var axisToRotateObj = nmlPlane.clone().cross(yUp).normalize();
+	obj.rotateOnAxis(axisToRotateObj, angleToRotateObj);
+}
+
 
 function analyzeStrapMethod(obj, facesToStrapOn) {
 
@@ -63,6 +134,10 @@ function analyzeStrapMethod(obj, facesToStrapOn) {
 		// f.scoreStrap = score;
 	}
 
+
+	/*
+		generating heat map
+	*/
 	var material = new THREE.MeshBasicMaterial( { vertexColors: THREE.VertexColors} );
 	for(var i=0; i<facesToStrapOn.length; i++) {
 
@@ -89,7 +164,7 @@ function analyzeStrapMethod(obj, facesToStrapOn) {
 				for(var h=0; h<3; h++) {
 					if(ff.scoreStrap != undefined) {
 						var dist = v.distanceTo(ff.verticesTemp[h]);
-						var w = Math.max(0, 1 - dist/radiusHandle);
+						var w = Math.max(0, 1 - dist/radiusHandleStrap);
 						score += ff.scoreStrap * w;
 						weightTotal += w;
 					}
@@ -266,8 +341,18 @@ function performStrapAnalysis(obj, f, nml) {
 	// 	cutPointsXZ[i].y = 0;
 	// };
 	var chs = findConvexHull(cutPoints);
+
+	if(chs.length <= 0) {
+		return 0;
+	}
 	// console.log("chs%: " + (chs.length * 100 / cutPoints.length).toFixed(2) + "%");
 	
+	// if(f.rCrossSection == undefined) {
+
+	// 	// for (var i = 0; i < chs.length; i++) {
+	// 	// 	chs[i]
+	// 	// };
+	// }
 	
 
 	/* 
@@ -291,23 +376,49 @@ function performStrapAnalysis(obj, f, nml) {
 		visualization
 	*/
 
-	if(toVisualize){
+	// if(toVisualize){
+	if(f.rCrossSection == undefined) {
 		mRot = new THREE.Matrix4();
 		mRot.makeRotationAxis(axisCutPlane, -angleCutPlane);
 
 		for (var i = 0; i < cutPoints.length; i++) {
 			cutPoints[i].applyMatrix4(mRot);
 		};
+
+		var minCrossSec = new THREE.Vector3(INFINITY, INFINITY, INFINITY);
+		var maxCrossSec = new THREE.Vector3(-INFINITY, -INFINITY, -INFINITY);
+
 		for(var i=0; i<chs.length; i++) {
 			var idx = chs[i];
-			addABall(cutPoints[idx].x, cutPoints[idx].y, cutPoints[idx].z, 0xff00ff, 0.25);
-			addALine(cutPoints[idx], cutPoints[idx].clone().add(cutPoitnNmls[idx].clone().multiplyScalar(5)), 0x0000ff);
+
+			if(toVisualize){
+				addABall(cutPoints[idx].x, cutPoints[idx].y, cutPoints[idx].z, 0xff00ff, 0.25);
+				addALine(cutPoints[idx], cutPoints[idx].clone().add(cutPoitnNmls[idx].clone().multiplyScalar(5)), 0x0000ff);
+			}
+
+			minCrossSec.x = Math.min(minCrossSec.x, cutPoints[idx].x);
+			minCrossSec.y = Math.min(minCrossSec.y, cutPoints[idx].y);
+			minCrossSec.z = Math.min(minCrossSec.z, cutPoints[idx].z);
+
+			maxCrossSec.x = Math.max(maxCrossSec.x, cutPoints[idx].x);
+			maxCrossSec.y = Math.max(maxCrossSec.y, cutPoints[idx].y);
+			maxCrossSec.z = Math.max(maxCrossSec.z, cutPoints[idx].z);
 			// var ff = cutPointTris[idx]; //obj.geometry.faces[cutPointTris[idx]];
 			// var vaa = obj.geometry.vertices[ff.a].clone().applyMatrix4(obj.matrixWorld);
 			// var vbb = obj.geometry.vertices[ff.b].clone().applyMatrix4(obj.matrixWorld);
 			// var vcc = obj.geometry.vertices[ff.c].clone().applyMatrix4(obj.matrixWorld);
 			// addATriangle(vaa, vbb, vcc, 0xffff00);
 		}
+
+		var ctrCrossSec = new THREE.Vector3().addVectors(minCrossSec, maxCrossSec).divideScalar(2);
+
+		f.rCrossSection = 0;
+		for(var i=0; i<chs.length; i++) {
+			var idx = chs[i];
+
+			f.rCrossSection = Math.max(f.rCrossSection, cutPoints[idx].distanceTo(ctrCrossSec));
+		}
+		// console.log(f.rCrossSection);
 	}
 
 	return attachability;
@@ -384,25 +495,6 @@ function analyzeCrossSection(pts, chs, nmls, nmlPlane) {
 		maxPerSector = Math.max(scorePnt, maxPerSector);
 		cntPts++;
 	}
-
-	/* 
-		for each point, compute the shortest distance to the segments 
-	*/
-	// var distToCH = 0;
-	// for (var i = 0; i < pts.length; i++) {
-	// 	var minDist = INFINITY;
-		
-	// 	for(var j=0; j<segments.length; j++) {
-	// 		var l = segments[j];
-	// 		minDist = Math.min(minDist, distanceToSegment(pts[i], l.a, l.b, l.c));	
-	// 	}
-
-	// 	distToCH += minDist;
-	// };
-
-	// console.log("distToCH mean: " + (distToCH/pts.length));
-
-	/* compute the global distance */
 
 	return scoreSectors;
 }

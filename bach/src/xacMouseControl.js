@@ -74,7 +74,7 @@ function onMouseDown( event ) {
 	for (var i = 0; i < intersects.length; i++) {
 		var obj = intersects[i].object;
 
-		strokePoints = [];
+		// strokePoints = [];
 
 		/* set orientation sliders to match the object selected */
 		var idx = selected.indexOf(obj);
@@ -91,8 +91,8 @@ function onMouseDown( event ) {
 	}
 
 	isMouseDown = true;
-	miny = INFINITY;
-	maxy = -INFINITY;
+	// miny = INFINITY;
+	// maxy = -INFINITY;
 	prevGrndX = undefined;
 	prevGrndZ = undefined;
 }
@@ -175,6 +175,11 @@ function onMouseUp( event ) {
 		obj.__dirtyRotation = true;
 	}
 
-	computeRangesLayers();
+	// if(strokePoints.length > 0) {
+	// 	computeRangesLayers(obj);
+	// }	
+
+	if(event.button == 0)
+		console.log("number of stroke points: " + strokePoints.length);
 }
 

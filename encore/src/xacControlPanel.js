@@ -65,7 +65,7 @@ var ControlPanel = function () {
 	cb4.style.cssText = cssCb;
 	container.appendChild( cb4 );
 	var lb4 = document.createElement( 'label' );
-	lb4.innerHTML = 'Lock object to print';
+	lb4.innerHTML = 'Lock existing object';
 	lb4.style.cssText = cssCb;
 	container.appendChild( lb4 );
 
@@ -77,7 +77,7 @@ var ControlPanel = function () {
 		select object to print
 	*/
 	var lb5 = document.createElement( 'label' );
-	lb5.innerHTML = 'Object to print:  ';
+	lb5.innerHTML = 'Existing object:  ';
 	lb5.style.cssText = cssLb;
 	container.appendChild( lb5 );
 
@@ -92,7 +92,7 @@ var ControlPanel = function () {
 		select handle
 	*/
 	var lb6 = document.createElement( 'label' );
-	lb6.innerHTML = 'Existing object: ';
+	lb6.innerHTML = 'Attachment to print: ';
 	lb6.style.cssText = cssLb;
 	container.appendChild( lb6 );
 
@@ -127,8 +127,8 @@ var ControlPanel = function () {
 	btnAction2.id = 'action2';
 	btnAction2.style.cssText = cssBtn;
 	btnAction2.innerHTML = 'Detect Intersection';
-	// container.appendChild( btnAction2 );
-	// container.appendChild(document.createElement('br'));
+	container.appendChild( btnAction2 );
+	container.appendChild(document.createElement('br'));
 
 
 
@@ -165,7 +165,7 @@ var ControlPanel = function () {
 	slider1.setAttribute('type', 'range');
 	slider1.style.cssText = cssCb;
 	slider1.min = '0';
-	slider1.max = '180';
+	slider1.max = '360';
 	slider1.value = '0';
 	slider1.step = '1';
 	slider1.style.cssText += 'width: 64px;';
@@ -203,7 +203,7 @@ var ControlPanel = function () {
 	slider3.setAttribute('type', 'range');
 	slider3.style.cssText = cssCb;
 	slider3.min = '0';
-	slider3.max = '180';
+	slider3.max = '360';
 	slider3.value = '0';
 	slider3.step = '1';
 	slider3.style.cssText += 'width: 64px';
@@ -269,7 +269,7 @@ var ControlPanel = function () {
 	// container.appendChild(document.createElement('br'));
 
 	var lbSld4 = document.createElement( 'label' );
-	lbSld4.innerHTML = 'Attachability: ';
+	lbSld4.innerHTML = 'Durability: ';
 	lbSld4.style.cssText = cssLb;
 	container.appendChild( lbSld4 );
 	
@@ -277,8 +277,8 @@ var ControlPanel = function () {
 	slider4.id = 'sldr4';
 	slider4.setAttribute('type', 'range');
 	slider4.style.cssText = cssCb;
-	slider4.min = '0';
-	slider4.max = '99';
+	slider4.min = '1';
+	slider4.max = '100';
 	slider4.value = '50';
 	slider4.step = '1';
 	// slider1.onchange = "updateSlider(this.value)";
@@ -286,31 +286,45 @@ var ControlPanel = function () {
 
 	container.appendChild(document.createElement('br'));
 
+
+
+	var lbSld5 = document.createElement( 'label' );
+	lbSld5.innerHTML = 'Usability: ';
+	lbSld5.style.cssText = cssLb;
+	container.appendChild( lbSld5 );
+
 	var slider5 = document.createElement( 'input' );
 	slider5.id = 'sldr5';
 	slider5.setAttribute('type', 'range');
 	slider5.style.cssText = cssCb;
-	slider5.min = '0';
-	slider5.max = '99';
-	slider5.value = '25';
+	slider5.min = '1';
+	slider5.max = '100';
+	slider5.value = '50';
 	slider5.step = '1';
 	// slider2.onchange = "updateSlider(this.value)";
 	container.appendChild( slider5 );
 
 	container.appendChild(document.createElement('br'));
 
-	var slider6 = document.createElement( 'input' );
-	slider6.id = 'sldr3';
-	slider6.setAttribute('type', 'range');
-	slider6.style.cssText = cssCb;
-	slider6.min = '0';
-	slider6.max = '99';
-	slider6.value = '25';
-	slider6.step = '1';
-	// slider3.onchange = "updateSlider(this.value)";
-	container.appendChild( slider6 );
 
-	container.appendChild(document.createElement('br'));
+
+	// var lbSld6 = document.createElement( 'label' );
+	// lbSld6.innerHTML = 'Attachability: ';
+	// lbSld6.style.cssText = cssLb;
+	// container.appendChild( lbSld6 );
+
+	// var slider6 = document.createElement( 'input' );
+	// slider6.id = 'sldr3';
+	// slider6.setAttribute('type', 'range');
+	// slider6.style.cssText = cssCb;
+	// slider6.min = '0';
+	// slider6.max = '99';
+	// slider6.value = '25';
+	// slider6.step = '1';
+	// // slider3.onchange = "updateSlider(this.value)";
+	// container.appendChild( slider6 );
+
+	// container.appendChild(document.createElement('br'));
 
 
 	/* 
@@ -491,7 +505,7 @@ var ControlPanel = function () {
 
 		slider5: slider5,
 
-		slider6: slider6,
+		// slider6: slider6,
 
 		// label4: lb4,
 		label7: lb7,

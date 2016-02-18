@@ -40,3 +40,26 @@ function project(points, axis) {
 
 	return [min, max];
 }
+
+
+
+function getPlaneFromThreePoints(p0, p1, p2) {
+	var A = [	[p0.x, p0.y, p0.z, 1],
+				[p1.x, p1.y, p1.z, 1],
+				[p2.x, p2.y, p2.z, 1]
+			];
+	// var D = numeric.mul(numeric.identity(), -)
+	var b = [0, 0, 0, 0];
+	var LUP = numeric.ccsLUP(A);
+	var p = numeric.ccsLUPSolve(LUP, b);
+	console.log(p);
+}
+
+
+/*
+	get the projection coordinates of a point on a given plane parameterized by ax+by+cz+d=0
+*/
+function getProjection(v, a, b, c, d) {
+	var t = -(a*v.x + b*v.y + c*v.z + d) / (a*a + b*b + c*c);
+	return new THREE.Vector3(v.x + a*t, v.y + b*t, v.z + c*t);
+}

@@ -2447,3 +2447,260 @@ function makeStrapPrintableOld (obj) {
   // wsta = (1 - wflaNew) * wsta / (1 - wfla);
   // wfla = wflaNew;
   // updateAllWeightSliders();
+
+
+  function makeStrapPrintable(obj) {
+
+  /*
+    clean up some visuals
+    UPDATED: depricated
+  */
+  // for (var i = 0; i < visualsStrap.length; i++) {
+  //  scene.remove(visualsStrap[i]);
+  // };
+
+
+  /* 
+    find the size and position of the connector
+  */
+  // var OCCLUSION = 1;
+  // var NOTENOUGHSUPPORT = 2;
+  // var TOOMUCHDROP = 3;
+  // var CONNECTORTOOTHIN = 4;
+  // var UNKNOWN = 0;
+
+  // var REASONMESSAGES 
+  //  = ['unknown', 'occlusion', 'not enough support', 'too much drop', 'connector too thin'];
+  // var unprintableReason = UNKNOWN;
+
+  var strappableFace;
+  var ctrConnector;
+  var rConnector;
+  var nmlConnector;
+
+  var ctrStrap = new THREE.Vector3();
+  var dimStrap;
+
+  for(var r=radiusHandleStrap; r>radiusMinimumStrap; r*=shrinkRatio) {
+    obj.updateMatrixWorld();
+    
+    var minSd = INFINITY;
+    var v0, v1, v2;
+    
+    var minStrap = new THREE.Vector3(INFINITY, INFINITY, INFINITY);
+    var maxStrap = new THREE.Vector3(-INFINITY, -INFINITY, -INFINITY);
+
+    for(var i=0; i<facesToStrapOn.length; i++) {
+      var f = facesToStrapOn[i];
+      neighbors = [];
+
+      var va = obj.geometry.vertices[f.a].clone().applyMatrix4(obj.matrixWorld);
+      var vb = obj.geometry.vertices[f.b].clone().applyMatrix4(obj.matrixWorld);
+      var vc = obj.geometry.vertices[f.c].clone().applyMatrix4(obj.matrixWorld);
+      
+      var ctr = new THREE.Vector3().addVectors(va, vb).add(vc).divideScalar(3);
+      // ctrStrap.add(ctr);
+
+      minStrap.x = Math.min(minStrap.x, ctr.x);
+      minStrap.y = Math.min(minStrap.y, ctr.y);
+      minStrap.z = Math.min(minStrap.z, ctr.z);
+
+      maxStrap.x = Math.max(maxStrap.x, ctr.x);
+      maxStrap.y = Math.max(maxStrap.y, ctr.y);
+      maxStrap.z = Math.max(maxStrap.z, ctr.z);
+
+      var nmlFace = new THREE.Vector3().crossVectors(
+            new THREE.Vector3().subVectors(vb, va),
+            new THREE.Vector3().subVectors(vc, va));
+
+      /* finding the neighbors */
+      findNeighbors(obj, f, ctr, r*1.5, neighbors);
+      if(neighbors.length <= 0) {
+        continue;
+      }
+      for(var j=0; j<neighbors.length; j++) {
+        neighbors[j].collected = false;
+      }
+
+      
+      var nmlStats = assessFlatness(obj, neighbors);
+      if(Math.abs(nmlStats.sd) < minSd) {
+        ctrConnector = ctr;
+        nmlConnector = nmlStats.mean.normalize();
+
+        /*for debugging*/
+        strappableFace = f;
+        minSd = nmlStats.sd;
+        v0 = va;
+        v1 = vb;
+        v2 = vc;
+      }
+    }
+
+    if(facesToStrapOn.length > 0) {
+      // ctrStrap.divideScalar(facesToStrapOn.length);
+      ctrStrap = new THREE.Vector3().addVectors(minStrap, maxStrap).divideScalar(2);
+      rStrap = minStrap.distanceTo(maxStrap) / 2;
+      // dimStrap = new THREE.Vector3().subVectors(maxStrap, minStrap);
+      // addALine(minStrap, maxStrap, 0xff0000);
+      // addABall(ctrStrap.x, ctrStrap.y, ctrStrap.z, 0xff0000, 0.5);
+    }
+    
+    if(strappableFace != undefined) {
+      rConnector = r;
+
+      /*for debugging*/
+      addATriangle(v0, v1, v2, 0xffff00);
+      break;
+    }
+  }
+
+  /*
+    assess strappability
+  */
+  assessStrappability(obj, strappableFace, nmlConnector);
+
+  
+  /* 
+    adding a connector & perform csg
+  */
+  var matConnector = new THREE.MeshPhongMaterial( { color: 0x080888, transparent: true, opacity: 0.5} );
+  var connector = makeStrapConnector(ctrConnector, rConnector, 
+    Math.max(rConnector * 2, (widthStrap + minMargin * 2) * 2), nmlConnector);
+  // connector.position.add(nmlConnector.multiplyScalar(0.5));
+  connector.updateMatrixWorld();
+  var subConnector = csgSubtract(connector, obj, matConnector);
+
+  
+
+  /* 
+    digging a tunnel 
+  */
+
+  /* find a common plane */
+  neighbors = [];
+  findNeighbors(obj, strappableFace, ctrConnector, rConnector*2, neighbors);
+  var points = [];
+  for(var i=0; i<neighbors.length; i++) {
+    neighbors[i].collected = false;
+
+    var f = neighbors[i];
+    var va = obj.geometry.vertices[f.a].clone().applyMatrix4(obj.matrixWorld);
+    var vb = obj.geometry.vertices[f.b].clone().applyMatrix4(obj.matrixWorld);
+    var vc = obj.geometry.vertices[f.c].clone().applyMatrix4(obj.matrixWorld);
+
+    // addATriangle(va, vb, vc, 0xff0ff0);
+    points.push(va);
+    points.push(vb);
+    points.push(vc);
+  }
+
+  var planeParams = findPlaneToFitPoints(points);
+  var a = planeParams.A;
+  var b = planeParams.B;
+  var c = planeParams.C;
+  var d = planeParams.D;
+
+  // var v0 = new THREE.Vector3(0, 0, -d/c);
+  // var v1 = new THREE.Vector3(0, -d/b, 0);
+  // var v2 = new THREE.Vector3(-d/a, 0, 0);
+
+  // addATriangle(v0, v1, v2, 0xffff00);
+
+  /* compute the raise distance */
+  var maxDist = -INFINITY;
+  for(var i=0; i<points.length; i++) {
+    var v = points[i];
+
+    /* there are points from the extended search that actually fall out of r */
+    if(getProjection(v, a, b, c, d).distanceTo(ctrConnector) > rConnector) {
+      continue;
+    }
+
+    var dist = Math.abs(a*v.x + b*v.y + c*v.z + d) / Math.sqrt(a*a + b*b + c*c);
+
+    maxDist = Math.max(dist, maxDist);
+  }
+
+  /* dig tunnerl at that distance */
+  var ctrTunnel = ctrConnector.clone().add(nmlConnector.clone().multiplyScalar(maxDist + minMargin + widthStrap/2));
+  // addABall(ctrTunnel.x, ctrTunnel.y, ctrTunnel.z, 0xf00fff, 1);
+  // var tunnel = makeTunnel(ctrTunnel, widthStrap, heightStrap, rConnector * 2);
+  // scene.add(tunnel);
+
+  var matTunnel = new THREE.MeshPhongMaterial( { color: 0x888008, transparent: true, opacity: 0.5} );
+  var rStubOuter = rStrap; //Math.abs(dimStrap.dot(nmlConnector)) / 2;
+  // rStubOuter *= 1.1;
+  var ctrStubs = ctrTunnel.clone().sub(nmlConnector.multiplyScalar(rStubOuter));
+  // rStubOuter += widthStrap;
+  var stubOuter = makeStub(ctrStubs, rStubOuter, heightStrap, nmlConnector);
+  scene.add(stubOuter);
+
+  var rStubInner = rStubOuter - widthStrap;
+  var stubInner = makeStub(ctrStubs, rStubInner, heightStrap, nmlConnector);
+  scene.add(stubInner);
+
+  var strap = csgSubtract(stubOuter, stubInner, matTunnel);
+  // strap.position.add(nmlConnector.multiplyScalar(0.5));
+  scene.add(strap);
+  scene.remove(stubOuter);
+  scene.remove(stubInner);
+
+  subConnector = csgSubtract(subConnector, strap, matConnector);
+  scene.remove(strap);
+  scene.add(subConnector);
+
+  connectors.push(subConnector);
+}
+
+/* preparing outlook points */
+  obj.geometry.computeBoundingBox();
+  var bbox = obj.geometry.boundingBox;
+  var sampleRes = 8;
+  var ctrLook = new THREE.Vector3().addVectors(bbox.min, bbox.max).divideScalar(2);
+  var rLook= bbox.min.distanceTo(bbox.max) / 2;
+
+// var theta;
+  // var psi;
+  // var outLooks = [];
+  // for(var j=1; j < sampleRes; j++) {
+  //  psi = Math.PI * 2 * j / sampleRes;
+  //  var r = rLook * Math.sin(psi);
+  //  var z = ctrLook.z + rLook * Math.cos(psi);
+  //  var clr = 0x0000ff + j * 0x001100;
+  //  for (var i = 1; i < sampleRes; i++) {
+  //    theta = Math.PI * 2 * i / sampleRes;
+  //    var x = ctrLook.x + r * Math.sin(theta);
+  //    var y = ctrLook.y + r * Math.cos(theta);
+
+  //    // addABall(x, y, z, clr, 1);
+  //    // console.log(x + ", " + y + ", " + z);
+  //    outLooks.push(new THREE.Vector3(x, y, z));
+  //  }
+  //  // break;
+  // }
+
+  /* 
+    for each point, compute the shortest distance to the segments 
+  */
+  // var distToCH = 0;
+  // for (var i = 0; i < pts.length; i++) {
+  //  var minDist = INFINITY;
+    
+  //  for(var j=0; j<segments.length; j++) {
+  //    var l = segments[j];
+  //    minDist = Math.min(minDist, distanceToSegment(pts[i], l.a, l.b, l.c));  
+  //  }
+
+  //  distToCH += minDist;
+  // };
+
+  // console.log("distToCH mean: " + (distToCH/pts.length));
+
+  /* compute the global distance */
+
+  // var yUp = new THREE.Vector3(0, 1, 0);
+    // var angleMark = yUp.angleTo(nmlFace);
+    // var axisMark = new THREE.Vector3().crossVectors(yUp, nmlFace).normalize();
+    // visualMark.rotateOnAxis(axisMark, angleMark);
+    // visualMark.position.add(nmlFace.multiplyScalar(0.1));

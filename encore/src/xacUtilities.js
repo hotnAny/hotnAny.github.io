@@ -246,34 +246,6 @@ function saveBothObjs() {
 }
 
 
-function saveAdhereObjects() {
-	/* the attachment */
-	var mergedGeom = getTransformedGeometry(objDynamic);
-
-	/* the connector */
-	var connectorGeom = getTransformedGeometry(connector);
-	THREE.GeometryUtils.merge(mergedGeom, connectorGeom);
-
-	for(var i=0; i<pillars.length; i++) {
-		var supportGeom = pillars[i].geometry.clone();
-		supportGeom.applyMatrix(pillars[i].matrixWorld);
-
-		// if(i==0) {
-		// 	mergedGeom = supportGeom.clone();
-		// } else {
-			THREE.GeometryUtils.merge(mergedGeom, supportGeom);
-		// }
-	}
-
-	var m = new THREE.Matrix4();
-	m.makeRotationX(Math.PI/2);
-	mergedGeom.applyMatrix(m);
-
-	var stlStr = stlFromGeometry( mergedGeom );
-	var blob = new Blob([stlStr], {type: 'text/plain'});
-	saveAs(blob, name + '.stl');
-}
-
 function getTransformedGeometry(obj) {
 	var geom = obj.geometry;
 	geom.applyMatrix(obj.matrixWorld);

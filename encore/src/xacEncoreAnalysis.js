@@ -17,17 +17,17 @@ var neighbors;	// neighbors of a particular face, used in both mouse selection a
 
 // attachability
 var wAttachability = 0.5;
-var wfla = 0.50;
-var wsup = 0.50;
+	var wfla = 0.50;
+	var wsup = 0.50;
 
 // usability
-var wUsability = 0.25;
-var wbal = 0.5;
-var wvis = 0.5;
+var wUsability = 0.5;
+	var wbal = 0.5;
+// var wvis = 0.5;
+	var wstr = 0.5;
+// var wStrength = 0.0;
 
-var wStrength = 0.25;
-
-var TOSHOWHEATMAP = true;
+// var TOSHOWHEATMAP = true;
 
 
 // function analyzeAttachmentMethod() {
@@ -91,7 +91,7 @@ function computeCtrOfMass(obj) {
 	known issues: 
 	- each triangle should have exactly 3 neighbors. however, some have 4 due to triangle redundance; some have only 2 due to unmanifold structure
 */
-function createNeighborList(obj) {
+function createNeighborList(obj, rConnector) {
 	timeStamp();
 	console.log("creating neighbor list ...");
 
@@ -166,7 +166,7 @@ function createNeighborList(obj) {
 		}
 
 		f.neighbors1R = [f]; // need to check if this f is out of bound
-		findNeighbors(obj, f, ctr, radiusHandle, f.neighbors1R);
+		findNeighbors(obj, f, ctr, rConnector, f.neighbors1R);
 
 		for(var j=0; j<f.neighbors1R .length; j++) {
 			f.neighbors1R [j].collected = false;
@@ -178,7 +178,7 @@ function createNeighborList(obj) {
 		}
 
 		f.neighbors2R = [f];
-		findNeighbors(obj, f, ctr, 2 * radiusHandle, f.neighbors2R);
+		findNeighbors(obj, f, ctr, 2 * rConnector, f.neighbors2R);
 
 		for(var j=0; j<f.neighbors2R .length; j++) {
 			f.neighbors2R [j].collected = false;
@@ -524,4 +524,10 @@ function swap(array, i, j) {
 */
 function distanceToSegment(p, a, b, c) {
 	return Math.abs(a*p.x + b*p.z + c) / Math.sqrt(a*a + b*b);
+}
+
+function  cleanUpNeighbors (neighbors) {
+	for(var j=0; j<neighbors.length; j++) {
+		neighbors[j].collected = false;
+	}
 }

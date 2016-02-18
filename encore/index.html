@@ -35,6 +35,7 @@
 
 		<!-- capability js -->
 		<script src="src/xacMouseControl.js"></script>
+		<script src="src/xacKeyControl.js"></script>
 		<script src="src/xacEncoreAnalysis.js"></script>
 		
 		<script src="src/interlock/xacIntersectionAnalysis.js"></script>
@@ -92,6 +93,11 @@
 				}
 			);
 
+
+
+			/* keyboard event */
+			document.addEventListener( 'keydown', onKeyDown, false );
+			document.addEventListener( 'keyup', onKeyUp, false );
 
 			/*
 				render set up

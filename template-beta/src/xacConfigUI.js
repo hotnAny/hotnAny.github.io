@@ -1,8 +1,10 @@
 var controlPanel = new ControlPanel();
-controlPanel.domElement.style.position = 'absolute';
-controlPanel.domElement.style.top = '0px';
-document.body.appendChild( controlPanel.domElement);
+// controlPanel.domElement.style.position = 'absolute';
+// controlPanel.domElement.style.top = '0px';
+// document.body.appendChild(controlPanel.domElement);
 
+$(document.body).append(controlPanel.domElement);
+console.log(controlPanel.domElement);
 /* 
 	control buttons 
 */
@@ -15,27 +17,27 @@ document.body.appendChild( controlPanel.domElement);
 // controlPanel.button1.onclick = slice;
 // controlPanel.button8.onclick = reverseGravity;
 // controlPanel.button4.onclick = computeLayerToPause;
-controlPanel.button7.onclick = savePrintObj; //saveBothObjs;
-// controlPanel.button9.onclick = restoreObjects;
-// controlPanel.button10.onclick = makeItPrintable;
-// controlPanel.button11.onclick = toggleSupport;
+// controlPanel.button7.onclick = savePrintObj; //saveBothObjs;
+// // controlPanel.button9.onclick = restoreObjects;
+// // controlPanel.button10.onclick = makeItPrintable;
+// // controlPanel.button11.onclick = toggleSupport;
 
-controlPanel.checkbox1.onchange = toggleDebugMode;
-// controlPanel.checkbox2.onchange = toggleOctreeVisibility;
-// controlPanel.checkbox3.onchange = togglePhysics;
-// controlPanel.checkbox4.onchange = lockObjToPrint;
+// controlPanel.checkbox1.onchange = toggleDebugMode;
+// // controlPanel.checkbox2.onchange = toggleOctreeVisibility;
+// // controlPanel.checkbox3.onchange = togglePhysics;
+// // controlPanel.checkbox4.onchange = lockObjToPrint;
 
-controlPanel.slider1.oninput = rotateObjectX;
-controlPanel.slider2.oninput = rotateObjectY;
-controlPanel.slider3.oninput = rotateObjectZ;
+// controlPanel.slider1.oninput = rotateObjectX;
+// controlPanel.slider2.oninput = rotateObjectY;
+// controlPanel.slider3.oninput = rotateObjectZ;
 
-/* populating objects into lists */
-controlPanel.dd1.appendChild(controlPanel.ddOption("-----------", undefined));
-controlPanel.dd1.appendChild(controlPanel.ddOption("Teddy", teddy));
-controlPanel.dd1.appendChild(controlPanel.ddOption("Wrench", wrench));
-controlPanel.dd1.appendChild(controlPanel.ddOption("Mug", mug));
+// /* populating objects into lists */
+// controlPanel.dd1.appendChild(controlPanel.ddOption("-----------", undefined));
+// controlPanel.dd1.appendChild(controlPanel.ddOption("Teddy", teddy));
+// controlPanel.dd1.appendChild(controlPanel.ddOption("Wrench", wrench));
+// controlPanel.dd1.appendChild(controlPanel.ddOption("Mug", mug));
 
-controlPanel.dd1.onchange = loadObjToPrint;
+// controlPanel.dd1.onchange = loadObjToPrint;
 
 // controlPanel.dd2.appendChild(controlPanel.ddOption("-----------", undefined));
 // controlPanel.dd2.appendChild(controlPanel.ddOption("Big ring", ring3));

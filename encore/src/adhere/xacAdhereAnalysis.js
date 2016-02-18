@@ -1,6 +1,10 @@
-/*
-	analyze printability by computing scores across several criteria
-*/
+
+/*********************************************************************************************
+
+	analysis for adhering technique
+
+*********************************************************************************************/
+
 function analyzeAdhereMethod() {
 	var obj = objStatic;
 
@@ -12,36 +16,9 @@ function analyzeAdhereMethod() {
 	var maxScore = -INFINITY;
 	
 
-	/* preparing outlook points */
-	obj.geometry.computeBoundingBox();
-	var bbox = obj.geometry.boundingBox;
-	var sampleRes = 8;
-	var ctrLook = new THREE.Vector3().addVectors(bbox.min, bbox.max).divideScalar(2);
-	var rLook= bbox.min.distanceTo(bbox.max) / 2;
-	
-
-	// var theta;
-	// var psi;
-	// var outLooks = [];
-	// for(var j=1; j < sampleRes; j++) {
-	// 	psi = Math.PI * 2 * j / sampleRes;
-	// 	var r = rLook * Math.sin(psi);
-	// 	var z = ctrLook.z + rLook * Math.cos(psi);
-	// 	var clr = 0x0000ff + j * 0x001100;
-	// 	for (var i = 1; i < sampleRes; i++) {
-	// 		theta = Math.PI * 2 * i / sampleRes;
-	// 		var x = ctrLook.x + r * Math.sin(theta);
-	// 		var y = ctrLook.y + r * Math.cos(theta);
-
-	// 		// addABall(x, y, z, clr, 1);
-	// 		// console.log(x + ", " + y + ", " + z);
-	// 		outLooks.push(new THREE.Vector3(x, y, z));
-	// 	}
-	// 	// break;
-	// }
-
-
-
+	/*
+		compute scores for eac face
+	*/
 	for(var i=0; i<obj.geometry.faces.length; i++) {
 		var f = obj.geometry.faces[i];
 
@@ -58,6 +35,7 @@ function analyzeAdhereMethod() {
 				new THREE.Vector3().subVectors(vb, va),
 				new THREE.Vector3().subVectors(vc, va)).normalize();
 
+		/* for adhering, scores are calculated as a set using one function */
 		if(f.scoreSetAdhere == undefined) {
 			var mat = obj.matrixWorld.clone();
 			f.scoreSetAdhere = performAdhereAnlysis(obj, f);
@@ -67,20 +45,20 @@ function analyzeAdhereMethod() {
 			// console.log(f.scoreSetAdhere.balance);
 
 			// TODO: fix the nml that is not the nml that should be used
+			// balance is a general term across techniques
 			f.scoreSetAdhere.balance = assessBalance(obj, ctr, nml);
+
 			// f.scoreSetAdhere.visual = assessVisualImpact(obj, ctr, nml, outLooks);
 		}
-
-		// need to update this whenever object orientation changes
 		
-		// var score = f.scoreSetAdhere.visual;
+		// printability (occlusion is a hard constraint)
 		var score = (f.scoreSetAdhere.isOccluding == false ? 1 : 0) * (
 						
 						f.scoreSetAdhere.flatness * wAttachability +
-						f.scoreSetAdhere.strength * wStrength +
-						f.scoreSetAdhere.balance * wUsability
+						(f.scoreSetAdhere.strength * wstr +
+							f.scoreSetAdhere.balance * wbal) * wUsability
 
-					) / (wAttachability + wUsability + wStrength);
+					) / (wAttachability + wUsability);
 
 		// console.log(f.scoreSetAdhere);
 		f.scoreAdhere = score;
@@ -91,41 +69,47 @@ function analyzeAdhereMethod() {
 	console.log("done, in " + timeStamp() + " msec.");
 
 
-	if(TOSHOWHEATMAP) {
-		console.log("generating heatmap ...");
 
-      	obj.material = new THREE.MeshBasicMaterial( { vertexColors: THREE.VertexColors} )
-      	obj.material.needsUpdate = true;
-      
-		for(var i=0; i<obj.geometry.faces.length; i++) {
 
-			var f = obj.geometry.faces[i];
+	/*
+		computing heatmap visualization
+	*/
 
-			for( var j = 0; j < 3; j++ ) {
-				var weightTotal = 1;
-				var score = f.scoreAdhere;
+	// if(TOSHOWHEATMAP) {
+	console.log("generating heatmap ...");
 
-				var v = f.verticesTemp[j];
-				
-				for(var k=0; k<f.neighbors2R.length; k++) {
-					var ff = f.neighbors2R[k];
-					for(var h=0; h<3; h++) {
-						var dist = v.distanceTo(ff.verticesTemp[h]);
-						var w = Math.max(0, 1 - dist/radiusHandle/2);
-						score += ff.scoreAdhere * w;
-						weightTotal += w;
-					} 
-				}
+  	obj.material = new THREE.MeshBasicMaterial( { vertexColors: THREE.VertexColors, transparent: true, opacity: 0.85 } )
+  	obj.material.needsUpdate = true;
+  
+	for(var i=0; i<obj.geometry.faces.length; i++) {
 
-				score /= weightTotal;
+		var f = obj.geometry.faces[i];
 
-				f.vertexColors[j] = getColorFromScore(score, maxScore);
+		for( var j = 0; j < 3; j++ ) {
+			var weightTotal = 1;
+			var score = f.scoreAdhere;
+
+			var v = f.verticesTemp[j];
+			
+			for(var k=0; k<f.neighbors2R.length; k++) {
+				var ff = f.neighbors2R[k];
+				for(var h=0; h<3; h++) {
+					var dist = v.distanceTo(ff.verticesTemp[h]);
+					var w = Math.max(0, 1 - dist/radiusAdhereHandle/2);
+					score += ff.scoreAdhere * w;
+					weightTotal += w;
+				} 
 			}
-		}
 
-		obj.geometry.colorsNeedUpdate = true;
-		console.log("done, in " + timeStamp() + " msec.");
+			score /= weightTotal;
+
+			f.vertexColors[j] = getColorFromScore(score, maxScore);
+		}
 	}
+
+	obj.geometry.colorsNeedUpdate = true;
+	console.log("done, in " + timeStamp() + " msec.");
+	// }
 }
 
 function performAdhereAnlysis(obj, faceSelected) {
@@ -135,15 +119,15 @@ function performAdhereAnlysis(obj, faceSelected) {
 	scores.flatness = 0;
 	scores.isOccluding = true;
 	
-	var OCCLUSION = 1;
-	var NOTENOUGHSUPPORT = 2;
-	var TOOMUCHDROP = 3;
-	var CONNECTORTOOTHIN = 4;
-	var UNKNOWN = 0;
+	// var OCCLUSION = 1;
+	// var NOTENOUGHSUPPORT = 2;
+	// var TOOMUCHDROP = 3;
+	// var CONNECTORTOOTHIN = 4;
+	// var UNKNOWN = 0;
 
-	var REASONMESSAGES 
-		= ['unknown', 'occlusion', 'not enough support', 'too much drop', 'connector too thin'];
-	var unprintableReason = UNKNOWN;
+	// var REASONMESSAGES 
+	// 	= ['unknown', 'occlusion', 'not enough support', 'too much drop', 'connector too thin'];
+	// var unprintableReason = UNKNOWN;
 
 
 	var shrinkRatio = 0.9;
@@ -166,37 +150,40 @@ function performAdhereAnlysis(obj, faceSelected) {
 				new THREE.Vector3().subVectors(vc, va));
 
 	var ctrConnector;
-	for(var r=radiusHandle; r>radiusMinimum; r*=shrinkRatio) {
-		scores.strength = r / radiusHandle;
+	for(var r=radiusAdhereHandle; r>radiusMinimum; r*=shrinkRatio) {
+
+		/***********************************************/
+
+		scores.strength = r / radiusAdhereHandle;
+
+		/***********************************************/
 
 		/* 
-			find the neighbors and the actual radius
+			find the adhereNeighbors and the actual radius
 		*/
 
 		/* important: make sure the object's matrix is up to date */
 		obj.updateMatrixWorld();
 
-		neighbors = [];
+		adhereNeighbors = [];
 		/* when searching, use 1.5 times of r to include more possible triangles*/
-		findNeighbors(obj, faceSelected, ctr, r*1.5, neighbors);
+		findNeighbors(obj, faceSelected, ctr, r*1.5, adhereNeighbors);
 
-		if(neighbors.length <= 0) {
-			unprintableReason = CONNECTORTOOTHIN;
+		if(adhereNeighbors.length <= 0) {
+			// unprintableReason = CONNECTORTOOTHIN;
 			break;
 		}
 
 		/* clean up the masks used for searching */
-		for(var i=0; i<neighbors.length; i++) {
-			neighbors[i].collected = false;
-		}
+		cleanUpNeighbors(adhereNeighbors);
 
 		
 		/* 
 			find the commonly shared plane 
 		*/
 		var points = [];
-		for(var i=0; i<neighbors.length; i++) {
-			var f = neighbors[i];
+		for(var i=0; i<adhereNeighbors.length; i++) {
+			var f = adhereNeighbors[i];
 			var indices = [f.a, f.b, f.c];
 			var vertices = [];
 			for(var j=0; j<indices.length; j++) {
@@ -208,10 +195,11 @@ function performAdhereAnlysis(obj, faceSelected) {
 			f.verts = vertices;
 		}
 
-		// console.log(points.length);
+		// 3 is the minimum number of points that can be applied the following method
 		if(points.length <= 3) {
 			continue;
 		}
+
 		var planeParams = findPlaneToFitPoints(points);
 		var a = planeParams.A;
 		var b = planeParams.B;
@@ -219,16 +207,17 @@ function performAdhereAnlysis(obj, faceSelected) {
 		var d = planeParams.D;
 
 
+
 		/* 
 			measure coverage 
-			s: project the neighbors onto the plane, cal the sum of their area
+			s: project the adhereNeighbors onto the plane, cal the sum of their area
 			S: the plane's area (circle)
 			coverage = s/S
 		*/
 		var actualArea = 0;
 		var projections = [];
-		for(var i=0; i<neighbors.length; i++) {
-		var f = neighbors[i];
+		for(var i=0; i<adhereNeighbors.length; i++) {
+			var f = adhereNeighbors[i];
 			var proj = [];
 			for(var j=0; j<f.verts.length; j++) {
 				var p = getProjection(f.verts[j], a, b, c, d);
@@ -243,10 +232,10 @@ function performAdhereAnlysis(obj, faceSelected) {
 		var coverage = actualArea / (Math.PI * r * r);
 
 		// console.log("supporting " + coverage.toFixed(4)*100 + "%");
-		if(coverage < supportiveness) {
-			unprintableReason = NOTENOUGHSUPPORT;
-			continue;
-		}
+		// if(coverage < supportiveness) {
+		// 	// unprintableReason = NOTENOUGHSUPPORT;
+		// 	continue;
+		// }
 
 
 		/* 
@@ -287,9 +276,15 @@ function performAdhereAnlysis(obj, faceSelected) {
 
 			maxNegDist = Math.min(dist, maxNegDist);
 			maxPosDist = Math.max(dist, maxPosDist);
-			sumDist += dist;
+			sumDist += Math.abs(dist);
 		}
+
+		/***********************************************************************************/
+
 		scores.flatness = Math.max(0, 1 - sumDist / points.length / maxDropDistance);
+
+		/***********************************************************************************/
+
 
 		// console.log("maxPosDist:" + maxPosDist + ", maxNegDist: " + maxNegDist);
 		// ctr2.y += Math.min(maxDropDistance, -maxNegDist);
@@ -297,11 +292,12 @@ function performAdhereAnlysis(obj, faceSelected) {
 		/* if highest possible drop exceeds the threshold */
 		if(Math.abs(maxPosDist) + Math.abs(maxNegDist) > maxDropDistance) {
 			obj.rotateOnAxis(axisToRotate, -angleToRotate);
-			unprintableReason = TOOMUCHDROP;
+			// unprintableReason = TOOMUCHDROP;
 			continue;
 		}
 		var distToRaise = Math.abs(angleToRotate) > Math.PI/2 ? -maxNegDist : maxPosDist;
-
+		distToRaise = Math.max(distToRaise, 1);
+		
 		var ctr2 = ctr.clone().applyMatrix4(obj.matrixWorld);//new THREE.Vector3().addVectors(va, vb).add(vc).divideScalar(3);
 		ctr2.y += distToRaise;
 
@@ -341,7 +337,12 @@ function performAdhereAnlysis(obj, faceSelected) {
 		/*
 			escape when finding printable radius
 		*/
+
+		/***********************************************************************************/
+
 		scores.isOccluding = isOccluding;
+
+		/***********************************************************************************/
 
 		if(isOccluding == false) {
 			// addACircle(ctr2, r, 0x0faaf0);
@@ -352,7 +353,7 @@ function performAdhereAnlysis(obj, faceSelected) {
 
 			break;
 		} else {
-			unprintableReason = OCCLUSION;
+			// unprintableReason = OCCLUSION;
 		}
 
 	}

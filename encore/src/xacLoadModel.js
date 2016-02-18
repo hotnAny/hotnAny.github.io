@@ -5,7 +5,7 @@ function loadStl (objPath, objName, isStatic, addToObjects) {
 
     // geometry.dynamic = true;
     // var material = new THREE.MeshPhongMaterial( { color: colorNormal });
-    var material = new THREE.MeshPhongMaterial( { color: colorNormal, transparent: true, opacity: 0.75, vertexColors: THREE.VertexColors} );  
+    var material = new THREE.MeshPhongMaterial( { color: colorNormal, transparent: true, opacity: 0.85, vertexColors: THREE.VertexColors} );  
     // material.side = THREE.DoubleSide;
     // geometry.materials.push(material);
     // geometry.materials.push(new THREE.MeshBasicMaterial( { vertexColors: THREE.VertexColors} ));
@@ -27,6 +27,18 @@ function loadStl (objPath, objName, isStatic, addToObjects) {
     log("object #" + objects.length + " " + objName + " loaded");
     log(geometry.vertices.length + " vertices, " + geometry.faces.length + " faces");
     
+    object.geometry.computeBoundingBox();
+    var bbox = object.geometry.boundingBox;
+    object.bbox = bbox;
+    // console.log(bbox);
+    // object.position.set(20 * Math.random(), 0, 20 * Math.random());
+    // (bbox.max.y - bbox.min.y) / 2 + 30 * Math.random()
+    var maxDimExisting = 0;
+    maxDimExisting = Math.max(maxDimExisting, Math.abs(bbox.max.x - bbox.min.x));
+    maxDimExisting = Math.max(maxDimExisting, Math.abs(bbox.max.y - bbox.min.y));
+    maxDimExisting = Math.max(maxDimExisting, Math.abs(bbox.max.z - bbox.min.z));
+    object.maxDimExisting = maxDimExisting;
+
     object.isStatic = isStatic;
 
     if(attachmentMethod != INTERLOCK) {
@@ -43,9 +55,13 @@ function loadStl (objPath, objName, isStatic, addToObjects) {
       // octree.add(object);
       // octree.add(object, { useVertices: true });
       octree.add(object, { useFaces: true });
+      // octree.setVisibility(true);
       object.ot = octree;
       controlPanel.checkbox4.checked = staticObjLocked;
+      console.log("octree built");
       // object.rotation.set(Math.PI / 2 * Math.random(), Math.PI / 2 * Math.random(), Math.PI / 2 * Math.random());
+    } else {
+      object.position.set(50, 0, 0); 
     }
 
     // if(!TOSHOWHEATMAP) {
@@ -112,10 +128,29 @@ function cleanObjects(isStatic) {
   }
 }
 
-function generateSupport(obj) {
+var raisedHeight = 0;
+function generateSupport(obj, objExisting) {
+  /*
+    raise the object
+  */
+  
+  var dy = objExisting.maxDimExisting + obj.maxDimExisting / 2 - obj.position.y;
+  obj.position.y += Math.max(dy, 0);
+  console.log("obj.position.y: " + obj.position.y);
+  obj.needRebuildOctree = true;
+  obj.updateMatrixWorld();
+
+  raisedHeight = dy;
+
   var material = new THREE.MeshBasicMaterial( { color: 0x22FF66 } );
 
+  // if(obj.bbox == undefined) {
+  //   obj.geometry.computeBoundingBox();
+  //   obj.bbox = obj.geometry.boundingBox;
+  // }
   /* making the base */
+  // var mergedGeom = getTransformedGeometry(obj);
+
   var minBaseDim = 2;
   var baseDimX = Math.max(minBaseDim, Math.abs(obj.bbox.max.x - obj.bbox.min.x)),
       baseDimY = minBaseDim,
@@ -124,6 +159,8 @@ function generateSupport(obj) {
   
   var base = new Physijs.BoxMesh(geomBase, material, 0);
   base.position.set(obj.position.x, obj.position.y - (obj.bbox.max.y - obj.bbox.min.y) / 2 - minBaseDim / 2, obj.position.z);
+  // THREE.GeometryUtils.merge(mergedGeom, base.geometry);
+  
   scene.add(base);
   supports.push(base);
 
@@ -132,6 +169,7 @@ function generateSupport(obj) {
   var bbox = base.geometry.boundingBox;
 
   var heightPillar = base.position.y - minBaseDim/2;
+  // console.log("heightPillar: " + heightPillar)
   var geomPillar = new THREE.CubeGeometry(minBaseDim, heightPillar, minBaseDim);
 
   for(var i=-1; i<=1; i+=2) {
@@ -142,10 +180,17 @@ function generateSupport(obj) {
         heightPillar/2, 
         obj.position.z + j * baseDimZ / 2 - j * minBaseDim / 2
         );
+
+      // pillar.updateMatrixWorld();
+      // pillar.geometry.applyMatrix(pillar.matrixWorld);
+      // THREE.GeometryUtils.merge(mergedGeom, pillar.geometry);
       scene.add(pillar);
       supports.push(pillar);
     }
   }
+
+  // var objNew = new THREE.Mesh(mergedGeom, material); 
+  // scene.add(objNew);
 
 }
 

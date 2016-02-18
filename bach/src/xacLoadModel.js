@@ -14,9 +14,9 @@ function loadStl (objPath, objName, isStatic, addToObjects) {
     object.castShadow = true;
     object.receiveShadow = true;
 
-    if(addToObjects == undefined || addToObjects == true) {
+    // if(addToObjects == undefined || addToObjects == true) {
       objects.push(object);  
-    } 
+    // } 
     
     log("object #" + objects.length + " " + objName + " loaded");
     log(geometry.vertices.length + " vertices, " + geometry.faces.length + " faces");

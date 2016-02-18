@@ -292,7 +292,7 @@ VoxelGrid.prototype.exportVoxels = function(voxels) {
 	for(var idx=-1; idx < voxels.length; idx++) {
 		
 		var geom = idx >= 0 ? geometry : geometrySmall;
-		var weight = this.obj.isStatic ? 0 : 10;
+		var weight = this.obj.isStatic ? 10 : 0;
 		
 		//var voxel = new Physijs.BoxMesh(geom, material, weight);
 		var voxel = new Physijs.SphereMesh(geom, material, weight);

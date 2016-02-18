@@ -99,3 +99,7 @@ var teddy = 'things/teddy.stl';
 var wrench = 'things/wrench.stl';
 var mug = 'things/mug.stl';
 var troll = 'things/troll.stl';
+var head = 'things/head5.stl';
+var cube = 'things/cali-cube.stl';
+var halfdome = 'things/halfdome.stl';
+var horse = 'things/horse_r.stl';

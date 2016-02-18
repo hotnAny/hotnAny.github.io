@@ -6,7 +6,7 @@
 var D = false;
 var D_MOUSE = false;
 var D_COLLISION = false;
-var D_INTERSECTION = false;
+var D_INTERSECTION = true;
 var D_OVERLAP = false;
 var D_INTERLOCK = false;
 var D_PHYSICS = false;
@@ -23,6 +23,8 @@ var ball;
      constants
      
 */
+var EVALUATIONMODE = false;
+
 var BACKGROUNDCOLOR = 0xF2F0F0;
 var GROUNDCOLOR     = 0xF2F0F0;
 var GRIDCOLOR       = 0x888888;
@@ -33,6 +35,7 @@ var INFINITY   = 10e6;
 var INTERLOCK  = 0;
 var ADHERE     = 1;
 var STRAP      = 2;
+var ADHESIVE   = 3;
 
 
 /* ------------------------------------------------------------------------------------------------------
@@ -111,16 +114,7 @@ var staticObjLocked = true;
 
 var withoutSupport = true;
 
-var radiusHandle = 2.5;
-var radiusPrinthead = 7.5;
-var heightPrinthead = 50;
-var radiusMinimum = 1;
-var maxDropDistance = 1;
-var supportiveness = 0.75;
-var radiusSupport = 2.5;
 
-var radiusMinimumStrap = 3;
-var radiusHandleStrap = 5;
 
 /*-----------------------------------------------------------------------------------------------
      
@@ -131,7 +125,7 @@ var radiusHandleStrap = 5;
 var stlLoader = new THREE.STLLoader();
 
 var key = 'things/keyxac.stl';
-var ringBig = 'things/ring-big.stl';
+var ringBig = 'things/ring-big2.stl';
 var ringSmall = 'things/ring-small.stl';
 
 /* key + ring */
@@ -151,11 +145,11 @@ var tetra = 'things/tetra.stl';
 
 
 // var cube = 'things/cube.stl';
-var bracelet = 'things/nervos.stl';
+var bracelet = 'things/nervos3.stl';
 var cylinder = 'things/cylinder.stl';
 var trisqr = 'things/trisqr.stl';
 var arrow = 'things/arrow.stl';
-// var frame = 'things/frame2.stl';
+var frame = 'things/frame.stl';
 var skull = 'things/skull.stl';
 var meshouter = 'things/deltoidalIcositetrahedron-outer.stl';
 var meshinner = 'things/deltoidalIcositetrahedron-inner.stl';
@@ -166,17 +160,41 @@ var ballOuter = 'things/ball-outer.stl';
 var ballInner = 'things/ball-inner.stl';
 
 var teddy = 'things/teddy.stl';
-var wrench = 'things/wrench.stl';
+var wrench = 'things/wrench_rm.stl';
 var goblet = 'things/goblet.stl';
-var cup = 'things/cup.stl';
+var cup = 'things/cup2.stl';
 
 var bottle = 'things/bottle.stl';
 // var coke = 'things/coke.stl';
-var can = 'things/soda_can.stl';
+var can = 'things/can.stl';
 
 var zipperPull = 'things/zipper-pull.stl';
 var house = 'things/house.stl';
 
 var smallHandle = 'things/small-handle.stl';
 
-// pikachui
+var screwDriver = 'things/screwdriver.stl';
+
+// var printOverBatch1 = 'evaluation/batch-3/b3-print-over.stl';
+var printOverBatch1 = 'evaluation/successful-sets/2_strap/C0.67_fixed.stl'
+// var printOverBatch1 = 'evaluation/successful-sets/1_print-over_affix-adhesive_tan/platforms/pf-C0.0N10.stl';
+
+var minion = 'things/minion2.stl';
+var led = 'things/led2.stl';
+
+var magnet = 'things/magnet.stl';
+
+var scissors = 'things/scissors.stl';
+var labelRing = 'things/label-frame2.stl';
+
+var amex = 'things/amex_rm.stl';
+
+var teapot = 'things/teapot.stl';
+
+var gatorade = 'things/g.stl';
+
+var gluegun = 'things/gluegun-stand.stl';
+
+var batteries = 'things/battery9v.stl';
+
+var winebottle = 'things/redbull.stl';

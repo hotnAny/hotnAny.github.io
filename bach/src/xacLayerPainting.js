@@ -1,22 +1,36 @@
 var strokes = [];
 var strokePoints = [];
 var strokeFaces = [];
-var miny;
-var maxy;
+var miny = INFINITY;
+var maxy = -INFINITY;
 
-var layerThickness = 0.1;
+var layerThickness = 0.5;
 
 var layerRanges = [];
 
 function computeRangesLayers() {
+
+	var obj = objects[0];
+
 	if(miny == undefined || maxy == undefined) {
+
 		return;
 	}
+	
+	console.log("min: " + miny + ", max: " + maxy);
+
+	// obj.geometry.computeBoundingBox();
+	// var boxHelper = obj.geometry.boundingBox;
+
+	var boxHelper = new THREE.BoundingBoxHelper( obj, 0xff0000 );
+	boxHelper.update();
+	scene.add( boxHelper );
+
 	// console.log(miny + ", " + maxy);
 	for(var y=miny; y<=maxy; y+=layerThickness) {
 		var layerRange = new Object();
 
-		layerRange.y = y;
+		layerRange.y = (y - boxHelper.box.min.y) / (boxHelper.box.max.y - boxHelper.box.min.y);
 		layerRange.xmin = INFINITY;
 		layerRange.xmax = -INFINITY;
 		layerRange.zmin = INFINITY;
@@ -44,7 +58,7 @@ function computeRangesLayers() {
 		// 	": x:[" + layerRanges[i].xmin + ", " + layerRanges[i].xmax + "]" +
 		// 	": y:[" + layerRanges[i].zmin + ", " + layerRanges[i].zmax + "]");
 
-		strData += layerRanges[i].y + 
+		strData += layerRanges[i].y.toFixed(2) + 
 			"," + layerRanges[i].xmin + "," + layerRanges[i].xmax + "," +
 			layerRanges[i].zmin + "," + layerRanges[i].zmax + "\n";
 	};
@@ -57,5 +71,5 @@ function computeRangesLayers() {
 
 	console.log("range!");
 
-	strokePoints = [];
+	// strokePoints = [];
 }

@@ -122,7 +122,7 @@ var ControlPanel = function () {
 	var btnAction1 = document.createElement( 'button' );
 	btnAction1.id = 'action1';
 	btnAction1.style.cssText = cssBtn;
-	btnAction1.innerHTML = 'Do nothing';
+	btnAction1.innerHTML = 'Generate contour';
 	container.appendChild( btnAction1 );
 
 	container.appendChild(document.createTextNode( '\u00A0\u00A0' ));
