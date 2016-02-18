@@ -1,10 +1,4 @@
-var controlPanel = new ControlPanel();
-// controlPanel.domElement.style.position = 'absolute';
-// controlPanel.domElement.style.top = '0px';
-// document.body.appendChild(controlPanel.domElement);
 
-$(document.body).append(controlPanel.domElement);
-controlPanel.initPanel();
 // console.log(controlPanel.domElement);
 /* 
 	control buttons 
