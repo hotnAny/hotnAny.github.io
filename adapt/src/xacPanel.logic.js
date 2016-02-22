@@ -35,20 +35,52 @@ var _closeAccordion = function() {
 }
 
 var initPanel = function() {
-	panels.accordion({
-		heightStyle: "content",
-		collapsible: true,
-		active: false
-	});
+	// panels.accordion({
+	// 	heightStyle: "content",
+	// 	collapsible: true,
+	// 	active: false
+	// });
 
 	// _closeAccordion();
 	// _expandAccordion();
+
+	// $('#btnCylinder').button().append
+	// $('#btnCylinder').width(96);
+	// $('#btnCylinder').height(72);
+
+	// divShapeOptions.width(divButtons.width());
+
+	// step 1
+	// btnShape.checked = 'checked';
+	btnUpload.change(function() {
+		if ($(this).is(':checked')) {
+			trSelectArea.empty();
+		}
+	});
+	btnShape.change(function() {
+		if ($(this).is(':checked')) {
+			trSelectArea.empty();
+			trSelectArea.append(tblShapeOptions);
+		}
+	});
+	btnLibrary.change(function() {
+		if ($(this).is(':checked')) {
+			trSelectArea.empty();
+		}
+	});
 
 	$('#sldSize').slider();
 	$('#sldAttach').slider();
 
 }
 initPanel();
+
+//
+//	Step 1 - button to obtain geometry
+//
+btnShape.click(function(event) {
+
+});
 
 //
 //	Step 2 - parts controls add button
@@ -162,7 +194,7 @@ smAdapts.selectmenu({
 					}
 				}
 			});
-			adaptations.prepend(lsAdapts);
+			trAdaptations.prepend(lsAdapts);
 
 		}
 
@@ -196,7 +228,7 @@ smConns.selectmenu({
 					}
 				}
 			});
-			connectors.prepend(lsConns);
+			trConns.prepend(lsConns);
 
 		}
 

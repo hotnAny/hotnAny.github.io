@@ -8,7 +8,15 @@ var gPartCtrlId = 0; // global id for part-control
 var gAdaptId = 0; // global id for adaptations
 var gConnId = 0; // global id for connectors
 
-var icons = $("#accordion").accordion("option", "icons");
+//
+// Helper functions
+//
+var _genSectionBar = function(text) {
+	var sectionBar = $('<span class="ui-corner-all" style="padding:4px 15px 4px 15px;margin-left:15px;background-color:#878787;color:#ffffff"></span>');
+	sectionBar.append('<b>' + text + '</b>');
+	return sectionBar;
+}
+
 
 var container = $('<div></div>');
 container.css('width', '388px');
@@ -20,7 +28,6 @@ container.css('position', 'absolute');
 container.css('font-family', 'Helvetica');
 container.css('font-size', '12px');
 
-
 var title = $('<h3></h3>');
 title.html('ADAPT');
 title.css('margin-top', '10px');
@@ -29,58 +36,87 @@ title.css('margin-left', '10px');
 title.css('margin-right', '10px');
 container.append(title);
 
-
 var panels = $('<div></div>');
 
 
 //
 // Step 1 - Geometry & Measurement
 //
-panels.append("<h3>Geometry & Measurement</h3>");
-var geomMeas = $('<div></div>');
+panels.append(_genSectionBar('Geometry & Measurement'));
+var geomMeas = $('<table class="ui-step-area" cellspacing="10"></table>');
 
-var divButtons = $('<div></div>');
-
+// 1.1	the buttons for different geometry options
+var trButtons = $('<tr></tr>');
+var divButtons = $('<div align="center"></div>');
 var btnUpload = $('<input type="radio" id="rdUpload" name="radio"><label for="rdUpload">Upload Models</label>');
-var btnShape = $('<input type="radio" id="rdShape" name="radio"><label for="rdShape">Use Simple Shapes</label>');
-var btnLibrary = $('<input type="radio" id="rdLibrary" name="radio"><label for="rdLibrary">From Library</label>');
-
 divButtons.append(btnUpload);
+var btnShape = $('<input type="radio" id="rdShape" name="radio" checked="checked"><label for="rdShape">Use Simple Shapes</label>');
 divButtons.append(btnShape);
+var btnLibrary = $('<input type="radio" id="rdLibrary" name="radio"><label for="rdLibrary">From Library</label>');
 divButtons.append(btnLibrary);
 divButtons.buttonset();
+trButtons.append(divButtons);
+geomMeas.append(trButtons);
 
-geomMeas.append(divButtons);
+// 1.2	the area that shows UI for a selected option
+var trSelectArea = $('<tr></tr>');
+geomMeas.append(trSelectArea);
+
+// 1.2.1	upload
+// TODO: implement this
+
+// 1.2.2	simple shapes
+var tblShapeOptions = $('<table align="center" cellspacing="10"></table>');
+tblShapeOptions.append('<td><button id="btnCylinder"><img height="50px" src="./misc/cylinder.png"/></button></td>');
+tblShapeOptions.append('<td><button id="btnPrism"><img height="50px" src="./misc/prism.png"/></button></td>');
+tblShapeOptions.append('<td><button id="btnPlane"><img height="50px" src="./misc/plane.png"/></button></td>');
+trSelectArea.append(tblShapeOptions);
+
+// 1.2.3	library
+// TODO: implement this
 
 panels.append(geomMeas);
+panels.append('<br/>');
 
 
 //
 // Step 2 - Parts & Controls
 //
-panels.append("<h3>Parts & Controls</h3>");
-var partsCtrls = $("<div></div>");
+panels.append(_genSectionBar('Parts & Controls'));
+var partsCtrls = $("<table class='ui-step-area' cellspacing='10'></table>");
 
-var tblPartsCtrls = $('<table class="display"><tbody></tbody></table>');
+// 2.1	a table of specified parts & controls
+var trPartsCtrlsList = $('<tr></tr>');
+var tblPartsCtrls = $('<table></table>');
 tblPartsCtrls.rows = [];
-partsCtrls.append(tblPartsCtrls);
-partsCtrls.append('<br>');
+trPartsCtrlsList.append(tblPartsCtrls);
+partsCtrls.append(trPartsCtrlsList);
 
+// 2.2	a button for adding a new parts-controls
+var trAddPartsCtrls = $('<tr></tr>');
 var btnAddPartsCtrls = $("<button>Add parts & controls</button>")
-partsCtrls.append(btnAddPartsCtrls);
+trAddPartsCtrls.append(btnAddPartsCtrls);
+partsCtrls.append(trAddPartsCtrls);
 
 panels.append(partsCtrls);
+panels.append('<br/>');
+
 
 
 //
 // Step 3 - Adaptation
 //
-panels.append("<h3>Adaptation</h3>");
-var adaptations = $("<div></div>");
+panels.append(_genSectionBar('Adaptations'));
+var adaptations = $("<table class='ui-step-area' cellspacing='10'></table>");
 
+// 3.1	a list of added adaptations
+var trAdaptations = $('<tr></tr>');
 var lsAdapts = $('<ul></ul>');
 // don't append until something is called to be added
+adaptations.append(trAdaptations);
 
+// 3.2	a dropdownlist of various adaptations
+var trAddAdaptations = $('<tr></tr>');
 var smAdapts = $('<select></select>');
 smAdapts.width('128px');
 smAdapts.append('<option id="noAdaptSel"> Add adaptations </option>');
@@ -90,55 +126,62 @@ smAdapts.append('<option>Lever</option>');
 smAdapts.append('<option>Anchor</option>');
 smAdapts.append('<option>Guide</option>');
 smAdapts.append('<option>Mechanism</option>');
-adaptations.append(smAdapts);
+trAddAdaptations.append(smAdapts);
+adaptations.append(trAddAdaptations);
 
 panels.append(adaptations);
-
+panels.append('<br/>');
 
 
 //
 // Step 4 - Optimization
 //
-panels.append("<h3>Optimization</h3>")
-var optimization = $("<div></div>");
+panels.append(_genSectionBar('Optimization'));
+var optimization = $("<table class='ui-step-area' cellspacing='10'></table>");
 
-// what to optimize
-var divOptim = $("<div></div>");
+// 4.1	what to optimize
+var trOptim = $('<tr></tr>');
+var divOptim = $('<div align="center"></div>');
 divOptim.append($('<input type="checkbox" id="cbGrip"><label for="cbGrip">Grip</label>'));
 divOptim.append($('<input type="checkbox" id="cbStrength"><label for="cbStrength">Strength</label>'));
 divOptim.append($('<input type="checkbox" id="cbCoord"><label for="cbCoord">Coordination</label>'));
 divOptim.buttonset().find('label').css('width', '30%');
 optimization.append(divOptim);
 
-optimization.append('<br/>');
-
-var tbOptim = $('<table cellspacing="5" cellpadding="5"></table>');
+// 4.2	other sliderable optimizations
+var tblSldrOptim = $('<table cellspacing="5" cellpadding="5"></table>');
 var trSize = $('<tr><td><label class="ui-widget">Size: </label></td><td width="200px"><div id="sldSize"></div></td></tr>');
 var trAttach = $('<tr><td><label class="ui-widget">Attachability: </label></td><td width="200px"><div id="sldAttach"></div></td></tr>');
-// $('#sldSize').slider();
-tbOptim.append(trSize);
-tbOptim.append(trAttach);
-optimization.append(tbOptim);
+tblSldrOptim.append(trSize);
+tblSldrOptim.append(trAttach);
+trOptim.append(tblSldrOptim);
+optimization.append(trOptim);
 
-optimization.append('<br/>');
-
+// 4.3	the update button
+var trUpdate = $('<tr></tr>');
 var btnUpdate = $('<button>Update</button>')
 btnUpdate.button();
-optimization.append(btnUpdate);
+trUpdate.append(btnUpdate);
+optimization.append(trUpdate);
 
 panels.append(optimization);
-
+panels.append('<br/>');
 
 
 //
 // Step 5 - Connector
 //
-panels.append("<h3>Connection</h3>")
-var connectors = $("<div></div>");
+panels.append(_genSectionBar('Connectors'));
+var connectors = $("<table class='ui-step-area' cellspacing='10'></table>");
 
+// 5.1	a list of added connectors
+var trConns = $('<tr></tr>');
 var lsConns = $('<ul></ul>');
 // don't append until something is called to be added
+connectors.append(trConns);
 
+// 5.2 a dropdownlist of various connectors
+var trAddConns = $('<tr></tr>');
 var smConns = $('<select></select>');
 smConns.width('128px');
 smConns.append('<option id="noConnSel"> Add Connector </option>');
@@ -146,12 +189,20 @@ smConns.append('<option>Clamp</option>');
 smConns.append('<option>Strap</option>');
 smConns.append('<option>Bolt</option>');
 smConns.append('<option>Adhesive</option>');
-
-connectors.append(smConns);
+trAddConns.append(smConns);
+connectors.append(trAddConns);
 
 panels.append(connectors);
+panels.append('<br/>');
 
 
+//
+//	Final step - export
+//
+var btnExport = $('<button style="margin-left:10px"><b>Export models</b></button>');
+btnExport.button();
+
+panels.append(btnExport);
 //
 // Wrap up
 //
