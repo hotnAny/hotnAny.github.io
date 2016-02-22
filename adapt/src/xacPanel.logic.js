@@ -64,8 +64,9 @@ initPanel();
 //	Step 1 - button to obtain geometry
 //
 $('#btnCylinder').click(function(event) {
-	var cylinder = new xacCylinder(5, 16);
+	var cylinder = new xacCylinder(10, 30);
 	scene.add(cylinder.m);
+	objects.push(cylinder.m);
 	gItems.push(cylinder);
 
 	gStep = 1;
@@ -74,6 +75,7 @@ $('#btnCylinder').click(function(event) {
 $('#btnPrism').click(function(event) {
 	var prism = new xacRectPrism(10, 20, 5);
 	scene.add(prism.m);
+	objects.push(prism.m);
 	gItems.push(prism);
 
 	gStep = 1;
@@ -82,6 +84,7 @@ $('#btnPrism').click(function(event) {
 $('#btnPlane').click(function(event) {
 	var plane = new xacPlane(40, 60);
 	scene.add(plane.m);
+	objects.push(plane.m);
 	gItems.push(plane);
 
 	gStep = 1;
@@ -124,7 +127,7 @@ btnAddPartsCtrls.button().click(function(event) {
 		parts: undefined,
 		ctrls: undefined
 	};
-	
+
 	// click to acitivate a set of parts (to be modified or extended)
 	trPartsCtrls.tdParts.click(function(event) {
 		if (gCurrPartCtrl != undefined && $(this).attr('pcId') == gCurrPartCtrl.attr('pcId')) {
