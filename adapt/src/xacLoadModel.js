@@ -5,7 +5,7 @@ function loadStl (objPath, objName, isStatic, addToObjects) {
 
     // geometry.dynamic = true;
     // var material = new THREE.MeshPhongMaterial( { color: colorNormal });
-    var material = new THREE.MeshPhongMaterial( { color: colorNormal, transparent: true, opacity: 0.5} );  
+    var material = new THREE.MeshPhongMaterial( { color: colorNormal, transparent: true, opacity: 0.5} );
     // material.side = THREE.DoubleSide;
     var object = new THREE.Mesh(geometry, material); 
 

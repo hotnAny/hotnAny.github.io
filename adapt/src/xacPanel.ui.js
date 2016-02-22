@@ -40,7 +40,7 @@ var panels = $('<div></div>');
 
 
 //
-// Step 1 - Geometry & Measurement
+//	Step 1 - Geometry & Measurement
 //
 panels.append(_genSectionBar('Geometry & Measurement'));
 var geomMeas = $('<table class="ui-step-area" cellspacing="10"></table>');
@@ -80,14 +80,14 @@ panels.append('<br/>');
 
 
 //
-// Step 2 - Parts & Controls
+//	Step 2 - Parts & Controls
 //
 panels.append(_genSectionBar('Parts & Controls'));
 var partsCtrls = $("<table class='ui-step-area' cellspacing='10'></table>");
 
 // 2.1	a table of specified parts & controls
 var trPartsCtrlsList = $('<tr></tr>');
-var tblPartsCtrls = $('<table></table>');
+var tblPartsCtrls = $('<table width="100%"></table>');
 tblPartsCtrls.rows = [];
 trPartsCtrlsList.append(tblPartsCtrls);
 partsCtrls.append(trPartsCtrlsList);
@@ -104,7 +104,7 @@ panels.append('<br/>');
 
 
 //
-// Step 3 - Adaptation
+//	Step 3 - Adaptation
 //
 panels.append(_genSectionBar('Adaptations'));
 var adaptations = $("<table class='ui-step-area' cellspacing='10'></table>");
@@ -134,7 +134,7 @@ panels.append('<br/>');
 
 
 //
-// Step 4 - Optimization
+//	Step 4 - Optimization
 //
 panels.append(_genSectionBar('Optimization'));
 var optimization = $("<table class='ui-step-area' cellspacing='10'></table>");
@@ -169,7 +169,7 @@ panels.append('<br/>');
 
 
 //
-// Step 5 - Connector
+//	Step 5 - Connector
 //
 panels.append(_genSectionBar('Connectors'));
 var connectors = $("<table class='ui-step-area' cellspacing='10'></table>");

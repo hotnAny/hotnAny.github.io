@@ -1,5 +1,8 @@
-// ///////////////
-// for debugging
+/*-----------------------------------------------------------------------------------------------
+     
+     template
+
+-----------------------------------------------------------------------------------------------*/
 var D = false;
 
 var helpers = new Array();
@@ -26,15 +29,12 @@ var voxelGrids = new Array();
 var supports = new Array();
 var objectPair;// = new THREE.Object3D();
 
-// #obselete
-// projections of objStatic
-// var projStatic = new Array();
-// var projDynamic = new Array();
-
 var objectMoved = new Array();
 var selected = new Array();
 
 var colorNormal = 0xDB5B8A;
+var colorContrast = 0xD1D6E7; // is the contrast of the colorNormal
+var colorWidget = 0x000000;
 var colorSelected = 0x00ff00;
 var colorCollided = 0xff0000;
 var colors = [0xdd0044, 0x00dd44, 0x4400dd];
@@ -98,3 +98,14 @@ var stlLoader = new THREE.STLLoader();
 var teddy = 'things/teddy.stl';
 var wrench = 'things/wrench.stl';
 var mug = 'things/mug.stl';
+
+/*-----------------------------------------------------------------------------------------------
+     
+     app specific
+
+-----------------------------------------------------------------------------------------------*/
+var MATERIALNORMAL = new THREE.MeshPhongMaterial( { color: colorNormal, transparent: true, opacity: 0.5} );
+var gStep = 0;
+var gItems = [];
+var gPartsCtrls = new Array();
+var gCurrPartCtrl = undefined;  // the parts-controls that is currently selected to be interacted with

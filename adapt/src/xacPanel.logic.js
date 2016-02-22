@@ -35,23 +35,7 @@ var _closeAccordion = function() {
 }
 
 var initPanel = function() {
-	// panels.accordion({
-	// 	heightStyle: "content",
-	// 	collapsible: true,
-	// 	active: false
-	// });
-
-	// _closeAccordion();
-	// _expandAccordion();
-
-	// $('#btnCylinder').button().append
-	// $('#btnCylinder').width(96);
-	// $('#btnCylinder').height(72);
-
-	// divShapeOptions.width(divButtons.width());
-
 	// step 1
-	// btnShape.checked = 'checked';
 	btnUpload.change(function() {
 		if ($(this).is(':checked')) {
 			trSelectArea.empty();
@@ -69,6 +53,7 @@ var initPanel = function() {
 		}
 	});
 
+	// step 4
 	$('#sldSize').slider();
 	$('#sldAttach').slider();
 
@@ -78,8 +63,28 @@ initPanel();
 //
 //	Step 1 - button to obtain geometry
 //
-btnShape.click(function(event) {
+$('#btnCylinder').click(function(event) {
+	var cylinder = new xacCylinder(5, 16);
+	scene.add(cylinder.m);
+	gItems.push(cylinder);
 
+	gStep = 1;
+});
+
+$('#btnPrism').click(function(event) {
+	var prism = new xacRectPrism(10, 20, 5);
+	scene.add(prism.m);
+	gItems.push(prism);
+
+	gStep = 1;
+});
+
+$('#btnPlane').click(function(event) {
+	var plane = new xacPlane(40, 60);
+	scene.add(plane.m);
+	gItems.push(plane);
+
+	gStep = 1;
 });
 
 //
@@ -91,10 +96,7 @@ btnAddPartsCtrls.button().click(function(event) {
 	//
 	// parts
 	//
-	trPartsCtrls.tdParts = $("<td></td>");
-
-	// do not use fixed width for the parts' labels
-	// trPartsCtrls.tdParts.width('192px');
+	trPartsCtrls.tdParts = $("<td width='60%'></td>");
 
 	trPartsCtrls.tdParts.lsParts = $('<ul></ul>');
 	trPartsCtrls.tdParts.lsParts.pcId = gPartCtrlId;
@@ -105,12 +107,41 @@ btnAddPartsCtrls.button().click(function(event) {
 			if (wasHighlighted == false) {
 				$(ui.tag).addClass('ui-state-highlight')
 			}
+			event.stopPropagation();
+		}
+	});
+
+	// highlight current row
+	if (gCurrPartCtrl != undefined) {
+		gCurrPartCtrl.css('background-color', 'rgba(255, 255, 255, 0.25)');
+	}
+	gCurrPartCtrl = trPartsCtrls.tdParts;
+	gCurrPartCtrl.css('background-color', '#rgba(128, 128, 128, 0.25)');
+
+	// store the new row into a global array
+	gCurrPartCtrl.attr('pcId', 'pc' + Object.keys(gPartsCtrls).length);
+	gPartsCtrls[gCurrPartCtrl.attr('pcId')] = {
+		parts: undefined,
+		ctrls: undefined
+	};
+	
+	// click to acitivate a set of parts (to be modified or extended)
+	trPartsCtrls.tdParts.click(function(event) {
+		if (gCurrPartCtrl != undefined && $(this).attr('pcId') == gCurrPartCtrl.attr('pcId')) {
+			$(this).css('background-color', '#rgba(255, 255, 255, 0.25)');
+			gCurrPartCtrl = undefined;
+		} else {
+			if (gCurrPartCtrl != undefined) {
+				gCurrPartCtrl.css('background-color', 'rgba(255, 255, 255, 0.25)');
+			}
+			$(this).css('background-color', 'rgba(128, 128, 128, 0.25)');
+			gCurrPartCtrl = $(this);
 		}
 	});
 
 	// exemplar code for adding parts
-	trPartsCtrls.tdParts.lsParts.tagit('createTag', 'Part 1');
-	trPartsCtrls.tdParts.lsParts.tagit('createTag', 'Part 2');
+	// trPartsCtrls.tdParts.lsParts.tagit('createTag', 'Part 1');
+	// trPartsCtrls.tdParts.lsParts.tagit('createTag', 'Part 2');
 
 	trPartsCtrls.tdParts.append(trPartsCtrls.tdParts.lsParts);
 
@@ -176,6 +207,8 @@ btnAddPartsCtrls.button().click(function(event) {
 
 	gPartCtrlId += 1;
 
+	// once a button is pressed, the step becomes 2.1 specifying parts
+	gStep = 2.1;
 });
 
 //
