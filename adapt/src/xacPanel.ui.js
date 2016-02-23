@@ -63,7 +63,8 @@ var trSelectArea = $('<tr></tr>');
 geomMeas.append(trSelectArea);
 
 // 1.2.1	upload
-// TODO: implement this
+var tblDropZone = $('<table align="center" cellspacing="10" table width="100%"></table>');
+tblDropZone.append('<tr><td><div id="dropZone" align="center" class="ui-widget ui-corner-all ui-step-area" style="width: 95%; height: 50px; line-height: 50px; border-style: dotted; border-width: 2px;"><div>Drop .stl models here.</div></div></td></tr>');
 
 // 1.2.2	simple shapes
 var tblShapeOptions = $('<table align="center" cellspacing="10"></table>');

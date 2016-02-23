@@ -1,54 +1,56 @@
-function loadStl (objPath, objName, isStatic, addToObjects) {
-  return stlLoader.load(objPath, function (geometry) {
 
-    THREE.GeometryUtils.center(geometry);
 
-    // geometry.dynamic = true;
-    // var material = new THREE.MeshPhongMaterial( { color: colorNormal });
-    var material = new THREE.MeshPhongMaterial( { color: colorNormal, transparent: true, opacity: 0.5} );
-    // material.side = THREE.DoubleSide;
-    var object = new THREE.Mesh(geometry, material); 
+// function loadStl (objFile, objName, isStatic, addToObjects) {
+//   return stlLoader.parse(objFile, function (geometry) {
+//     log('callback of loading model!');
+//     THREE.GeometryUtils.center(geometry);
 
-    object.name = objName;
+//     // geometry.dynamic = true;
+//     // var material = new THREE.MeshPhongMaterial( { color: colorNormal });
+//     var material = new THREE.MeshPhongMaterial( { color: colorNormal, transparent: true, opacity: 0.5} );
+//     // material.side = THREE.DoubleSide;
+//     var object = new THREE.Mesh(geometry, material); 
 
-    object.castShadow = true;
-    object.receiveShadow = true;
+//     object.name = objName;
 
-    if(addToObjects == undefined || addToObjects == true) {
-      objects.push(object);  
-    } else {
-      legends.push(object);
-      object.position.set(0, 50, 100);
-      return;
-    }
+//     object.castShadow = true;
+//     object.receiveShadow = true;
+
+//     if(addToObjects == undefined || addToObjects == true) {
+//       objects.push(object);  
+//     } else {
+//       legends.push(object);
+//       object.position.set(0, 50, 100);
+//       return;
+//     }
     
-    log("object #" + objects.length + " " + objName + " loaded");
-    log(geometry.vertices.length + " vertices, " + geometry.faces.length + " faces");
+//     log("object #" + objects.length + " " + objName + " loaded");
+//     log(geometry.vertices.length + " vertices, " + geometry.faces.length + " faces");
     
-    object.isStatic = isStatic;
+//     object.isStatic = isStatic;
 
-    // if(attachmentMethod != INTERLOCK) {
-    //   object.isVoxelized = false;
-    // } else {
-    //   voxelizeObject(object);
-    // }
-    // to be added: computeMedialAxis
+//     // if(attachmentMethod != INTERLOCK) {
+//     //   object.isVoxelized = false;
+//     // } else {
+//     //   voxelizeObject(object);
+//     // }
+//     // to be added: computeMedialAxis
 
-    if(isStatic) {
-      // object.position.set(0, 0, 0); 
+//     if(isStatic) {
+//       // object.position.set(0, 0, 0); 
 
-      /* add to the octree */
-      // octree.add(object);
-      // octree.add(object, { useVertices: true });
-      octree.add(object, { useFaces: true });
-      object.ot = octree;
-      // controlPanel.checkbox4.checked = staticObjLocked;
-      // object.rotation.set(Math.PI / 2 * Math.random(), Math.PI / 2 * Math.random(), Math.PI / 2 * Math.random());
-    }
+//       /* add to the octree */
+//       // octree.add(object);
+//       // octree.add(object, { useVertices: true });
+//       octree.add(object, { useFaces: true });
+//       object.ot = octree;
+//       // controlPanel.checkbox4.checked = staticObjLocked;
+//       // object.rotation.set(Math.PI / 2 * Math.random(), Math.PI / 2 * Math.random(), Math.PI / 2 * Math.random());
+//     }
 
-    scene.add(object); 
-  });
-}
+//     scene.add(object); 
+//   });
+// }
 
 /* loading the objects */
 function loadObjToPrint() {

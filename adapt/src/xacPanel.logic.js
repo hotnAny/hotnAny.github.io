@@ -35,10 +35,33 @@ var _closeAccordion = function() {
 }
 
 var initPanel = function() {
-	// step 1
+	// step 1 - upload
+	tblDropZone.on('dragover', function(e) {
+		e.stopPropagation();
+		e.preventDefault();
+		e.dataTransfer = e.originalEvent.dataTransfer;
+		e.dataTransfer.dropEffect = 'copy';
+	});
+
+	tblDropZone.on('drop', function(e) {
+		e.stopPropagation();
+		e.preventDefault();
+		e.dataTransfer = e.originalEvent.dataTransfer;
+		var files = e.dataTransfer.files; 
+
+		var reader = new FileReader();
+		reader.onload = (function(e) {
+			loadStl(e.target.result);
+		});
+		reader.readAsBinaryString(files[0]);
+
+	});
+
+	// step 1 - simple shapes
 	btnUpload.change(function() {
 		if ($(this).is(':checked')) {
 			trSelectArea.empty();
+			trSelectArea.append(tblDropZone);
 		}
 	});
 	btnShape.change(function() {
