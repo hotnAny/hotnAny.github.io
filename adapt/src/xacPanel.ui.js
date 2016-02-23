@@ -67,9 +67,9 @@ geomMeas.append(trSelectArea);
 
 // 1.2.2	simple shapes
 var tblShapeOptions = $('<table align="center" cellspacing="10"></table>');
-tblShapeOptions.append('<td><button id="btnCylinder"><img height="50px" src="./misc/cylinder.png"/></button></td>');
-tblShapeOptions.append('<td><button id="btnPrism"><img height="50px" src="./misc/prism.png"/></button></td>');
-tblShapeOptions.append('<td><button id="btnPlane"><img height="50px" src="./misc/plane.png"/></button></td>');
+tblShapeOptions.append('<td><button id="btnCylinder" height="50px"><img height="50px" src="./misc/cylinder.png"/></button></td>');
+tblShapeOptions.append('<td><button id="btnPrism" height="50px"><img height="50px" src="./misc/prism.png"/></button></td>');
+tblShapeOptions.append('<td><button id="btnPlane" height="50px"><img height="50px" src="./misc/plane.png"/></button></td>');
 trSelectArea.append(tblShapeOptions);
 
 // 1.2.3	library
@@ -184,7 +184,7 @@ connectors.append(trConns);
 var trAddConns = $('<tr></tr>');
 var smConns = $('<select></select>');
 smConns.width('128px');
-smConns.append('<option id="noConnSel"> Add Connector </option>');
+smConns.append('<option id="noConnSel"> Add connectors </option>');
 smConns.append('<option>Clamp</option>');
 smConns.append('<option>Strap</option>');
 smConns.append('<option>Bolt</option>');

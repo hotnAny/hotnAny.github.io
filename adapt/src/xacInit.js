@@ -119,6 +119,12 @@ var MATERIALCONTRAST = new THREE.MeshPhongMaterial({
      opacity: 0.5
 });
 
+var MATERIALOVERLAY = new THREE.MeshPhongMaterial({
+     color: colorContrast,
+     transparent: true,
+     opacity: 1
+});
+
 var gStep = 0;
 var gItems = [];
 var gPartsCtrls = new Array();
