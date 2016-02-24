@@ -60,6 +60,8 @@ var _vector = new THREE.Vector3,
 
 function onMouseDownCtrl(event) {
 	// event.preventDefault();
+	
+	// TODO: fix this hardcoded width
 	if (event.clientX < 256) return;
 
 	// usingPhysics = false;

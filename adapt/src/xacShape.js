@@ -49,24 +49,24 @@ class xacShape {
 		return csgBoolean;
 	}
 
-	static subtract(obj1, obj2, isHelper) {
-		return xacShape._boolean(obj1, obj2, SUBTRACT).toMesh(isHelper == true ? MATERIALOVERLAY : MATERIALNORMAL);
+	static subtract(obj1, obj2, material) {
+		return xacShape._boolean(obj1, obj2, SUBTRACT).toMesh(material == undefined ? MATERIALNORMAL : material);
 	}
 
-	static union(obj1, obj2, isHelper) {
-		return xacShape._boolean(obj1, obj2, UNION).toMesh(isHelper == true ? MATERIALOVERLAY : MATERIALNORMAL);
+	static union(obj1, obj2, material) {
+		return xacShape._boolean(obj1, obj2, UNION).toMesh(material == undefined ? MATERIALNORMAL : material);
 	}
 
-	static intersect(obj1, obj2, isHelper) {
-		return xacShape._boolean(obj1, obj2, INTERSECT).toMesh(isHelper == true ? MATERIALOVERLAY : MATERIALNORMAL);
+	static intersect(obj1, obj2, material) {
+		return xacShape._boolean(obj1, obj2, INTERSECT).toMesh(material == undefined ? MATERIALNORMAL : material);
 	}
 }
 
 class xacCylinder extends xacShape {
-	constructor(r, h, isOpenEnded, isHelper) {
+	constructor(r, h, isOpenEnded, material) {
 		super();
 		this._g = new THREE.CylinderGeometry(r, r, h, 32, 1, isOpenEnded);
-		this._m = new THREE.Mesh(this._g, isHelper == true ? MATERIALOVERLAY : MATERIALNORMAL);
+		this._m = new THREE.Mesh(this._g, material == undefined ? MATERIALNORMAL : MATERIALOVERLAY);
 	}
 }
 

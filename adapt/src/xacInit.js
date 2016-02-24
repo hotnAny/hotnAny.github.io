@@ -18,6 +18,10 @@ var BACKGROUNDCOLOR = 0xF2F0F0;
 var GROUNDCOLOR = 0xF2F0F0;
 var GRIDCOLOR = 0x888888;
 
+var LEFTMOUSE = 1;
+var MIDMOUSE = 2;
+var RIGHTMOUSE = 3;
+
 var ball;
 
 var objDynamic = null;
@@ -124,6 +128,12 @@ var MATERIALOVERLAY = new THREE.MeshPhongMaterial({
      transparent: true,
      opacity: 1
 });
+
+// var MATERIALOVERLAY = new THREE.MeshBasicMaterial({
+//      vertexColors: THREE.VertexColors,
+//      transparent: true,
+//      opacity: 1.0
+// })
 
 var gStep = 0;
 var gItems = [];
