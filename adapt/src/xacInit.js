@@ -22,6 +22,8 @@ var LEFTMOUSE = 1;
 var MIDMOUSE = 2;
 var RIGHTMOUSE = 3;
 
+var WIDTHCONTAINER = 388;
+
 var ball;
 
 var objDynamic = null;
@@ -38,9 +40,8 @@ var selected = new Array();
 
 var colorNormal = 0xDB5B8A;
 var colorContrast = 0xD1D6E7; // is the contrast of the colorNormal
-var colorWidget = 0x000000;
-var colorSelected = 0x00ff00;
-var colorCollided = 0xff0000;
+var colorOverlay = colorContrast;
+var colorHighlight = 0xfffa90; //
 var colors = [0xdd0044, 0x00dd44, 0x4400dd];
 var colorsBold = [0xff0000, 0x00ff00, 0x0000ff];
 
@@ -116,7 +117,6 @@ var MATERIALNORMAL = new THREE.MeshPhongMaterial({
      opacity: 0.75
 });
 
-
 var MATERIALCONTRAST = new THREE.MeshPhongMaterial({
      color: colorContrast,
      transparent: true,
@@ -124,18 +124,25 @@ var MATERIALCONTRAST = new THREE.MeshPhongMaterial({
 });
 
 var MATERIALOVERLAY = new THREE.MeshPhongMaterial({
-     color: colorContrast,
+     color: colorOverlay,
      transparent: true,
      opacity: 1
 });
 
-// var MATERIALOVERLAY = new THREE.MeshBasicMaterial({
-//      vertexColors: THREE.VertexColors,
-//      transparent: true,
-//      opacity: 1.0
-// })
+var MATERIALHIGHLIGHT = new THREE.MeshPhongMaterial({
+     color: colorHighlight,
+     transparent: true,
+     opacity: 1
+});
+
+var MATERIALPLAIN = new THREE.MeshBasicMaterial({
+     vertexColors: THREE.VertexColors,
+     transparent: true,
+     opacity: 1.0
+})
 
 var gStep = 0;
 var gItems = [];
+var gPartSerial = 1;
 var gPartsCtrls = new Array();
 var gCurrPartCtrl = undefined; // the parts-controls that is currently selected to be interacted with

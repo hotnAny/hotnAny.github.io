@@ -7,33 +7,6 @@
 
 $(document.body).append(container);
 
-var _expandAccordion = function() {
-
-	$('.ui-accordion-header').removeClass('ui-corner-all').addClass('ui-accordion-header-active ui-state-active ui-corner-top').attr({
-		'aria-selected': 'true',
-		'tabindex': '0'
-	});
-	$('.ui-accordion-header-icon').removeClass(icons.header).addClass(icons.headerSelected);
-	$('.ui-accordion-content').addClass('ui-accordion-content-active').attr({
-		'aria-expanded': 'true',
-		'aria-hidden': 'false'
-	}).show();
-}
-
-var _closeAccordion = function() {
-	$('.ui-accordion-header').removeClass('ui-accordion-header-active ui-state-active ui-corner-top').addClass('ui-corner-all').attr({
-		'aria-selected': 'false',
-		'tabindex': '-1'
-	});
-	$('.ui-accordion-header-icon').removeClass(icons.headerSelected).addClass(icons.header);
-	$('.ui-accordion-content').removeClass('ui-accordion-content-active').attr({
-		'aria-expanded': 'false',
-		'aria-hidden': 'true'
-	}).hide();
-	$(this).attr("disabled", "disabled");
-	$('.open').removeAttr("disabled");
-}
-
 var initPanel = function() {
 	// step 1 - upload
 	tblDropZone.on('dragover', function(e) {
@@ -47,7 +20,7 @@ var initPanel = function() {
 		e.stopPropagation();
 		e.preventDefault();
 		e.dataTransfer = e.originalEvent.dataTransfer;
-		var files = e.dataTransfer.files; 
+		var files = e.dataTransfer.files;
 
 		var reader = new FileReader();
 		reader.onload = (function(e) {
@@ -55,6 +28,8 @@ var initPanel = function() {
 		});
 		reader.readAsBinaryString(files[0]);
 
+		gStep = 1;
+		showElm(partsCtrls);
 	});
 
 	// step 1 - simple shapes
@@ -83,6 +58,7 @@ var initPanel = function() {
 }
 initPanel();
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 //	Step 1 - button to obtain geometry
 //
@@ -93,6 +69,7 @@ $('#btnCylinder').click(function(event) {
 	gItems.push(cylinder);
 
 	gStep = 1;
+	showElm(partsCtrls);
 });
 
 $('#btnPrism').click(function(event) {
@@ -102,6 +79,7 @@ $('#btnPrism').click(function(event) {
 	gItems.push(prism);
 
 	gStep = 1;
+	showElm(partsCtrls);
 });
 
 $('#btnPlane').click(function(event) {
@@ -111,8 +89,10 @@ $('#btnPlane').click(function(event) {
 	gItems.push(plane);
 
 	gStep = 1;
+	showElm(partsCtrls);
 });
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 //	Step 2 - parts controls add button
 //
@@ -124,16 +104,23 @@ btnAddPartsCtrls.button().click(function(event) {
 	//
 	trPartsCtrls.tdParts = $("<td width='60%'></td>");
 
-	trPartsCtrls.tdParts.lsParts = $('<ul></ul>');
-	trPartsCtrls.tdParts.lsParts.pcId = gPartCtrlId;
-	trPartsCtrls.tdParts.lsParts.tagit({
+	var lsParts = $('<ul></ul>');
+	lsParts.pcId = gPartCtrlId;
+	lsParts.tagit({
 		onTagClicked: function(event, ui) {
-			var wasHighlighted = $(ui.tag).hasClass('ui-state-highlight');
-			$('.ui-state-highlight').removeClass('ui-state-highlight');
-			if (wasHighlighted == false) {
-				$(ui.tag).addClass('ui-state-highlight')
-			}
-			event.stopPropagation();
+
+			// set time out here because the row selection might be different once the event propagates
+			setTimeout(function() {
+				triggerUI2ObjAction(ui.tag, FOCUSACTION);
+			}, 100);
+
+			// let event propagate
+			// event.stopPropagation();
+		},
+		afterTagRemoved: function(event, ui) {
+			setTimeout(function() {
+				triggerUI2ObjAction(ui.tag, DELETEACTION);
+			}, 100);
 		}
 	});
 
@@ -142,18 +129,21 @@ btnAddPartsCtrls.button().click(function(event) {
 		gCurrPartCtrl.css('background-color', 'rgba(255, 255, 255, 0.25)');
 	}
 	gCurrPartCtrl = trPartsCtrls.tdParts;
-	gCurrPartCtrl.css('background-color', '#rgba(128, 128, 128, 0.25)');
+	gCurrPartCtrl.css('background-color', 'rgba(128, 128, 128, 0.25)');
 
 	// store the new row into a global array
 	gCurrPartCtrl.attr('pcId', 'pc' + Object.keys(gPartsCtrls).length);
 	gPartsCtrls[gCurrPartCtrl.attr('pcId')] = {
-		parts: undefined,
-		ctrls: undefined
+		obj: undefined,
+		parts: new Array(),
+		ctrls: new Array()
 	};
 
 	// click to acitivate a set of parts (to be modified or extended)
 	trPartsCtrls.tdParts.click(function(event) {
-		if (gCurrPartCtrl != undefined && $(this).attr('pcId') == gCurrPartCtrl.attr('pcId')) {
+
+		// if it's (1) directly (2) clikcing the same row
+		if ($(event.target).is('td') && gCurrPartCtrl != undefined && gCurrPartCtrl.attr('pcId') == $(this).attr('pcId')) {
 			$(this).css('background-color', '#rgba(255, 255, 255, 0.25)');
 			gCurrPartCtrl = undefined;
 		} else {
@@ -165,11 +155,7 @@ btnAddPartsCtrls.button().click(function(event) {
 		}
 	});
 
-	// exemplar code for adding parts
-	// trPartsCtrls.tdParts.lsParts.tagit('createTag', 'Part 1');
-	// trPartsCtrls.tdParts.lsParts.tagit('createTag', 'Part 2');
-
-	trPartsCtrls.tdParts.append(trPartsCtrls.tdParts.lsParts);
+	trPartsCtrls.tdParts.append(lsParts);
 
 	//
 	// controls
@@ -177,16 +163,30 @@ btnAddPartsCtrls.button().click(function(event) {
 	trPartsCtrls.tdCtrls = $("<td></td>");
 
 	var smCtrls = $('<select></select>');
+	smCtrls.attr('pcId', trPartsCtrls.tdParts.attr('pcId'));
 	smCtrls.width('128px');
 	smCtrls.pcId = gPartCtrlId;
 	smCtrls.append('<option> - </option>');
-	smCtrls.append('<option>Grasp</option>');
-	smCtrls.append('<option>Push/Pull</option>');
-	smCtrls.append('<option>Rotate</option>');
-	smCtrls.append('<option>Clutch</option>');
-	smCtrls.append('<option>Join/Separate</option>');
+	smCtrls.append('<option value=0>Grasp</option>');
+	smCtrls.append('<option value=1>Push/Pull</option>');
+	smCtrls.append('<option value=2>Rotate</option>');
+	smCtrls.append('<option value=3>Clutch</option>');
+	smCtrls.append('<option value=4>Join/Separate</option>');
 	trPartsCtrls.tdCtrls.append(smCtrls);
-	smCtrls.selectmenu();
+	smCtrls.selectmenu({
+		change: function(event, data) {
+			var type = data['item'].value;
+
+			log($(this).attr('pcId'));
+
+			var ctrl = undefined;
+			switch (type) {
+				case GRASPCTRL:
+					ctrl = new xacGrasp();
+					break;
+			}
+		}
+	});
 
 	//
 	// copy button
@@ -235,6 +235,9 @@ btnAddPartsCtrls.button().click(function(event) {
 
 	// once a button is pressed, the step becomes 2.1 specifying parts
 	gStep = 2.1;
+
+	// TODO: make this more strict: need to have at least one pair of parts-ctrls
+	showElm(adaptations)
 });
 
 //
@@ -242,15 +245,21 @@ btnAddPartsCtrls.button().click(function(event) {
 //
 smAdapts.selectmenu({
 	change: function(event, data) {
+		gStep = 3;
+
 		// init the container for adaptations
 		if (gAdaptId == 0) {
 			lsAdapts.tagit({
 				onTagClicked: function(event, ui) {
-					var wasHighlighted = $(ui.tag).hasClass('ui-state-highlight');
-					$('.ui-state-highlight').removeClass('ui-state-highlight');
-					if (wasHighlighted == false) {
-						$(ui.tag).addClass('ui-state-highlight')
-					}
+
+					// var wasHighlighted = $(ui.tag).hasClass('ui-state-highlight');
+					// $('.ui-state-highlight').removeClass('ui-state-highlight');
+					// if (wasHighlighted == false) {
+					// 	$(ui.tag).addClass('ui-state-highlight')
+					// }
+
+					triggerUI2ObjAction(ui.tag, FOCUSACTION);
+					event.stopPropagation();
 				}
 			});
 			trAdaptations.prepend(lsAdapts);
@@ -268,7 +277,17 @@ smAdapts.selectmenu({
 		optionSelected.removeAttr("selected");
 		$('#noAdaptSel').attr('selected', 'selected');
 		smAdapts.selectmenu("refresh");
+
+		showElm(optimization);
 	}
+});
+
+
+//
+//	Step 4 - optimization UIs
+//
+$('#cbGrip').click(function(e) {
+	showElm(connectors);
 });
 
 //
@@ -276,15 +295,20 @@ smAdapts.selectmenu({
 //
 smConns.selectmenu({
 	change: function(event, data) {
+		gStep = 5;
+
 		// init the container for Connsations
 		if (gConnId == 0) {
 			lsConns.tagit({
 				onTagClicked: function(event, ui) {
-					var wasHighlighted = $(ui.tag).hasClass('ui-state-highlight');
-					$('.ui-state-highlight').removeClass('ui-state-highlight');
-					if (wasHighlighted == false) {
-						$(ui.tag).addClass('ui-state-highlight')
-					}
+					// var wasHighlighted = $(ui.tag).hasClass('ui-state-highlight');
+					// $('.ui-state-highlight').removeClass('ui-state-highlight');
+					// if (wasHighlighted == false) {
+					// 	$(ui.tag).addClass('ui-state-highlight')
+					// }
+
+					triggerUI2ObjAction(ui.tag, FOCUSACTION);
+					event.stopPropagation();
 				}
 			});
 			trConns.prepend(lsConns);
@@ -304,3 +328,58 @@ smConns.selectmenu({
 		smConns.selectmenu("refresh");
 	}
 });
+
+
+//
+//	Global
+//
+var justFocusedUIs = new Array();
+var justFocusedObjs = new Array();
+var FOCUSACTION = 0;
+var DELETEACTION = 1;
+var ADDACTION = 2;
+
+function triggerUI2ObjAction(ui, action, key) {
+	switch (action) {
+		case FOCUSACTION:
+			// the ui part
+			var wasHighlighted = $(ui).hasClass('ui-state-highlight');
+			if (justFocusedUIs[gStep] != undefined) {
+				justFocusedUIs[gStep].removeClass('ui-state-highlight');
+			}
+			if (!wasHighlighted) {
+				ui.addClass('ui-state-highlight');
+			}
+			justFocusedUIs[gStep] = ui;
+
+			// the obj part
+			if (justFocusedObjs[gStep] != undefined) {
+				justFocusedObjs[gStep].material.color.setHex(colorOverlay); // = MATERIALOVERLAY;
+				// log('material changed to overlay')
+				justFocusedObjs[gStep].material.needsUpdate = true;
+			}
+
+			// log(gCurrPartCtrl.attr('pcId'))
+			var parts = gPartsCtrls[gCurrPartCtrl.attr('pcId')].parts;
+
+			var namePart = $(ui[0]).text().slice(0, -1);
+			// log(namePart)
+			var part = parts[namePart];
+
+			if (!wasHighlighted) {
+				part.material.color.setHex(colorHighlight); // = MATERIALHIGHLIGHT;
+				part.material.needsUpdate = true;
+				justFocusedObjs[gStep] = part;
+			}
+
+			break;
+		case DELETEACTION:
+			var parts = gPartsCtrls[gCurrPartCtrl.attr('pcId')].parts;
+			var namePart = $(ui[0]).text().slice(0, -1);
+			var part = parts[namePart];
+
+			scene.remove(part);
+
+			break;
+	}
+}

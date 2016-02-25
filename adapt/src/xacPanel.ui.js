@@ -12,14 +12,14 @@ var gConnId = 0; // global id for connectors
 // Helper functions
 //
 var _genSectionBar = function(text) {
-	var sectionBar = $('<span class="ui-corner-all" style="padding:4px 15px 4px 15px;margin-left:15px;background-color:#878787;color:#ffffff"></span>');
+	var sectionBar = $('<span class="ui-corner-all" style="padding:4px 15px 4px 15px;margin-left:10px;background-color:#878787;color:#ffffff;display: block; float: left; clear: left; width: 340px;"></span>');
 	sectionBar.append('<b>' + text + '</b>');
 	return sectionBar;
 }
 
 
 var container = $('<div></div>');
-container.css('width', '388px');
+container.css('width', WIDTHCONTAINER + 'px');
 container.css('height', '100%');
 container.css('color', '#000000');
 container.css('background-color', 'rgba(192, 192, 192, 0.5)');
@@ -27,6 +27,7 @@ container.css('top', '0px');
 container.css('position', 'absolute');
 container.css('font-family', 'Helvetica');
 container.css('font-size', '12px');
+container.css('overflow', 'auto');
 
 var title = $('<h3></h3>');
 title.html('ADAPT');
@@ -34,10 +35,10 @@ title.css('margin-top', '10px');
 title.css('margin-bottom', '10px');
 title.css('margin-left', '10px');
 title.css('margin-right', '10px');
-container.append(title);
+// container.append(title);
 
 var panels = $('<div></div>');
-
+panels.append('<br/>');
 
 //
 //	Step 1 - Geometry & Measurement
@@ -77,7 +78,7 @@ trSelectArea.append(tblShapeOptions);
 // TODO: implement this
 
 panels.append(geomMeas);
-panels.append('<br/>');
+panels.append('<br/><br/>');
 
 
 //
@@ -100,7 +101,8 @@ trAddPartsCtrls.append(btnAddPartsCtrls);
 partsCtrls.append(trAddPartsCtrls);
 
 panels.append(partsCtrls);
-panels.append('<br/>');
+partsCtrls.hide();
+panels.append('<br/><br/>');
 
 
 
@@ -131,7 +133,8 @@ trAddAdaptations.append(smAdapts);
 adaptations.append(trAddAdaptations);
 
 panels.append(adaptations);
-panels.append('<br/>');
+adaptations.hide();
+panels.append('<br/><br/>');
 
 
 //
@@ -166,7 +169,8 @@ trUpdate.append(btnUpdate);
 optimization.append(trUpdate);
 
 panels.append(optimization);
-panels.append('<br/>');
+optimization.hide();
+panels.append('<br/><br/>');
 
 
 //
@@ -194,7 +198,8 @@ trAddConns.append(smConns);
 connectors.append(trAddConns);
 
 panels.append(connectors);
-panels.append('<br/>');
+connectors.hide();
+panels.append('<br/><br/>');
 
 
 //

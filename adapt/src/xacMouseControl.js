@@ -62,7 +62,7 @@ function onMouseDownCtrl(event) {
 	// event.preventDefault();
 	
 	// TODO: fix this hardcoded width
-	if (event.clientX < 256) return;
+	if (event.clientX < WIDTHCONTAINER) return;
 
 	// usingPhysics = false;
 	// controlPanel.checkbox3.checked = usingPhysics;

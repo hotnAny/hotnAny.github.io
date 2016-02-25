@@ -533,6 +533,8 @@
             if (this.options.showAutocompleteOnFocus && !duringInitialization) {
                 setTimeout(function () { that._showAutocomplete(); }, 0);
             }
+
+            return tag;
         },
 
         removeTag: function(tag, animate) {
