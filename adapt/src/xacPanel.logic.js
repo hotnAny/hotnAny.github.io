@@ -298,7 +298,7 @@ smAdapts.selectmenu({
 
 				// experimental: only dealing with 1st parts-ctrls now
 				gAdaptations.push(new xacEnlargement(gPartsCtrls.pc0));
-
+				// scene.remove(gPartsCtrls.pc0.obj);
 				break;
 		}
 

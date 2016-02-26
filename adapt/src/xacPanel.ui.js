@@ -51,11 +51,29 @@ var trButtons = $('<tr></tr>');
 var divButtons = $('<div align="center"></div>');
 var btnUpload = $('<input type="radio" id="rdUpload" name="radio"><label for="rdUpload">Upload Models</label>');
 divButtons.append(btnUpload);
-var btnShape = $('<input type="radio" id="rdShape" name="radio" checked="checked"><label for="rdShape">Use Simple Shapes</label>');
+var btnShape = $('<input type="radio" id="rdShape" name="radio"><label for="rdShape">Use Simple Shapes</label>');
 divButtons.append(btnShape);
 var btnLibrary = $('<input type="radio" id="rdLibrary" name="radio"><label for="rdLibrary">From Library</label>');
 divButtons.append(btnLibrary);
+
+var optS1 = gup('s1', window.location.href);
+var btnOptStartup = btnShape;
+switch (optS1) {
+	case 'upload':
+		btnOptStartup = btnUpload;
+		break;
+	case 'shape':
+		btnOptStartup = btnShape;
+		break;
+	case 'library':
+		btnOptStartup = btnLibrary;
+		break;
+}
+btnOptStartup.attr('checked', 'checked');
+
+
 divButtons.buttonset();
+
 trButtons.append(divButtons);
 geomMeas.append(trButtons);
 

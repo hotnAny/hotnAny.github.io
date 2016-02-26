@@ -243,3 +243,52 @@ function gup(name, url) {
 	var results = regex.exec(url);
 	return results == null ? null : results[1];
 }
+
+/*
+	merge a list of THREE.Mesh
+*/
+function mergeObjs(objs) {
+	if(objs.length == 0) return undefined;
+
+	// the openjscad approach
+	// var mm = objs[objs.length - 1];
+	// for (var i = objs.length - 1; i > 0; i--) {
+	// 	mm = xacThing.union(getTransformedGeometry(mm), getTransformedGeometry(objs[i]), mm.material);
+	// }
+
+	// the three js approach
+	var mo = new THREE.Geometry();
+	// var mm = objs[objs.length - 1];
+	for (var i = objs.length - 1; i > 0; i--) {
+		// mm = xacThing.union(getTransformedGeometry(mm), getTransformedGeometry(objs[i]), mm.material);
+		// var vs = mo.geometry.vertices;
+		var objFs = objs[i].geometry.faces;
+		var fs = [];
+		var n = mo.vertices.length;
+
+		for (var j = 0; j < objFs.length; j++) {
+			fs.push(objFs[j]);
+			fs[j].a += n;
+			fs[j].b += n;
+			fs[j].c += n;
+		}
+
+		mo.vertices = mo.vertices.concat(objs[i].geometry.vertices);
+		mo.faces = mo.faces.concat(objFs);
+
+	}
+
+	var material = objs[0].material.clone();
+	material.side = THREE.DoubleSide;
+	var mm = new THREE.Mesh(mo, material);
+
+	return mm;
+}
+
+
+function flipNormals(obj) {
+	for (var i = obj.geometry.faces.length - 1; i >= 0; i--) {
+		obj.geometry.faces[i].normal = obj.geometry.faces[i].normal.multiplyScalar(-1); 
+	}
+	return obj;
+}

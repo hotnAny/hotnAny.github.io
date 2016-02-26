@@ -9,7 +9,9 @@
 class PartSelection {
 	constructor() {
 		this.FINGER = 10;
-		this.HAND = 50;
+
+		// TODO: rehink how to compute this parameter
+		this.HAND = 20;
 
 		this._obj = undefined;
 
@@ -249,6 +251,7 @@ class PartSelection {
 			scaleAroundCenter(this._part, factorInflate);
 
 			// if (contains(scene.children, this._part) == false)
+
 			scene.add(this._part);
 
 

@@ -120,7 +120,7 @@ var MATERIALNORMAL = new THREE.MeshPhongMaterial({
 var MATERIALCONTRAST = new THREE.MeshPhongMaterial({
      color: colorContrast,
      transparent: true,
-     opacity: 0.5
+     opacity: 1.0
 });
 
 var MATERIALOVERLAY = new THREE.MeshPhongMaterial({
