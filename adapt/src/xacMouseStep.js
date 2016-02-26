@@ -10,24 +10,20 @@ document.addEventListener('mousedown', onMouseDownStep, false);
 document.addEventListener('mousemove', onMouseMoveStep, false);
 document.addEventListener('mouseup', onMouseUpStep, false);
 
+var ptDown = [];
+
 function onMouseDownStep(event) {
 	if (event.clientX < WIDTHCONTAINER) return;
+
+	intersects = rayCast(event.clientX, event.clientY, objects);
+
+	ptDown = [event.clientX, event.clientY];
 
 	switch (gStep) {
 		case 2.1:
 			if (event.which == LEFTMOUSE && intersects.length > 0) {
-
-				// find the object closest to the camera
-				var objInt = undefined;
-				var distObj = INFINITY;
-				for (var i = intersects.length - 1; i >= 0; i--) {
-					if (intersects[i].distance < distObj) {
-						distObj = intersects[i].distance;
-						objInt = intersects[i];
-					}
-				}
-
-				partSel.cast(objInt.object, objInt.point.clone(), objInt.face.normal.clone(), partSel.FINGER);
+				partSel.isEngaged = true;
+				partSel.isWrapping = false;
 			}
 
 			break;
@@ -37,10 +33,23 @@ function onMouseDownStep(event) {
 }
 
 function onMouseMoveStep(event) {
+	if (ptDown.length == 0) return;
 	if (event.clientX < WIDTHCONTAINER) return;
+
+	var ptMove = [event.clientX, event.clientY];
+	intersects = rayCast(event.clientX, event.clientY, objects);
 
 	switch (gStep) {
 		case 2.1:
+			if (partSel.isEngaged) {
+				// log(getDist(ptDown, ptMove));
+				if (partSel.isWrapping == false) {
+					partSel.isWrapping = getDist(ptDown, ptMove) > partSel.MINWRAPMOUSEOFFSET;
+				} else {
+					var objInt = getClosestIntersected();
+					if (objInt != undefined) partSel.wrap(objInt.object, objInt.point.clone());
+				}
+			}
 			break;
 		case 2.2:
 			break;
@@ -50,27 +59,42 @@ function onMouseMoveStep(event) {
 function onMouseUpStep(event) {
 	if (event.clientX < WIDTHCONTAINER) return;
 
+	intersects = rayCast(event.clientX, event.clientY, objects);
 	switch (gStep) {
 		case 2.1:
-			if (event.which == LEFTMOUSE && partSel.part != undefined) {
-				gPartsCtrls[gCurrPartCtrl.attr('pcId')].obj = partSel.obj;
+			if (event.which == LEFTMOUSE) {
 
-				var parts = gPartsCtrls[gCurrPartCtrl.attr('pcId')].parts;
+				if (partSel.isWrapping) {
+					partSel.wrap(undefined, undefined, partSel.HAND, true);
+				} else {
+					var objInt = getClosestIntersected();
+					if (objInt != undefined) {
+						// find the object closest to the camera
+						partSel.cast(objInt.object, objInt.point.clone(), objInt.face.normal.clone(), partSel.FINGER);
 
-				var tagName = 'Part ' + gPartSerial;//(Object.keys(parts).length + 1);
-				var lsParts = $(gCurrPartCtrl.children()[0]); //.attr('lsParts');
+						gPartsCtrls[gCurrPartCtrl.attr('pcId')].obj = partSel.obj;
 
-				var tag = lsParts.tagit('createTag', tagName);
+						var parts = gPartsCtrls[gCurrPartCtrl.attr('pcId')].parts;
 
-				parts[tagName] = partSel.part;
-				gPartSerial += 1;
+						var tagName = 'Part ' + gPartSerial; //(Object.keys(parts).length + 1);
+						var lsParts = $(gCurrPartCtrl.children()[0]); //.attr('lsParts');
 
-				triggerUI2ObjAction(tag, FOCUSACTION);
+						var tag = lsParts.tagit('createTag', tagName);
 
-				partSel.clear();
+						parts[tagName] = partSel.part;
+						gPartSerial += 1;
+
+						triggerUI2ObjAction(tag, FOCUSACTION);
+
+						partSel.clear();
+					}
+				}
+				partSel.isEngaged = false;
 			}
 			break;
 		case 2.2:
 			break;
 	}
+
+	ptDown = [];
 }

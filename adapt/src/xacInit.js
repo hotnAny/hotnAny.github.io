@@ -7,7 +7,7 @@ var D = false;
 
 var helpers = new Array();
 
-var balls = new THREE.Object3D();
+
 var boxes = new THREE.Object3D();
 
 // ///////////////
@@ -126,13 +126,13 @@ var MATERIALCONTRAST = new THREE.MeshPhongMaterial({
 var MATERIALOVERLAY = new THREE.MeshPhongMaterial({
      color: colorOverlay,
      transparent: true,
-     opacity: 1
+     opacity: 0.5
 });
 
 var MATERIALHIGHLIGHT = new THREE.MeshPhongMaterial({
      color: colorHighlight,
      transparent: true,
-     opacity: 1
+     opacity: 0.75
 });
 
 var MATERIALPLAIN = new THREE.MeshBasicMaterial({
@@ -146,3 +146,4 @@ var gItems = [];
 var gPartSerial = 1;
 var gPartsCtrls = new Array();
 var gCurrPartCtrl = undefined; // the parts-controls that is currently selected to be interacted with
+var gAdaptations = [];

@@ -28,11 +28,6 @@ class xacThing {
 	}
 
 	static _boolean(obj1, obj2, type) {
-		// this geometry
-
-		// this._csg = new ThreeBSP(this.gt());
-
-		// incoming geometry
 		var objCsg1 = new ThreeBSP(obj1);
 		var objCsg2 = new ThreeBSP(obj2);
 
@@ -65,12 +60,12 @@ class xacThing {
 }
 
 class xacCylinder extends xacThing {
-	constructor(r, h, isOpenEnded, material) {
+	constructor(r, h, material) {
 		super();
 		this._r = r;
 		this._h = h;
-		this._g = new THREE.CylinderGeometry(r, r, h, 32, 1, isOpenEnded);
-		this._m = new THREE.Mesh(this._g, material == undefined ? MATERIALNORMAL.clone() : MATERIALOVERLAY.clone());
+		this._g = new THREE.CylinderGeometry(r, r, h, 32, 1);
+		this._m = new THREE.Mesh(this._g, material == undefined ? MATERIALNORMAL.clone() : material.clone());
 	}
 }
 

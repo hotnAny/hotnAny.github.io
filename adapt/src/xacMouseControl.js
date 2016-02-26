@@ -32,9 +32,9 @@ var prevGrndZ;
 
 var intersects = [];
 
-document.addEventListener('mousedown', onMouseDownCtrl, false);
-document.addEventListener('mousemove', onMouseMoveCtrl, false);
-document.addEventListener('mouseup', onMouseUpCtrl, false);
+// document.addEventListener('mousedown', onMouseDownCtrl, false);
+// document.addEventListener('mousemove', onMouseMoveCtrl, false);
+// document.addEventListener('mouseup', onMouseUpCtrl, false);
 
 /*
  *	function for performing raycasting
