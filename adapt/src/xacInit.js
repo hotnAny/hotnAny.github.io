@@ -143,7 +143,7 @@ var MATERIALPLAIN = new THREE.MeshBasicMaterial({
 
 var gStep = 0;
 var gItems = [];
-var gPartSerial = 1;
+var gPartSerial = 0;
 var gPartsCtrls = new Array();
 var gCurrPartCtrl = undefined; // the parts-controls that is currently selected to be interacted with
 var gAdaptations = [];

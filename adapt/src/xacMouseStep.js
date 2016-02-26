@@ -22,6 +22,9 @@ function onMouseDownStep(event) {
 	switch (gStep) {
 		case 2.1:
 			if (event.which == LEFTMOUSE && intersects.length > 0) {
+				if (event.shiftKey == false) {
+					partSel.clear();
+				}
 				partSel.isEngaged = true;
 				partSel.isWrapping = false;
 			}
@@ -63,7 +66,6 @@ function onMouseUpStep(event) {
 	switch (gStep) {
 		case 2.1:
 			if (event.which == LEFTMOUSE) {
-
 				if (partSel.isWrapping) {
 					partSel.wrap(undefined, undefined, partSel.HAND, true);
 				} else {
@@ -71,25 +73,28 @@ function onMouseUpStep(event) {
 					if (objInt != undefined) {
 						// find the object closest to the camera
 						partSel.cast(objInt.object, objInt.point.clone(), objInt.face.normal.clone(), partSel.FINGER);
-
-						gPartsCtrls[gCurrPartCtrl.attr('pcId')].obj = partSel.obj;
-
-						var parts = gPartsCtrls[gCurrPartCtrl.attr('pcId')].parts;
-
-						var tagName = 'Part ' + gPartSerial; //(Object.keys(parts).length + 1);
-						var lsParts = $(gCurrPartCtrl.children()[0]); //.attr('lsParts');
-
-						var tag = lsParts.tagit('createTag', tagName);
-
-						parts[tagName] = partSel.part;
-						gPartSerial += 1;
-
-						triggerUI2ObjAction(tag, FOCUSACTION);
-
-						partSel.clear();
 					}
 				}
+
+				if (partSel.part != undefined) {
+					var parts = gPartsCtrls[gCurrPartCtrl.attr('pcId')].parts;
+					if (event.shiftKey == false) {
+						gPartsCtrls[gCurrPartCtrl.attr('pcId')].obj = partSel.obj;
+						gPartSerial += 1;
+						var tagName = 'Part ' + gPartSerial; //(Object.keys(parts).length + 1);
+						var lsParts = $(gCurrPartCtrl.children()[0]); //.attr('lsParts');
+						var tag = lsParts.tagit('createTag', tagName);
+						parts[tagName] = partSel.part;
+						triggerUI2ObjAction(tag, FOCUSACTION);
+					} else {
+						var ui = justFocusedUIs[gStep];
+						var tagName = $(ui[0]).text().slice(0, -1);
+						parts[tagName] = partSel.part;
+					}
+				}
+
 				partSel.isEngaged = false;
+				removeBalls();
 			}
 			break;
 		case 2.2:

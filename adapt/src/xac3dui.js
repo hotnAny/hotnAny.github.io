@@ -32,6 +32,7 @@ class PartSelection {
 
 	clear() {
 		this._part = undefined;
+		this._strokePoints = [];
 	}
 
 	/*
@@ -99,11 +100,11 @@ class PartSelection {
 		//
 
 		// the part where the shadow casting cylinder eats in the object
-		var cylPartSelectionIn = xacThing.intersect(cylPartSelection.gt, obj, MATERIALOVERLAY);
+		var cylPartSelectionIn = xacThing.intersect(cylPartSelection.gt, obj, MATERIALCONTRAST);
 		// scene.add(cylPartSelectionIn);
 
 		// the part of the shadow casting cylinder that's outside the object
-		var cylPartSelectionOut = xacThing.subtract(cylPartSelection.gt, cylPartSelectionIn.geometry, MATERIALOVERLAY);
+		var cylPartSelectionOut = xacThing.subtract(cylPartSelection.gt, cylPartSelectionIn.geometry, MATERIALCONTRAST);
 		// scene.add(cylPartSelectionOut);
 
 		// let it eat in the object an epsilon to get the minimal intersection
@@ -112,7 +113,7 @@ class PartSelection {
 		cylPartSelectionOut.translateOnAxis(vEatIn.clone().normalize(), dEatIn);
 
 		// get the geometric representation of the shadow
-		this._part = xacThing.intersect(obj, getTransformedGeometry(cylPartSelectionOut), MATERIALHIGHLIGHT);
+		this._part = xacThing.intersect(obj, getTransformedGeometry(cylPartSelectionOut), MATERIALCONTRAST);
 		// eat out a little for better display
 		this._part.translateOnAxis(vEatIn.clone().normalize().multiplyScalar(-1), 2 * dEatIn);
 		scene.add(this._part);
@@ -130,10 +131,10 @@ class PartSelection {
 		var facesToRemove = [];
 		for (var i = this._part.geometry.faces.length - 1; i >= 0; i--) {
 			var f = this._part.geometry.faces[i];
-			var bendAngle = type == this.FINGER ? Math.PI / 4 : Math.PI / 2;
+			var bendAngle = size == this.FINGER ? Math.PI / 4 : Math.PI / 2;
 			if (f.normal.angleTo(nml) > bendAngle) {
 				facesToRemove.push(f);
-			} 
+			}
 		}
 
 		for (var i = facesToRemove.length - 1; i >= 0; i--) {
@@ -158,6 +159,10 @@ class PartSelection {
 			// bounding box of the stroke
 			var min = new THREE.Vector3(INFINITY, INFINITY, INFINITY);
 			var max = new THREE.Vector3(-INFINITY, -INFINITY, -INFINITY);
+
+
+			log(this._strokePoints.length);
+
 			for (var i = 0; i < this._strokePoints.length; i++) {
 				var p = this._strokePoints[i];
 
@@ -206,7 +211,6 @@ class PartSelection {
 						maxDistBelow = Math.min(maxDistBelow, dist);
 					}
 				}
-
 			}
 
 			//
@@ -232,13 +236,19 @@ class PartSelection {
 			//	3. make wraps
 			//
 			var gtCylWrap = getTransformedGeometry(this.cylWrap.m);
-			this.wrapIn = xacThing.intersect(gtCylWrap, obj, MATERIALHIGHLIGHT);
+			this.wrapIn = xacThing.intersect(gtCylWrap, obj, this._part == undefined ? MATERIALCONTRAST : this._part.material);
 
-			if (this._part != undefined) scene.remove(this._part);
+			if (this._part != undefined) //{
+				scene.remove(this._part);
+			// this._part = xacThing.union(getTransformedGeometry(this._part), getTransformedGeometry(this.wrapIn), this._part.material);
+			// } else {
 			this._part = this.wrapIn;
+			// }
 
 			var factorInflate = 1.1;
 			scaleAroundCenter(this._part, factorInflate);
+
+			// if (contains(scene.children, this._part) == false)
 			scene.add(this._part);
 
 
@@ -260,8 +270,10 @@ class PartSelection {
 				removeFromArray(this._part.geometry.faces, facesToRemove[i]);
 			}
 
+			// scene.remove(obj)
+
 			this.isWrapping = false;
-			// this._strokePoints = [];
+
 		} else {
 			this._obj = obj;
 			addABall(pt, colorHighlight, 0.5);

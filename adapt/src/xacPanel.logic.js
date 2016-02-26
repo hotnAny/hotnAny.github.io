@@ -29,7 +29,9 @@ var initPanel = function() {
 		reader.readAsBinaryString(files[0]);
 
 		gStep = 1;
-		showElm(partsCtrls);
+		showElm(partsCtrls, function() {
+			btnAddPartsCtrls.trigger('click');
+		});
 	});
 
 	// step 1 - simple shapes
@@ -43,6 +45,44 @@ var initPanel = function() {
 		if ($(this).is(':checked')) {
 			trSelectArea.empty();
 			trSelectArea.append(tblShapeOptions);
+
+			$('#btnCylinder').click(function(event) {
+				var cylinder = new xacCylinder(10, 30);
+				scene.add(cylinder.m);
+				objects.push(cylinder.m);
+				gItems.push(cylinder);
+
+				gStep = 1;
+				showElm(partsCtrls, function() {
+					btnAddPartsCtrls.trigger('click');
+				});
+			});
+
+			$('#btnPrism').click(function(event) {
+				var prism = new xacRectPrism(10, 20, 5);
+				scene.add(prism.m);
+				objects.push(prism.m);
+				gItems.push(prism);
+
+				gStep = 1;
+				showElm(partsCtrls, function() {
+					btnAddPartsCtrls.trigger('click');
+				});
+				btnAddPartsCtrls.trigger('click');
+			});
+
+			$('#btnPlane').click(function(event) {
+				var plane = new xacPlane(40, 60);
+				scene.add(plane.m);
+				objects.push(plane.m);
+				gItems.push(plane);
+
+				gStep = 1;
+				showElm(partsCtrls, function() {
+					btnAddPartsCtrls.trigger('click');
+				});
+				btnAddPartsCtrls.trigger('click');
+			});
 		}
 	});
 	btnLibrary.change(function() {
@@ -51,51 +91,14 @@ var initPanel = function() {
 		}
 	});
 
+	btnOptStartup.trigger('change')
+
 	// step 4
 	$('#sldSize').slider();
 	$('#sldAttach').slider();
 
 }
 initPanel();
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//
-//	Step 1 - button to obtain geometry
-//
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-$('#btnCylinder').click(function(event) {
-	var cylinder = new xacCylinder(10, 30);
-	scene.add(cylinder.m);
-	objects.push(cylinder.m);
-	gItems.push(cylinder);
-
-	gStep = 1;
-	showElm(partsCtrls);
-});
-
-$('#btnPrism').click(function(event) {
-	var prism = new xacRectPrism(10, 20, 5);
-	scene.add(prism.m);
-	objects.push(prism.m);
-	gItems.push(prism);
-
-	gStep = 1;
-	showElm(partsCtrls);
-});
-
-$('#btnPlane').click(function(event) {
-	var plane = new xacPlane(40, 60);
-	scene.add(plane.m);
-	objects.push(plane.m);
-	gItems.push(plane);
-
-	gStep = 1;
-	showElm(partsCtrls);
-});
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -146,7 +149,7 @@ btnAddPartsCtrls.button().click(function(event) {
 	gPartsCtrls[gCurrPartCtrl.attr('pcId')] = {
 		obj: undefined,
 		parts: new Array(),
-		ctrls: new Array()
+		ctrl: undefined
 	};
 
 	// click to acitivate a set of parts (to be modified or extended)
@@ -185,15 +188,21 @@ btnAddPartsCtrls.button().click(function(event) {
 	trPartsCtrls.tdCtrls.append(smCtrls);
 	smCtrls.selectmenu({
 		change: function(event, data) {
-			var type = data['item'].value;
-
-			log($(this).attr('pcId'));
+			var type = parseInt(data['item'].value);
 
 			var ctrl = undefined;
 			switch (type) {
 				case GRASPCTRL:
 					ctrl = new xacGrasp();
+					log(ctrl)
 					break;
+			}
+
+			var pcId = $(this).attr('pcId');
+			gPartsCtrls[pcId].ctrl = ctrl;
+
+			if (numValidPartsCtrl() > 0) {
+				showElm(adaptations);
 			}
 		}
 	});
@@ -247,7 +256,10 @@ btnAddPartsCtrls.button().click(function(event) {
 	gStep = 2.1;
 
 	// TODO: make this more strict: need to have at least one pair of parts-ctrls
-	showElm(adaptations)
+	// if (gPartsCtrls.pc0 != undefined && Object.keys(gPartsCtrls.pc0.parts).length > 0 && gPartsCtrls.pc0.ctrl != undefined) {
+	if (numValidPartsCtrl() > 0) {
+		showElm(adaptations)
+	}
 });
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -319,12 +331,6 @@ smConns.selectmenu({
 		if (gConnId == 0) {
 			lsConns.tagit({
 				onTagClicked: function(event, ui) {
-					// var wasHighlighted = $(ui.tag).hasClass('ui-state-highlight');
-					// $('.ui-state-highlight').removeClass('ui-state-highlight');
-					// if (wasHighlighted == false) {
-					// 	$(ui.tag).addClass('ui-state-highlight')
-					// }
-
 					triggerUI2ObjAction(ui.tag, FOCUSACTION);
 					event.stopPropagation();
 				}
@@ -396,8 +402,21 @@ function triggerUI2ObjAction(ui, action, key) {
 			var namePart = $(ui[0]).text().slice(0, -1);
 			var part = parts[namePart];
 
+			partSel.clear();
+
 			scene.remove(part);
 
 			break;
 	}
+}
+
+function numValidPartsCtrl() {
+	var n = 0;
+	for (var pcId in gPartsCtrls) {
+		pc = gPartsCtrls[pcId];
+		if (Object.keys(pc.parts).length > 0 && pc.ctrl != undefined) {
+			n++;
+		}
+	}
+	return n;
 }

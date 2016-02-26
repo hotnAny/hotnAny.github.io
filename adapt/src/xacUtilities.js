@@ -156,9 +156,14 @@ function removeFromArray(arr, elm) {
 	arr.splice(idx, 1);
 }
 
-function showElm(elm) {
+function showElm(elm, actionUponShow) {
 	if (elm.is(":visible") == false) {
 		elm.show('slow');
+		try {
+			actionUponShow();
+		} catch (e) {
+
+		}
 	}
 }
 
@@ -228,4 +233,13 @@ function scaleAroundCenter(obj, factor) {
 	// re-position
 	var ctr1 = getCenter(getTransformedGeometry(obj).vertices, factor);
 	obj.position.add(ctr0.clone().sub(ctr1))
+}
+
+function gup(name, url) {
+	if (!url) url = location.href;
+	name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+	var regexS = "[\\?&]" + name + "=([^&#]*)";
+	var regex = new RegExp(regexS);
+	var results = regex.exec(url);
+	return results == null ? null : results[1];
 }
