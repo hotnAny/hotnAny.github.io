@@ -44,7 +44,7 @@ function rayCast(x, y, objs) {
 	var vector = new THREE.Vector3();
 	vector.set((x / window.innerWidth) * 2 - 1, -(y / window.innerHeight) * 2 + 1, 0.5);
 	var projector = new THREE.Projector();
-	projector.unprojectVector(vector, camera);
+	vector.unproject(camera);
 	// controlPanel.log(vector);
 	// vector.unproject( camera );
 	rayCaster.ray.set(camera.position, vector.sub(camera.position).normalize());

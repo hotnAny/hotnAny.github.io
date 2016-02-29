@@ -67,6 +67,7 @@ function onMouseUpStep(event) {
 		case 2.1:
 			if (event.which == LEFTMOUSE) {
 				if (partSel.isWrapping) {
+					var objInt = getClosestIntersected();
 					partSel.wrap(undefined, undefined, partSel.HAND, true);
 				} else {
 					var objInt = getClosestIntersected();
@@ -94,7 +95,8 @@ function onMouseUpStep(event) {
 				}
 
 				partSel.isEngaged = false;
-				removeBalls();
+
+				// if (D != true || event.shiftKey == false) removeBalls();
 			}
 			break;
 		case 2.2:

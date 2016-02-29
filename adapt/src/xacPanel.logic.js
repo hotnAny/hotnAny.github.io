@@ -94,8 +94,45 @@ var initPanel = function() {
 	btnOptStartup.trigger('change')
 
 	// step 4
-	$('#sldSize').slider();
-	$('#sldAttach').slider();
+	// $('#cbGrip').click(function(e) {
+	// 	showElm(connectors);
+	// });
+
+	$('#sldGrip').slider({
+		max: 5,
+		min: 1,
+		range: 'max',
+		value: 2,
+		change: function(e) {
+			var value = $('#sldGrip').slider('value');
+			gOptParams.gripFactor = value;
+		}
+	});
+	$('#sldGrip').css('background-color', '#b7b7b4');
+
+	$('#sldSize').slider({
+		max: 100,
+		range: 'max',
+		value: 25,
+		change: function(e) {
+			var minValue = $("#sldSize").slider("option", "min");
+			var maxValue = $("#sldSize").slider("option", "max");
+			var value = $('#sldSize').slider('value');
+			gOptParams.sizeFactor = 1 + (value - minValue) * 1.0 / (maxValue - minValue);
+
+		}
+	});
+	$('#sldSize').css('background-color', '#b7b7b4');
+
+	// $('#sldAttach').slider();
+
+	btnUpdate.click(function(e) {
+		for (var i = gAdaptations.length - 1; i >= 0; i--) {
+			gAdaptations[i].update(gOptParams);
+		}
+	});
+
+	// showElm(optimization);
 
 }
 initPanel();
@@ -284,7 +321,6 @@ smAdapts.selectmenu({
 				}
 			});
 			trAdaptations.prepend(lsAdapts);
-
 		}
 
 		// create a 'tag' to represent an added adaptation
@@ -316,9 +352,7 @@ smAdapts.selectmenu({
 //
 //	Step 4 - optimization UIs
 //
-$('#cbGrip').click(function(e) {
-	showElm(connectors);
-});
+
 
 //
 //	Step 5 - connector select menu
@@ -410,6 +444,7 @@ function triggerUI2ObjAction(ui, action, key) {
 	}
 }
 
+// TODO: do not require to have parts
 function numValidPartsCtrl() {
 	var n = 0;
 	for (var pcId in gPartsCtrls) {

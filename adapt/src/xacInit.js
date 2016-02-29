@@ -3,7 +3,7 @@
      template
 
 -----------------------------------------------------------------------------------------------*/
-var D = false;
+// var D = false;
 
 var helpers = new Array();
 
@@ -111,6 +111,9 @@ var mug = 'things/mug.stl';
      app specific
 
 -----------------------------------------------------------------------------------------------*/
+
+var D = gup('d', window.location.href);
+
 var MATERIALNORMAL = new THREE.MeshPhongMaterial({
      color: colorNormal,
      transparent: true,
@@ -120,7 +123,7 @@ var MATERIALNORMAL = new THREE.MeshPhongMaterial({
 var MATERIALCONTRAST = new THREE.MeshPhongMaterial({
      color: colorContrast,
      transparent: true,
-     opacity: 1.0
+     opacity: 0.5
 });
 
 var MATERIALOVERLAY = new THREE.MeshPhongMaterial({
@@ -147,3 +150,4 @@ var gPartSerial = 0;
 var gPartsCtrls = new Array();
 var gCurrPartCtrl = undefined; // the parts-controls that is currently selected to be interacted with
 var gAdaptations = [];
+var gOptParams = new Array();

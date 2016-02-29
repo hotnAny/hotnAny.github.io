@@ -213,27 +213,8 @@ function getClosestIntersected() {
 	return objInt;
 }
 
-function rotateObjTo(obj, v) {
-	var yUp = new THREE.Vector3(0, 1, 0);
-	var angleToRotate = yUp.angleTo(v);
-	var axisToRotate = new THREE.Vector3().crossVectors(yUp, v).normalize();
-	obj.rotateOnAxis(axisToRotate, angleToRotate);
-}
 
-/*
-	scale an object around its center by factor
-*/
-function scaleAroundCenter(obj, factor) {
-	// find true center point
-	var ctr0 = getCenter(obj.geometry.vertices);
 
-	// naive scaling
-	obj.scale.set(factor, factor, factor);
-
-	// re-position
-	var ctr1 = getCenter(getTransformedGeometry(obj).vertices, factor);
-	obj.position.add(ctr0.clone().sub(ctr1))
-}
 
 function gup(name, url) {
 	if (!url) url = location.href;
@@ -244,51 +225,11 @@ function gup(name, url) {
 	return results == null ? null : results[1];
 }
 
-/*
-	merge a list of THREE.Mesh
-*/
-function mergeObjs(objs) {
-	if(objs.length == 0) return undefined;
 
-	// the openjscad approach
-	// var mm = objs[objs.length - 1];
-	// for (var i = objs.length - 1; i > 0; i--) {
-	// 	mm = xacThing.union(getTransformedGeometry(mm), getTransformedGeometry(objs[i]), mm.material);
-	// }
-
-	// the three js approach
-	var mo = new THREE.Geometry();
-	// var mm = objs[objs.length - 1];
-	for (var i = objs.length - 1; i > 0; i--) {
-		// mm = xacThing.union(getTransformedGeometry(mm), getTransformedGeometry(objs[i]), mm.material);
-		// var vs = mo.geometry.vertices;
-		var objFs = objs[i].geometry.faces;
-		var fs = [];
-		var n = mo.vertices.length;
-
-		for (var j = 0; j < objFs.length; j++) {
-			fs.push(objFs[j]);
-			fs[j].a += n;
-			fs[j].b += n;
-			fs[j].c += n;
-		}
-
-		mo.vertices = mo.vertices.concat(objs[i].geometry.vertices);
-		mo.faces = mo.faces.concat(objFs);
-
-	}
-
-	var material = objs[0].material.clone();
-	material.side = THREE.DoubleSide;
-	var mm = new THREE.Mesh(mo, material);
-
-	return mm;
-}
-
-
-function flipNormals(obj) {
-	for (var i = obj.geometry.faces.length - 1; i >= 0; i--) {
-		obj.geometry.faces[i].normal = obj.geometry.faces[i].normal.multiplyScalar(-1); 
-	}
-	return obj;
-}
+/*obselete*/
+// function flipNormals(obj) {
+// 	for (var i = obj.geometry.faces.length - 1; i >= 0; i--) {
+// 		obj.geometry.faces[i].normal = obj.geometry.faces[i].normal.multiplyScalar(-1); 
+// 	}
+// 	return obj;
+// }

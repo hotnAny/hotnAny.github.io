@@ -59,6 +59,15 @@ class xacThing {
 	}
 }
 
+class xacSphere extends xacThing {
+	constructor(r, material) {
+		super();
+		this._r = r;
+		this._g = new THREE.SphereGeometry(r, 32, 32);
+		this._m = new THREE.Mesh(this._g, material == undefined ? MATERIALNORMAL.clone() : material.clone());
+	}
+}
+
 class xacCylinder extends xacThing {
 	constructor(r, h, material) {
 		super();

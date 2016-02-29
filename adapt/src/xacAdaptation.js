@@ -4,58 +4,76 @@ class xacAdaptation {
 	constructor(pc) {
 		this._pc = pc;
 		this._as = new Array(); // adaptation mesh
-
 		// a factor that will dampen the growth of the adaptation
+		// TODO: make this programmatic
 		this._sizeFactor = 1.25;
+		this._gripFactor = 2;
 		// this._bboxFactor = 1.25;
+	}
+
+	update(params) {
+		this._update(params);
 	}
 }
 
 class xacEnlargement extends xacAdaptation {
-	constructor(pc) {
+	constructor(pc, params) {
 		super(pc);
 
 		// these parameters the optimize function will manipulate
 		// TODO: rehink how to compute this parameter
 		this.amnt = 5;
-		// this.factor = 1.5;
 
-		// preprocess aoc - find center, normal
 		this._pc = pc;
-		for (var pid in this._pc.parts) {
-			// log(pc.parts[pid]);
-			var a = this._extrude(this._pc.parts[pid], this.amnt, this._sizeFactor);
-			scene.add(a);
-			this._as[pid] = a;
+		this._update = function(params) {
+			if (params != undefined) {
+				this._sizeFactor = params.sizeFactor == undefined ? this._sizeFactor : params.sizeFactor;
+				this._gripFactor = params.gripFactor == undefined ? this._gripFactor : params.gripFactor;
+			}
+
+			for (var pid in this._pc.parts) {
+				if (this._as[pid] != undefined) {
+					scene.remove(this._as[pid]);
+				}
+
+				if (this._pc.parts[pid] != undefined) {
+					scene.remove(this._pc.parts[pid]);
+				}
+
+				var a = this._extrude(this._pc.parts[pid], this.amnt, this._sizeFactor, this._gripFactor);
+				this._as[pid] = a;
+				scene.add(this._as[pid]);
+			}
 		}
+
+		this._update();
 	}
 
-	_extrude(aoc, amnt, factor) {
-		// remove the previous extruded enlargement
-		// TODO: merge generated into this._a
-		// if (this._a != undefined) {
-		// 	scene.remove(this._a);
-		// }
+	_extrude(part, amnt, sizeFactor, gripFactor) {
+		// select a subset of aoc
+		var r0 = 15; // temp: finger size
+		var r = gripFactor * r0;
 
-		// if (aoc != undefined) {
-		// 	this._aoc = aoc;
-		// }
+		// TODO: check if need to get transformed geometry
+		var ctrPart = getCenter(part.geometry.vertices);
 
-		// if(this._aoc == undefined) {
-		// 	return;
-		// }
+		// bounding cylinder
+		var cylinderSel = new xacCylinder(100, r, MATERIALCONTRAST);
+		rotateObjTo(cylinderSel.m, part.normal);
+		cylinderSel.m.position.copy(ctrPart.clone());
+		// scene.add(cylinderSel.m);
 
-		// aoc = this._aoc;
-		// copy, scale & raise the aoc
+		// select which bounding geometry to use
+		var spaceSel = cylinderSel.m;
+		scene.add(spaceSel);
+
+		var aoc = xacThing.intersect(getTransformedGeometry(part), getTransformedGeometry(spaceSel), part.material);
+		scene.add(aoc);
+
 		var laoc = aoc.clone();
-		scaleAroundCenter(laoc, factor);
-
-		// if (this._laoc != undefined) {
-		// 	scene.remove(this._laoc);
-		// }
-
-		// scene.add(laoc);
-		// TODO: raise it
+		scaleAroundVector(laoc, sizeFactor, part.normal);
+		
+		if (D) addALine(ctrPart, ctrPart.clone().add(part.normal.clone().multiplyScalar(100)));
 
 		// stich the wall
 		var geoWall = new THREE.Geometry();
@@ -70,9 +88,6 @@ class xacEnlargement extends xacAdaptation {
 				var n = vs[j];
 				var np = vs[(j + 1) % vs.length];
 
-				// log(geoAoc.vertices[n])
-
-				// triangle 1
 				var m = geoWall.vertices.length;
 				geoWall.vertices.push(
 					geoAoc.vertices[n].clone(),
@@ -94,17 +109,15 @@ class xacEnlargement extends xacAdaptation {
 
 		if (this._wall != undefined) scene.remove(this._wall);
 		var wall = new THREE.Mesh(geoWall, MATERIALHIGHLIGHT.clone());
-		// scene.add(wall);
+		var a = mergeObjs([aoc, laoc]);
 
+		scene.remove(aoc);
+		scene.remove(spaceSel);
+		return laoc;
+	}
 
-		// this._laoc = laoc;
-		// this._wall = wall;
-		var a = mergeObjs([aoc, wall, laoc]);
-
-		// scene.remove(aoc);
-		// scene.remove(wall);
-
-		return a;
+	scaleMap(a, factor) {
+		return a * factor + 1;
 	}
 
 	optimize(params) {

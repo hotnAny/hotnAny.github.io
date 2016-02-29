@@ -11,12 +11,12 @@ class PartSelection {
 		this.FINGER = 10;
 
 		// TODO: rehink how to compute this parameter
-		this.HAND = 20;
+		this.HAND = 75;
 
 		this._obj = undefined;
 
 		this.isEngaged = false;
-		this.MINWRAPMOUSEOFFSET = 10;
+		this.MINWRAPMOUSEOFFSET = 5;
 		// this.WRAPTHICKNESS = 20;
 		this.isWrapping = false;
 
@@ -229,10 +229,15 @@ class PartSelection {
 				rWrap = Math.max(rWrap, ptProj.distanceTo(ctrWrapProj));
 			}
 
-			this.cylWrap = new xacCylinder(rWrap, maxDistAbove - maxDistBelow, MATERIALCONTRAST);
+			// this.cylWrap = new xacCylinder(rWrap, maxDistAbove - maxDistBelow, MATERIALCONTRAST);
+			this.cylWrap = new xacCylinder(rWrap, this.HAND, MATERIALCONTRAST);
 			rotateObjTo(this.cylWrap.m, nmlWrap);
-			this.cylWrap.m.position = ctrWrap.clone();
+			this.cylWrap.m.position.copy(ctrWrap.clone());
 
+			scene.add(this.cylWrap.m);
+			setTimeout(function(m) {
+				scene.remove(m);
+			}, 1000, this.cylWrap.m);
 
 			//
 			//	3. make wraps
@@ -242,15 +247,10 @@ class PartSelection {
 
 			if (this._part != undefined) //{
 				scene.remove(this._part);
-			// this._part = xacThing.union(getTransformedGeometry(this._part), getTransformedGeometry(this.wrapIn), this._part.material);
-			// } else {
 			this._part = this.wrapIn;
-			// }
 
 			var factorInflate = 1.1;
 			scaleAroundCenter(this._part, factorInflate);
-
-			// if (contains(scene.children, this._part) == false)
 
 			scene.add(this._part);
 
@@ -273,7 +273,10 @@ class PartSelection {
 				removeFromArray(this._part.geometry.faces, facesToRemove[i]);
 			}
 
-			// scene.remove(obj)
+			this._part.center = getCenter(this._part.geometry.vertices);
+			this._part.normal = nmlWrap;
+
+			// scene.remove(obj);
 
 			this.isWrapping = false;
 
