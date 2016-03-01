@@ -164,6 +164,7 @@ var optimization = $("<table class='ui-step-area' cellspacing='10'></table>");
 // 4.1	what to optimize
 var trOptim = $('<tr></tr>');
 var divOptim = $('<div align="center"></div>');
+// divOptim.append($('<input type="checkbox" id="cbFingers"><label id="lbFingers" for="cbFingers">finger</label>'));
 divOptim.append($('<input type="checkbox" id="cbGrip"><label for="cbGrip">Grip</label>'));
 divOptim.append($('<input type="checkbox" id="cbStrength"><label for="cbStrength">Strength</label>'));
 divOptim.append($('<input type="checkbox" id="cbCoord"><label for="cbCoord">Coordination</label>'));
@@ -172,9 +173,11 @@ optimization.append(divOptim);
 
 // 4.2	other sliderable optimizations
 var tblSldrOptim = $('<table cellspacing="5" cellpadding="5"></table>');
-var trGrip = $('<tr><td><label class="ui-widget">Grip: </label></td><td width="200px"><div id="sldGrip"></div></td></tr>');
-var trSize = $('<tr><td><label class="ui-widget">Size: </label></td><td width="200px"><div id="sldSize"></div></td></tr>');
+var trFingers = $('<tr><td><label id="lbFingers" class="ui-widget">X finger </label></td><td width="200px"><div id="sldFingers"></div></td></tr>');
+var trGrip = $('<tr><td><label class="ui-widget">Grip </label></td><td width="200px"><div id="sldGrip"></div></td></tr>');
+var trSize = $('<tr><td><label class="ui-widget">Size </label></td><td width="200px"><div id="sldSize"></div></td></tr>');
 // var trAttach = $('<tr><td><label class="ui-widget">Attachability: </label></td><td width="200px"><div id="sldAttach"></div></td></tr>');
+tblSldrOptim.append(trFingers);
 tblSldrOptim.append(trGrip);
 tblSldrOptim.append(trSize);
 // tblSldrOptim.append(trAttach);

@@ -85,3 +85,67 @@
 			// // eat out a little for better display
 			// this._part.translateOnAxis(vEatIn.clone().normalize().multiplyScalar(-1), 2 * dEatIn);
 			// scene.add(this._part);
+
+			
+	scaleMap(a, factor) {
+		return a * factor + 1;
+	}
+
+	optimize(params) {
+		if (params.grip == true) {
+
+		}
+
+		if (params.strength == true) {
+
+		}
+
+		if (parames.coordination == true) {
+
+		}
+
+		this._sizeFactor = params.sizeFactor;
+
+		this._extrude
+	}
+
+// scene.add(part.selCyl);
+			// scene.add(part.selCyl);
+
+			// var geoWall = new THREE.Geometry();
+			// var geoAoc = getTransformedGeometry(aoc);
+			// var geoLaoc = getTransformedGeometry(laoc);
+			// // var geoLaoc = laoc.geometry;
+			// for (var i = geoAoc.faces.length - 1; i >= 0; i--) {
+			// 	var f = geoAoc.faces[i];
+			// 	var lf = geoLaoc.faces[i];
+
+			// 	var vs = [f.a, f.b, f.c];
+			// 	for (var j = 0; j < 3; j++) {
+			// 		var n = vs[j];
+			// 		var np = vs[(j + 1) % vs.length];
+
+			// 		var m = geoWall.vertices.length;
+			// 		geoWall.vertices.push(
+			// 			geoAoc.vertices[n].clone(),
+			// 			geoAoc.vertices[np].clone(),
+
+			// 			geoLaoc.vertices[n].clone(),
+			// 			geoLaoc.vertices[np].clone()
+			// 		);
+
+			// 		var wf1 = new THREE.Face3(m, m + 3, m + 2);
+			// 		wf1.normal = computeFaceNormal(geoWall.vertices[wf1.a], geoWall.vertices[wf1.b], geoWall.vertices[wf1.c]);
+			// 		geoWall.faces.push(wf1);
+
+			// 		var wf2 = new THREE.Face3(m, m + 1, m + 3);
+			// 		wf2.normal = computeFaceNormal(geoWall.vertices[wf2.a], geoWall.vertices[wf2.b], geoWall.vertices[wf2.c]);
+			// 		geoWall.faces.push(wf2);
+			// 	}
+			// }
+
+			// if (this._wall != undefined) scene.remove(this._wall);
+			// var wall = new THREE.Mesh(geoWall, MATERIALHIGHLIGHT.clone());
+			// var a = mergeObjs([aoc, wall, laoc]);
+
+

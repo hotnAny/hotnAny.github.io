@@ -226,10 +226,6 @@ function gup(name, url) {
 }
 
 
-/*obselete*/
-// function flipNormals(obj) {
-// 	for (var i = obj.geometry.faces.length - 1; i >= 0; i--) {
-// 		obj.geometry.faces[i].normal = obj.geometry.faces[i].normal.multiplyScalar(-1); 
-// 	}
-// 	return obj;
-// }
+function float2int (value) {
+    return value | 0;
+}

@@ -73,7 +73,7 @@ function onMouseUpStep(event) {
 					var objInt = getClosestIntersected();
 					if (objInt != undefined) {
 						// find the object closest to the camera
-						partSel.cast(objInt.object, objInt.point.clone(), objInt.face.normal.clone(), partSel.FINGER);
+						partSel.press(objInt.object, objInt.point.clone(), objInt.face.normal.clone(), partSel.FINGER);
 					}
 				}
 
@@ -96,7 +96,7 @@ function onMouseUpStep(event) {
 
 				partSel.isEngaged = false;
 
-				// if (D != true || event.shiftKey == false) removeBalls();
+				if (D != true || event.shiftKey == false) removeBalls();
 			}
 			break;
 		case 2.2:

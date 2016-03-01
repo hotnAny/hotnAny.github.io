@@ -8,6 +8,16 @@
 $(document.body).append(container);
 
 var initPanel = function() {
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//
+	//	Step 1 - model and measurement acquisition
+	//
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 	// step 1 - upload
 	tblDropZone.on('dragover', function(e) {
 		e.stopPropagation();
@@ -91,38 +101,281 @@ var initPanel = function() {
 		}
 	});
 
-	btnOptStartup.trigger('change')
+	btnOptStartup.trigger('change');
+
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//
+	//	Step 2 - parts controls add button
+	//
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	btnAddPartsCtrls.button().click(function(event) {
+		var trPartsCtrls = $("<tr></tr>");
+
+		//
+		// parts
+		//
+		trPartsCtrls.tdParts = $("<td width='60%'></td>");
+
+		var lsParts = $('<ul></ul>');
+		lsParts.pcId = gPartCtrlId;
+		lsParts.tagit({
+			onTagClicked: function(event, ui) {
+
+				// set time out here because the row selection might be different once the event propagates
+				setTimeout(function() {
+					triggerUI2ObjAction(ui.tag, FOCUSACTION);
+				}, 100);
+
+				// let event propagate
+				// event.stopPropagation();
+			},
+			afterTagRemoved: function(event, ui) {
+				setTimeout(function() {
+					triggerUI2ObjAction(ui.tag, DELETEACTION);
+				}, 100);
+			}
+		});
+
+		// highlight current row
+		if (gCurrPartCtrl != undefined) {
+			gCurrPartCtrl.css('background-color', 'rgba(255, 255, 255, 0.25)');
+		}
+		gCurrPartCtrl = trPartsCtrls.tdParts;
+		gCurrPartCtrl.css('background-color', 'rgba(128, 128, 128, 0.25)');
+
+		// store the new row into a global array
+		gCurrPartCtrl.attr('pcId', 'pc' + Object.keys(gPartsCtrls).length);
+		gPartsCtrls[gCurrPartCtrl.attr('pcId')] = {
+			obj: undefined,
+			parts: new Array(),
+			ctrl: undefined
+		};
+
+		// click to acitivate a set of parts (to be modified or extended)
+		trPartsCtrls.tdParts.click(function(event) {
+
+			// if it's (1) directly (2) clikcing the same row
+			if ($(event.target).is('td') && gCurrPartCtrl != undefined && gCurrPartCtrl.attr('pcId') == $(this).attr('pcId')) {
+				$(this).css('background-color', '#rgba(255, 255, 255, 0.25)');
+				gCurrPartCtrl = undefined;
+			} else {
+				if (gCurrPartCtrl != undefined) {
+					gCurrPartCtrl.css('background-color', 'rgba(255, 255, 255, 0.25)');
+				}
+				$(this).css('background-color', 'rgba(128, 128, 128, 0.25)');
+				gCurrPartCtrl = $(this);
+			}
+		});
+
+		trPartsCtrls.tdParts.append(lsParts);
+
+		//
+		// controls
+		//
+		trPartsCtrls.tdCtrls = $("<td></td>");
+
+		var smCtrls = $('<select></select>');
+		smCtrls.attr('pcId', trPartsCtrls.tdParts.attr('pcId'));
+		smCtrls.width('128px');
+		smCtrls.pcId = gPartCtrlId;
+		smCtrls.append('<option> - </option>');
+		smCtrls.append('<option value=0>Grasp</option>');
+		smCtrls.append('<option value=1>Push/Pull</option>');
+		smCtrls.append('<option value=2>Rotate</option>');
+		smCtrls.append('<option value=3>Clutch</option>');
+		smCtrls.append('<option value=4>Join/Separate</option>');
+		trPartsCtrls.tdCtrls.append(smCtrls);
+		smCtrls.selectmenu({
+			change: function(event, data) {
+				var type = parseInt(data['item'].value);
+
+				var ctrl = undefined;
+				switch (type) {
+					case GRASPCTRL:
+						ctrl = new xacGrasp();
+						log(ctrl)
+						break;
+				}
+
+				var pcId = $(this).attr('pcId');
+				gPartsCtrls[pcId].ctrl = ctrl;
+
+				if (numValidPartsCtrl() > 0) {
+					showElm(adaptations);
+				}
+			}
+		});
+
+		//
+		// copy button
+		//
+		trPartsCtrls.tdCopy = $("<td></td>");
+		var iconCopy = $('<span></span>')
+			.addClass('ui-icon ui-icon-copy');
+		trPartsCtrls.tdCopy.append(iconCopy);
+		iconCopy.click(function(event) {
+
+			//
+			// TODO: copying the previous row and insert it to the end of the table
+			//
+			// var row = tblPartsCtrls.rows.slice(-1)[0]; // the row to copy
+			// var rowNew = $('<tr></tr>');
+			// rowNew.html(row.html());
+			// tblPartsCtrls.append(rowNew);
+
+		})
+
+		//
+		// del button
+		//
+		trPartsCtrls.tdDel = $("<td></td>");
+		var iconDel = $('<span></span>')
+			.addClass('ui-icon ui-icon-trash');
+		trPartsCtrls.tdDel.append(iconDel);
+		iconDel.click(function(event) {
+			// tblPartsCtrls.rows.pop().remove();
+			var row = $(this).parent().parent(); // the row to remove
+			var idxRow = tblPartsCtrls.rows.indexOf(row);
+			tblPartsCtrls.rows.splice(idxRow, 1);
+			row.remove();
+		})
+
+
+		trPartsCtrls.append(trPartsCtrls.tdParts);
+		trPartsCtrls.append(trPartsCtrls.tdCtrls);
+		trPartsCtrls.append(trPartsCtrls.tdCopy);
+		trPartsCtrls.append(trPartsCtrls.tdDel);
+
+		tblPartsCtrls.append(trPartsCtrls);
+		tblPartsCtrls.rows.push(trPartsCtrls);
+
+		gPartCtrlId += 1;
+
+		// once a button is pressed, the step becomes 2.1 specifying parts
+		gStep = 2.1;
+
+		// TODO: make this more strict: need to have at least one pair of parts-ctrls
+		// if (gPartsCtrls.pc0 != undefined && Object.keys(gPartsCtrls.pc0.parts).length > 0 && gPartsCtrls.pc0.ctrl != undefined) {
+		if (numValidPartsCtrl() > 0) {
+			showElm(adaptations)
+		}
+	});
+
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//
+	//	Step 3 - adaptations select menu
+	//
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	smAdapts.selectmenu({
+		change: function(event, data) {
+			gStep = 3;
+
+			// init the container for adaptations
+			if (gAdaptId == 0) {
+				lsAdapts.tagit({
+					onTagClicked: function(event, ui) {
+						triggerUI2ObjAction(ui.tag, FOCUSACTION);
+						event.stopPropagation();
+					}
+				});
+				trAdaptations.prepend(lsAdapts);
+			}
+
+			// create a 'tag' to represent an added adaptation
+			if (data.item.index > 0) {
+				gAdaptId += 1;
+				lsAdapts.tagit('createTag', gAdaptId + ' ' + data.item.value);
+			}
+
+			switch (data.item.value) {
+				case 'Enlargement':
+
+					// experimental: only dealing with 1st parts-ctrls now
+					gAdaptations.push(new xacEnlargement(gPartsCtrls.pc0));
+					break;
+			}
+
+			// reset the selection from the list
+			var optionSelected = $("option:selected", this);
+			optionSelected.removeAttr("selected");
+			$('#noAdaptSel').attr('selected', 'selected');
+			smAdapts.selectmenu("refresh");
+
+			showElm(optimization, function() {
+
+
+
+			});
+		}
+	});
 
 	// step 4
 	// $('#cbGrip').click(function(e) {
 	// 	showElm(connectors);
 	// });
 
-	$('#sldGrip').slider({
-		max: 5,
-		min: 1,
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//
+	//	Step 4 - optimization
+	//
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	$('#sldFingers').slider({
+		max: 50,
+		min: 10,
 		range: 'max',
-		value: 2,
 		change: function(e) {
-			var value = $('#sldGrip').slider('value');
-			gOptParams.gripFactor = value;
+			var minValue = $("#sldFingers").slider("option", "min");
+			var value = $('#sldFingers').slider('value') / minValue;
+			var valueInt = float2int(value + 0.5);
+			if (valueInt != value) {
+				$('#sldFingers').slider('value', valueInt * minValue);
+			} else {
+				$('#lbFingers').html(value + ' Finger' + (value > 1 ? 's' : ''));
+				gOptParams.fingerFactor = value;
+			}
+		},
+		slide: function(e) {
+			var minValue = $("#sldFingers").slider("option", "min");
+			var value = float2int($('#sldFingers').slider('value') / minValue);
+			$('#lbFingers').html(value + ' Finger' + (value > 1 ? 's' : ' '));
 		}
 	});
-	$('#sldGrip').css('background-color', '#b7b7b4');
+	var minSldFingersValue = $("#sldFingers").slider("option", "min");
+	$('#sldFingers').slider('value', FINGERINIT * minSldFingersValue);
+	// $('#sldFingers').trigger('change');
+	$('#sldFingers').css('background-color', '#b7b7b4');
+
 
 	$('#sldSize').slider({
 		max: 100,
 		range: 'max',
-		value: 25,
 		change: function(e) {
 			var minValue = $("#sldSize").slider("option", "min");
 			var maxValue = $("#sldSize").slider("option", "max");
 			var value = $('#sldSize').slider('value');
 			gOptParams.sizeFactor = 1 + (value - minValue) * 1.0 / (maxValue - minValue);
-
 		}
 	});
 	$('#sldSize').css('background-color', '#b7b7b4');
+	var minsldSizeValue = $("#sldSize").slider("option", "min");
+	var maxsldSizeValue = $("#sldSize").slider("option", "max");
+	var valuesldSize = minsldSizeValue + (SIZEINIT - 1) * (maxsldSizeValue - minsldSizeValue);
+	$('#sldSize').slider('value', valuesldSize);
+	// $('#sldSize').trigger('change');
+
 
 	// $('#sldAttach').slider();
 
@@ -132,259 +385,50 @@ var initPanel = function() {
 		}
 	});
 
-	// showElm(optimization);
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//
+	//	Step 5 - connector
+	//
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	smConns.selectmenu({
+		change: function(event, data) {
+			gStep = 5;
+
+			// init the container for Connsations
+			if (gConnId == 0) {
+				lsConns.tagit({
+					onTagClicked: function(event, ui) {
+						triggerUI2ObjAction(ui.tag, FOCUSACTION);
+						event.stopPropagation();
+					}
+				});
+				trConns.prepend(lsConns);
+
+			}
+
+			// create a 'tag' to represent an added Connsation
+			if (data.item.index > 0) {
+				gConnId += 1;
+				lsConns.tagit('createTag', gConnId + ' ' + data.item.value);
+			}
+
+			// reset the selection from the list
+			var optionSelected = $("option:selected", this);
+			optionSelected.removeAttr("selected");
+			$('#noConnSel').attr('selected', 'selected');
+			smConns.selectmenu("refresh");
+		}
+	});
 
 }
-initPanel();
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//
-//	Step 2 - parts controls add button
-//
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-btnAddPartsCtrls.button().click(function(event) {
-	var trPartsCtrls = $("<tr></tr>");
-
-	//
-	// parts
-	//
-	trPartsCtrls.tdParts = $("<td width='60%'></td>");
-
-	var lsParts = $('<ul></ul>');
-	lsParts.pcId = gPartCtrlId;
-	lsParts.tagit({
-		onTagClicked: function(event, ui) {
-
-			// set time out here because the row selection might be different once the event propagates
-			setTimeout(function() {
-				triggerUI2ObjAction(ui.tag, FOCUSACTION);
-			}, 100);
-
-			// let event propagate
-			// event.stopPropagation();
-		},
-		afterTagRemoved: function(event, ui) {
-			setTimeout(function() {
-				triggerUI2ObjAction(ui.tag, DELETEACTION);
-			}, 100);
-		}
-	});
-
-	// highlight current row
-	if (gCurrPartCtrl != undefined) {
-		gCurrPartCtrl.css('background-color', 'rgba(255, 255, 255, 0.25)');
-	}
-	gCurrPartCtrl = trPartsCtrls.tdParts;
-	gCurrPartCtrl.css('background-color', 'rgba(128, 128, 128, 0.25)');
-
-	// store the new row into a global array
-	gCurrPartCtrl.attr('pcId', 'pc' + Object.keys(gPartsCtrls).length);
-	gPartsCtrls[gCurrPartCtrl.attr('pcId')] = {
-		obj: undefined,
-		parts: new Array(),
-		ctrl: undefined
-	};
-
-	// click to acitivate a set of parts (to be modified or extended)
-	trPartsCtrls.tdParts.click(function(event) {
-
-		// if it's (1) directly (2) clikcing the same row
-		if ($(event.target).is('td') && gCurrPartCtrl != undefined && gCurrPartCtrl.attr('pcId') == $(this).attr('pcId')) {
-			$(this).css('background-color', '#rgba(255, 255, 255, 0.25)');
-			gCurrPartCtrl = undefined;
-		} else {
-			if (gCurrPartCtrl != undefined) {
-				gCurrPartCtrl.css('background-color', 'rgba(255, 255, 255, 0.25)');
-			}
-			$(this).css('background-color', 'rgba(128, 128, 128, 0.25)');
-			gCurrPartCtrl = $(this);
-		}
-	});
-
-	trPartsCtrls.tdParts.append(lsParts);
-
-	//
-	// controls
-	//
-	trPartsCtrls.tdCtrls = $("<td></td>");
-
-	var smCtrls = $('<select></select>');
-	smCtrls.attr('pcId', trPartsCtrls.tdParts.attr('pcId'));
-	smCtrls.width('128px');
-	smCtrls.pcId = gPartCtrlId;
-	smCtrls.append('<option> - </option>');
-	smCtrls.append('<option value=0>Grasp</option>');
-	smCtrls.append('<option value=1>Push/Pull</option>');
-	smCtrls.append('<option value=2>Rotate</option>');
-	smCtrls.append('<option value=3>Clutch</option>');
-	smCtrls.append('<option value=4>Join/Separate</option>');
-	trPartsCtrls.tdCtrls.append(smCtrls);
-	smCtrls.selectmenu({
-		change: function(event, data) {
-			var type = parseInt(data['item'].value);
-
-			var ctrl = undefined;
-			switch (type) {
-				case GRASPCTRL:
-					ctrl = new xacGrasp();
-					log(ctrl)
-					break;
-			}
-
-			var pcId = $(this).attr('pcId');
-			gPartsCtrls[pcId].ctrl = ctrl;
-
-			if (numValidPartsCtrl() > 0) {
-				showElm(adaptations);
-			}
-		}
-	});
-
-	//
-	// copy button
-	//
-	trPartsCtrls.tdCopy = $("<td></td>");
-	var iconCopy = $('<span></span>')
-		.addClass('ui-icon ui-icon-copy');
-	trPartsCtrls.tdCopy.append(iconCopy);
-	iconCopy.click(function(event) {
-
-		//
-		// TODO: copying the previous row and insert it to the end of the table
-		//
-		// var row = tblPartsCtrls.rows.slice(-1)[0]; // the row to copy
-		// var rowNew = $('<tr></tr>');
-		// rowNew.html(row.html());
-		// tblPartsCtrls.append(rowNew);
-
-	})
-
-	//
-	// del button
-	//
-	trPartsCtrls.tdDel = $("<td></td>");
-	var iconDel = $('<span></span>')
-		.addClass('ui-icon ui-icon-trash');
-	trPartsCtrls.tdDel.append(iconDel);
-	iconDel.click(function(event) {
-		// tblPartsCtrls.rows.pop().remove();
-		var row = $(this).parent().parent(); // the row to remove
-		var idxRow = tblPartsCtrls.rows.indexOf(row);
-		tblPartsCtrls.rows.splice(idxRow, 1);
-		row.remove();
-	})
-
-
-	trPartsCtrls.append(trPartsCtrls.tdParts);
-	trPartsCtrls.append(trPartsCtrls.tdCtrls);
-	trPartsCtrls.append(trPartsCtrls.tdCopy);
-	trPartsCtrls.append(trPartsCtrls.tdDel);
-
-	tblPartsCtrls.append(trPartsCtrls);
-	tblPartsCtrls.rows.push(trPartsCtrls);
-
-	gPartCtrlId += 1;
-
-	// once a button is pressed, the step becomes 2.1 specifying parts
-	gStep = 2.1;
-
-	// TODO: make this more strict: need to have at least one pair of parts-ctrls
-	// if (gPartsCtrls.pc0 != undefined && Object.keys(gPartsCtrls.pc0.parts).length > 0 && gPartsCtrls.pc0.ctrl != undefined) {
-	if (numValidPartsCtrl() > 0) {
-		showElm(adaptations)
-	}
-});
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//
-//	Step 3 - adaptations select menu
-//
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-smAdapts.selectmenu({
-	change: function(event, data) {
-		gStep = 3;
-
-		// init the container for adaptations
-		if (gAdaptId == 0) {
-			lsAdapts.tagit({
-				onTagClicked: function(event, ui) {
-					triggerUI2ObjAction(ui.tag, FOCUSACTION);
-					event.stopPropagation();
-				}
-			});
-			trAdaptations.prepend(lsAdapts);
-		}
-
-		// create a 'tag' to represent an added adaptation
-		if (data.item.index > 0) {
-			gAdaptId += 1;
-			lsAdapts.tagit('createTag', gAdaptId + ' ' + data.item.value);
-		}
-
-		switch (data.item.value) {
-			case 'Enlargement':
-
-				// experimental: only dealing with 1st parts-ctrls now
-				gAdaptations.push(new xacEnlargement(gPartsCtrls.pc0));
-				// scene.remove(gPartsCtrls.pc0.obj);
-				break;
-		}
-
-		// reset the selection from the list
-		var optionSelected = $("option:selected", this);
-		optionSelected.removeAttr("selected");
-		$('#noAdaptSel').attr('selected', 'selected');
-		smAdapts.selectmenu("refresh");
-
-		showElm(optimization);
-	}
-});
-
-
-//
-//	Step 4 - optimization UIs
-//
-
-
-//
-//	Step 5 - connector select menu
-//
-smConns.selectmenu({
-	change: function(event, data) {
-		gStep = 5;
-
-		// init the container for Connsations
-		if (gConnId == 0) {
-			lsConns.tagit({
-				onTagClicked: function(event, ui) {
-					triggerUI2ObjAction(ui.tag, FOCUSACTION);
-					event.stopPropagation();
-				}
-			});
-			trConns.prepend(lsConns);
-
-		}
-
-		// create a 'tag' to represent an added Connsation
-		if (data.item.index > 0) {
-			gConnId += 1;
-			lsConns.tagit('createTag', gConnId + ' ' + data.item.value);
-		}
-
-		// reset the selection from the list
-		var optionSelected = $("option:selected", this);
-		optionSelected.removeAttr("selected");
-		$('#noConnSel').attr('selected', 'selected');
-		smConns.selectmenu("refresh");
-	}
+$(document).ready(function() {
+	initPanel();
 });
 
 

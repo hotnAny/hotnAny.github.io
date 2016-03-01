@@ -101,14 +101,27 @@ function scaleAroundCenter(obj, factor) {
 
 /*
 	scale an object along the plane ┴ to dir
-	this method is implemented based on geometry rather than mesh
 */
 function scaleAroundVector(obj, factor, dir) {
+	scaleWithVector(obj, [factor, 1, factor], dir);
+}
+
+/*
+	scale an object/geometry/vector along dir
+*/
+function scaleAlongVector(obj, factor, dir) {
+	scaleWithVector(obj, [1, factor, 1], dir);
+}
+
+/*
+	this method is implemented based on geometry rather than mesh
+*/
+function scaleWithVector(obj, factors, dir) {
 	var ctr0 = obj.geometry.center();
 	rotateGeoTo(obj.geometry, dir, true);
 	
 	var m = new THREE.Matrix4();
-	m.makeScale(factor, 1, factor);
+	m.makeScale(factors[0], factors[1], factors[2]);
 	obj.geometry.applyMatrix(m);
 
 	rotateGeoTo(obj.geometry, dir);
@@ -116,17 +129,6 @@ function scaleAroundVector(obj, factor, dir) {
 	var ctr1 = obj.geometry.center();
 	var offset = ctr1.clone().sub(ctr0);
 	obj.geometry.translate(offset.x, offset.y, offset.z);
-	
-}
-
-/*
-	scale an object/geometry/vector along dir
-	TODO: unify them?
-*/
-function scaleAlongVector(obj, factor, dir) {
-	rotateObjTo(obj, dir);
-	scaleAroundCenter(obj, [1, factor, 1]);
-	rotateObjTo(obj, dir, true);
 }
 
 function rotateObjTo(obj, dir, isReversed) {

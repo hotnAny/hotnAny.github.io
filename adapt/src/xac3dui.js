@@ -11,7 +11,7 @@ class PartSelection {
 		this.FINGER = 10;
 
 		// TODO: rehink how to compute this parameter
-		this.HAND = 75;
+		this.HAND = 150;
 
 		this._obj = undefined;
 
@@ -40,7 +40,7 @@ class PartSelection {
 	/*
 		casting a finger or hand print on the object by single clicks
 	*/
-	cast(obj, pt, nml, size) {
+	press(obj, pt, nml, size) {
 		this.clear();
 		this._obj = obj;
 
@@ -50,14 +50,14 @@ class PartSelection {
 		nml = nml.normalize();
 		var nmlOpp = nml.clone().multiplyScalar(-1);
 
-		var rPartSelection = size;
-		var distAbove = size * 2; // hyperthetical dist between finger(s) and the ctrl point
+		var rPartSelection = this.HAND;
+		var distAbove = this.HAND * 2; // hyperthetical dist between finger(s) and the ctrl point
 
 		var yUp = new THREE.Vector3(0, 1, 0);
 		var angleToRotate = yUp.angleTo(nml);
 		var axisToRotate = new THREE.Vector3().crossVectors(yUp, nml).normalize();
 
-		// find the max distance to cast the shadow
+		// find the max distance to press the shadow
 		var ctrlPts = [];
 		var tess = 32;
 		var rayCaster = new THREE.Raycaster();
@@ -79,11 +79,10 @@ class PartSelection {
 
 		maxDist2PartSelection += 1;
 
-
 		//
 		//	2. create a normal-orthogonal cylinder
 		//
-		var cylPartSelection = new xacCylinder(rPartSelection, maxDist2PartSelection);
+		var cylPartSelection = new xacCylinder(rPartSelection, maxDist2PartSelection + 1);
 
 		var midPt = pt.clone().add(nml.clone().multiplyScalar(distAbove - maxDist2PartSelection * 0.5));
 
@@ -93,7 +92,6 @@ class PartSelection {
 		// option 2: do translate on axis
 		var vOffset = midPt.clone().sub(cylPartSelection.m.position.clone());
 		cylPartSelection.m.translateOnAxis(vOffset.clone().normalize(), vOffset.length());
-
 		cylPartSelection.m.rotateOnAxis(axisToRotate, angleToRotate);
 		// scene.add(cylPartSelection.m);
 
@@ -102,22 +100,24 @@ class PartSelection {
 		//
 
 		// the part where the shadow casting cylinder eats in the object
-		var cylPartSelectionIn = xacThing.intersect(cylPartSelection.gt, obj, MATERIALCONTRAST);
-		// scene.add(cylPartSelectionIn);
+		var vEatIn = pt.clone().sub(midPt).normalize();
+		var dEatIn = 5;
+		var cylEatIn = cylPartSelection.m.clone();
+		cylEatIn.position.copy(cylEatIn.position.clone().add(vEatIn.multiplyScalar(dEatIn)));
+		var cylPartSelectionIn = xacThing.intersect(getTransformedGeometry(cylEatIn), obj, MATERIALCONTRAST);
+		// cylPartSelection.m.translateOnAxis(vEatIn.clone().normalize().multiplyScalar(-1), dEatIn);
+		// scene.add(cylEatIn);
 
 		// the part of the shadow casting cylinder that's outside the object
 		var cylPartSelectionOut = xacThing.subtract(cylPartSelection.gt, cylPartSelectionIn.geometry, MATERIALCONTRAST);
 		// scene.add(cylPartSelectionOut);
 
-		// let it eat in the object an epsilon to get the minimal intersection
-		var vEatIn = pt.clone().sub(cylPartSelection.m.position);
-		var dEatIn = 0.01;
-		cylPartSelectionOut.translateOnAxis(vEatIn.clone().normalize(), dEatIn);
-
 		// get the geometric representation of the shadow
-		this._part = xacThing.intersect(obj, getTransformedGeometry(cylPartSelectionOut), MATERIALCONTRAST);
+		// this._part = xacThing.intersect(obj, getTransformedGeometry(cylPartSelectionOut), MATERIALCONTRAST);
+		this._part = cylPartSelectionIn;
+
 		// eat out a little for better display
-		this._part.translateOnAxis(vEatIn.clone().normalize().multiplyScalar(-1), 2 * dEatIn);
+		this._part.translateOnAxis(vEatIn.clone().normalize().multiplyScalar(-1), 1);
 		scene.add(this._part);
 
 		// scene.remove(cylPartSelection.m);
@@ -125,23 +125,32 @@ class PartSelection {
 		// remove original objects for better visibility
 		// scene.remove(obj);
 
-
 		//
 		//	4. removing excessive faces
 		//
-		var clrTrans = new THREE.Color("#ff0000");
-		var facesToRemove = [];
-		for (var i = this._part.geometry.faces.length - 1; i >= 0; i--) {
-			var f = this._part.geometry.faces[i];
-			var bendAngle = size == this.FINGER ? Math.PI / 4 : Math.PI / 2;
-			if (f.normal.angleTo(nml) > bendAngle) {
-				facesToRemove.push(f);
-			}
-		}
+		// var clrTrans = new THREE.Color("#ff0000");
+		// var facesToRemove = [];
+		// for (var i = this._part.geometry.faces.length - 1; i >= 0; i--) {
+		// 	var f = this._part.geometry.faces[i];
+		// 	var bendAngle = size == this.FINGER ? Math.PI / 4 : Math.PI / 2;
+		// 	if (f.normal.angleTo(nml) > bendAngle) {
+		// 		facesToRemove.push(f);
+		// 	}
+		// }
 
-		for (var i = facesToRemove.length - 1; i >= 0; i--) {
-			removeFromArray(this._part.geometry.faces, facesToRemove[i]);
-		}
+		// for (var i = facesToRemove.length - 1; i >= 0; i--) {
+		// 	removeFromArray(this._part.geometry.faces, facesToRemove[i]);
+		// }
+
+		//
+		//	5. wrap up
+		//
+		this._part.type = 'press';
+		this._part.normal = nml;
+		this._part.center = pt;
+		this._part.cylCenter = cylPartSelection.m.position;
+		this._part.cylHeight = maxDist2PartSelection;
+		this._part.selCyl = cylPartSelectionOut;//xacThing.intersect(cylPartSelection.gt, obj, MATERIALCONTRAST);
 	}
 
 	/*
@@ -234,6 +243,7 @@ class PartSelection {
 			rotateObjTo(this.cylWrap.m, nmlWrap);
 			this.cylWrap.m.position.copy(ctrWrap.clone());
 
+			// flash a cylinder to show selection volume
 			scene.add(this.cylWrap.m);
 			setTimeout(function(m) {
 				scene.remove(m);
@@ -245,7 +255,7 @@ class PartSelection {
 			var gtCylWrap = getTransformedGeometry(this.cylWrap.m);
 			this.wrapIn = xacThing.intersect(gtCylWrap, obj, this._part == undefined ? MATERIALCONTRAST : this._part.material);
 
-			if (this._part != undefined) //{
+			if (this._part != undefined)
 				scene.remove(this._part);
 			this._part = this.wrapIn;
 
@@ -278,6 +288,11 @@ class PartSelection {
 
 			// scene.remove(obj);
 
+			//
+			//	5. finishing up
+			//
+			this._part.type = 'wrap';
+			this._part.ctrSel = ctrWrap;
 			this.isWrapping = false;
 
 		} else {
