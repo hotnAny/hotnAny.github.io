@@ -80,7 +80,6 @@ function triangleArea(va, vb, vc) {
 }
 
 
-
 /*
 	load models from stl binary/ascii data
 */
@@ -89,10 +88,19 @@ function loadStl(data) {
 	var object = new THREE.Mesh(geometry, MATERIALNORMAL);
 	scene.add(object);
 
+	var dims = getBoundingBoxDimensions(object);
+	object.position.y = dims[1] / 2;
+
 	objects.push(object);
 
 	// TODO package non-regular objects
 	// gItems.push(object);
+}
+
+function showBoundingBox(obj) {
+	var bbox = new THREE.BoundingBoxHelper(obj, 0x00ff00);
+	bbox.update();
+	scene.add(bbox);
 }
 
 /*
@@ -141,15 +149,27 @@ function removeBalls() {
 	}
 }
 
+function getRandom(min, max) {
+	return Math.random() * (max - min) + min;
+}
+
+function getRandomInt(min, max) {
+	return Math.floor(Math.random() * (max - min)) + min;
+}
+
+function getRandomVector(scale) {
+	return new THREE.Vector3(getRandom(-scale, scale), getRandom(-scale, scale), getRandom(-scale, scale));
+}
+
 /*
 	get the geometry from a mesh with transformation matrix applied
 */
-function getTransformedGeometry(mesh) {
-	mesh.updateMatrixWorld();
-	var gt = mesh.geometry.clone();
-	gt.applyMatrix(mesh.matrixWorld);
-	return gt;
-}
+// function getTransformedGeometry(mesh) {
+// 	mesh.updateMatrixWorld();
+// 	var gt = mesh.geometry.clone();
+// 	gt.applyMatrix(mesh.matrixWorld);
+// 	return gt;
+// }
 
 function removeFromArray(arr, elm) {
 	var idx = arr.indexOf(elm);
@@ -215,7 +235,6 @@ function getClosestIntersected() {
 
 
 
-
 function gup(name, url) {
 	if (!url) url = location.href;
 	name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
@@ -226,6 +245,6 @@ function gup(name, url) {
 }
 
 
-function float2int (value) {
-    return value | 0;
+function float2int(value) {
+	return value | 0;
 }

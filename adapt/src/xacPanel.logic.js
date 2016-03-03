@@ -276,6 +276,7 @@ var initPanel = function() {
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	smAdapts.selectmenu({
 		change: function(event, data) {
+			$("*").css("cursor", "progress");
 			gStep = 3;
 
 			// init the container for adaptations
@@ -299,7 +300,15 @@ var initPanel = function() {
 				case 'Enlargement':
 
 					// experimental: only dealing with 1st parts-ctrls now
-					gAdaptations.push(new xacEnlargement(gPartsCtrls.pc0));
+					// TODO: fix this
+					var i = 0;
+					var part = undefined;
+					// TODO: mark pc pair deteled when deleted
+					while (part == undefined || part.deleted == true) {
+						part = gPartsCtrls['pc' + i++];
+						log(i);
+					}
+					gAdaptations.push(new xacEnlargement(part));
 					break;
 			}
 
@@ -311,9 +320,9 @@ var initPanel = function() {
 
 			showElm(optimization, function() {
 
-
-
 			});
+
+			$("*").css("cursor", "default");
 		}
 	});
 
@@ -355,9 +364,23 @@ var initPanel = function() {
 	});
 	var minSldFingersValue = $("#sldFingers").slider("option", "min");
 	$('#sldFingers').slider('value', FINGERINIT * minSldFingersValue);
-	// $('#sldFingers').trigger('change');
 	$('#sldFingers').css('background-color', '#b7b7b4');
 
+	$('#sldGrip').slider({
+		max: 100,
+		min: 0,
+		range: 'max',
+		change: function(e) {
+			var minValue = $("#sldGrip").slider("option", "min");
+			var maxValue = $("#sldGrip").slider("option", "max");
+			var value = $('#sldGrip').slider('value');
+			gOptParams.gripFactor = (value - minValue) * 1.0 / (maxValue - minValue);
+		}
+	});
+	$('#sldGrip').css('background-color', '#b7b7b4');
+	var minSldGripValue = $("#sldGrip").slider("option", "min");
+	var maxSldGripValue = $("#sldGrip").slider("option", "max");
+	$('#sldGrip').slider('value', GRIPINIT * (maxSldGripValue - minSldFingersValue));
 
 	$('#sldSize').slider({
 		max: 100,
@@ -374,15 +397,16 @@ var initPanel = function() {
 	var maxsldSizeValue = $("#sldSize").slider("option", "max");
 	var valuesldSize = minsldSizeValue + (SIZEINIT - 1) * (maxsldSizeValue - minsldSizeValue);
 	$('#sldSize').slider('value', valuesldSize);
-	// $('#sldSize').trigger('change');
 
 
 	// $('#sldAttach').slider();
 
 	btnUpdate.click(function(e) {
+		$("html, body").css("cursor", "progress");
 		for (var i = gAdaptations.length - 1; i >= 0; i--) {
 			gAdaptations[i].update(gOptParams);
 		}
+		$("html, body").css("cursor", "default");
 	});
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -423,6 +447,21 @@ var initPanel = function() {
 			$('#noConnSel').attr('selected', 'selected');
 			smConns.selectmenu("refresh");
 		}
+	});
+
+
+	btnExport.click(function(e) {
+		for (var i = objects.length - 1; i >= 0; i--) {
+			scene.remove(objects[i]);
+		}
+
+		// TODO: deal with multiple exports
+		var stlStr = stlFromGeometry(gAdaptations.slice(-1)[0].adaptation.geometry);
+		var blob = new Blob([stlStr], {
+			type: 'text/plain'
+		});
+		saveAs(blob, 'adaptation.stl');
+
 	});
 
 }
@@ -479,6 +518,7 @@ function triggerUI2ObjAction(ui, action, key) {
 			var parts = gPartsCtrls[gCurrPartCtrl.attr('pcId')].parts;
 			var namePart = $(ui[0]).text().slice(0, -1);
 			var part = parts[namePart];
+			part.deleted = true;
 
 			partSel.clear();
 

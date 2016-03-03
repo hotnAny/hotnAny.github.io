@@ -86,10 +86,6 @@ class PartSelection {
 
 		var midPt = pt.clone().add(nml.clone().multiplyScalar(distAbove - maxDist2PartSelection * 0.5));
 
-		// option 1: set position
-		// addALine(cylPartSelection.m.position.clone(), midPt)
-
-		// option 2: do translate on axis
 		var vOffset = midPt.clone().sub(cylPartSelection.m.position.clone());
 		cylPartSelection.m.translateOnAxis(vOffset.clone().normalize(), vOffset.length());
 		cylPartSelection.m.rotateOnAxis(axisToRotate, angleToRotate);
@@ -98,50 +94,22 @@ class PartSelection {
 		//
 		//	3. intersect it with the object to obtain ctrl area
 		//
-
-		// the part where the shadow casting cylinder eats in the object
 		var vEatIn = pt.clone().sub(midPt).normalize();
 		var dEatIn = 5;
 		var cylEatIn = cylPartSelection.m.clone();
 		cylEatIn.position.copy(cylEatIn.position.clone().add(vEatIn.multiplyScalar(dEatIn)));
 		var cylPartSelectionIn = xacThing.intersect(getTransformedGeometry(cylEatIn), obj, MATERIALCONTRAST);
-		// cylPartSelection.m.translateOnAxis(vEatIn.clone().normalize().multiplyScalar(-1), dEatIn);
-		// scene.add(cylEatIn);
 
-		// the part of the shadow casting cylinder that's outside the object
 		var cylPartSelectionOut = xacThing.subtract(cylPartSelection.gt, cylPartSelectionIn.geometry, MATERIALCONTRAST);
 		// scene.add(cylPartSelectionOut);
 
 		// get the geometric representation of the shadow
-		// this._part = xacThing.intersect(obj, getTransformedGeometry(cylPartSelectionOut), MATERIALCONTRAST);
 		this._part = cylPartSelectionIn;
 
 		// eat out a little for better display
 		this._part.translateOnAxis(vEatIn.clone().normalize().multiplyScalar(-1), 1);
 		scene.add(this._part);
-
-		// scene.remove(cylPartSelection.m);
-
-		// remove original objects for better visibility
-		// scene.remove(obj);
-
-		//
-		//	4. removing excessive faces
-		//
-		// var clrTrans = new THREE.Color("#ff0000");
-		// var facesToRemove = [];
-		// for (var i = this._part.geometry.faces.length - 1; i >= 0; i--) {
-		// 	var f = this._part.geometry.faces[i];
-		// 	var bendAngle = size == this.FINGER ? Math.PI / 4 : Math.PI / 2;
-		// 	if (f.normal.angleTo(nml) > bendAngle) {
-		// 		facesToRemove.push(f);
-		// 	}
-		// }
-
-		// for (var i = facesToRemove.length - 1; i >= 0; i--) {
-		// 	removeFromArray(this._part.geometry.faces, facesToRemove[i]);
-		// }
-
+		
 		//
 		//	5. wrap up
 		//
@@ -158,8 +126,6 @@ class PartSelection {
 	*/
 	wrap(obj, pt, size, done) {
 		if (done) {
-			// removeBalls();
-
 			//
 			//	1. find points surrounding the cross section
 			//
@@ -170,9 +136,6 @@ class PartSelection {
 			// bounding box of the stroke
 			var min = new THREE.Vector3(INFINITY, INFINITY, INFINITY);
 			var max = new THREE.Vector3(-INFINITY, -INFINITY, -INFINITY);
-
-
-			log(this._strokePoints.length);
 
 			for (var i = 0; i < this._strokePoints.length; i++) {
 				var p = this._strokePoints[i];
@@ -292,7 +255,7 @@ class PartSelection {
 			//	5. finishing up
 			//
 			this._part.type = 'wrap';
-			this._part.ctrSel = ctrWrap;
+			this._part.ctrSel = getProjection(ctrWrap, a, b, c, d);
 			this.isWrapping = false;
 
 		} else {

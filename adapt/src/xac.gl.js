@@ -1,43 +1,3 @@
-// function findBoundaryEdges(obj, action) {
-// 	for (var i = obj.geometry.faces.length - 1; i >= 0; i--) {
-// 		var f = obj.geometry.faces[i];
-// 		var vidx = [f.a, f.b, f.c];
-// 		for (var j = vidx.length - 1; j >= 0; j--) {
-// 			var v = obj.geometry.vertices[vidx[j]];
-// 			var vNext = obj.geometry.vertices[vidx[(j + 1) % vidx.length]];
-
-// 			if(v.isOnBoundary == undefined && vNext.isOnBoundary == u markSameEdgeVertices(obj, vidx[j], vidx[(j + 1) % vidx.length]) == true) {
-// 				v.isOnBoundary = false;
-// 				vNext.isOnBoundary = false;
-// 			}
-
-// 		}
-// 		// if(m)
-// 	}
-// }
-
-// // helper functions
-// function markSameEdgeVertices(obj, idx1, idx2) {
-// 	var v1 = obj.geometry.vertices[idx1];
-// 	var v2 = obj.geometry.vertices[idx2];
-
-// 	if(v1.nextTos == undefined) v1.nextTos = new Array();
-// 	if(v1.nextTos[v2] != undefined) {
-// 		return true;
-// 	} else {
-// 		v1.nextTos[v2] = true;
-// 	}
-
-// 	if(v2.nextTos == undefined) v2.nextTos = new Array();
-// 	if(v2.nextTos[v1] != undefined) {
-// 		return true;
-// 	} else {
-// 		v2.nextTos[v1] = true;
-// 	}
-
-// 	return false;
-// }
-
 /*
 	merge a list of THREE.Mesh
 */
@@ -113,13 +73,15 @@ function scaleAlongVector(obj, factor, dir) {
 	scaleWithVector(obj, [1, factor, 1], dir);
 }
 
+// TODO: clean up unused methods
+
 /*
 	this method is implemented based on geometry rather than mesh
 */
 function scaleWithVector(obj, factors, dir) {
 	var ctr0 = obj.geometry.center();
 	rotateGeoTo(obj.geometry, dir, true);
-	
+
 	var m = new THREE.Matrix4();
 	m.makeScale(factors[0], factors[1], factors[2]);
 	obj.geometry.applyMatrix(m);
@@ -152,4 +114,202 @@ function rotateVectorTo(v, dir) {
 	var angleToRotate = yUp.angleTo(dir);
 	var axisToRotate = new THREE.Vector3().crossVectors(yUp, dir).normalize();
 	v.applyAxisAngle(axisToRotate, angleToRotate);
+}
+
+function tessellate(obj, minArea) {
+
+}
+
+function computeFaceArea(obj) {
+	var g = getTransformedGeometry(obj);
+	for (var i = g.faces.length - 1; i >= 0; i--) {
+		var f = g.faces[i];
+		// log(f.vertexNormals);
+		var va = g.vertices[f.a];
+		var vb = g.vertices[f.b];
+		var vc = g.vertices[f.c];
+		f.area = triangleArea(va, vb, vc);
+
+		va.normal = f.vertexNormals[0];
+		// addALine(va, va.clone().add(va.normal.clone().multiplyScalar(20)));
+		vb.normal = f.vertexNormals[1];
+		// addALine(vb, vb.clone().add(vb.normal.clone().multiplyScalar(20)));
+		vc.normal = f.vertexNormals[2];
+		// addALine(vc, vc.clone().add(vc.normal.clone().multiplyScalar(20)));
+	}
+}
+
+function markVertexNeighbors(obj) {
+	removeBalls();
+
+	obj.vneighbors = [];
+	var g = getTransformedGeometry(obj);
+	var addNeighbors = function(list, idx, idxNeighbors) {
+		if (list[idx] == undefined) list[idx] = [];
+		for (var i = idxNeighbors.length - 1; i >= 0; i--) {
+			list[idx].push(idxNeighbors[i]);
+		}
+	}
+
+	for (var i = g.faces.length - 1; i >= 0; i--) {
+		var f = g.faces[i];
+		addNeighbors(obj.vneighbors, f.a, [f.b, f.c]);
+		addNeighbors(obj.vneighbors, f.b, [f.c, f.a]);
+		addNeighbors(obj.vneighbors, f.c, [f.a, f.b]);
+	}
+
+	for (var i = g.vertices.length - 1; i >= 0; i--) {
+		addABall(g.vertices[i], 0xffffff, 0.15);
+	}
+
+	var idx = getRandomInt(0, obj.vneighbors.length);
+	var v = g.vertices[idx];
+	addABall(v, 0xff0000, 0.5)
+	nudgeNeighbors(obj, g, idx, v, 9);
+	vns = obj.vneighbors[idx];
+
+	for (var i = vns.length - 1; i >= 0; i--) {
+		var vn = g.vertices[vns[i]];
+		addABall(vn, 0x444444, 0.3);
+	}
+}
+
+function nudgeNeighbors(a, ag, idx, ctr, d) {
+	// var v = ag.vertices[idx];
+	// if (v.activated != undefined || v.distanceTo(ctr) > d) {
+	// 	if(v.distanceTo(ctr) > d)
+
+	// 	return false;
+	// }
+
+	// v.activated = false;
+
+	var vneighbors = a.vneighbors[idx];
+	for (var i = vneighbors.length - 1; i >= 0; i--) {
+		var nidx = vneighbors[i];
+		var vn = ag.vertices[nidx];
+
+		if (vn.activated == false) {
+			continue;
+		}
+
+		if (vn.distanceTo(ctr) < d) {
+			vn.activated = false;
+			this.nudgeNeighbors(a, ag, nidx, ctr, d);
+			addABall(vn, 0x444444, 0.2);
+		} else {
+			addABall(vn, 0x0000ff, 0.2);
+			continue;
+		}
+
+	}
+}
+
+function computeVertexNormal(obj) {
+
+}
+
+/*
+	get the geometry from a mesh with transformation matrix applied
+*/
+function getTransformedGeometry(mesh) {
+	mesh.updateMatrixWorld();
+	var gt = mesh.geometry.clone();
+	gt.applyMatrix(mesh.matrixWorld);
+	return gt;
+}
+
+function getTransformedVector(v, mesh) {
+	var vt = v.clone();
+	vt.applyMatrix4(mesh.matrixWorld);
+	return vt;
+}
+
+function getBoundingBoxCenter(obj) {
+	var g = obj.geometry;
+	g.computeBoundingBox();;
+	var x = 0.5 * (g.boundingBox.max.x + g.boundingBox.min.x);
+	var y = 0.5 * (g.boundingBox.max.y + g.boundingBox.min.y);
+	var z = 0.5 * (g.boundingBox.max.z + g.boundingBox.min.z);
+	return new THREE.Vector3(x, y, z);
+}
+
+// function getAspectRatios(obj) {
+
+
+// 	var ratios = [1 / (ly * lz), 1 / (lz * lx), 1 / (lx * ly)];
+// 	// log(ratios)
+// 	var minRatio = ratios[0];
+// 	for (var i = ratios.length - 1; i > 0; i--) {
+// 		minRatio = Math.min(minRatio, ratios[i]);
+// 	}
+
+// 	// TODO denominator zero check
+// 	for (var i = ratios.length - 1; i >= 0; i--) {
+// 		ratios[i] /= minRatio;
+// 	}
+
+// 	return ratios;
+// }
+
+function getBoundingBoxDimensions(obj) {
+	var g = obj.geometry;
+	g.computeBoundingBox();
+
+	var lx = (g.boundingBox.max.x - g.boundingBox.min.x);
+	var ly = (g.boundingBox.max.y - g.boundingBox.min.y);
+	var lz = (g.boundingBox.max.z - g.boundingBox.min.z);
+
+	return [lx, ly, lz];
+}
+
+function getBoundingBoxVolume(obj) {
+	var dims = getBoundingBoxDimensions(obj);
+	return dims[0] * dims[1] * dims[2];
+}
+
+function getEndPointsAlong(obj, dir) {
+	var bbox = new THREE.BoundingBoxHelper(obj, 0x00ff00);
+	var ctr = getBoundingBoxCenter(obj);
+	bbox.update();
+	bbox.material.side = THREE.DoubleSide;
+	// scene.add(bbox);
+
+	var signs = [1, -1];
+	var endPoints = [];
+	for (var i = signs.length - 1; i >= 0; i--) {
+		var sdir = dir.clone().multiplyScalar(signs[i]).normalize();
+		var rayCaster = new THREE.Raycaster();
+
+		rayCaster.ray.set(ctr, sdir);
+		// addALine(ctr, ctr.clone().add(sdir.clone().multiplyScalar(100)));
+
+		var ints = rayCaster.intersectObjects([bbox.object]);
+		// while(ints.length == 0) {
+		// 	var dv = getRandomVector(1.0);
+		// 	rayCaster.ray.set(ctr.clone().add(dv), sdir);
+		// 	ints = rayCaster.intersectObjects([bbox.object]);
+		// }
+		// 	log(ints);
+		if (ints[0] != undefined) {
+			// addABall(ints[0].point, 0xaabbcc);
+			endPoints[i] = ints[0].point;
+		}
+	}
+
+	if (endPoints[0] == undefined && endPoints[1] != undefined) {
+		endPoints[0] = ctr.add(ctr.clone().sub(endPoints[1]));
+	}
+
+	if (endPoints[1] == undefined && endPoints[0] != undefined) {
+		endPoints[1] = ctr.add(ctr.clone().sub(endPoints[0]));
+	}
+
+	if (endPoints[0] == undefined && endPoints[1] == undefined) {
+		endPoints[0] = new THREE.Vector3(ctr.x, bbox.box.min.y, ctr.z);
+		endPoints[1] = new THREE.Vector3(ctr.x, bbox.box.max.y, ctr.z);
+	}
+
+	// log(endPoints);
+	return endPoints;
 }

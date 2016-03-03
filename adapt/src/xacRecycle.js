@@ -149,3 +149,132 @@
 			// var a = mergeObjs([aoc, wall, laoc]);
 
 
+// scene.remove(cylPartSelection.m);
+
+		// remove original objects for better visibility
+		// scene.remove(obj);
+
+		//
+		//	4. removing excessive faces
+		//
+		// var clrTrans = new THREE.Color("#ff0000");
+		// var facesToRemove = [];
+		// for (var i = this._part.geometry.faces.length - 1; i >= 0; i--) {
+		// 	var f = this._part.geometry.faces[i];
+		// 	var bendAngle = size == this.FINGER ? Math.PI / 4 : Math.PI / 2;
+		// 	if (f.normal.angleTo(nml) > bendAngle) {
+		// 		facesToRemove.push(f);
+		// 	}
+		// }
+
+		// for (var i = facesToRemove.length - 1; i >= 0; i--) {
+		// 	removeFromArray(this._part.geometry.faces, facesToRemove[i]);
+		// }
+
+
+// optimizeGrip(a, ctrl, gripFactor) {
+
+	// 	//
+	// 	//	preprocessing
+	// 	//
+	// 	if (!a.preprocessed) {
+	// 		tessellate(a, 5);
+
+	// 		a.geometry.computeFaceNormals();
+	// 		a.geometry.computeVertexNormals();
+	// 		a.vnormals = [a.geometry.vertices.length];
+	// 		for (var i = a.geometry.faces.length - 1; i >= 0; i--) {
+	// 			var f = a.geometry.faces[i];
+	// 			a.vnormals[f.a] = f.vertexNormals[0];
+	// 			a.vnormals[f.b] = f.vertexNormals[1];
+	// 			a.vnormals[f.c] = f.vertexNormals[2];
+	// 		}
+
+	// 		computeFaceArea(a);
+	// 		markVertexNeighbors(a);
+
+	// 		a.preprocessed = true;
+	// 	}
+
+	// 	return;
+
+	// 	//
+	// 	// init
+	// 	//
+	// 	var spacing = 50 * (1 - gripFactor);
+	// 	var sphereSet = undefined;
+	// 	var ag = getTransformedGeometry(a);
+
+	// 	//
+	// 	ctrl.gravity = new THREE.Vector3(0, -1, 0);
+	// 	//
+
+	// 	a.updateMatrixWorld();
+	// 	for (var i = ag.vertices.length - 1; i >= 0; i--) {
+	// 		var v = ag.vertices[i];
+
+	// 		v.activated = undefined;
+	// 	}
+
+	// 	//
+	// 	//	making dents/grooves
+	// 	//
+	// 	for (var i = ag.vertices.length - 1; i >= 0; i--) {
+	// 		var v = ag.vertices[i];
+	// 		v.normal = getTransformedVector(a.vnormals[i], a);
+
+	// 		if (v.activated != false) {
+	// 			var toOpt = false;
+	// 			var eps = Math.PI / 8;
+	// 			// log(v.normal.angleTo(ctrl.gravity))
+	// 			if (toOpt == false && ctrl.gravity != undefined && Math.abs(v.normal.angleTo(ctrl.gravity) - Math.PI / 2) < eps) {
+	// 				toOpt = true;
+	// 			}
+
+	// 			if (toOpt == false && ctrl.force != undefined && Math.abs(v.normal.angleTo(ctrl.force)) < eps) {
+	// 				toOpt = true;
+	// 			}
+
+	// 			if (toOpt) {
+	// 				// add to the sphere set
+	// 				var sphere = new xacSphere(5);
+	// 				addABall(v);
+	// 				sphere.m.position.copy(v.clone());
+	// 				if (sphereSet == undefined) {
+	// 					sphereSet = sphere.m;
+	// 				} else {
+	// 					// sphereSet = xacThing.union(getTransformedGeometry(sphereSet), getTransformedGeometry(sphere.m));
+	// 				}
+
+	// 				// mark its neighbors within spacing as not activated
+	// 				// log((ag.vertices.length - i) + "/" + ag.vertices.length);
+	// 				this.nudgeNeighbors(a, ag, i, v, spacing);
+	// 			} else {
+	// 				addABall(v, 0xaaaaaa)
+	// 			}
+	// 		} else {
+	// 			// log("skipped " + i);
+	// 			// addABall(v, 0xaaaaaa)
+	// 		}
+	// 	}
+
+	// 	// wrap up
+	// 	a = xacThing.subtract(ag, getTransformedGeometry(sphereSet));
+
+	// }
+
+	// nudgeNeighbors(a, ag, idx, ctr, d) {
+	// 	var v = ag.vertices[idx];
+	// 	if (v.activated != undefined || v.distanceTo(ctr) > d) {
+	// 		log(idx + " out!")
+	// 		return false;
+	// 	}
+
+	// 	v.activated = false;
+	// 	var vneighbors = a.vneighbors[idx];
+	// 	log(vneighbors);
+	// 	for (var i = vneighbors.length - 1; i >= 0; i--) {
+	// 		var nidx = vneighbors[i];
+	// 		this.nudgeNeighbors(a, ag, nidx, ctr, d);
+	// 	}
+	// }

@@ -34,6 +34,8 @@ class xacThing {
 		var csgBoolean = undefined;
 		switch (type) {
 			case SUBTRACT:
+				// scene.add(new THREE.Mesh(obj1, MATERIALNORMAL));
+				// scene.add(new THREE.Mesh(obj2, MATERIALNORMAL));
 				csgBoolean = objCsg1.subtract(objCsg2);
 				break;
 			case UNION:
@@ -63,7 +65,7 @@ class xacSphere extends xacThing {
 	constructor(r, material) {
 		super();
 		this._r = r;
-		this._g = new THREE.SphereGeometry(r, 32, 32);
+		this._g = new THREE.SphereGeometry(r, 8, 8);
 		this._m = new THREE.Mesh(this._g, material == undefined ? MATERIALNORMAL.clone() : material.clone());
 	}
 }
@@ -80,10 +82,10 @@ class xacCylinder extends xacThing {
 
 class xacRectPrism extends xacThing {
 	// width, thickness, length
-	constructor(w, t, l) {
+	constructor(w, t, l, material) {
 		super();
 		this._g = new THREE.CubeGeometry(w, t, l);
-		this._m = new THREE.Mesh(this._g, MATERIALNORMAL.clone());
+		this._m = new THREE.Mesh(this._g, material == undefined ? MATERIALNORMAL.clone() : material.clone());
 	}
 }
 

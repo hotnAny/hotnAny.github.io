@@ -66,6 +66,7 @@ function onMouseUpStep(event) {
 	switch (gStep) {
 		case 2.1:
 			if (event.which == LEFTMOUSE) {
+				$("html,body").css("cursor", "progress");
 				if (partSel.isWrapping) {
 					var objInt = getClosestIntersected();
 					partSel.wrap(undefined, undefined, partSel.HAND, true);
@@ -96,7 +97,9 @@ function onMouseUpStep(event) {
 
 				partSel.isEngaged = false;
 
-				if (D != true || event.shiftKey == false) removeBalls();
+				if (D != 'true' || event.shiftKey == false) removeBalls();
+
+				$("html,body").css("cursor", "default");
 			}
 			break;
 		case 2.2:
