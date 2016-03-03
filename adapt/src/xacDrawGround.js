@@ -15,7 +15,6 @@ var ground = new THREE.Mesh(
 // var df = 0.0;
 // ground.setDamping([df, df, df], [df, df, df]);
 ground.receiveShadow = true;
-ground.position.y -= 50;
-;
+// ground.position.y -= 50;
 
 scene.add(ground);
