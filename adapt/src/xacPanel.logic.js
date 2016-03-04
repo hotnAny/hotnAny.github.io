@@ -297,19 +297,21 @@ var initPanel = function() {
 				lsAdapts.tagit('createTag', gAdaptId + ' ' + data.item.value);
 			}
 
+			var i = 0;
+			var part = undefined;
+			// TODO: mark pc pair deteled when deleted
+			while (part == undefined || part.deleted == true) {
+				part = gPartsCtrls['pc' + i++];
+			}
 			switch (data.item.value) {
 				case 'Enlargement':
 
 					// experimental: only dealing with 1st parts-ctrls now
 					// TODO: fix this
-					var i = 0;
-					var part = undefined;
-					// TODO: mark pc pair deteled when deleted
-					while (part == undefined || part.deleted == true) {
-						part = gPartsCtrls['pc' + i++];
-						log(i);
-					}
 					gAdaptations.push(new xacEnlargement(part));
+					break;
+				case 'Lever':
+					gAdaptations.push(new xacLever(part));
 					break;
 			}
 
@@ -400,14 +402,10 @@ var initPanel = function() {
 	$('#sldSize').slider('value', valuesldSize);
 
 
-	// $('#sldAttach').slider();
-
 	btnUpdate.click(function(e) {
-		$("html, body").css("cursor", "progress");
 		for (var i = gAdaptations.length - 1; i >= 0; i--) {
 			gAdaptations[i].update(gOptParams);
 		}
-		$("html, body").css("cursor", "default");
 	});
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////

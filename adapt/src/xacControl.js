@@ -9,7 +9,7 @@ var JOINSEPCTRL = 4;
 class xacControl {
 	constructor(type) {
 		this._type = type;
-		this._ve = [];	// visual elements
+		this._ve = []; // visual elements
 	}
 
 	get type() {
@@ -26,13 +26,27 @@ class xacControl {
 class xacGrasp extends xacControl {
 	constructor() {
 		super(GRASPCTRL);
-
 		this._g = new THREE.Vector3(0, -1, 0);
 	}
 
 	mouseDown(e, obj, pt, fnml) {
-
+		if (gSticky == false) {
+			if (obj != undefined && pt != undefined && fnml != undefined) {
+				gPartSel.grab(obj, pt, fnml);
+			}
+		} else if (gSticky) {
+			gPartSel.release();
+			gPartSel.finishUp();
+		}
 	}
+
+	mouseMove(e, obj, pt, fml) {
+		if (gSticky) {
+			gPartSel.rotateHand(e.ptMove, e.ptDown);
+		}
+	}
+
+	mouseUp(e, obj, pt, fml) {}
 }
 
 class xacRotate extends xacControl {
@@ -60,7 +74,7 @@ class xacRotate extends xacControl {
 				break;
 			case this._TOSELECTPLANE:
 				// show planes
-				if(this._planeSel.hitTest(e) == true) {
+				if (this._planeSel.hitTest(e) == true) {
 					gSticky = true;
 					this._step = this._TOSELECTFULCRUM;
 				}
@@ -84,12 +98,12 @@ class xacRotate extends xacControl {
 	}
 
 	mouseUp(e, obj, pt, fml) {
-		switch (this._step) {
-			case this._TOSELECTOBJ:
-				break;
-			case this._TOSELECTFULCRUM:
-				// compute the fulcrum
-				break;
-		}
+		// switch (this._step) {
+		// 	case this._TOSELECTOBJ:
+		// 		break;
+		// 	case this._TOSELECTFULCRUM:
+		// 		// compute the fulcrum
+		// 		break;
+		// }
 	}
 }
