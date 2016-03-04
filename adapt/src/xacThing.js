@@ -59,6 +59,20 @@ class xacThing {
 	static intersect(obj1, obj2, material) {
 		return xacThing._boolean(obj1, obj2, INTERSECT).toMesh(material == undefined ? MATERIALNORMAL.clone() : material.clone());
 	}
+
+	static line(v, dir) {
+		var clr = 0xff0000;
+
+		var geometry = new THREE.Geometry();
+		geometry.vertices.push(v);
+		geometry.vertices.push(v.clone().add(dir.clone().normalize().multiplyScalar(100)));
+		var material = new THREE.LineBasicMaterial({
+			color: clr
+		});
+		var line = new THREE.Line(geometry, material);
+
+		return line;
+	}
 }
 
 class xacSphere extends xacThing {

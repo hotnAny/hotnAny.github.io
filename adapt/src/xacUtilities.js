@@ -84,17 +84,41 @@ function triangleArea(va, vb, vc) {
 	load models from stl binary/ascii data
 */
 function loadStl(data) {
+	var stlLoader = new THREE.STLLoader();
 	var geometry = stlLoader.parse(data);
 	var object = new THREE.Mesh(geometry, MATERIALNORMAL);
 	scene.add(object);
 
 	var dims = getBoundingBoxDimensions(object);
-	object.position.y = dims[1] / 2;
+	var ctr = getBoundingBoxCenter(object);
 
+	// reposition the ground & grid
+	gGround.position.y -= dims[1] * 0.55;
+
+	scene.remove(gGrid);
+	gGrid = drawGrid(dims[1] * 0.55);
+	scene.add(gGrid);
+
+	// relocate the camera
+	var upperLeft = object.position.clone().add(new THREE.Vector3(-dims[0] / 2, dims[1] / 2, dims[2] / 2));
+	var r = getBoundingSphereRadius(object);
+	camera.position.copy(gPosCam.clone().multiplyScalar(r * 2));
+	camera.position.y = 0;
+
+	// store the object
 	objects.push(object);
 
 	// TODO package non-regular objects
 	// gItems.push(object);
+}
+
+var objectDelay; // loaded from file
+function loadStlFromFile(objPath, material) {
+	var stlLoader = new THREE.STLLoader();
+	stlLoader.load(objPath, function(geometry) {
+		THREE.GeometryUtils.center(geometry);
+		objectDelay = new THREE.Mesh(geometry, material.clone());
+	});
 }
 
 function showBoundingBox(obj) {
@@ -138,6 +162,7 @@ function addALine(v1, v2, clr) {
 
 	scene.add(line);
 	addABall(v1);
+	return line;
 }
 
 /*
@@ -247,4 +272,26 @@ function gup(name, url) {
 
 function float2int(value) {
 	return value | 0;
+}
+
+function addATriangle(v1, v2, v3, clr) {
+	var vs = [v1.x, v1.y, v1.z, v2.x, v2.y, v2.z, v3.x, v3.y, v3.z];
+	var fs = new THREE.Face3(0, 1, 2);
+
+	var geometry = new THREE.Geometry(); //PolyhedronGeometry(vs, fs, 1, 1);
+	geometry.vertices.push(v1);
+	geometry.vertices.push(v2);
+	geometry.vertices.push(v3);
+	geometry.faces.push(new THREE.Face3(0, 1, 2));
+	var material = new THREE.MeshBasicMaterial({
+		color: clr,
+		transparent: true,
+		opacity: 0.5
+	});
+	var tri = new THREE.Mesh(geometry, material);
+	tri.material.side = THREE.DoubleSide;
+
+	scene.add(tri);
+
+	return tri;
 }

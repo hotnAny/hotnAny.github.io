@@ -227,11 +227,17 @@ function getTransformedVector(v, mesh) {
 
 function getBoundingBoxCenter(obj) {
 	var g = obj.geometry;
-	g.computeBoundingBox();;
+	g.computeBoundingBox();
 	var x = 0.5 * (g.boundingBox.max.x + g.boundingBox.min.x);
 	var y = 0.5 * (g.boundingBox.max.y + g.boundingBox.min.y);
 	var z = 0.5 * (g.boundingBox.max.z + g.boundingBox.min.z);
 	return new THREE.Vector3(x, y, z);
+}
+
+function getBoundingSphereRadius(obj) {
+	var g = obj.geometry;
+	g.computeBoundingSphere();
+	return g.boundingSphere.radius;
 }
 
 // function getAspectRatios(obj) {

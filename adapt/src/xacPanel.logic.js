@@ -244,9 +244,8 @@ var initPanel = function() {
 			row.remove();
 		})
 
-
-		trPartsCtrls.append(trPartsCtrls.tdParts);
 		trPartsCtrls.append(trPartsCtrls.tdCtrls);
+		trPartsCtrls.append(trPartsCtrls.tdParts);
 		trPartsCtrls.append(trPartsCtrls.tdCopy);
 		trPartsCtrls.append(trPartsCtrls.tdDel);
 
@@ -533,9 +532,16 @@ function numValidPartsCtrl() {
 	var n = 0;
 	for (var pcId in gPartsCtrls) {
 		pc = gPartsCtrls[pcId];
-		if (Object.keys(pc.parts).length > 0 && pc.ctrl != undefined) {
+		// either one is none empty is fine
+		if (Object.keys(pc.parts).length > 0 || pc.ctrl != undefined) {
 			n++;
 		}
 	}
 	return n;
+}
+
+function getActiveCtrl() {
+	if (gCurrPartCtrl != undefined) {
+		return gPartsCtrls[gCurrPartCtrl.attr('pcId')].ctrl;
+	}
 }

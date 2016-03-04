@@ -278,3 +278,33 @@
 	// 		this.nudgeNeighbors(a, ag, nidx, ctr, d);
 	// 	}
 	// }
+
+// gtCylWrapDisplay = getTransformedGeometry(wrapDisplay.m);
+			// wrapInDisplay = xacThing.subtract(gtCylWrapDisplay, obj, MATERIALHIGHLIGHT);
+
+			// flash a cylinder to show selection volume
+			// scene.add(this.cylWrap.m);
+			// setTimeout(function(m) {
+			// 	scene.remove(m);
+			// }, 1000, this.cylWrap.m);
+
+			// scene.add(this._part);
+			
+
+			//
+			//	4. remove unused faces
+			//
+			// var facesToRemove = [];
+			// var graspAngle = Math.PI * 0.45;
+			// this._part.material.needsUpdate = true;
+			// for (var i = this._part.geometry.faces.length - 1; i >= 0; i--) {
+			// 	var f = this._part.geometry.faces[i];
+			// 	if (Math.abs(Math.PI / 2 - f.normal.angleTo(nmlWrap)) > graspAngle) {
+			// 		facesToRemove.push(f);
+			// 	}
+			// }
+			// this._part.geometry.colorsNeedUpdate = true;
+
+			// for (var i = facesToRemove.length - 1; i >= 0; i--) {
+			// 	removeFromArray(this._part.geometry.faces, facesToRemove[i]);
+			// }

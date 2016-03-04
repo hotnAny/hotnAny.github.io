@@ -1,13 +1,12 @@
 /* 
  *	parameters for the trackball control library
  */
-
 controls.rotateSpeed = 5.0;
 controls.zoomSpeed = 0.5;
 controls.panSpeed = 2;
 
 controls.noZoom = false;
-controls.noPan = true;
+// controls.noPan = true;
 
 controls.staticMoving = true;
 controls.dynamicDampingFactor = 0.3;
@@ -31,10 +30,6 @@ var prevGrndX;
 var prevGrndZ;
 
 var intersects = [];
-
-// document.addEventListener('mousedown', onMouseDownCtrl, false);
-// document.addEventListener('mousemove', onMouseMoveCtrl, false);
-// document.addEventListener('mouseup', onMouseUpCtrl, false);
 
 /*
  *	function for performing raycasting

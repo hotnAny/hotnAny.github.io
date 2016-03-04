@@ -20,7 +20,7 @@ class xacAdaptation {
 		for (var pid in this._pc.parts) {
 			return this._as[pid];
 		}
-		
+
 	}
 
 	update(params) {
@@ -44,7 +44,7 @@ class xacAdaptation {
 		// // log("n: " + n);
 
 		// TODO: make this programatic - should be a function of the object's size
-		var rHole = Math.pow(getBoundingBoxVolume(a), 1.0/3) / 15;
+		var rHole = Math.pow(getBoundingBoxVolume(a), 1.0 / 3) / 10;
 		// TODO: make this programatic
 		var spacing = rHole * (2 + 9 * (1 - gripFactor));
 		var gripPoints = [];
@@ -94,7 +94,7 @@ class xacAdaptation {
 			for (var j = 0; j < n; j += 1) {
 
 				var ctrj = endPoints[0].clone().add(ddir.clone().multiplyScalar(j))
-				// addABall(ctrj, 0x44ee55);
+					// addABall(ctrj, 0x44ee55);
 
 				for (var i = rays.length - 1; i >= 0; i--) {
 					var dirCast = rays[i].clone();
@@ -106,7 +106,7 @@ class xacAdaptation {
 					rayCaster.ray.set(ctrj2, dirCast.clone().multiplyScalar(-1).normalize());
 					var ints = rayCaster.intersectObjects([a]);
 					if (ints.length > 0) {
-						var thisPoint = ints[0].point.add(dirCast.normalize().multiplyScalar(rHole * 0.5));
+						var thisPoint = ints[0].point; //.add(dirCast.normalize().multiplyScalar(rHole * 0.5));
 						var lastPoint = gripPoints.slice(-1)[0];
 						if (lastPoint == undefined || lastPoint.distanceTo(thisPoint) > spacing) {
 							gripPoints.push(thisPoint);
@@ -122,7 +122,7 @@ class xacAdaptation {
 			var parentPos = undefined;
 			for (var i = gripPoints.length - 1; i >= 0; i--) {
 				var sphere = new xacSphere(rHole, MATERIALCONTRAST);
-				
+
 				if (sphereSet == undefined) {
 					sphere.m.position.copy(gripPoints[i]);
 					sphereSet = sphere.m;
@@ -139,7 +139,7 @@ class xacAdaptation {
 				var tmpObj = new THREE.Mesh(getTransformedGeometry(sphereSet), sphereSet.material);
 				// scene.add(tmpObj)
 				scene.remove(a);
-				aGrippable  = xacThing.subtract(ag, getTransformedGeometry(sphereSet), MATERIALHIGHLIGHT);
+				aGrippable = xacThing.subtract(ag, getTransformedGeometry(sphereSet), MATERIALHIGHLIGHT);
 				// scene.add(aDented);
 				// scene.remove(tmpObj)
 			}
@@ -187,7 +187,7 @@ class xacEnlargement extends xacAdaptation {
 				this._as[pid] = this.optimizeGrip(this._as[pid], this._pc.ctrl, this._gripFactor, new THREE.Vector3(0, -1, 0), undefined);
 				this._as[pid] = xacThing.subtract(getTransformedGeometry(this._as[pid]), getTransformedGeometry(this._pc.obj), this._as[pid].material);
 				scene.add(this._as[pid]);
-				
+
 			}
 		}
 
@@ -240,7 +240,7 @@ class xacEnlargement extends xacAdaptation {
 			var dirCut = 0;
 			var minDist = 1000;
 			// addABall(ctrPart);
-			for(var i=0; i<n; i++) {
+			for (var i = 0; i < n; i++) {
 				var theta = Math.PI * 2 * i / n;
 				var dir = new THREE.Vector3(Math.cos(theta), 0, Math.sin(theta));
 				rotateVectorTo(dir, part.normal);
@@ -251,15 +251,17 @@ class xacEnlargement extends xacAdaptation {
 				var ints = rayCaster.intersectObjects([laoc]);
 				// addABall(ints[0].point);
 
-				var dist = ints[0].point.distanceTo(ctrPart);
-				if(dist < minDist) {
-					minDist = dist;
-					dirCut = dir;
+				if (ints[0] != undefined) {
+					var dist = ints[0].point.distanceTo(ctrPart);
+					if (dist < minDist) {
+						minDist = dist;
+						dirCut = dir;
+					}
 				}
 			}
 
 			// addALine(ctrPart, ctrPart.clone().add(dirCut.clone().multiplyScalar(100)));
-			var cutPlane = new xacRectPrism(1000, 5, 1000, MATERIALCONTRAST);
+			var cutPlane = new xacRectPrism(1000, 2, 1000, MATERIALCONTRAST);
 			var nmlPlane = new THREE.Vector3().crossVectors(part.normal, dirCut).normalize();
 			rotateObjTo(cutPlane.m, nmlPlane);
 			cutPlane.m.position.copy(ctrPart);

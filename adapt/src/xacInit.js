@@ -52,12 +52,12 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 // renderer.setPixelRatio( window.devicePixelRatio );
 document.body.appendChild(renderer.domElement);
 
-/* using physijs now */
-// var scene = new Physijs.Scene({ fixedTimeStep: 1 / 120 });
 var scene = new THREE.Scene();
 
 var camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 10000);
-camera.position.set(-0, 60, 90);
+var gPosCam = new THREE.Vector3(-6, 3, 4);
+gPosCam.normalize();
+camera.position.copy(gPosCam.clone().multiplyScalar(100));
 
 var controls = new THREE.TrackballControls(camera); // for mouse control
 
@@ -92,19 +92,58 @@ var usingPhysics = false;
 
 var staticObjLocked = false;
 
-var withoutSupport = true;
+// var withoutSupport = true;
 
-/*-----------------------------------------------------------------------------------------------
-     
-     models
+//
+// draw floor
+//
+function drawGround(yOffset) {
+     var groundMaterial = new THREE.MeshBasicMaterial({
+          color: GROUNDCOLOR,
+          transparent: true,
+          opacity: 0.5
+     });
 
------------------------------------------------------------------------------------------------*/
 
-var stlLoader = new THREE.STLLoader();
+     var geometryGround = new THREE.CubeGeometry(1000, 1, 1000);
+     var ground = new THREE.Mesh(
+          geometryGround,
+          groundMaterial,
+          0 // mass
+     );
 
-var teddy = 'things/teddy.stl';
-var wrench = 'things/wrench.stl';
-var mug = 'things/mug.stl';
+     ground.position.y -= yOffset;
+     return ground;
+}
+var gGround = drawGround(0);
+scene.add(gGround);
+
+//
+// draw grid
+//
+function drawGrid(yOffset) {
+     var lineMaterial = new THREE.LineBasicMaterial({
+          color: GRIDCOLOR
+     });
+     var lineGeometry = new THREE.Geometry();
+     var floor = 0.5 - yOffset;
+     var step = 25;
+
+     for (var i = 0; i <= 40; i++) {
+
+          lineGeometry.vertices.push(new THREE.Vector3(-500, floor, i * step - 500));
+          lineGeometry.vertices.push(new THREE.Vector3(500, floor, i * step - 500));
+
+          lineGeometry.vertices.push(new THREE.Vector3(i * step - 500, floor, -500));
+          lineGeometry.vertices.push(new THREE.Vector3(i * step - 500, floor, 500));
+
+     }
+
+     return new THREE.Line(lineGeometry, lineMaterial, THREE.LinePieces);
+}
+var gGrid = drawGrid(0);
+scene.add(gGrid);
+
 
 /*-----------------------------------------------------------------------------------------------
      
@@ -136,7 +175,7 @@ var MATERIALOVERLAY = new THREE.MeshPhongMaterial({
 var MATERIALHIGHLIGHT = new THREE.MeshPhongMaterial({
      color: colorHighlight,
      transparent: true,
-     opacity: 0.75
+     opacity: 0.5
 });
 
 var MATERIALPLAIN = new THREE.MeshBasicMaterial({
@@ -144,6 +183,11 @@ var MATERIALPLAIN = new THREE.MeshBasicMaterial({
      transparent: true,
      opacity: 1.0
 })
+
+var FINGERSIZE = 15;
+var HANDSIZE = 150;
+
+var HANDMODELPATH = 'things/small_hand.stl';
 
 var gStep = 0;
 var gItems = [];
