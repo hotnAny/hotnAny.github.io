@@ -174,36 +174,36 @@ function markVertexNeighbors(obj) {
 	}
 }
 
-function nudgeNeighbors(a, ag, idx, ctr, d) {
-	// var v = ag.vertices[idx];
-	// if (v.activated != undefined || v.distanceTo(ctr) > d) {
-	// 	if(v.distanceTo(ctr) > d)
+	// function nudgeNeighbors(a, ag, idx, ctr, d) {
+	// 	// var v = ag.vertices[idx];
+	// 	// if (v.activated != undefined || v.distanceTo(ctr) > d) {
+	// 	// 	if(v.distanceTo(ctr) > d)
 
-	// 	return false;
+	// 	// 	return false;
+	// 	// }
+
+	// 	// v.activated = false;
+
+	// 	var vneighbors = a.vneighbors[idx];
+	// 	for (var i = vneighbors.length - 1; i >= 0; i--) {
+	// 		var nidx = vneighbors[i];
+	// 		var vn = ag.vertices[nidx];
+
+	// 		if (vn.activated == false) {
+	// 			continue;
+	// 		}
+
+	// 		if (vn.distanceTo(ctr) < d) {
+	// 			vn.activated = false;
+	// 			this.nudgeNeighbors(a, ag, nidx, ctr, d);
+	// 			addABall(vn, 0x444444, 0.2);
+	// 		} else {
+	// 			addABall(vn, 0x0000ff, 0.2);
+	// 			continue;
+	// 		}
+
+	// 	}
 	// }
-
-	// v.activated = false;
-
-	var vneighbors = a.vneighbors[idx];
-	for (var i = vneighbors.length - 1; i >= 0; i--) {
-		var nidx = vneighbors[i];
-		var vn = ag.vertices[nidx];
-
-		if (vn.activated == false) {
-			continue;
-		}
-
-		if (vn.distanceTo(ctr) < d) {
-			vn.activated = false;
-			this.nudgeNeighbors(a, ag, nidx, ctr, d);
-			addABall(vn, 0x444444, 0.2);
-		} else {
-			addABall(vn, 0x0000ff, 0.2);
-			continue;
-		}
-
-	}
-}
 
 function computeVertexNormal(obj) {
 
@@ -239,24 +239,6 @@ function getBoundingSphereRadius(obj) {
 	g.computeBoundingSphere();
 	return g.boundingSphere.radius;
 }
-
-// function getAspectRatios(obj) {
-
-
-// 	var ratios = [1 / (ly * lz), 1 / (lz * lx), 1 / (lx * ly)];
-// 	// log(ratios)
-// 	var minRatio = ratios[0];
-// 	for (var i = ratios.length - 1; i > 0; i--) {
-// 		minRatio = Math.min(minRatio, ratios[i]);
-// 	}
-
-// 	// TODO denominator zero check
-// 	for (var i = ratios.length - 1; i >= 0; i--) {
-// 		ratios[i] /= minRatio;
-// 	}
-
-// 	return ratios;
-// }
 
 function getBoundingBoxDimensions(obj) {
 	var g = obj.geometry;

@@ -1,15 +1,72 @@
 "use strict";
 
 /*
-	a visualization that shows where the user selects on an object as control point/area
-	there are two selection methods:
-		1) casting ...
-		2) wrapping ...
+	showing xy-yz-zx planes for selection
 */
+class PlaneSelector {
+	constructor(pt) {
+		this._dim = 1000;
+		this._pxy = new xacRectPrism(this._dim, this._dim, 0.1, MATERIALCONTRAST);
+		this._pyz = new xacRectPrism(0.1, this._dim, this._dim, MATERIALCONTRAST);
+		this._pzx = new xacRectPrism(this._dim, 0.1, this._dim, MATERIALCONTRAST);
 
+		this._planes = new THREE.Object3D();
+		this._planes.add(this._pxy.m);
+		this._planes.add(this._pyz.m);
+		this._planes.add(this._pzx.m);
+
+		this._planes.position.copy(pt);
+
+		scene.add(this._planes);
+	}
+
+	hitTest(e) {
+		var intPlane = rayCast(e.clientX, e.clientY, this._planes.children);
+
+		if (intPlane[0] != undefined) {
+			if (this._point == undefined) {
+				this._planes.remove(this._pxy.m);
+				this._planes.remove(this._pyz.m);
+				this._planes.remove(this._pzx.m);
+				this._planes.add(intPlane[0].object);
+				scene.remove(this._planes);
+
+				this._point = new THREE.Object3D();
+
+				var circle = new xacCircle(25, 32, MATERIALHIGHLIGHT).m;
+				rotateObjTo(circle, new THREE.Vector3(0, 0, 1), true);
+
+				this._point.add(circle);
+				this._point.add(new xacSphere(1, MATERIALHIGHLIGHT).m);
+
+				scene.add(this._point);
+			}
+			this._point.position.copy(intPlane[0].point);
+
+			return true;
+		}
+		return false;
+	}
+
+	clear() {
+		setTimeout(function(planes, point) {
+			planes.children.length = 0;
+			scene.remove(planes);
+			scene.remove(point);
+		}, 1000, this._planes, this._point);
+	}
+
+	get selection() {
+		return this._point.position;
+	}
+}
+
+/*
+	a visualization that shows where the user selects on an object as control point/area
+*/
 var gHand = undefined;
 
-class PartSelection {
+class PartSelector {
 	constructor() {
 		this.FINGER = 10;
 
@@ -38,7 +95,7 @@ class PartSelection {
 	/*
 		casting a finger or hand print on the object by single clicks
 	*/
-	press(obj, pt, nml, size) {
+	press(obj, pt, nml) {
 		this.clear();
 		this._obj = obj;
 
@@ -214,140 +271,8 @@ class PartSelection {
 		this._part.type = 'wrap';
 		this._part.ctrSel = getProjection(ctrWrap, a, b, c, d);
 		this.isWrapping = false;
-
-
 	}
 
-	/*
-		wrapping an object by drawing a stroke on it
-	*/
-	// wrap(obj, pt, done) {
-	// 	if (done) {
-	// 		//
-	// 		//	1. find points surrounding the cross section
-	// 		//
-	// 		var ptsWrap = []; // points sampled to rep the wrap
-	// 		var maxDistAbove = 0; // max signed distances to the cross section
-	// 		var maxDistBelow = 0;
-
-	// 		// bounding box of the stroke
-	// 		var min = new THREE.Vector3(INFINITY, INFINITY, INFINITY);
-	// 		var max = new THREE.Vector3(-INFINITY, -INFINITY, -INFINITY);
-
-	// 		for (var i = 0; i < this._strokePoints.length; i++) {
-	// 			var p = this._strokePoints[i];
-
-	// 			min.x = Math.min(min.x, p.x);
-	// 			min.y = Math.min(min.y, p.y);
-	// 			min.z = Math.min(min.z, p.z);
-
-	// 			max.x = Math.max(max.x, p.x);
-	// 			max.y = Math.max(max.y, p.y);
-	// 			max.z = Math.max(max.z, p.z);
-	// 		}
-
-	// 		var scale = min.distanceTo(max);
-	// 		var ctr = new THREE.Vector3().addVectors(min, max).divideScalar(2);
-
-	// 		// calculate intersection plane
-	// 		var planeParams = findPlaneToFitPoints(this._strokePoints);
-	// 		var a = planeParams.A;
-	// 		var b = planeParams.B;
-	// 		var c = planeParams.C;
-	// 		var d = planeParams.D;
-
-	// 		// find intersecting triangles
-	// 		// ref: http://mathworld.wolfram.com/Point-PlaneDistance.html
-	// 		var obj = this._obj;
-	// 		for (var i = 0; i < obj.geometry.faces.length; i++) {
-	// 			var f = obj.geometry.faces[i];
-
-	// 			var indices = [f.a, f.b, f.c];
-	// 			var vertices = [];
-	// 			var faceInRange = true;
-	// 			for (var j = 0; j < indices.length; j++) {
-	// 				var v = obj.geometry.vertices[indices[j]].clone().applyMatrix4(obj.matrixWorld);
-	// 				vertices.push(v);
-	// 				var dist = (a * v.x + b * v.y + c * v.z + d) / Math.sqrt(a * a + b * b + c * c);
-
-	// 				/*
-	// 					for faces to be included they need to be
-	// 						1) close to the cutting plane
-	// 						2) close to the firstly selected points
-	// 				*/
-
-	// 				if (Math.abs(dist) < HANDSIZE && v.distanceTo(ctr) < 2 * scale) {
-	// 					ptsWrap.push(v);
-	// 					maxDistAbove = Math.max(maxDistAbove, dist);
-	// 					maxDistBelow = Math.min(maxDistBelow, dist);
-	// 				}
-	// 			}
-	// 		}
-
-	// 		//
-	// 		//	2. find a wrapping cylinder
-	// 		//
-	// 		var ctrWrap = getCenter(ptsWrap);
-
-	// 		var nmlWrap = new THREE.Vector3(a, b, c);
-	// 		nmlWrap.normalize();
-
-	// 		var rWrap = 0;
-	// 		var ctrWrapProj = getProjection(ctrWrap, a, b, c, d);
-	// 		for (var i = ptsWrap.length - 1; i >= 0; i--) {
-	// 			var ptProj = getProjection(ptsWrap[i], a, b, c, d);
-	// 			rWrap = Math.max(rWrap, ptProj.distanceTo(ctrWrapProj));
-	// 		}
-	// 		rWrap *= 1.1;
-
-	// 		this.cylWrap = new xacCylinder(rWrap, HANDSIZE, MATERIALCONTRAST);
-	// 		var wrapDisplay = new xacCylinder(rWrap, FINGERSIZE * 2, MATERIALCONTRAST);
-	// 		rotateObjTo(this.cylWrap.m, nmlWrap);
-	// 		rotateObjTo(wrapDisplay.m, nmlWrap);
-	// 		this.cylWrap.m.position.copy(ctrWrap.clone());
-
-	// 		// var ctrStroke = getCenter(this._strokePoints);
-	// 		// ctrStroke = getProjection(ctrStroke, a, b, c, d);
-	// 		wrapDisplay.m.position.copy(ctrWrapProj.clone());
-
-	// 		//
-	// 		//	3. make wraps
-	// 		//
-	// 		var gtCylWrap = getTransformedGeometry(this.cylWrap.m);
-	// 		this.wrapIn = xacThing.intersect(gtCylWrap, obj, this._part == undefined ? MATERIALCONTRAST : this._part.material);
-
-	// 		var gtCylWrapDisplay = getTransformedGeometry(wrapDisplay.m);
-	// 		var wrapInDisplay = xacThing.intersect(gtCylWrapDisplay, obj, MATERIALHIGHLIGHT);
-	// 		scene.add(wrapInDisplay);
-
-	// 		if (this._part != undefined)
-	// 			scene.remove(this._part);
-	// 		this._part = this.wrapIn;
-
-	// 		var factorInflate = 1.1;
-	// 		scaleAroundCenter(this._part, factorInflate);
-	// 		scaleAroundCenter(wrapInDisplay, factorInflate);
-
-	// 		this._part.center = getCenter(this._part.geometry.vertices);
-	// 		this._part.normal = nmlWrap;
-
-	// 		// scene.remove(obj);
-
-	// 		//
-	// 		//	5. finishing up
-	// 		//
-	// 		this._part.type = 'wrap';
-	// 		this._part.ctrSel = getProjection(ctrWrap, a, b, c, d);
-	// 		this.isWrapping = false;
-
-	// 	} else {
-	// 		this._obj = obj;
-	// 		addABall(pt, colorHighlight, 0.5);
-	// 		this._strokePoints.push(pt);
-	// 	}
-	// }
-
-	// TODO: fix size param
 	grab(obj, pt, fnml, done) {
 		// var plane = new xacPlane(40, 60);
 		// rotateObjTo(plane.m, fnml);
@@ -426,5 +351,24 @@ class PartSelection {
 		}
 		this._anglePrev = angle;
 
+	}
+
+	finishUp() {
+		if (this._part != undefined) {
+			var parts = gPartsCtrls[gCurrPartCtrl.attr('pcId')].parts;
+			// if (event.shiftKey == false) {
+			gPartsCtrls[gCurrPartCtrl.attr('pcId')].obj = this._obj;
+			gPartSerial += 1;
+			var tagName = 'Part ' + gPartSerial; //(Object.keys(parts).length + 1);
+			var lsParts = $(gCurrPartCtrl.children()[0]); //.attr('lsParts');
+			var tag = lsParts.tagit('createTag', tagName);
+			parts[tagName] = this._part;
+			triggerUI2ObjAction(tag, FOCUSACTION);
+			// } else {
+			// 	var ui = justFocusedUIs[gStep];
+			// 	var tagName = $(ui[0]).text().slice(0, -1);
+			// 	parts[tagName] = gPartSel.part;
+			// }
+		}
 	}
 }

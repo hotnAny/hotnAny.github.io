@@ -197,7 +197,9 @@ var initPanel = function() {
 				switch (type) {
 					case GRASPCTRL:
 						ctrl = new xacGrasp();
-						log(ctrl)
+						break;
+					case ROTATECTRL:
+						ctrl = new xacRotate();
 						break;
 				}
 
@@ -514,14 +516,17 @@ function triggerUI2ObjAction(ui, action, key) {
 
 			break;
 		case DELETEACTION:
+			// part
 			var parts = gPartsCtrls[gCurrPartCtrl.attr('pcId')].parts;
 			var namePart = $(ui[0]).text().slice(0, -1);
 			var part = parts[namePart];
 			part.deleted = true;
-
-			partSel.clear();
-
+			gPartSel.clear();
 			scene.remove(part);
+
+			// ctrl
+			var ctrl = gPartsCtrls[gCurrPartCtrl.attr('pcId')].ctrl;
+			ctrl.clear();
 
 			break;
 	}

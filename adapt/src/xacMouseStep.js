@@ -4,7 +4,7 @@
  * @author Xiang 'Anthony' Chen http://xiangchen.me
  */
 
-var partSel = new PartSelection();
+var gPartSel = new PartSelector();
 
 document.addEventListener('mousedown', onMouseDownStep, false);
 document.addEventListener('mousemove', onMouseMoveStep, false);
@@ -27,22 +27,26 @@ function onMouseDownStep(event) {
 		case 2.1:
 			if (event.which == LEFTMOUSE) {
 				// if (event.shiftKey == false) {
-				// 	partSel.clear();
+				// 	gPartSel.clear();
 				// }
-				// partSel.isEngaged = true;
-				// partSel.isWrapping = false;
-				if (activeCtrl != undefined && intersects.length > 0) {
+				// gPartSel.isEngaged = true;
+				// gPartSel.isWrapping = false;
+				if (activeCtrl != undefined) {
 					var objInt = getClosestIntersected();
-					if (activeCtrl.type == GRASPCTRL) {
+					if (activeCtrl.type == GRASPCTRL && objInt != undefined) {
 						if (gSticky == false) {
-							partSel.grab(objInt.object, objInt.point.clone(), objInt.face.normal);
+							gPartSel.grab(objInt.object, objInt.point.clone(), objInt.face.normal);
 						} else if (gSticky) {
-							partSel.release();
+							gPartSel.release();
 						}
 					} else {
 						// show rotation planes to select
 						// tentative - let xacControl handle the events
-						activeCtrl.mouseDown(event, objInt.object, objInt.point.clone(), objInt.face.normal);
+						if (objInt != undefined) {
+							activeCtrl.mouseDown(event, objInt.object, objInt.point.clone(), objInt.face.normal);
+						} else {
+							activeCtrl.mouseDown(event);
+						}
 					}
 				}
 			}
@@ -59,6 +63,7 @@ function onMouseMoveStep(event) {
 		if (event.clientX < WIDTHCONTAINER) return;
 
 		intersects = rayCast(event.clientX, event.clientY, objects);
+		var objInt = getClosestIntersected();
 	}
 
 	var ptMove = [event.clientX, event.clientY];
@@ -67,20 +72,24 @@ function onMouseMoveStep(event) {
 
 	switch (gStep) {
 		case 2.1:
-			// if (partSel.isEngaged) {
-			// if (partSel.isWrapping == false) {
-			// 	partSel.isWrapping = getDist(ptDown, ptMove) > partSel.MINWRAPMOUSEOFFSET;
+			// if (gPartSel.isEngaged) {
+			// if (gPartSel.isWrapping == false) {
+			// 	gPartSel.isWrapping = getDist(ptDown, ptMove) > gPartSel.MINWRAPMOUSEOFFSET;
 			// } else {
 			// 	var objInt = getClosestIntersected();
-			// 	if (objInt != undefined) partSel.wrap(objInt.object, objInt.point.clone());
+			// 	if (objInt != undefined) gPartSel.wrap(objInt.object, objInt.point.clone());
 			// }
 			if (activeCtrl != undefined) {
 				if (activeCtrl.type == GRASPCTRL) {
 					if (gSticky) {
-						partSel.rotateHand(ptMove, ptDown);
+						gPartSel.rotateHand(ptMove, ptDown);
 					}
 				} else {
-					activeCtrl.mouseMove(event, objInt.object, objInt.point.clone(), objInt.face.normal);
+					if (objInt != undefined) {
+						activeCtrl.mouseMove(event, objInt.object, objInt.point.clone(), objInt.face.normal);
+					} else {
+						activeCtrl.mouseMove(event);
+					}
 				}
 			}
 			// rotateHand([event.movementX , event.movementY]);
@@ -103,38 +112,29 @@ function onMouseUpStep(event) {
 		case 2.1:
 			if (event.which == LEFTMOUSE) {
 				// 	$("html,body").css("cursor", "progress");
-				// 	if (partSel.isWrapping) {
+				// 	if (gPartSel.isWrapping) {
 				// 		var objInt = getClosestIntersected();
-				// 		partSel.wrap(undefined, undefined, HANDSIZE / 2, true);
+				// 		gPartSel.wrap(undefined, undefined, HANDSIZE / 2, true);
 				// 	} else {
-				if (activeCtrl != undefined && activeCtrl.type == GRASPCTRL) {
-					//
-				} else {
-					var objInt = getClosestIntersected();
-					if (objInt != undefined) {
-						partSel.press(objInt.object, objInt.point.clone(), objInt.face.normal.clone(), partSel.FINGER);
+				if (activeCtrl != undefined) {
+					if (activeCtrl.type == GRASPCTRL) {
+						//
+					} else {
+
+						activeCtrl.mouseUp(event); //, objInt.object, objInt.point.clone(), objInt.face.normal);
+
+						// TODO: maybe move it to down?
+						// var objInt = getClosestIntersected();
+						// if (objInt != undefined) {
+						// 	gPartSel.press(objInt.object, objInt.point.clone(), objInt.face.normal.clone(), gPartSel.FINGER);
+						// }
 					}
 				}
 				// 	}
 
-				if (partSel.part != undefined) {
-					var parts = gPartsCtrls[gCurrPartCtrl.attr('pcId')].parts;
-					if (event.shiftKey == false) {
-						gPartsCtrls[gCurrPartCtrl.attr('pcId')].obj = partSel.obj;
-						gPartSerial += 1;
-						var tagName = 'Part ' + gPartSerial; //(Object.keys(parts).length + 1);
-						var lsParts = $(gCurrPartCtrl.children()[0]); //.attr('lsParts');
-						var tag = lsParts.tagit('createTag', tagName);
-						parts[tagName] = partSel.part;
-						triggerUI2ObjAction(tag, FOCUSACTION);
-					} else {
-						var ui = justFocusedUIs[gStep];
-						var tagName = $(ui[0]).text().slice(0, -1);
-						parts[tagName] = partSel.part;
-					}
-				}
 
-				// 	partSel.isEngaged = false;
+
+				// 	gPartSel.isEngaged = false;
 
 				// 	if (D != 'true' || event.shiftKey == false) removeBalls();
 

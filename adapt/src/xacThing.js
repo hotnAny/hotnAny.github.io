@@ -104,9 +104,17 @@ class xacRectPrism extends xacThing {
 }
 
 class xacPlane extends xacThing {
-	constructor(w, l) {
+	constructor(w, l, material) {
 		super();
 		this._g = new THREE.CubeGeometry(w, 1, l);
-		this._m = new THREE.Mesh(this._g, MATERIALNORMAL.clone());
+		this._m = new THREE.Mesh(this._g, material == undefined ? MATERIALNORMAL.clone() : material.clone());
+	}
+}
+
+class xacCircle extends xacThing {
+	constructor(r, seg, material) {
+		super();
+		this._g = new THREE.CircleGeometry(r, seg == undefined ? 16 : seg);
+		this._m = new THREE.Mesh(this._g, material == undefined ? MATERIALNORMAL.clone() : material.clone());
 	}
 }
