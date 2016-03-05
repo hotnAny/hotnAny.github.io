@@ -15,34 +15,46 @@ var ptDown = [];
 var gSticky = false;
 
 function onMouseDownStep(event) {
+	if (event.which != LEFTMOUSE) {
+		return;
+	}
+
 	if (event.clientX < WIDTHCONTAINER) return;
-
 	intersects = rayCast(event.clientX, event.clientY, objects);
-
 	ptDown = [event.clientX, event.clientY];
-
 	var activeCtrl = getActiveCtrl();
 
 	switch (gStep) {
 		case 2.1:
-			if (event.which == LEFTMOUSE) {
-				if (activeCtrl != undefined) {
-					var objInt = getClosestIntersected();
-					if (objInt != undefined) {
-						activeCtrl.mouseDown(event, objInt.object, objInt.point.clone(), objInt.face.normal);
-					} else {
-						activeCtrl.mouseDown(event);
-					}
+			if (activeCtrl != undefined) {
+				var objInt = getClosestIntersected();
+				if (objInt != undefined) {
+					activeCtrl.mouseDown(event, objInt.object, objInt.point.clone(), objInt.face.normal);
+				} else {
+					activeCtrl.mouseDown(event);
 				}
 			}
 
 			break;
 		case 2.2:
 			break;
+		case 5:
+			if (gConnMethod != undefined) {
+				if (objInt != undefined) {
+					gConnMethod.mousedown(event, objInt.object, objInt.point.clone(), objInt.face.normal);
+				} else {
+					gConnMethod.mousedown(event);
+				}
+			}
+			break;
 	}
 }
 
 function onMouseMoveStep(event) {
+	if (event.which != LEFTMOUSE) {
+		return;
+	}
+
 	if (gSticky == false) {
 		if (ptDown.length == 0) return;
 		if (event.clientX < WIDTHCONTAINER) return;
@@ -69,14 +81,23 @@ function onMouseMoveStep(event) {
 			break;
 		case 2.2:
 			break;
+		case 5:
+			if (gConnMethod != undefined) {
+				if (objInt != undefined) {
+					gConnMethod.mousemove(event, objInt.object, objInt.point.clone(), objInt.face.normal);
+				}
+			}
+			break;
 	}
 }
 
 function onMouseUpStep(event) {
+	if (event.which != LEFTMOUSE) {
+		return;
+	}
+	
 	if (event.clientX < WIDTHCONTAINER) return;
-
 	intersects = rayCast(event.clientX, event.clientY, objects);
-
 	var activeCtrl = getActiveCtrl();
 
 	switch (gStep) {
@@ -87,7 +108,12 @@ function onMouseUpStep(event) {
 				}
 			}
 			break;
-		case 2.2:
+		case 5:
+			if (gConnMethod != undefined) {
+				// if (objInt != undefined) {
+				gConnMethod.mouseup(event); //, objInt.object, objInt.point.clone(), objInt.face.normal);
+				// }
+			}
 			break;
 	}
 

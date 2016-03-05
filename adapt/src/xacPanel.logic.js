@@ -8,6 +8,10 @@
 $(document.body).append(container);
 
 var initPanel = function() {
+
+	// faster debug
+	showElm(connectors);
+
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -321,54 +325,50 @@ var initPanel = function() {
 			$('#noAdaptSel').attr('selected', 'selected');
 			smAdapts.selectmenu("refresh");
 
-			showElm(optimization, function() {
-				
-			});
+			showElm(customization);
+			showElm(connectors);
 
 			$("*").css("cursor", "default");
 		}
 	});
 
-	// step 4
-	// $('#cbGrip').click(function(e) {
-	// 	showElm(connectors);
-	// });
-
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//
-	//	Step 4 - optimization
+	//	Step 4 - customization
 	//
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+	// # of fingers
 	$('#sldFingers').slider({
 		max: 50,
-		min: 10,
+		min: 1,
 		range: 'max',
 		change: function(e) {
-			var minValue = $("#sldFingers").slider("option", "min");
-			var value = $('#sldFingers').slider('value') / minValue;
-			var valueInt = float2int(value + 0.5);
-			if (valueInt != value) {
-				$('#sldFingers').slider('value', valueInt * minValue);
-			} else {
-				$('#lbFingers').html(value + ' Finger' + (value > 1 ? 's' : ''));
-				gOptParams.fingerFactor = value;
-			}
+			// var minValue = $("#sldFingers").slider("option", "min");
+			var value = $('#sldFingers').slider('value') / 10;
+			var valueInt = Math.max(1, float2int(value + 0.5));
+			// if (valueInt != value) {
+			// 	$('#sldFingers').slider('value', valueInt * minValue);
+			// } else {
+			$('#lbFingers').html(value + ' Finger' + (valueInt > 1 ? 's' : ''));
+			gOptParams.fingerFactor = value;
+			// }
 		},
 		slide: function(e) {
 			var minValue = $("#sldFingers").slider("option", "min");
-			var value = float2int($('#sldFingers').slider('value') / minValue);
+			var value = float2int($('#sldFingers').slider('value') / 10);
 			$('#lbFingers').html(value + ' Finger' + (value > 1 ? 's' : ' '));
 		}
 	});
-	var minSldFingersValue = $("#sldFingers").slider("option", "min");
-	$('#sldFingers').slider('value', FINGERINIT * minSldFingersValue);
+	// var minSldFingersValue = $("#sldFingers").slider("option", "min");
+	$('#sldFingers').slider('value', FINGERINIT * 10);
 	$('#sldFingers').css('background-color', '#b7b7b4');
 
+	// grip
 	$('#sldGrip').slider({
 		max: 100,
 		min: 0,
@@ -383,8 +383,26 @@ var initPanel = function() {
 	$('#sldGrip').css('background-color', '#b7b7b4');
 	var minSldGripValue = $("#sldGrip").slider("option", "min");
 	var maxSldGripValue = $("#sldGrip").slider("option", "max");
-	$('#sldGrip').slider('value', GRIPINIT * (maxSldGripValue - minSldFingersValue));
+	$('#sldGrip').slider('value', GRIPINIT * (maxSldGripValue - minSldGripValue));
 
+	// strength
+	$('#sldStrength').slider({
+		max: 100,
+		range: 'max',
+		change: function(e) {
+			var minValue = $("#sldStrength").slider("option", "min");
+			var maxValue = $("#sldStrength").slider("option", "max");
+			var value = $('#sldStrength').slider('value');
+			gOptParams.strengthFactor = 1 + (value - minValue) * 1.0 / (maxValue - minValue);
+		}
+	});
+	$('#sldStrength').css('background-color', '#b7b7b4');
+	var minsldStrengthValue = $("#sldStrength").slider("option", "min");
+	var maxsldStrengthValue = $("#sldStrength").slider("option", "max");
+	var valuesldStrength = minsldStrengthValue + (STRENGTHINT - 1) * (maxsldStrengthValue - minsldStrengthValue);
+	$('#sldStrength').slider('value', valuesldStrength);
+
+	// size
 	$('#sldSize').slider({
 		max: 100,
 		range: 'max',
@@ -400,7 +418,6 @@ var initPanel = function() {
 	var maxsldSizeValue = $("#sldSize").slider("option", "max");
 	var valuesldSize = minsldSizeValue + (SIZEINIT - 1) * (maxsldSizeValue - minsldSizeValue);
 	$('#sldSize').slider('value', valuesldSize);
-
 
 	btnUpdate.click(function(e) {
 		for (var i = gAdaptations.length - 1; i >= 0; i--) {
@@ -445,6 +462,13 @@ var initPanel = function() {
 			optionSelected.removeAttr("selected");
 			$('#noConnSel').attr('selected', 'selected');
 			smConns.selectmenu("refresh");
+
+			switch (data.item.value) {
+				case 'Strap':
+					// stub value
+					gConnMethod = new xacStrap(gAdaptations[0]);
+					break;
+			}
 		}
 	});
 

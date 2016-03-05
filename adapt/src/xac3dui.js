@@ -6,7 +6,7 @@
 class PlaneSelector {
 	constructor(pt) {
 		addABall(pt, 0x00ff00);
-		
+
 		this._dim = 1000;
 		this._pxy = new xacRectPrism(this._dim, this._dim, 0.1, MATERIALCONTRAST);
 		this._pxy.m.normal = new THREE.Vector3(0, 0, 1);
@@ -184,6 +184,9 @@ class PartSelector {
 	}
 
 	_doWrap(obj, pt, planeParams) {
+		//
+		//	1. compute points of interest/in range
+		//
 		var a = planeParams.A;
 		var b = planeParams.B;
 		var c = planeParams.C;
@@ -250,6 +253,7 @@ class PartSelector {
 		// ctrStroke = getProjection(ctrStroke, a, b, c, d);
 		wrapDisplay.m.position.copy(ctrWrapProj.clone());
 		// scene.add(wrapDisplay.m);
+
 		//
 		//	3. make wraps
 		//
@@ -282,12 +286,6 @@ class PartSelector {
 	}
 
 	grab(obj, pt, fnml, done) {
-		// var plane = new xacPlane(40, 60);
-		// rotateObjTo(plane.m, fnml);
-		// plane.m.position.copy(pt);
-		// scene.add(plane.m);
-
-		// if (gSticky == false) {
 		loadStlFromFile(HANDMODELPATH, MATERIALCONTRAST);
 
 		setTimeout(function(hand) {
@@ -309,12 +307,11 @@ class PartSelector {
 			gHand.position.copy(pt);
 			scene.add(gHand);
 
-		}, 500);
+		}, 250);
 		gSticky = true;
+		log("xac3dui")
 		this._obj = obj;
 		this._pt = pt;
-
-		// } else {
 	}
 
 	release() {
@@ -358,13 +355,11 @@ class PartSelector {
 			gHand.rotateOnAxis(gHand.axis, angle - this._anglePrev);
 		}
 		this._anglePrev = angle;
-
 	}
 
 	finishUp() {
 		if (this._part != undefined) {
 			var parts = gPartsCtrls[gCurrPartCtrl.attr('pcId')].parts;
-			// if (event.shiftKey == false) {
 			gPartsCtrls[gCurrPartCtrl.attr('pcId')].obj = this._obj;
 			gPartSerial += 1;
 			var tagName = 'Part ' + gPartSerial; //(Object.keys(parts).length + 1);
@@ -372,11 +367,6 @@ class PartSelector {
 			var tag = lsParts.tagit('createTag', tagName);
 			parts[tagName] = this._part;
 			triggerUI2ObjAction(tag, FOCUSACTION);
-			// } else {
-			// 	var ui = justFocusedUIs[gStep];
-			// 	var tagName = $(ui[0]).text().slice(0, -1);
-			// 	parts[tagName] = gPartSel.part;
-			// }
 		}
 	}
 }

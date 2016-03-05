@@ -61,39 +61,6 @@ camera.position.copy(gPosCam.clone().multiplyScalar(100));
 
 var controls = new THREE.TrackballControls(camera); // for mouse control
 
-var angle = 0;
-
-var octree = new THREE.Octree({
-     // automatic, no need to specify
-     // radius: 100,	
-
-     // when undeferred = true, objects are inserted immediately
-     // instead of being deferred until next octree.update() call
-     // this may decrease performance as it forces a matrix update
-     undeferred: false,
-
-     // set the max depth of tree
-     depthMax: Infinity,
-
-     // max number of objects before nodes split or merge
-     // objectsThreshold: 8,
-
-     // percent between 0 and 1 that nodes will overlap each other
-     // helps insert objects that lie over more than one node
-     // overlapPct: 0.5,
-
-     // pass the scene to visualize the octree
-     scene: scene
-});
-
-var octreesProj = new Array();
-
-var usingPhysics = false;
-
-var staticObjLocked = false;
-
-// var withoutSupport = true;
-
 //
 // draw floor
 //
@@ -143,6 +110,15 @@ function drawGrid(yOffset) {
 }
 var gGrid = drawGrid(0);
 scene.add(gGrid);
+
+//
+// add lights
+//
+var lights = [];
+lights[0] = new THREE.PointLight(0xffffff, 1, 0);
+lights[0].position.set(0, 100, -100);
+lights[0].castShadow = true;
+scene.add(lights[0]);
 
 
 /*-----------------------------------------------------------------------------------------------
@@ -196,3 +172,4 @@ var gPartsCtrls = new Array();
 var gCurrPartCtrl = undefined; // the parts-controls that is currently selected to be interacted with
 var gAdaptations = [];
 var gOptParams = new Array();
+var gConnMethod = undefined;  // connection method

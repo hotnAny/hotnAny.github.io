@@ -85,6 +85,7 @@ class xacRotate extends xacControl {
 				// show planes
 				if (this._planeSel.hitTest(e) == true) {
 					gSticky = true;
+					log("xacControl")
 					this._step = this._TOSELECTFULCRUM;
 				}
 				break;
@@ -94,6 +95,7 @@ class xacRotate extends xacControl {
 				this._dirLever = this._poc.clone().sub(this._fulcrum);
 				this._ve.push(addABall(this._fulcrum));
 				this._ve.push(addAVector(this._fulcrum, this._dirLever));
+				gSticky = false;
 				this._step = this._TOSELECTOBJ;
 				break;
 		}

@@ -203,11 +203,11 @@ function getBoundingBoxCenter(obj) {
 	return new THREE.Vector3(x, y, z);
 }
 
-function getBoundingSphereRadius(obj) {
-	var g = obj.geometry;
-	g.computeBoundingSphere();
-	return g.boundingSphere.radius;
-}
+// function getBoundingSphereRadius(obj) {
+// 	var g = obj.geometry;
+// 	g.computeBoundingSphere();
+// 	return g.boundingSphere.radius;
+// }
 
 function getBoundingBoxDimensions(obj) {
 	var g = obj.geometry;
@@ -223,6 +223,12 @@ function getBoundingBoxDimensions(obj) {
 function getBoundingBoxVolume(obj) {
 	var dims = getBoundingBoxDimensions(obj);
 	return dims[0] * dims[1] * dims[2];
+}
+
+function getBoundingSphereRadius(obj) {
+	var gt = getTransformedGeometry(obj);
+	gt.computeBoundingSphere();
+	return gt.boundingSphere.radius;
 }
 
 function getDimAlong(obj, dir) {

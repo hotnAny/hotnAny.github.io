@@ -1,13 +1,15 @@
 "use strict";
 
-var SIZEINIT = 1.75;
 var FINGERINIT = 2;
 var GRIPINIT = 0.1;
+var STRENGTHINT = 1.5;
+var SIZEINIT = 1.75;
 
 class xacAdaptation {
 	constructor(pc) {
 		this._pc = pc;
 		this._as = new Array(); // adaptation mesh
+		this._strengthFactor = STRENGTHINT;
 		this._sizeFactor = SIZEINIT;
 		this._fingerFactor = FINGERINIT;
 		this._gripFactor = GRIPINIT;
@@ -24,9 +26,10 @@ class xacAdaptation {
 		// this._update(params);
 
 		if (params != undefined) {
-			this._sizeFactor = params.sizeFactor == undefined ? this._sizeFactor : params.sizeFactor;
 			this._fingerFactor = params.fingerFactor == undefined ? this._fingerFactor : params.fingerFactor;
 			this._gripFactor = params.gripFactor == undefined ? this._gripFactor : params.gripFactor;
+			this._strengthFactor = params.strengthFactor == undefined ? this._strengthFactor : params.strengthFactor;
+			this._sizeFactor = params.sizeFactor == undefined ? this._sizeFactor : params.sizeFactor;
 		}
 
 		for (var pid in this._pc.parts) {
@@ -240,11 +243,12 @@ class xacLever extends xacAdaptation {
 	_makeLever(a) {
 		var dirLever = this._pc.ctrl.dirLever.clone().normalize();
 		var aNew = new THREE.Mesh(a.geometry.clone(), a.material);
-		scaleAlongVector(aNew, this._strengthFactor, dirLever);
+		scaleAlongVector(aNew, Math.pow(3, this._strengthFactor), dirLever);
 
 		var l = getDimAlong(aNew, dirLever);
 
-		aNew.translateOnAxis(dirLever, l * 0.4);
+		// TODO: make 0.3 programmatic
+		aNew.translateOnAxis(dirLever, l * 0.3);
 
 		return aNew;
 	}

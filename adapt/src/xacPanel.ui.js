@@ -123,7 +123,6 @@ partsCtrls.hide();
 panels.append('<br/><br/>');
 
 
-
 //
 //	Step 3 - Adaptation
 //
@@ -156,10 +155,10 @@ panels.append('<br/><br/>');
 
 
 //
-//	Step 4 - Optimization
+//	Step 4 - Customization
 //
-panels.append(_genSectionBar('Optimization'));
-var optimization = $("<table class='ui-step-area' cellspacing='10'></table>");
+panels.append(_genSectionBar('Customization'));
+var customization = $("<table class='ui-step-area' cellspacing='10'></table>");
 
 // 4.1	what to optimize
 var trOptim = $('<tr></tr>');
@@ -169,30 +168,31 @@ divOptim.append($('<input type="checkbox" id="cbGrip"><label for="cbGrip">Grip</
 divOptim.append($('<input type="checkbox" id="cbStrength"><label for="cbStrength">Strength</label>'));
 divOptim.append($('<input type="checkbox" id="cbCoord"><label for="cbCoord">Coordination</label>'));
 divOptim.buttonset().find('label').css('width', '30%');
-optimization.append(divOptim);
+// customization.append(divOptim);
 
 // 4.2	other sliderable optimizations
 var tblSldrOptim = $('<table cellspacing="5" cellpadding="5"></table>');
 var trFingers = $('<tr><td><label id="lbFingers" class="ui-widget">X finger </label></td><td width="200px"><div id="sldFingers"></div></td></tr>');
 var trGrip = $('<tr><td><label class="ui-widget">Grip </label></td><td width="200px"><div id="sldGrip"></div></td></tr>');
+var trStrength = $('<tr><td><label class="ui-widget">Strength </label></td><td width="200px"><div id="sldStrength"></div></td></tr>');
 var trSize = $('<tr><td><label class="ui-widget">Size </label></td><td width="200px"><div id="sldSize"></div></td></tr>');
-// var trAttach = $('<tr><td><label class="ui-widget">Attachability: </label></td><td width="200px"><div id="sldAttach"></div></td></tr>');
 tblSldrOptim.append(trFingers);
 tblSldrOptim.append(trGrip);
+tblSldrOptim.append(trStrength);
 tblSldrOptim.append(trSize);
 // tblSldrOptim.append(trAttach);
 trOptim.append(tblSldrOptim);
-optimization.append(trOptim);
+customization.append(trOptim);
 
 // 4.3	the update button
 var trUpdate = $('<tr></tr>');
 var btnUpdate = $('<button>Update</button>')
 btnUpdate.button();
 trUpdate.append(btnUpdate);
-optimization.append(trUpdate);
+customization.append(trUpdate);
 
-panels.append(optimization);
-optimization.hide();
+panels.append(customization);
+customization.hide();
 panels.append('<br/><br/>');
 
 
