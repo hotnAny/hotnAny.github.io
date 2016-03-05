@@ -322,7 +322,7 @@ var initPanel = function() {
 			smAdapts.selectmenu("refresh");
 
 			showElm(optimization, function() {
-
+				
 			});
 
 			$("*").css("cursor", "default");

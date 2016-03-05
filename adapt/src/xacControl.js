@@ -61,12 +61,21 @@ class xacRotate extends xacControl {
 		this._step = this._TOSELECTOBJ;
 	}
 
+	get fulcrum() {
+		return this._fulcrum;
+	}
+
+	get dirLever() {
+		return this._dirLever;
+	}
+
 	mouseDown(e, obj, pt, fnml) {
 		switch (this._step) {
 			case this._TOSELECTOBJ:
 				// do 3dui press
 				if (obj != undefined && pt != undefined && fnml != undefined) {
-					gPartSel.press(obj, pt, fnml);
+					gPartSel.press(obj, pt, fnml, true);
+					this._poc = pt.clone();	// poc: point of contact
 					gPartSel.finishUp();
 					this._step = this._TOSELECTPLANE;
 					this._planeSel = new PlaneSelector(pt);
@@ -81,7 +90,10 @@ class xacRotate extends xacControl {
 				break;
 			case this._TOSELECTFULCRUM:
 				this._planeSel.clear();
-				this._ve.push(addABall(this._planeSel.selection));
+				this._fulcrum = this._planeSel.selection;
+				this._dirLever = this._poc.clone().sub(this._fulcrum);
+				this._ve.push(addABall(this._fulcrum));
+				this._ve.push(addAVector(this._fulcrum, this._dirLever));
 				this._step = this._TOSELECTOBJ;
 				break;
 		}
@@ -97,13 +109,5 @@ class xacRotate extends xacControl {
 		}
 	}
 
-	mouseUp(e, obj, pt, fml) {
-		// switch (this._step) {
-		// 	case this._TOSELECTOBJ:
-		// 		break;
-		// 	case this._TOSELECTFULCRUM:
-		// 		// compute the fulcrum
-		// 		break;
-		// }
-	}
+	mouseUp(e, obj, pt, fml) {}
 }

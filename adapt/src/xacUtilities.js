@@ -165,6 +165,11 @@ function addALine(v1, v2, clr) {
 	return line;
 }
 
+function addAVector(v1, dir, clr) {
+	var v2 = v1.clone().add(dir.clone().normalize().multiplyScalar(1000));
+	return addALine(v1, v2, clr);
+}
+
 /*
 	remove the balls
 */

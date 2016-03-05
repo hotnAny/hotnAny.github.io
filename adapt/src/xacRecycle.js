@@ -454,3 +454,28 @@
 
 // 	return ratios;
 // }
+
+	// var ny = Math.min(n * aspectRatios[1], 80);
+		// for (var i = 0; i < ny; i++) {
+		// 	for (var j = 0; j < n; j++) {
+		// 		// for(var k=0; k<n; k++) {
+		// 		var v = new THREE.Vector3();
+
+		// 		var theta = Math.PI * 2 * i / n;
+		// 		v.y = 0;//ctr.y + r * Math.cos(theta) * aspectRatios[1];
+
+		// 		var phi = Math.PI * 2 * j / n;
+		// 		v.x = ctr.x + r * Math.sin(theta) * Math.cos(phi) * aspectRatios[2];
+		// 		v.z = ctr.z + r * Math.sin(theta) * Math.sin(phi) * aspectRatios[0];
+
+		// 		addALine(ctr, v);
+		// 		var rayCaster = new THREE.Raycaster();
+		// 		rayCaster.ray.set(ctr, v.clone().sub(ctr).normalize());
+		// 		var ints = rayCaster.intersectObjects([a]);
+
+		// 		if (ints[0] != undefined) {
+		// 			addABall(ints[0].point, 0xaaaaaa);
+		// 		}
+
+		// 	}
+		// }

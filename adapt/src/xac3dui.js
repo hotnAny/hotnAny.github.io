@@ -5,10 +5,15 @@
 */
 class PlaneSelector {
 	constructor(pt) {
+		addABall(pt, 0x00ff00);
+		
 		this._dim = 1000;
 		this._pxy = new xacRectPrism(this._dim, this._dim, 0.1, MATERIALCONTRAST);
+		this._pxy.m.normal = new THREE.Vector3(0, 0, 1);
 		this._pyz = new xacRectPrism(0.1, this._dim, this._dim, MATERIALCONTRAST);
+		this._pyz.m.normal = new THREE.Vector3(1, 0, 0);
 		this._pzx = new xacRectPrism(this._dim, 0.1, this._dim, MATERIALCONTRAST);
+		this._pzx.m.normal = new THREE.Vector3(0, 1, 0);
 
 		this._planes = new THREE.Object3D();
 		this._planes.add(this._pxy.m);
@@ -33,8 +38,10 @@ class PlaneSelector {
 
 				this._point = new THREE.Object3D();
 
-				var circle = new xacCircle(25, 32, MATERIALHIGHLIGHT).m;
-				rotateObjTo(circle, new THREE.Vector3(0, 0, 1), true);
+				// var circle = new xacCircle(25, 32, MATERIALHIGHLIGHT).m;
+				var circle = new xacCylinder(25, 0.1, MATERIALHIGHLIGHT).m;
+				rotateObjTo(circle, intPlane[0].object.normal, true);
+				// rotateObjTo(circle, new THREE.Vector3(0, 0, 1), true);
 
 				this._point.add(circle);
 				this._point.add(new xacSphere(1, MATERIALHIGHLIGHT).m);
@@ -95,7 +102,7 @@ class PartSelector {
 	/*
 		casting a finger or hand print on the object by single clicks
 	*/
-	press(obj, pt, nml) {
+	press(obj, pt, nml, isSmall) {
 		this.clear();
 		this._obj = obj;
 
@@ -105,7 +112,7 @@ class PartSelector {
 		nml = nml.normalize();
 		var nmlOpp = nml.clone().multiplyScalar(-1);
 
-		var rPartSelection = HANDSIZE;
+		var rPartSelection = isSmall == true ? FINGERSIZE * 2 : HANDSIZE;
 		var distAbove = HANDSIZE * 2; // hyperthetical dist between finger(s) and the ctrl point
 
 		var yUp = new THREE.Vector3(0, 1, 0);
@@ -182,6 +189,7 @@ class PartSelector {
 		var c = planeParams.C;
 		var d = planeParams.D;
 
+		// DEBUG: show the cutting plane
 		// var v1 = new THREE.Vector3(-d/a, 0, 0);
 		// var v2 = new THREE.Vector3(0, -b/d, 0);
 		// var v3 = new THREE.Vector3(0, 0, -c/d);

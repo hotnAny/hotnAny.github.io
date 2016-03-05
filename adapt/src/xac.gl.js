@@ -79,7 +79,9 @@ function scaleAlongVector(obj, factor, dir) {
 	this method is implemented based on geometry rather than mesh
 */
 function scaleWithVector(obj, factors, dir) {
-	var ctr0 = obj.geometry.center();
+	// var ctr0 = obj.geometry.center();
+	var ctr0 = getTransformedGeometry(obj).center();
+
 	rotateGeoTo(obj.geometry, dir, true);
 
 	var m = new THREE.Matrix4();
@@ -88,7 +90,9 @@ function scaleWithVector(obj, factors, dir) {
 
 	rotateGeoTo(obj.geometry, dir);
 
-	var ctr1 = obj.geometry.center();
+	// var ctr1 = obj.geometry.center();
+	var ctr1 = getTransformedGeometry(obj).center();
+
 	var offset = ctr1.clone().sub(ctr0);
 	obj.geometry.translate(offset.x, offset.y, offset.z);
 }
@@ -174,41 +178,6 @@ function markVertexNeighbors(obj) {
 	}
 }
 
-	// function nudgeNeighbors(a, ag, idx, ctr, d) {
-	// 	// var v = ag.vertices[idx];
-	// 	// if (v.activated != undefined || v.distanceTo(ctr) > d) {
-	// 	// 	if(v.distanceTo(ctr) > d)
-
-	// 	// 	return false;
-	// 	// }
-
-	// 	// v.activated = false;
-
-	// 	var vneighbors = a.vneighbors[idx];
-	// 	for (var i = vneighbors.length - 1; i >= 0; i--) {
-	// 		var nidx = vneighbors[i];
-	// 		var vn = ag.vertices[nidx];
-
-	// 		if (vn.activated == false) {
-	// 			continue;
-	// 		}
-
-	// 		if (vn.distanceTo(ctr) < d) {
-	// 			vn.activated = false;
-	// 			this.nudgeNeighbors(a, ag, nidx, ctr, d);
-	// 			addABall(vn, 0x444444, 0.2);
-	// 		} else {
-	// 			addABall(vn, 0x0000ff, 0.2);
-	// 			continue;
-	// 		}
-
-	// 	}
-	// }
-
-function computeVertexNormal(obj) {
-
-}
-
 /*
 	get the geometry from a mesh with transformation matrix applied
 */
@@ -256,6 +225,13 @@ function getBoundingBoxVolume(obj) {
 	return dims[0] * dims[1] * dims[2];
 }
 
+function getDimAlong(obj, dir) {
+	var gt = getTransformedGeometry(obj);
+	var range = project(gt.vertices, dir);
+	return range[1] - range[0];
+}
+
+// TODO: possibly rewrite this - don't need raycasting
 function getEndPointsAlong(obj, dir) {
 	var bbox = new THREE.BoundingBoxHelper(obj, 0x00ff00);
 	var ctr = getBoundingBoxCenter(obj);
@@ -273,12 +249,6 @@ function getEndPointsAlong(obj, dir) {
 		// addALine(ctr, ctr.clone().add(sdir.clone().multiplyScalar(100)));
 
 		var ints = rayCaster.intersectObjects([bbox.object]);
-		// while(ints.length == 0) {
-		// 	var dv = getRandomVector(1.0);
-		// 	rayCaster.ray.set(ctr.clone().add(dv), sdir);
-		// 	ints = rayCaster.intersectObjects([bbox.object]);
-		// }
-		// 	log(ints);
 		if (ints[0] != undefined) {
 			// addABall(ints[0].point, 0xaabbcc);
 			endPoints[i] = ints[0].point;
