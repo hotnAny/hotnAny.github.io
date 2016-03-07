@@ -1,9 +1,10 @@
 "use strict";
 
 var FINGERINIT = 2;
-var GRIPINIT = 0.1;
+var GRIPINIT = 0;
 var STRENGTHINT = 1.5;
 var SIZEINIT = 1.75;
+var COORDINIT = 0.25;
 
 class xacAdaptation {
 	constructor(pc) {
@@ -13,6 +14,7 @@ class xacAdaptation {
 		this._sizeFactor = SIZEINIT;
 		this._fingerFactor = FINGERINIT;
 		this._gripFactor = GRIPINIT;
+		this._coordFactor = COORDINIT;
 	}
 
 	get adaptation() {
@@ -30,6 +32,7 @@ class xacAdaptation {
 			this._gripFactor = params.gripFactor == undefined ? this._gripFactor : params.gripFactor;
 			this._strengthFactor = params.strengthFactor == undefined ? this._strengthFactor : params.strengthFactor;
 			this._sizeFactor = params.sizeFactor == undefined ? this._sizeFactor : params.sizeFactor;
+			this._coordFactor = params.coordFactor == undefined ? this._coordFactor : params.coordFactor;
 		}
 
 		for (var pid in this._pc.parts) {
@@ -45,8 +48,13 @@ class xacAdaptation {
 				scene.remove(this._pc.parts[pid]);
 			}
 
-			this._as[pid] = this._update(pid);
+			var a = this._update(pid);
 
+			if (a == undefined) {
+				continue;
+			}
+
+			this._as[pid] = a;
 			scene.add(this._as[pid]);
 		}
 	}
@@ -224,13 +232,80 @@ class xacAdaptation {
 	}
 }
 
+class xacGuide extends xacAdaptation {
+	constructor(pc, params) {
+		super(pc);
+
+		this._update = function(pid) {
+			var a = this._makeGuide(this._pc);
+			return a;
+		}
+
+		this.update();
+	}
+
+	// params:
+	// pc: the parts-ctrl pair
+	// - total length: sizeFactor
+	// - opening ratio: coordFactor
+	// - friction: gripFactor
+	_makeGuide(pc) {
+		var ctrl = pc.ctrl;
+		ctrl.clear();
+
+		// 0. compute the bounding cylinder
+		var bcylMobile = getBoundingCylinder(ctrl.mobile, ctrl.dir);
+		var bcylStatic = getBoundingCylinder(ctrl.static, ctrl.dir);
+
+		var lenMobile = bcylMobile.height;
+		var lenStatic = bcylStatic.height;
+
+		var ctrMobile = getBoundingBoxCenter(ctrl.static);
+
+		var margin = 0.1;
+
+		var rMobile = bcylMobile.radius * (1 + margin);
+		var cylMobile = new xacCylinder(rMobile, lenMobile, MATERIALHIGHLIGHT);
+		rotateObjTo(cylMobile.m, ctrl.dir);
+		var posCylMobile = ctrMobile.clone().add(ctrl.dir.clone().normalize().multiplyScalar((lenMobile + lenStatic) * 0.5));
+		cylMobile.m.position.copy(posCylMobile);
+		// scene.add(cylMobile.m);
+
+		// 1. make the tunnel body
+		var rGuide = Math.max(bcylMobile.radius * (1 + margin) * this._sizeFactor, bcylStatic.radius);
+		var lenGuide = lenMobile * 0.25 + lenStatic * 0.5;
+		var posGuide = ctrMobile.clone().add(ctrl.dir.clone().normalize().multiplyScalar(lenGuide * 0.5));
+
+		var guideBody = new xacCylinder(rGuide, lenGuide, MATERIALHIGHLIGHT);
+		rotateObjTo(guideBody.m, ctrl.dir);
+		guideBody.m.position.copy(posGuide);
+		// scene.add(guideBody.m);
+
+		// 2. make the tunnel's finishing part
+		var guideEnd = xacThing.subtract(getTransformedGeometry(guideBody.m), getTransformedGeometry(cylMobile.m), MATERIALHIGHLIGHT);
+
+		// 3. make the tunnel's openning
+		var lenOpen = lenGuide * this._coordFactor;
+		var rOpen = rGuide * (0.5 + this._sizeFactor);
+		var guideOpen = new xacCylinder([rOpen, rGuide], lenOpen, MATERIALHIGHLIGHT);
+		var stubOpen = new xacCylinder([rMobile * rOpen / rGuide, rMobile], lenOpen, MATERIALHIGHLIGHT);
+		var guideOpenCut = xacThing.subtract(getTransformedGeometry(guideOpen.m), getTransformedGeometry(stubOpen.m), MATERIALHIGHLIGHT);
+		rotateObjTo(guideOpenCut, ctrl.dir);
+		guideOpenCut.position.copy(posGuide.clone().add(ctrl.dir.clone().normalize().multiplyScalar((lenGuide + lenOpen) * 0.5)));
+
+		var guide = xacThing.union(getTransformedGeometry(guideEnd), getTransformedGeometry(guideOpenCut), MATERIALHIGHLIGHT);
+
+		return guide;
+	}
+}
+
 class xacLever extends xacAdaptation {
 	constructor(pc, params) {
 		super(pc);
 
 		this._update = function(pid) {
 			var ctrPart = getCenter(this._pc.parts[pid]);
-			
+
 			var a1 = this._extrude(this._pc.parts[pid], Math.sqrt(this._sizeFactor), this._fingerFactor, undefined);
 			// scene.add(a1);
 			var a2 = this._makeLever(a1);

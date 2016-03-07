@@ -163,7 +163,11 @@ var MATERIALPLAIN = new THREE.MeshBasicMaterial({
 var FINGERSIZE = 15;
 var HANDSIZE = 150;
 
+var gReadingFile = false;
+
+// the hand for selecting grasp area
 var HANDMODELPATH = 'things/small_hand.stl';
+var gHand = undefined;
 
 var gStep = 0;
 var gItems = [];

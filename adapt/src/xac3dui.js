@@ -1,7 +1,46 @@
 "use strict";
 
+class BboxSelector {
+	constructor(obj) {
+		this._obj = obj;
+
+		this._bbox = getBoundingBoxEverything(obj);
+		this._box = [];
+
+		var bb = this._bbox;
+
+		this._box.push(this._addPlane(bb.lenx, 0.1, bb.lenz, new THREE.Vector3(0, 1, 0), bb.ctrx, bb.cmax.y, bb.ctrz));
+		this._box.push(this._addPlane(bb.lenx, 0.1, bb.lenz, new THREE.Vector3(0, -1, 0), bb.ctrx, bb.cmin.y, bb.ctrz));
+		this._box.push(this._addPlane(bb.leny, 0.1, bb.lenz, new THREE.Vector3(1, 0, 0), bb.cmax.x, bb.ctry, bb.ctrz));
+		this._box.push(this._addPlane(bb.leny, 0.1, bb.lenz, new THREE.Vector3(-1, 0, 0), bb.cmin.x, bb.ctry, bb.ctrz));
+		this._box.push(this._addPlane(bb.lenx, 0.1, bb.leny, new THREE.Vector3(0, 0, 1), bb.ctrx, bb.ctry, bb.cmax.z));
+		this._box.push(this._addPlane(bb.lenx, 0.1, bb.leny, new THREE.Vector3(0, 0, -1), bb.ctrx, bb.ctry, bb.cmin.z));
+	}
+
+	_addPlane(lx, ly, lz, nml, cx, cy, cz) {
+		var pl = new xacRectPrism(lx, ly, lz, MATERIALCONTRAST);
+		rotateObjTo(pl.m, nml);
+		pl.m.position.copy(new THREE.Vector3(cx, cy, cz));
+		scene.add(pl.m);
+		pl.m.selector = this;
+		return pl.m;
+	}
+
+	get box() {
+		return this._box;
+	}
+
+	select(pl) {
+		for (var i = this._box.length - 1; i >= 0; i--) {
+			this._box[i].material.opacity = 0.25;
+		}
+		pl.material.opacity = 0.5;
+	}
+}
+
 /*
 	showing xy-yz-zx planes for selection
+	specific to adapt, also let the user subsequently select a point on the selected plane
 */
 class PlaneSelector {
 	constructor(pt) {
@@ -71,7 +110,6 @@ class PlaneSelector {
 /*
 	a visualization that shows where the user selects on an object as control point/area
 */
-var gHand = undefined;
 
 class PartSelector {
 	constructor() {
@@ -338,10 +376,6 @@ class PartSelector {
 	}
 
 	rotateHand(ptMove, ptDown) {
-		// var offset = getDist(ptMove, ptDown);
-		// if (offset > 50) {
-		// 	return;
-		// }
 		if (gHand == undefined) {
 			return;
 		}

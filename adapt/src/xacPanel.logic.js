@@ -36,11 +36,20 @@ var initPanel = function() {
 		e.dataTransfer = e.originalEvent.dataTransfer;
 		var files = e.dataTransfer.files;
 
-		var reader = new FileReader();
-		reader.onload = (function(e) {
-			loadStl(e.target.result);
-		});
-		reader.readAsBinaryString(files[0]);
+		for (var i = files.length - 1; i >= 0; i--) {
+			// while(reader.readyState == FileReader.LOADING) {
+			// 	log('reading ' + files[i]);
+			// }
+			var reader = new FileReader();
+			reader.onload = (function(e) {
+				loadStl(e.target.result);
+			});
+			// if (reader.readyState != FileReader.LOADING) {
+			reader.readAsBinaryString(files[i]);
+			// i--;
+			// }
+		}
+		// reader.readAsBinaryString(files[0]);
 
 		gStep = 1;
 		showElm(partsCtrls, function() {
@@ -196,19 +205,20 @@ var initPanel = function() {
 		smCtrls.selectmenu({
 			change: function(event, data) {
 				var type = parseInt(data['item'].value);
-
+				var pcId = $(this).attr('pcId');
 				var ctrl = undefined;
 				switch (type) {
 					case GRASPCTRL:
-						ctrl = new xacGrasp();
+						gPartsCtrls[pcId].ctrl = new xacGrasp();
 						break;
 					case ROTATECTRL:
-						ctrl = new xacRotate();
+						gPartsCtrls[pcId].ctrl = new xacRotate();
+						break;
+					case JOINSEPCTRL:
+						gPartsCtrls[pcId].ctrl = new xacJoinSeparate(objects);
+						gPartsCtrls[pcId].parts = objects[0]; // as a placeholder
 						break;
 				}
-
-				var pcId = $(this).attr('pcId');
-				gPartsCtrls[pcId].ctrl = ctrl;
 
 				if (numValidPartsCtrl() > 0) {
 					showElm(adaptations);
@@ -317,6 +327,9 @@ var initPanel = function() {
 				case 'Lever':
 					gAdaptations.push(new xacLever(part));
 					break;
+				case 'Guide':
+					gAdaptations.push(new xacGuide(part));
+					break;
 			}
 
 			// reset the selection from the list
@@ -344,27 +357,22 @@ var initPanel = function() {
 
 	// # of fingers
 	$('#sldFingers').slider({
-		max: 50,
+		max: 54,
 		min: 1,
 		range: 'max',
 		change: function(e) {
-			// var minValue = $("#sldFingers").slider("option", "min");
 			var value = $('#sldFingers').slider('value') / 10;
 			var valueInt = Math.max(1, float2int(value + 0.5));
-			// if (valueInt != value) {
-			// 	$('#sldFingers').slider('value', valueInt * minValue);
-			// } else {
-			$('#lbFingers').html(value + ' Finger' + (valueInt > 1 ? 's' : ''));
+			$('#lbFingers').html(valueInt + ' Finger' + (valueInt > 1 ? 's' : ''));
 			gOptParams.fingerFactor = value;
-			// }
 		},
 		slide: function(e) {
 			var minValue = $("#sldFingers").slider("option", "min");
 			var value = float2int($('#sldFingers').slider('value') / 10);
-			$('#lbFingers').html(value + ' Finger' + (value > 1 ? 's' : ' '));
+			var valueInt = Math.max(1, float2int(value + 0.5));
+			$('#lbFingers').html(valueInt + ' Finger' + (valueInt > 1 ? 's' : ' '));
 		}
 	});
-	// var minSldFingersValue = $("#sldFingers").slider("option", "min");
 	$('#sldFingers').slider('value', FINGERINIT * 10);
 	$('#sldFingers').css('background-color', '#b7b7b4');
 
@@ -401,6 +409,23 @@ var initPanel = function() {
 	var maxsldStrengthValue = $("#sldStrength").slider("option", "max");
 	var valuesldStrength = minsldStrengthValue + (STRENGTHINT - 1) * (maxsldStrengthValue - minsldStrengthValue);
 	$('#sldStrength').slider('value', valuesldStrength);
+
+	// coord
+	$('#sldCoord').slider({
+		max: 100,
+		range: 'max',
+		change: function(e) {
+			var minValue = $("#sldCoord").slider("option", "min");
+			var maxValue = $("#sldCoord").slider("option", "max");
+			var value = $('#sldCoord').slider('value');
+			gOptParams.coordFactor = (value - minValue) * 1.0 / (maxValue - minValue);
+		}
+	})
+	$('#sldCoord').css('background-color', '#b7b7b4');
+	var minsldCoordValue = $("#sldCoord").slider("option", "min");
+	var maxsldCoordValue = $("#sldCoord").slider("option", "max");
+	var valuesldCoord = minsldCoordValue + COORDINIT * (maxsldCoordValue - minsldCoordValue);
+	$('#sldCoord').slider('value', valuesldCoord);
 
 	// size
 	$('#sldSize').slider({

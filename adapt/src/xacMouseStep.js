@@ -51,11 +51,10 @@ function onMouseDownStep(event) {
 }
 
 function onMouseMoveStep(event) {
-	if (event.which != LEFTMOUSE) {
-		return;
-	}
-
 	if (gSticky == false) {
+		if (event.which != LEFTMOUSE) {
+			return;
+		}
 		if (ptDown.length == 0) return;
 		if (event.clientX < WIDTHCONTAINER) return;
 
@@ -95,7 +94,7 @@ function onMouseUpStep(event) {
 	if (event.which != LEFTMOUSE) {
 		return;
 	}
-	
+
 	if (event.clientX < WIDTHCONTAINER) return;
 	intersects = rayCast(event.clientX, event.clientY, objects);
 	var activeCtrl = getActiveCtrl();

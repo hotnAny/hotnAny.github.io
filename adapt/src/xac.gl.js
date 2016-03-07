@@ -1,44 +1,44 @@
 /*
-	merge a list of THREE.Mesh
+	merge a list of THREE.Mesh - don't three js has it
 */
-function mergeObjs(objs) {
-	if (objs.length == 0) return undefined;
+// function mergeObjs(objs) {
+// 	if (objs.length == 0) return undefined;
 
-	// the openjscad approach
-	// var mm = objs[objs.length - 1];
-	// for (var i = objs.length - 1; i > 0; i--) {
-	// 	mm = xacThing.union(getTransformedGeometry(mm), getTransformedGeometry(objs[i]), mm.material);
-	// }
+// 	// the openjscad approach
+// 	// var mm = objs[objs.length - 1];
+// 	// for (var i = objs.length - 1; i > 0; i--) {
+// 	// 	mm = xacThing.union(getTransformedGeometry(mm), getTransformedGeometry(objs[i]), mm.material);
+// 	// }
 
-	// the three js approach
-	var mo = new THREE.Geometry();
-	// var mm = objs[objs.length - 1];
-	for (var i = objs.length - 1; i > 0; i--) {
-		// mm = xacThing.union(getTransformedGeometry(mm), getTransformedGeometry(objs[i]), mm.material);
-		// var vs = mo.geometry.vertices;
-		var gtObj = getTransformedGeometry(objs[i]);
-		var objFs = gtObj.faces;
-		var fs = [];
-		var n = mo.vertices.length;
+// 	// the three js approach
+// 	var mo = new THREE.Geometry();
+// 	// var mm = objs[objs.length - 1];
+// 	for (var i = objs.length - 1; i > 0; i--) {
+// 		// mm = xacThing.union(getTransformedGeometry(mm), getTransformedGeometry(objs[i]), mm.material);
+// 		// var vs = mo.geometry.vertices;
+// 		var gtObj = getTransformedGeometry(objs[i]);
+// 		var objFs = gtObj.faces;
+// 		var fs = [];
+// 		var n = mo.vertices.length;
 
-		for (var j = 0; j < objFs.length; j++) {
-			fs.push(objFs[j]);
-			fs[j].a += n;
-			fs[j].b += n;
-			fs[j].c += n;
-		}
+// 		for (var j = 0; j < objFs.length; j++) {
+// 			fs.push(objFs[j]);
+// 			fs[j].a += n;
+// 			fs[j].b += n;
+// 			fs[j].c += n;
+// 		}
 
-		mo.vertices = mo.vertices.concat(gtObj.vertices);
-		mo.faces = mo.faces.concat(objFs);
+// 		mo.vertices = mo.vertices.concat(gtObj.vertices);
+// 		mo.faces = mo.faces.concat(objFs);
 
-	}
+// 	}
 
-	var material = objs[0].material.clone();
-	material.side = THREE.DoubleSide;
-	var mm = new THREE.Mesh(mo, material);
+// 	var material = objs[0].material.clone();
+// 	material.side = THREE.DoubleSide;
+// 	var mm = new THREE.Mesh(mo, material);
 
-	return mm;
-}
+// 	return mm;
+// }
 
 /*
 	scale an object around its center by factor
@@ -120,9 +120,9 @@ function rotateVectorTo(v, dir) {
 	v.applyAxisAngle(axisToRotate, angleToRotate);
 }
 
-function tessellate(obj, minArea) {
+// function tessellate(obj, minArea) {
 
-}
+// }
 
 function computeFaceArea(obj) {
 	var g = getTransformedGeometry(obj);
@@ -194,6 +194,52 @@ function getTransformedVector(v, mesh) {
 	return vt;
 }
 
+function getBoundingCylinder(obj, dir) {
+	var ctr = getBoundingBoxCenter(obj);
+	var h = getDimAlong(obj, dir);
+
+	var a = dir.x;
+	var b = dir.y;
+	var c = dir.z;
+	var d = -a * ctr.x - b * ctr.y - c * ctr.z;
+
+	var gt = getTransformedGeometry(obj);
+	var r = 0;
+	for (var i = gt.vertices.length - 1; i >= 0; i--) {
+		var v = getProjection(gt.vertices[i], a, b, c, d);
+		r = Math.max(r, v.distanceTo(ctr));
+	}
+
+	return {
+		radius: r,
+		height: h
+	};
+}
+
+function getBoundingBoxEverything(obj) {
+	var gt = getTransformedGeometry(obj);
+	gt.computeBoundingBox();
+	var cmax = gt.boundingBox.max;
+	var cmin = gt.boundingBox.min;
+	var lenx = cmax.x - cmin.x;
+	var leny = cmax.y - cmin.y;
+	var lenz = cmax.z - cmin.z;
+	var ctrx = 0.5 * (cmax.x + cmin.x);
+	var ctry = 0.5 * (cmax.y + cmin.y);
+	var ctrz = 0.5 * (cmax.z + cmin.z);
+
+	return {
+		cmax: cmax,
+		cmin: cmin,
+		lenx: lenx,
+		leny: leny,
+		lenz: lenz,
+		ctrx: ctrx,
+		ctry: ctry,
+		ctrz: ctrz
+	};
+}
+
 function getBoundingBoxCenter(obj) {
 	var g = obj.geometry;
 	g.computeBoundingBox();
@@ -202,12 +248,6 @@ function getBoundingBoxCenter(obj) {
 	var z = 0.5 * (g.boundingBox.max.z + g.boundingBox.min.z);
 	return new THREE.Vector3(x, y, z);
 }
-
-// function getBoundingSphereRadius(obj) {
-// 	var g = obj.geometry;
-// 	g.computeBoundingSphere();
-// 	return g.boundingSphere.radius;
-// }
 
 function getBoundingBoxDimensions(obj) {
 	var g = obj.geometry;
@@ -230,6 +270,16 @@ function getBoundingSphereRadius(obj) {
 	gt.computeBoundingSphere();
 	return gt.boundingSphere.radius;
 }
+
+// function getBoundingCylinder(obj, dir) {
+// 	var r = 0;
+// 	var h = 0;
+
+// 	return {
+// 		radius: r,
+// 		height: h
+// 	};
+// }
 
 function getDimAlong(obj, dir) {
 	var gt = getTransformedGeometry(obj);

@@ -89,7 +89,20 @@ class xacCylinder extends xacThing {
 		super();
 		this._r = r;
 		this._h = h;
-		this._g = new THREE.CylinderGeometry(r, r, h, 32, 1);
+
+		var r1, r2;
+		if (r.length >= 2) {
+			r1 = r[0];
+			r2 = r[1];
+		} else {
+			if (r.length > 0) {
+				r1 = r2 = r[0]
+			} else {
+				r1 = r2 = r;
+			}
+		}
+
+		this._g = new THREE.CylinderGeometry(r1, r2, h, 32, 1);
 		this._m = new THREE.Mesh(this._g, material == undefined ? MATERIALNORMAL.clone() : material.clone());
 	}
 }
