@@ -3,7 +3,7 @@
  * @author Mark Lundin 	/ http://mark-lundin.com
  */
 
-THREE.TrackballControls = function(object, domElement) {
+THREE.TrackballControls = function(object, domElement, lookAt) {
 
 	var _this = this;
 	var STATE = {
@@ -48,7 +48,7 @@ THREE.TrackballControls = function(object, domElement) {
 
 	// internals
 
-	this.target = new THREE.Vector3();
+	this.target = lookAt == undefined ? new THREE.Vector3() : lookAt;
 
 	var EPS = 0.000001;
 
