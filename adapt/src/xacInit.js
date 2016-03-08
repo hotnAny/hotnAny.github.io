@@ -55,11 +55,10 @@ document.body.appendChild(renderer.domElement);
 var scene = new THREE.Scene();
 
 var camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 10000);
-var gPosCam = new THREE.Vector3(-6, 3, 4);
-gPosCam.normalize();
-camera.position.copy(gPosCam.clone().multiplyScalar(100));
-
-var controls = new THREE.TrackballControls(camera); // for mouse control
+var gPosCam = new THREE.Vector3(-16, 8, 10);
+camera.position.copy(gPosCam.clone().multiplyScalar(50));
+var gLookAt = new THREE.Vector3(-25, 0, -0).multiplyScalar(10);
+var controls = new THREE.TrackballControls(camera, undefined, gLookAt); // for mouse control
 
 //
 // draw floor
@@ -160,10 +159,18 @@ var MATERIALPLAIN = new THREE.MeshBasicMaterial({
      opacity: 1.0
 })
 
+var MATERIALINVISIBLE= new THREE.MeshBasicMaterial({
+     vertexColors: 0xffffff,
+     transparent: true,
+     wireframe: true,
+     visible: false
+})
+
 var FINGERSIZE = 15;
 var HANDSIZE = 150;
 
-var gReadingFile = false;
+// specifying accessible area
+var gAccessSel;
 
 // the hand for selecting grasp area
 var HANDMODELPATH = 'things/small_hand.stl';

@@ -67,6 +67,7 @@ class xacStrap extends xacConnector {
 			scene.remove(this._a.adaptation);
 			this._awc = xacThing.subtract(getTransformedGeometry(this._a.adaptation), getTransformedGeometry(strap), this._a.adaptation.material);
 			scene.add(this._awc);
+			this._a.awc = this._awc;
 		}
 
 		setTimeout(function(strap) {

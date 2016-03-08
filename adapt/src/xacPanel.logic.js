@@ -223,6 +223,9 @@ var initPanel = function() {
 				if (numValidPartsCtrl() > 0) {
 					showElm(adaptations);
 				}
+
+				// once a button is pressed, the step becomes 2 specifying parts
+				gStep = 2;
 			}
 		});
 
@@ -270,8 +273,6 @@ var initPanel = function() {
 
 		gPartCtrlId += 1;
 
-		// once a button is pressed, the step becomes 2.1 specifying parts
-		gStep = 2.1;
 
 		// TODO: make this more strict: need to have at least one pair of parts-ctrls
 		// if (gPartsCtrls.pc0 != undefined && Object.keys(gPartsCtrls.pc0.parts).length > 0 && gPartsCtrls.pc0.ctrl != undefined) {
@@ -504,7 +505,7 @@ var initPanel = function() {
 		}
 
 		// TODO: deal with multiple exports
-		var stlStr = stlFromGeometry(gAdaptations.slice(-1)[0].adaptation.geometry);
+		var stlStr = stlFromGeometry(gAdaptations.slice(-1)[0].awc.geometry);
 		var blob = new Blob([stlStr], {
 			type: 'text/plain'
 		});

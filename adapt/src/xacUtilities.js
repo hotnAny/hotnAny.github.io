@@ -100,10 +100,16 @@ function loadStl(data) {
 	scene.add(gGrid);
 
 	// relocate the camera
-	var upperLeft = object.position.clone().add(new THREE.Vector3(-dims[0] / 2, dims[1] / 2, dims[2] / 2));
-	var r = getBoundingSphereRadius(object);
-	camera.position.copy(gPosCam.clone().multiplyScalar(r * 2));
-	camera.position.y = 0;
+	// var upperLeft = object.position.clone().add(new THREE.Vector3(-dims[0] / 2, dims[1] / 2, dims[2] / 2));
+	var r = Math.max(25, getBoundingSphereRadius(object));
+	camera.position.copy(gPosCam.clone().normalize().multiplyScalar(r * 2));
+
+	// re-lookAt for the camera
+	controls.target = new THREE.Vector3(0, 0, 0);
+	// camera.position.y = 0;
+
+	// specifying accessible area
+	gAccessSel = new BboxResizer(object);
 
 	// store the object
 	objects.push(object);

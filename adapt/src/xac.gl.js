@@ -1,44 +1,3 @@
-/*
-	merge a list of THREE.Mesh - don't three js has it
-*/
-// function mergeObjs(objs) {
-// 	if (objs.length == 0) return undefined;
-
-// 	// the openjscad approach
-// 	// var mm = objs[objs.length - 1];
-// 	// for (var i = objs.length - 1; i > 0; i--) {
-// 	// 	mm = xacThing.union(getTransformedGeometry(mm), getTransformedGeometry(objs[i]), mm.material);
-// 	// }
-
-// 	// the three js approach
-// 	var mo = new THREE.Geometry();
-// 	// var mm = objs[objs.length - 1];
-// 	for (var i = objs.length - 1; i > 0; i--) {
-// 		// mm = xacThing.union(getTransformedGeometry(mm), getTransformedGeometry(objs[i]), mm.material);
-// 		// var vs = mo.geometry.vertices;
-// 		var gtObj = getTransformedGeometry(objs[i]);
-// 		var objFs = gtObj.faces;
-// 		var fs = [];
-// 		var n = mo.vertices.length;
-
-// 		for (var j = 0; j < objFs.length; j++) {
-// 			fs.push(objFs[j]);
-// 			fs[j].a += n;
-// 			fs[j].b += n;
-// 			fs[j].c += n;
-// 		}
-
-// 		mo.vertices = mo.vertices.concat(gtObj.vertices);
-// 		mo.faces = mo.faces.concat(objFs);
-
-// 	}
-
-// 	var material = objs[0].material.clone();
-// 	material.side = THREE.DoubleSide;
-// 	var mm = new THREE.Mesh(mo, material);
-
-// 	return mm;
-// }
 
 /*
 	scale an object around its center by factor
@@ -216,6 +175,15 @@ function getBoundingCylinder(obj, dir) {
 	};
 }
 
+function getBoundingBoxMesh(obj) {
+	var params = getBoundingBoxEverything(obj);
+	var g = new THREE.BoxGeometry(params.lenx, params.leny, params.lenz);
+	var m = MATERIALCONTRAST;
+	var bbox = new THREE.Mesh(g, m);
+	bbox.position.set(params.ctrx, params.ctry, params.ctrz);
+	return bbox;
+}
+
 function getBoundingBoxEverything(obj) {
 	var gt = getTransformedGeometry(obj);
 	gt.computeBoundingBox();
@@ -270,16 +238,6 @@ function getBoundingSphereRadius(obj) {
 	gt.computeBoundingSphere();
 	return gt.boundingSphere.radius;
 }
-
-// function getBoundingCylinder(obj, dir) {
-// 	var r = 0;
-// 	var h = 0;
-
-// 	return {
-// 		radius: r,
-// 		height: h
-// 	};
-// }
 
 function getDimAlong(obj, dir) {
 	var gt = getTransformedGeometry(obj);

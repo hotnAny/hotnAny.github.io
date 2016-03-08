@@ -54,6 +54,7 @@ class xacAdaptation {
 				continue;
 			}
 
+			a = this._cutOff(a, this._pc);
 			this._as[pid] = a;
 			scene.add(this._as[pid]);
 		}
@@ -196,7 +197,7 @@ class xacAdaptation {
 				}
 			}
 
-			log("making " + gripPoints.length + " dents");
+			// log("making " + gripPoints.length + " dents");
 
 			var sphereSet = undefined;
 			var parentPos = undefined;
@@ -215,13 +216,9 @@ class xacAdaptation {
 			}
 
 			if (sphereSet != undefined) {
-				// scene.add(sphereSet);
 				var tmpObj = new THREE.Mesh(getTransformedGeometry(sphereSet), sphereSet.material);
-				// scene.add(tmpObj)
 				scene.remove(a);
 				aGrippable = xacThing.subtract(ag, getTransformedGeometry(sphereSet), MATERIALHIGHLIGHT);
-				// scene.add(aDented);
-				// scene.remove(tmpObj)
 			}
 
 		} else if (vForceToExert != undefined) {
@@ -229,6 +226,35 @@ class xacAdaptation {
 		}
 
 		return aGrippable;
+	}
+
+	/*
+		cut off inaccessible part
+	*/
+	_cutOff(a, pc) {
+		var aCutOff = a;
+
+		var aDims = getBoundingBoxDimensions(a);
+
+		var stubCutOff = getBoundingBoxMesh(a);
+
+		// [minx, maxx, miny, maxy, minz, maxz]
+		for (var i = 0; i < pc.obj.accessibleBoundaries.length; i++) {
+
+			var idx = float2int(i / 2);
+			// no boundaries on this side
+			if (pc.obj.accessibleBoundaries[i] == undefined) {
+				continue;
+			}
+
+			var stub = stubCutOff.clone();
+			var offsetStub = [stub.position.x, stub.position.y, stub.position.z];
+			offsetStub[idx] = pc.obj.accessibleBoundaries[i] + Math.pow(-1, i + 1) * aDims[idx] / 2;
+			stub.position.copy(new THREE.Vector3(offsetStub[0], offsetStub[1], offsetStub[2]));
+			aCutOff = xacThing.subtract(getTransformedGeometry(aCutOff), getTransformedGeometry(stub), MATERIALHIGHLIGHT);
+		}
+
+		return aCutOff;
 	}
 }
 
@@ -253,38 +279,46 @@ class xacGuide extends xacAdaptation {
 		var ctrl = pc.ctrl;
 		ctrl.clear();
 
+		//
 		// 0. compute the bounding cylinder
+		//
 		var bcylMobile = getBoundingCylinder(ctrl.mobile, ctrl.dir);
 		var bcylStatic = getBoundingCylinder(ctrl.static, ctrl.dir);
 
 		var lenMobile = bcylMobile.height;
 		var lenStatic = bcylStatic.height;
 
-		var ctrMobile = getBoundingBoxCenter(ctrl.static);
+		var ctrStatic = getBoundingBoxCenter(ctrl.static);
 
 		var margin = 0.1;
 
 		var rMobile = bcylMobile.radius * (1 + margin);
 		var cylMobile = new xacCylinder(rMobile, lenMobile, MATERIALHIGHLIGHT);
 		rotateObjTo(cylMobile.m, ctrl.dir);
-		var posCylMobile = ctrMobile.clone().add(ctrl.dir.clone().normalize().multiplyScalar((lenMobile + lenStatic) * 0.5));
+		var posCylMobile = ctrStatic.clone().add(ctrl.dir.clone().normalize().multiplyScalar((lenMobile + lenStatic) * 0.5));
 		cylMobile.m.position.copy(posCylMobile);
 		// scene.add(cylMobile.m);
 
+		//
 		// 1. make the tunnel body
+		//
 		var rGuide = Math.max(bcylMobile.radius * (1 + margin) * this._sizeFactor, bcylStatic.radius);
 		var lenGuide = lenMobile * 0.25 + lenStatic * 0.5;
-		var posGuide = ctrMobile.clone().add(ctrl.dir.clone().normalize().multiplyScalar(lenGuide * 0.5));
+		var posGuide = ctrStatic.clone().add(ctrl.dir.clone().normalize().multiplyScalar(lenGuide * 0.5));
 
 		var guideBody = new xacCylinder(rGuide, lenGuide, MATERIALHIGHLIGHT);
 		rotateObjTo(guideBody.m, ctrl.dir);
 		guideBody.m.position.copy(posGuide);
 		// scene.add(guideBody.m);
 
+		//
 		// 2. make the tunnel's finishing part
+		//
 		var guideEnd = xacThing.subtract(getTransformedGeometry(guideBody.m), getTransformedGeometry(cylMobile.m), MATERIALHIGHLIGHT);
 
+		//
 		// 3. make the tunnel's openning
+		//
 		var lenOpen = lenGuide * this._coordFactor;
 		var rOpen = rGuide * (0.5 + this._sizeFactor);
 		var guideOpen = new xacCylinder([rOpen, rGuide], lenOpen, MATERIALHIGHLIGHT);
@@ -294,6 +328,15 @@ class xacGuide extends xacAdaptation {
 		guideOpenCut.position.copy(posGuide.clone().add(ctrl.dir.clone().normalize().multiplyScalar((lenGuide + lenOpen) * 0.5)));
 
 		var guide = xacThing.union(getTransformedGeometry(guideEnd), getTransformedGeometry(guideOpenCut), MATERIALHIGHLIGHT);
+
+		//
+		// 4. cut the tunnel in half
+		//
+		var cutHalfStub = new xacRectPrism(rOpen, lenOpen + lenGuide + lenStatic / 2, rOpen * 2);
+		cutHalfStub.m.position.set(ctrStatic.x - rOpen / 2, posGuide.y + lenOpen / 2, ctrStatic.z);
+		// scene.add(cutHalfStub.m);
+
+		guide = xacThing.subtract(getTransformedGeometry(guide), getTransformedGeometry(cutHalfStub.m), MATERIALHIGHLIGHT);
 
 		return guide;
 	}

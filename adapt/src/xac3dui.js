@@ -1,25 +1,17 @@
 "use strict";
 
-class BboxSelector {
+class BboxUI {
 	constructor(obj) {
 		this._obj = obj;
-
-		this._bbox = getBoundingBoxEverything(obj);
-		this._box = [];
-
-		var bb = this._bbox;
-
-		this._box.push(this._addPlane(bb.lenx, 0.1, bb.lenz, new THREE.Vector3(0, 1, 0), bb.ctrx, bb.cmax.y, bb.ctrz));
-		this._box.push(this._addPlane(bb.lenx, 0.1, bb.lenz, new THREE.Vector3(0, -1, 0), bb.ctrx, bb.cmin.y, bb.ctrz));
-		this._box.push(this._addPlane(bb.leny, 0.1, bb.lenz, new THREE.Vector3(1, 0, 0), bb.cmax.x, bb.ctry, bb.ctrz));
-		this._box.push(this._addPlane(bb.leny, 0.1, bb.lenz, new THREE.Vector3(-1, 0, 0), bb.cmin.x, bb.ctry, bb.ctrz));
-		this._box.push(this._addPlane(bb.lenx, 0.1, bb.leny, new THREE.Vector3(0, 0, 1), bb.ctrx, bb.ctry, bb.cmax.z));
-		this._box.push(this._addPlane(bb.lenx, 0.1, bb.leny, new THREE.Vector3(0, 0, -1), bb.ctrx, bb.ctry, bb.cmin.z));
+		this._ctrObj = getBoundingBoxCenter(this._obj);
+		this._bboxParmas = getBoundingBoxEverything(obj);
+		this._update(this._bboxParmas)
 	}
 
 	_addPlane(lx, ly, lz, nml, cx, cy, cz) {
 		var pl = new xacRectPrism(lx, ly, lz, MATERIALCONTRAST);
 		rotateObjTo(pl.m, nml);
+		pl.m.normal = nml;
 		pl.m.position.copy(new THREE.Vector3(cx, cy, cz));
 		scene.add(pl.m);
 		pl.m.selector = this;
@@ -28,6 +20,138 @@ class BboxSelector {
 
 	get box() {
 		return this._box;
+	}
+
+	// update all the planes based on the object's bbox parameters
+	_update(bb) {
+		var boxNew = [];
+		boxNew.push(this._addPlane(bb.lenx, 0.1, bb.lenz, new THREE.Vector3(0, 1, 0), bb.ctrx, bb.cmax.y, bb.ctrz));
+		boxNew.push(this._addPlane(bb.lenx, 0.1, bb.lenz, new THREE.Vector3(0, -1, 0), bb.ctrx, bb.cmin.y, bb.ctrz));
+		boxNew.push(this._addPlane(bb.leny, 0.1, bb.lenz, new THREE.Vector3(1, 0, 0), bb.cmax.x, bb.ctry, bb.ctrz));
+		boxNew.push(this._addPlane(bb.leny, 0.1, bb.lenz, new THREE.Vector3(-1, 0, 0), bb.cmin.x, bb.ctry, bb.ctrz));
+		boxNew.push(this._addPlane(bb.lenx, 0.1, bb.leny, new THREE.Vector3(0, 0, 1), bb.ctrx, bb.ctry, bb.cmax.z));
+		boxNew.push(this._addPlane(bb.lenx, 0.1, bb.leny, new THREE.Vector3(0, 0, -1), bb.ctrx, bb.ctry, bb.cmin.z));
+
+		if (this._box != undefined && this._box.length > 0) {
+			for (var i = this._box.length - 1; i >= 0; i--) {
+				if (this._box[i] != this._pl) {
+					scene.remove(this._box[i]);
+					// scene.remove(boxNew[i]);
+					this._box[i] = boxNew[i];
+				} else {
+					scene.remove(boxNew[i]);
+				}
+			}
+		} else {
+			this._box = boxNew;
+		}
+	}
+}
+
+class BboxResizer extends BboxUI {
+	constructor(obj) {
+		super(obj);
+	}
+
+	mousedown(e) {
+		// select a plane, if there is any
+		var ints = rayCast(e.clientX, e.clientY, this._box);
+		if (ints.length > 0) {
+			this._pl = ints[0].object; // the plane being moved
+			this._point = ints[0].point; // last intersecting point
+			this._normal = this._pl.normal; // the normal of this plane
+
+
+			var dragPlane = new xacRectPrism(1000, 1000, 0.1, MATERIALINVISIBLE);
+			rotateObjTo(dragPlane.m, this._normal);
+			// log(this._normal)
+			dragPlane.m.position.copy(this._point);
+			scene.add(dragPlane.m);
+
+			this._dragPlane = dragPlane.m;
+			dragPlane.m.material.side = THREE.DoubleSide;
+		}
+	}
+
+	mousemove(e) {
+		// move the selected plane, if dragging, and update
+		if (e.which != LEFTMOUSE || this._pl == undefined) {
+			return;
+		}
+
+		var ints = rayCast(e.clientX, e.clientY, [this._dragPlane]);
+		if (ints.length > 0) {
+			var dirDrag = ints[0].point.clone().sub(this._point);
+
+			// DEBUG
+			// scene.remove(this._tmpVE);
+			// removeBalls();
+			// addABall(ints[0].point, 0x00ff00)
+			// this._tmpVE = addAVector(this._point, dirDrag);
+
+			var lenOff = dirDrag.dot(this._normal);
+			var vecOff = this._normal.clone().multiplyScalar(lenOff);
+			var sign = dirDrag.angleTo(this._normal) < Math.PI / 2 ? 1 : -1;
+			var posNew = this._pl.position.clone().add(vecOff);
+
+			// a plane cannot go across the centroid to the other side
+			if (posNew.clone().sub(this._ctrObj).angleTo(this._normal) < Math.PI / 2) {
+				this._pl.position.copy(posNew);
+
+				this._bboxParmas.ctrx += vecOff.x / 2;
+				this._bboxParmas.ctry += vecOff.y / 2;
+				this._bboxParmas.ctrz += vecOff.z / 2;
+
+				this._bboxParmas.lenx += sign * Math.abs(vecOff.x);
+				this._bboxParmas.leny += sign * Math.abs(vecOff.y);
+				this._bboxParmas.lenz += sign * Math.abs(vecOff.z);
+
+				this._bboxParmas.cmin.x = this._bboxParmas.ctrx - this._bboxParmas.lenx * 0.5;
+				this._bboxParmas.cmax.x = this._bboxParmas.ctrx + this._bboxParmas.lenx * 0.5;
+				this._bboxParmas.cmin.y = this._bboxParmas.ctry - this._bboxParmas.leny * 0.5;
+				this._bboxParmas.cmax.y = this._bboxParmas.ctry + this._bboxParmas.leny * 0.5;
+				this._bboxParmas.cmin.z = this._bboxParmas.ctrz - this._bboxParmas.lenz * 0.5;
+				this._bboxParmas.cmax.z = this._bboxParmas.ctrz + this._bboxParmas.lenz * 0.5;
+
+				this._point.add(vecOff);
+
+				// update the other planes
+				this._update(this._bboxParmas);
+			}
+		}
+	}
+
+	mouseup(e) {
+		this._pl = undefined;
+		this._point = undefined;
+		this._normal = undefined;
+
+		// compute accessible boundaries
+		this._obj.accessibleBoundaries = [];
+		var bbOriginal = getBoundingBoxEverything(this._obj);
+		log(bbOriginal)
+		var bbNow = this._bboxParmas;
+		log(bbNow)
+
+		var eps = 0.1
+		this._obj.accessibleBoundaries[0] = (bbNow.cmin.x > bbOriginal.cmin.x + eps) ? bbNow.cmin.x : undefined;
+		this._obj.accessibleBoundaries[1] = (bbNow.cmax.x < bbOriginal.cmax.x - eps) ? bbNow.cmax.x : undefined;
+		this._obj.accessibleBoundaries[2] = (bbNow.cmin.y > bbOriginal.cmin.y + eps) ? bbNow.cmin.y : undefined;
+		this._obj.accessibleBoundaries[3] = (bbNow.cmax.y < bbOriginal.cmax.y - eps) ? bbNow.cmax.y : undefined;
+		this._obj.accessibleBoundaries[4] = (bbNow.cmin.z > bbOriginal.cmin.z + eps) ? bbNow.cmin.z : undefined;
+		this._obj.accessibleBoundaries[5] = (bbNow.cmax.z < bbOriginal.cmax.z - eps) ? bbNow.cmax.z : undefined;
+
+		// log(this._accessibleBoundaries);
+		log(this._obj)
+	}
+
+
+
+}
+
+class BboxSelector extends BboxUI {
+	constructor(obj) {
+
 	}
 
 	select(pl) {
