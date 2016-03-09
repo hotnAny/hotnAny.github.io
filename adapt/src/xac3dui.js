@@ -1,3 +1,9 @@
+/**
+ * 3d ui widgets for selecting or specifying objects
+ * 	
+ * @author Xiang 'Anthony' Chen http://xiangchen.me
+ */
+
 "use strict";
 
 class BboxUI {
@@ -44,6 +50,12 @@ class BboxUI {
 			}
 		} else {
 			this._box = boxNew;
+		}
+	}
+
+	clear() {
+		for (var i = this._box.length - 1; i >= 0; i--) {
+			scene.remove(this._box[i]);
 		}
 	}
 }
@@ -169,6 +181,7 @@ class BboxSelector extends BboxUI {
 class PlaneSelector {
 	constructor(pt) {
 		addABall(pt, 0x00ff00);
+		this._pt = pt.clone(); // the point selected on the object
 
 		this._dim = 1000;
 		this._pxy = new xacRectPrism(this._dim, this._dim, 0.1, MATERIALCONTRAST);
@@ -202,16 +215,21 @@ class PlaneSelector {
 				this._point = new THREE.Object3D();
 
 				// var circle = new xacCircle(25, 32, MATERIALHIGHLIGHT).m;
-				var circle = new xacCylinder(25, 0.1, MATERIALHIGHLIGHT).m;
+				var circle = new xacCylinder(25, 0.1, MATERIALCONTRAST).m;
+				circle.wireframe = true;
 				rotateObjTo(circle, intPlane[0].object.normal, true);
 				// rotateObjTo(circle, new THREE.Vector3(0, 0, 1), true);
 
 				this._point.add(circle);
-				this._point.add(new xacSphere(1, MATERIALHIGHLIGHT).m);
+				this._point.add(new xacSphere(1, MATERIALFOCUS, true).m);
 
 				scene.add(this._point);
 			}
 			this._point.position.copy(intPlane[0].point);
+			if (this._leverLine != undefined) {
+				scene.remove(this._leverLine);
+			}
+			this._leverLine = addAVector(intPlane[0].point, this._pt.clone().sub(intPlane[0].point));
 
 			return true;
 		}
@@ -445,6 +463,8 @@ class PartSelector {
 		this._part.type = 'wrap';
 		this._part.ctrSel = getProjection(ctrWrap, a, b, c, d);
 		this.isWrapping = false;
+
+		return wrapInDisplay;
 	}
 
 	grab(obj, pt, fnml, done) {
@@ -492,11 +512,13 @@ class PartSelector {
 
 		var params = getPlaneFromPointVectors(p0, gHand.fnml.clone().normalize(), dirFingers.clone().normalize());
 
-		this._doWrap(this._obj, this._pt, params);
+		var wrapDisplayed = this._doWrap(this._obj, this._pt, params);
 
 		setTimeout(function() {
 			scene.remove(gHand);
 		}, 1000);
+
+		return wrapDisplayed;
 	}
 
 	rotateHand(ptMove, ptDown) {

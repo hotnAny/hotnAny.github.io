@@ -10,7 +10,7 @@ $(document.body).append(container);
 var initPanel = function() {
 
 	// faster debug
-	showElm(connectors);
+	// showElm(connectors);
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -37,24 +37,20 @@ var initPanel = function() {
 		var files = e.dataTransfer.files;
 
 		for (var i = files.length - 1; i >= 0; i--) {
-			// while(reader.readyState == FileReader.LOADING) {
-			// 	log('reading ' + files[i]);
-			// }
 			var reader = new FileReader();
 			reader.onload = (function(e) {
 				loadStl(e.target.result);
 			});
-			// if (reader.readyState != FileReader.LOADING) {
 			reader.readAsBinaryString(files[i]);
-			// i--;
-			// }
 		}
-		// reader.readAsBinaryString(files[0]);
+
+		hideElm(geomMeas);
 
 		gStep = 1;
 		showElm(partsCtrls, function() {
 			btnAddPartsCtrls.trigger('click');
 		});
+
 	});
 
 	// step 1 - simple shapes
@@ -226,6 +222,7 @@ var initPanel = function() {
 
 				// once a button is pressed, the step becomes 2 specifying parts
 				gStep = 2;
+				gAccessSel.clear();
 			}
 		});
 
@@ -493,6 +490,9 @@ var initPanel = function() {
 				case 'Strap':
 					// stub value
 					gConnMethod = new xacStrap(gAdaptations[0]);
+					break;
+				case 'Flexible part':
+					gConnMethod = new xacFlexiblePart(gAdaptations[0]);
 					break;
 			}
 		}

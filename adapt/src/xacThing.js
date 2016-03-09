@@ -76,10 +76,10 @@ class xacThing {
 }
 
 class xacSphere extends xacThing {
-	constructor(r, material) {
+	constructor(r, material, highFi) {
 		super();
 		this._r = r;
-		this._g = new THREE.SphereGeometry(r, 8, 8);
+		this._g = highFi == true ? new THREE.SphereGeometry(r, 32, 32) : new THREE.SphereGeometry(r, 8, 8);
 		this._m = new THREE.Mesh(this._g, material == undefined ? MATERIALNORMAL.clone() : material.clone());
 	}
 }

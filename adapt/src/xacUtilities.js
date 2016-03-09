@@ -167,7 +167,7 @@ function addALine(v1, v2, clr) {
 	var line = new THREE.Line(geometry, material);
 
 	scene.add(line);
-	addABall(v1);
+	// addABall(v1);
 	return line;
 }
 
@@ -220,6 +220,12 @@ function showElm(elm, actionUponShow) {
 		} catch (e) {
 
 		}
+	}
+}
+
+function hideElm(elm) {
+	if (elm.is(":visible") == true) {
+		elm.hide();
 	}
 }
 

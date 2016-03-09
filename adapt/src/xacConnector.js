@@ -7,6 +7,39 @@ class xacConnector {
 	}
 }
 
+/*
+	marking part of the adaptation to be printed with flexible material
+*/
+class xacFlexiblePart extends xacConnector {
+	constructor(a) {
+		super(a);
+
+		this._flexiblePart = undefined;
+
+		// TODO: this can be improved by considering interpolating btwn the adaptation & the object
+		this._ratio = 0.4; // in the adaptation, about this percentage the size of the original object will be flexible
+
+		this._makeFlexiblePart();
+
+	}
+
+	_makeFlexiblePart() {
+		// enlarge the original object
+		var objInflated = this._a.adaptation.obj.clone();
+
+		objInflated.scale.set(1 + this._ratio, 1 + this._ratio, 1 + this._ratio);
+
+		// get its intersection with the adaptation
+		var fp = xacThing.intersect(getTransformedGeometry(objInflated), getTransformedGeometry(this._a.adaptation), MATERIALOVERLAY);
+		scene.add(fp);
+		this._flexiblePart = fp;
+		
+		this._awc = xacThing.subtract(getTransformedGeometry(this._a.adaptation), getTransformedGeometry(fp), this._a.adaptation.material);
+		scene.remove(this._a.adaptation);
+		scene.add(this._awc);
+	}
+}
+
 class xacStrap extends xacConnector {
 	constructor(a) {
 		super(a);
@@ -34,7 +67,8 @@ class xacStrap extends xacConnector {
 	}
 
 	// strapping adaptation(a) to object(obj)
-	_makeStrapFor(pts, obj, a) {
+	// TODO: debug this
+	_makeStrapFor(pts, obj) {
 		//	1. find cutting center and cross section radius
 		var planeParams = findPlaneToFitPoints(this._strokePoints);
 		var a = planeParams.A;
@@ -62,7 +96,7 @@ class xacStrap extends xacConnector {
 		strap.position.copy(ctrStrap);
 		scene.add(strap);
 
-		// cut from the adaptation
+		//	3. cut from the adaptation
 		if (this._a != undefined) {
 			scene.remove(this._a.adaptation);
 			this._awc = xacThing.subtract(getTransformedGeometry(this._a.adaptation), getTransformedGeometry(strap), this._a.adaptation.material);

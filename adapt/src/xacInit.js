@@ -40,7 +40,7 @@ var selected = new Array();
 
 var colorNormal = 0xDB5B8A;
 var colorContrast = 0xD1D6E7; // is the contrast of the colorNormal
-var colorOverlay = colorContrast;
+var colorOverlay = 0xF2F2F2;  //colorContrast;
 var colorHighlight = 0xfffa90; //
 var colors = [0xdd0044, 0x00dd44, 0x4400dd];
 var colorsBold = [0xff0000, 0x00ff00, 0x0000ff];
@@ -138,33 +138,39 @@ var MATERIALCONTRAST = new THREE.MeshPhongMaterial({
      color: colorContrast,
      transparent: true,
      // wireframe: true,
-     opacity: 0.5
+     opacity: 0.25
 });
 
 var MATERIALOVERLAY = new THREE.MeshPhongMaterial({
      color: colorOverlay,
      transparent: true,
-     opacity: 0.5
+     opacity: 0.75
 });
 
 var MATERIALHIGHLIGHT = new THREE.MeshPhongMaterial({
      color: colorHighlight,
      transparent: true,
-     opacity: 0.5
+     opacity: 0.75
 });
 
 var MATERIALPLAIN = new THREE.MeshBasicMaterial({
      vertexColors: THREE.VertexColors,
      transparent: true,
      opacity: 1.0
-})
+});
 
 var MATERIALINVISIBLE= new THREE.MeshBasicMaterial({
      vertexColors: 0xffffff,
      transparent: true,
      wireframe: true,
      visible: false
-})
+});
+
+var MATERIALFOCUS = new THREE.MeshPhongMaterial({
+     color: 0xff0000,
+     transparent: true,
+     opacity: 1.0
+});
 
 var FINGERSIZE = 15;
 var HANDSIZE = 150;

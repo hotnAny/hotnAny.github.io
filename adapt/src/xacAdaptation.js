@@ -54,7 +54,16 @@ class xacAdaptation {
 				continue;
 			}
 
+			// clear visual elements from last step
+			this._pc.ctrl.clear();
+
+			// cutoff inaccessible part
 			a = this._cutOff(a, this._pc);
+
+			// associate to the original object
+			a.obj = this._pc.obj;
+
+			// keep adaptations in a list
 			this._as[pid] = a;
 			scene.add(this._as[pid]);
 		}
@@ -232,6 +241,10 @@ class xacAdaptation {
 		cut off inaccessible part
 	*/
 	_cutOff(a, pc) {
+		if(pc.obj.accessibleBoundaries == undefined) {
+			return a;
+		}
+
 		var aCutOff = a;
 
 		var aDims = getBoundingBoxDimensions(a);
@@ -277,7 +290,6 @@ class xacGuide extends xacAdaptation {
 	// - friction: gripFactor
 	_makeGuide(pc) {
 		var ctrl = pc.ctrl;
-		ctrl.clear();
 
 		//
 		// 0. compute the bounding cylinder

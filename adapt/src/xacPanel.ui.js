@@ -219,6 +219,7 @@ smConns.append('<option>Clamp</option>');
 smConns.append('<option>Strap</option>');
 smConns.append('<option>Bolt</option>');
 smConns.append('<option>Adhesive</option>');
+smConns.append('<option>Flexible part</option>');
 trAddConns.append(smConns);
 connectors.append(trAddConns);
 

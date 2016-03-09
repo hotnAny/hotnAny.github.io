@@ -105,7 +105,7 @@ class xacGrasp extends xacControl {
 				gPartSel.grab(obj, pt, fnml);
 			}
 		} else if (gSticky) {
-			gPartSel.release();
+			this._ve.push(gPartSel.release());
 			gPartSel.finishUp();
 		}
 	}
@@ -119,6 +119,9 @@ class xacGrasp extends xacControl {
 	mouseUp(e, obj, pt, fml) {}
 }
 
+/*
+	routines to specify a rotation control
+*/
 class xacRotate extends xacControl {
 	constructor() {
 		super(ROTATECTRL);
@@ -155,7 +158,6 @@ class xacRotate extends xacControl {
 				// show planes
 				if (this._planeSel.hitTest(e) == true) {
 					gSticky = true;
-					log("xacControl")
 					this._step = this._TOSELECTFULCRUM;
 				}
 				break;
@@ -163,8 +165,8 @@ class xacRotate extends xacControl {
 				this._planeSel.clear();
 				this._fulcrum = this._planeSel.selection;
 				this._dirLever = this._poc.clone().sub(this._fulcrum);
-				this._ve.push(addABall(this._fulcrum));
-				this._ve.push(addAVector(this._fulcrum, this._dirLever));
+				// this._ve.push(addABall(this._fulcrum));
+				// this._ve.push(addAVector(this._fulcrum, this._dirLever));
 				gSticky = false;
 				this._step = this._TOSELECTOBJ;
 				break;
