@@ -179,44 +179,68 @@ class BboxSelector extends BboxUI {
 	specific to adapt, also let the user subsequently select a point on the selected plane
 */
 class PlaneSelector {
-	constructor(pt) {
+	constructor(pt, nml) {
 		addABall(pt, 0x00ff00);
-		this._pt = pt.clone(); // the point selected on the object
 
 		this._dim = 1000;
-		this._pxy = new xacRectPrism(this._dim, this._dim, 0.1, MATERIALCONTRAST);
-		this._pxy.m.normal = new THREE.Vector3(0, 0, 1);
-		this._pyz = new xacRectPrism(0.1, this._dim, this._dim, MATERIALCONTRAST);
-		this._pyz.m.normal = new THREE.Vector3(1, 0, 0);
-		this._pzx = new xacRectPrism(this._dim, 0.1, this._dim, MATERIALCONTRAST);
-		this._pzx.m.normal = new THREE.Vector3(0, 1, 0);
-
 		this._planes = new THREE.Object3D();
-		this._planes.add(this._pxy.m);
-		this._planes.add(this._pyz.m);
-		this._planes.add(this._pzx.m);
 
-		this._planes.position.copy(pt);
+		// generate a plane based on pt and a vector nml from it
+		if (Array.isArray(pt)) {
+			this._pt = pt;
+
+			this._pl = new xacRectPrism(this._dim, 0.1, this._dim, MATERIALINVISIBLE);
+			rotateObjTo(this._pl.m, nml);
+			this._pl.m.normal = nml;
+			// this._pl.m.position.copy(pt);
+
+			this._planes.add(this._pl.m);
+
+			this._planes.position.copy(getCenter(pt));
+		}
+		// generate xy, yz, zx plane surrounding pt
+		else {
+			this._pt = pt.clone(); // the point selected on the object
+
+			this._pxy = new xacRectPrism(this._dim, this._dim, 0.1, MATERIALCONTRAST);
+			this._pxy.m.normal = new THREE.Vector3(0, 0, 1);
+			this._pyz = new xacRectPrism(0.1, this._dim, this._dim, MATERIALCONTRAST);
+			this._pyz.m.normal = new THREE.Vector3(1, 0, 0);
+			this._pzx = new xacRectPrism(this._dim, 0.1, this._dim, MATERIALCONTRAST);
+			this._pzx.m.normal = new THREE.Vector3(0, 1, 0);
+
+			this._planes.add(this._pxy.m);
+			this._planes.add(this._pyz.m);
+			this._planes.add(this._pzx.m);
+
+			this._planes.position.copy(pt);
+		}
+
 
 		scene.add(this._planes);
 	}
 
+	//
+	// for selecting fulcrum, specific to the adapt app
+	//
 	hitTest(e) {
 		var intPlane = rayCast(e.clientX, e.clientY, this._planes.children);
 
 		if (intPlane[0] != undefined) {
 			if (this._point == undefined) {
-				this._planes.remove(this._pxy.m);
-				this._planes.remove(this._pyz.m);
-				this._planes.remove(this._pzx.m);
-				this._planes.add(intPlane[0].object);
-				scene.remove(this._planes);
+
+				if (this._pxy != undefined && this._pyz != undefined && this._pzx != undefined) {
+					this._planes.remove(this._pxy.m);
+					this._planes.remove(this._pyz.m);
+					this._planes.remove(this._pzx.m);
+					this._planes.add(intPlane[0].object);
+					scene.remove(this._planes);
+				}
 
 				this._point = new THREE.Object3D();
 
-				// var circle = new xacCircle(25, 32, MATERIALHIGHLIGHT).m;
 				var circle = new xacCylinder(25, 0.1, MATERIALCONTRAST).m;
-				circle.wireframe = true;
+				// circle.material.wireframe = true;
 				rotateObjTo(circle, intPlane[0].object.normal, true);
 				// rotateObjTo(circle, new THREE.Vector3(0, 0, 1), true);
 
@@ -225,11 +249,32 @@ class PlaneSelector {
 
 				scene.add(this._point);
 			}
+
 			this._point.position.copy(intPlane[0].point);
-			if (this._leverLine != undefined) {
-				scene.remove(this._leverLine);
+
+			// if there are multiple points of control (e.g., clutching)
+			if (Array.isArray(this._pt)) {
+				if (this._leverLines == undefined) {
+					this._leverLines = [];
+				} else {
+					for (var i = this._leverLines.length - 1; i >= 0; i--) {
+						scene.remove(this._leverLines[i]);
+					}
+					this._leverLines = [];
+				}
+
+				for (var i = this._pt.length - 1; i >= 0; i--) {
+					this._leverLines.push(addAVector(intPlane[0].point, this._pt[i].clone().sub(intPlane[0].point)));
+				}
+
+			} 
+			// for single point cases
+			else {
+				if (this._leverLine != undefined) {
+					scene.remove(this._leverLine);
+				}
+				this._leverLine = addAVector(intPlane[0].point, this._pt.clone().sub(intPlane[0].point));
 			}
-			this._leverLine = addAVector(intPlane[0].point, this._pt.clone().sub(intPlane[0].point));
 
 			return true;
 		}
@@ -292,7 +337,7 @@ class PartSelector {
 		nml = nml.normalize();
 		var nmlOpp = nml.clone().multiplyScalar(-1);
 
-		var rPartSelection = isSmall == true ? FINGERSIZE * 2 : HANDSIZE;
+		var rPartSelection = isSmall == true ? FINGERSIZE : HANDSIZE;
 		var distAbove = HANDSIZE * 2; // hyperthetical dist between finger(s) and the ctrl point
 
 		var yUp = new THREE.Vector3(0, 1, 0);
@@ -342,7 +387,7 @@ class PartSelector {
 		cylEatIn.position.copy(cylEatIn.position.clone().add(vEatIn.multiplyScalar(dEatIn)));
 		var cylPartSelectionIn = xacThing.intersect(getTransformedGeometry(cylEatIn), obj, MATERIALCONTRAST);
 
-		var cylPartSelectionOut = xacThing.subtract(cylPartSelection.gt, cylPartSelectionIn.geometry, MATERIALCONTRAST);
+		var cylPartSelectionOut = xacThing.subtract(cylPartSelection.gt, cylPartSelectionIn.geometry, MATERIALHIGHLIGHT);
 		// scene.add(cylPartSelectionOut);
 
 		// get the geometric representation of the shadow

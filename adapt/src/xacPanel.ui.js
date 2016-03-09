@@ -35,15 +35,15 @@ title.css('margin-top', '10px');
 title.css('margin-bottom', '10px');
 title.css('margin-left', '10px');
 title.css('margin-right', '10px');
-// container.append(title);
+container.append(title);
 
 var panels = $('<div></div>');
-panels.append('<br/>');
+// panels.append('<br/>');
 
 //
 //	Step 1 - Geometry & Measurement
 //
-panels.append(_genSectionBar('Geometry & Measurement'));
+// panels.append(_genSectionBar('Geometry & Measurement'));
 var geomMeas = $('<table class="ui-step-area" cellspacing="10"></table>');
 
 // 1.1	the buttons for different geometry options
@@ -95,8 +95,8 @@ trSelectArea.append(tblShapeOptions);
 // 1.2.3	library
 // TODO: implement this
 
-panels.append(geomMeas);
-panels.append('<br/><br/>');
+// panels.append(geomMeas);
+// panels.append('<br/><br/>');
 
 
 //
@@ -140,12 +140,15 @@ var trAddAdaptations = $('<tr></tr>');
 var smAdapts = $('<select></select>');
 smAdapts.width('128px');
 smAdapts.append('<option id="noAdaptSel"> Add adaptations </option>');
-smAdapts.append('<option>Enlargement</option>');
-smAdapts.append('<option>Handle</option>');
-smAdapts.append('<option>Lever</option>');
-smAdapts.append('<option>Anchor</option>');
-smAdapts.append('<option>Guide</option>');
-smAdapts.append('<option>Mechanism</option>');
+smAdapts.append('<option value=0>Enlargement</option>');
+smAdapts.append('<option value=1>Handle</option>');
+smAdapts.append('<option value=2>Lever</option>');
+smAdapts.append('<option value=3>Anchor</option>');
+smAdapts.append('<option value=4>Guide</option>');
+smAdapts.append('<option value=5>Mechanism</option>');
+smAdapts.append('<option value=5.1>&nbsp;&nbsp;&#149; Clamp</option>');
+smAdapts.append('<option value=5.2>&nbsp;&nbsp;&#149; Universal joint</option>');
+smAdapts.append('<option value=5.3>&nbsp;&nbsp;&#149; Cam</option>');
 trAddAdaptations.append(smAdapts);
 adaptations.append(trAddAdaptations);
 

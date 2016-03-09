@@ -1,5 +1,16 @@
 "use strict";
 
+// TODO: link these to the values in the select menu
+var ENLARGEMENT = 0;
+var HANDLE = 1;
+var LEVER = 2;
+var ANCHOR = 3;
+var GUIDE = 4;
+var MECHANISM = 5;
+var HANDHELDCLAMP = 5.1;
+var UNIVJOINT = 5.2;
+var CAM = 5.3;
+
 var FINGERINIT = 2;
 var GRIPINIT = 0;
 var STRENGTHINT = 1.5;

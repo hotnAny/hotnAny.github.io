@@ -16,12 +16,78 @@ class xacControl {
 		return this._type;
 	}
 
+	// clear up the visual elements
 	clear() {
 		for (var i = this._ve.length - 1; i >= 0; i--) {
 			scene.remove(this._ve[i]);
 		}
 	}
 
+}
+
+class xacClutch extends xacControl {
+	constructor(objs) {
+		super(CLUTCHCTRL);
+
+		this._TOSELECTFREEEND = 0;
+		this._TOSELECTANCHOR = 1;
+		this._TOSELECTFULCRUM = 2;
+
+		this._step = this._TOSELECTFREEEND;
+	}
+
+	mouseDown(e, obj, pt, fnml) {
+		switch (this._step) {
+			case this._TOSELECTFREEEND:
+				// select free end
+				if (obj != undefined && pt != undefined && fnml != undefined) {
+					gPartSel.press(obj, pt, fnml, true);
+					this._pocFree = pt.clone(); // poc: point of contact
+					this._nmlFree = fnml.clone();
+					// addAVector(this._pocFree, this._nmlFree);
+					gPartSel.finishUp();
+					this._step = this._TOSELECTANCHOR;
+				}
+
+				break;
+			case this._TOSELECTANCHOR:
+				// select anchor
+				if (obj != undefined && pt != undefined && fnml != undefined) {
+					gPartSel.clear();
+					gPartSel.press(obj, pt, fnml, true);
+					this._pocAnchor = pt.clone(); // poc: point of contact
+					this._nmlAnchor = fnml.clone();
+					// addAVector(this._pocAnchor, this._nmlAnchor);
+					gPartSel.finishUp();
+
+					var midPoint = new THREE.Vector3().addVectors(this._pocFree, this._pocAnchor).multiplyScalar(0.5);
+					var midNml = new THREE.Vector3().addVectors(this._nmlFree, this._nmlAnchor).multiplyScalar(0.5);
+					// addAVector(midPoint, midNml);
+
+					this._planeSel = new PlaneSelector([this._pocFree, this._pocAnchor], midNml, true);
+					gSticky = true;
+					this._step = this._TOSELECTFULCRUM;
+				}
+				break;
+			case this._TOSELECTFULCRUM:
+				this._planeSel.clear();
+				this._fulcrum = this._planeSel.selection;
+				this._dirLeverFree = this._pocFree.clone().sub(this._fulcrum);
+				gSticky = false;
+				this._step = this._TOSELECTOBJ;
+				break;
+		}
+	}
+
+	mouseMove(e, obj, pt, fnml) {
+		switch (this._step) {
+			case this._TOSELECTFULCRUM:
+				this._planeSel.hitTest(e);
+				break;
+		}
+	}
+
+	mouseUp(e, obj, pt, fnml) {}
 }
 
 class xacJoinSeparate extends xacControl {
@@ -165,8 +231,6 @@ class xacRotate extends xacControl {
 				this._planeSel.clear();
 				this._fulcrum = this._planeSel.selection;
 				this._dirLever = this._poc.clone().sub(this._fulcrum);
-				// this._ve.push(addABall(this._fulcrum));
-				// this._ve.push(addAVector(this._fulcrum, this._dirLever));
 				gSticky = false;
 				this._step = this._TOSELECTOBJ;
 				break;

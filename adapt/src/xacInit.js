@@ -190,3 +190,13 @@ var gCurrPartCtrl = undefined; // the parts-controls that is currently selected 
 var gAdaptations = [];
 var gOptParams = new Array();
 var gConnMethod = undefined;  // connection method
+
+//
+//   Global
+//   TODO: rename them
+//
+var justFocusedUIs = new Array();
+var justFocusedObjs = new Array();
+var FOCUSACTION = 0;
+var DELETEACTION = 1;
+var ADDACTION = 2;

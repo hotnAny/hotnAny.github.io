@@ -23,14 +23,14 @@ var initPanel = function() {
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	// step 1 - upload
-	tblDropZone.on('dragover', function(e) {
+	$(document).on('dragover', function(e) {
 		e.stopPropagation();
 		e.preventDefault();
 		e.dataTransfer = e.originalEvent.dataTransfer;
 		e.dataTransfer.dropEffect = 'copy';
 	});
 
-	tblDropZone.on('drop', function(e) {
+	$(document).on('drop', function(e) {
 		e.stopPropagation();
 		e.preventDefault();
 		e.dataTransfer = e.originalEvent.dataTransfer;
@@ -210,6 +210,9 @@ var initPanel = function() {
 					case ROTATECTRL:
 						gPartsCtrls[pcId].ctrl = new xacRotate();
 						break;
+					case CLUTCHCTRL:
+						gPartsCtrls[pcId].ctrl = new xacClutch();
+						break;
 					case JOINSEPCTRL:
 						gPartsCtrls[pcId].ctrl = new xacJoinSeparate(objects);
 						gPartsCtrls[pcId].parts = objects[0]; // as a placeholder
@@ -271,8 +274,6 @@ var initPanel = function() {
 		gPartCtrlId += 1;
 
 
-		// TODO: make this more strict: need to have at least one pair of parts-ctrls
-		// if (gPartsCtrls.pc0 != undefined && Object.keys(gPartsCtrls.pc0.parts).length > 0 && gPartsCtrls.pc0.ctrl != undefined) {
 		if (numValidPartsCtrl() > 0) {
 			showElm(adaptations)
 		}
@@ -289,7 +290,7 @@ var initPanel = function() {
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	smAdapts.selectmenu({
 		change: function(event, data) {
-			$("*").css("cursor", "progress");
+			// $("*").css("cursor", "progress");
 			gStep = 3;
 
 			// init the container for adaptations
@@ -309,24 +310,31 @@ var initPanel = function() {
 				lsAdapts.tagit('createTag', gAdaptId + ' ' + data.item.value);
 			}
 
-			var i = 0;
-			var part = undefined;
-			// TODO: mark pc pair deteled when deleted
-			while (part == undefined || part.deleted == true) {
-				part = gPartsCtrls['pc' + i++];
-			}
-			switch (data.item.value) {
-				case 'Enlargement':
+			// get the selected parts-ctrl
+			var pc = gPartsCtrls[gCurrPartCtrl.attr('pcId')];
+
+			// var i = 0;
+			// var part = undefined;
+			// // TODO: mark pc pair deteled when deleted
+			// while (part == undefined || part.deleted == true) {
+			// 	part = gPartsCtrls['pc' + i++];
+			// }
+
+			var type = parseInt(data['item'].value);
+			switch (type) {
+				case ENLARGEMENT:
 
 					// experimental: only dealing with 1st parts-ctrls now
 					// TODO: fix this
-					gAdaptations.push(new xacEnlargement(part));
+					gAdaptations.push(new xacEnlargement(pc));
 					break;
-				case 'Lever':
-					gAdaptations.push(new xacLever(part));
+				case LEVER:
+					gAdaptations.push(new xacLever(pc));
 					break;
-				case 'Guide':
-					gAdaptations.push(new xacGuide(part));
+				case GUIDE:
+					gAdaptations.push(new xacGuide(pc));
+					break;
+				case UNIVJOINT:
 					break;
 			}
 
@@ -339,7 +347,7 @@ var initPanel = function() {
 			showElm(customization);
 			showElm(connectors);
 
-			$("*").css("cursor", "default");
+			// $("*").css("cursor", "default");
 		}
 	});
 
@@ -519,15 +527,6 @@ $(document).ready(function() {
 	initPanel();
 });
 
-
-//
-//	Global
-//
-var justFocusedUIs = new Array();
-var justFocusedObjs = new Array();
-var FOCUSACTION = 0;
-var DELETEACTION = 1;
-var ADDACTION = 2;
 
 function triggerUI2ObjAction(ui, action, key) {
 	switch (action) {

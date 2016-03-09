@@ -197,16 +197,6 @@ function getRandomVector(scale) {
 	return new THREE.Vector3(getRandom(-scale, scale), getRandom(-scale, scale), getRandom(-scale, scale));
 }
 
-/*
-	get the geometry from a mesh with transformation matrix applied
-*/
-// function getTransformedGeometry(mesh) {
-// 	mesh.updateMatrixWorld();
-// 	var gt = mesh.geometry.clone();
-// 	gt.applyMatrix(mesh.matrixWorld);
-// 	return gt;
-// }
-
 function removeFromArray(arr, elm) {
 	var idx = arr.indexOf(elm);
 	arr.splice(idx, 1);
