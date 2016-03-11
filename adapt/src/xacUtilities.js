@@ -109,7 +109,7 @@ function loadStl(data) {
 	// camera.position.y = 0;
 
 	// specifying accessible area
-	gAccessSel = new BboxResizer(object);
+	gAccessSel.push(new BboxResizer(object));
 
 	// store the object
 	objects.push(object);

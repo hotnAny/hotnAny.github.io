@@ -189,7 +189,7 @@ var initPanel = function() {
 		smCtrls.width('128px');
 		smCtrls.pcId = gPartCtrlId;
 		smCtrls.append('<option> - </option>');
-		smCtrls.append('<option value=0>Grasp</option>');
+		smCtrls.append('<option value=0>Grasp/Hold</option>');
 		smCtrls.append('<option value=1>Push/Pull</option>');
 		smCtrls.append('<option value=2>Rotate</option>');
 		smCtrls.append('<option value=3>Clutch/Squeeze</option>');
@@ -212,7 +212,10 @@ var initPanel = function() {
 						break;
 					case JOINSEPCTRL:
 						gPartsCtrls[pcId].ctrl = new xacJoinSeparate(objects);
+
+						// TODO fix these stub values
 						gPartsCtrls[pcId].parts = objects[0]; // as a placeholder
+						gPartsCtrls[pcId].obj = objects[0];
 						break;
 				}
 
@@ -222,7 +225,12 @@ var initPanel = function() {
 
 				// once a button is pressed, the step becomes 2 specifying parts
 				gStep = 2;
-				gAccessSel.clear();
+				
+				for (var i = gAccessSel.length - 1; i >= 0; i--) {
+					gAccessSel[i].clear();
+				}
+				gAccessSel = [];
+				// gAccessSel.clear();
 			}
 		});
 
@@ -294,7 +302,6 @@ var initPanel = function() {
 
 	smAdapts.selectmenu({
 		change: function(event, data) {
-			// $("*").css("cursor", "progress");
 			gStep = 3;
 
 			// init the container for adaptations
@@ -458,9 +465,11 @@ var initPanel = function() {
 	$('#sldSize').slider('value', valuesldSize);
 
 	btnUpdate.click(function(e) {
+		$("*").css("cursor", "progress");
 		for (var i = gAdaptations.length - 1; i >= 0; i--) {
 			gAdaptations[i].update(gOptParams);
 		}
+		$("*").css("cursor", "default");
 	});
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////

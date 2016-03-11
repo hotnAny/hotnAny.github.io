@@ -163,7 +163,7 @@ class BboxResizer extends BboxUI {
 
 class BboxSelector extends BboxUI {
 	constructor(obj) {
-
+		super(obj);
 	}
 
 	select(pl) {
@@ -180,7 +180,7 @@ class BboxSelector extends BboxUI {
 */
 class PlaneSelector {
 	constructor(pt, nml) {
-		addABall(pt, 0x00ff00);
+		addABall(pt);
 
 		this._dim = 1000;
 		this._planes = new THREE.Object3D();
@@ -267,7 +267,7 @@ class PlaneSelector {
 					this._leverLines.push(addAVector(intPlane[0].point, this._pt[i].clone().sub(intPlane[0].point)));
 				}
 
-			} 
+			}
 			// for single point cases
 			else {
 				if (this._leverLine != undefined) {
@@ -344,7 +344,7 @@ class PartSelector {
 		var angleToRotate = yUp.angleTo(nml);
 		var axisToRotate = new THREE.Vector3().crossVectors(yUp, nml).normalize();
 
-		// find the max distance to press the shadow
+		// find the max distance to press
 		var ctrlPts = [];
 		var tess = 32;
 		var rayCaster = new THREE.Raycaster();
@@ -385,12 +385,12 @@ class PartSelector {
 		var dEatIn = 5;
 		var cylEatIn = cylPartSelection.m.clone();
 		cylEatIn.position.copy(cylEatIn.position.clone().add(vEatIn.multiplyScalar(dEatIn)));
-		var cylPartSelectionIn = xacThing.intersect(getTransformedGeometry(cylEatIn), obj, MATERIALCONTRAST);
+		var cylPartSelectionIn = xacThing.intersect(getTransformedGeometry(cylEatIn), obj, MATERIALOVERLAY);
 
-		var cylPartSelectionOut = xacThing.subtract(cylPartSelection.gt, cylPartSelectionIn.geometry, MATERIALHIGHLIGHT);
+		var cylPartSelectionOut = xacThing.subtract(cylPartSelection.gt, cylPartSelectionIn.geometry, MATERIALOVERLAY);
 		// scene.add(cylPartSelectionOut);
 
-		// get the geometric representation of the shadow
+		// get the geometric representation of the press
 		this._part = cylPartSelectionIn;
 
 		// eat out a little for better display

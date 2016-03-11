@@ -47,8 +47,8 @@ class xacStrap extends xacConnector {
 	constructor(a) {
 		super(a);
 
-		this._strapWidth = 8;
-		this._strapThickness = 4;
+		this._strapWidth = 6;
+		this._strapThickness = 3;
 		this._inflateRatio = 1.1;
 	}
 

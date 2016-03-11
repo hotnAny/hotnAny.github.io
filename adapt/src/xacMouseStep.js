@@ -26,7 +26,10 @@ function onMouseDownStep(e) {
 
 	switch (gStep) {
 		case 1:
-			gAccessSel.mousedown(e);
+			for (var i = gAccessSel.length - 1; i >= 0; i--) {
+				gAccessSel[i].mousedown(e);
+			}
+			// gAccessSel.mousedown(e);
 			break;
 		case 2:
 			if (activeCtrl != undefined) {
@@ -72,7 +75,10 @@ function onMouseMoveStep(e) {
 
 	switch (gStep) {
 		case 1:
-			gAccessSel.mousemove(e);
+			for (var i = gAccessSel.length - 1; i >= 0; i--) {
+				gAccessSel[i].mousemove(e);
+			}
+			// gAccessSel.mousemove(e);
 			break;
 		case 2:
 			if (activeCtrl != undefined) {
@@ -104,7 +110,10 @@ function onMouseUpStep(e) {
 
 	switch (gStep) {
 		case 1:
-			gAccessSel.mouseup(e);
+			for (var i = gAccessSel.length - 1; i >= 0; i--) {
+				gAccessSel[i].mouseup(e);
+			}
+			// gAccessSel.mouseup(e);
 			break;
 		case 2:
 			if (e.which == LEFTMOUSE) {

@@ -14,7 +14,7 @@ var CAM = 53;
 var FINGERINIT = 2;
 var GRIPINIT = 0;
 var STRENGTHINT = 1.5;
-var SIZEINIT = 1.75;
+var SIZEINIT = 1.25;
 var COORDINIT = 0.25;
 
 class xacAdaptation {
@@ -148,13 +148,20 @@ class xacAdaptation {
 			cutPlane.m.position.copy(ctrPart);
 			// scene.add(cutPlane.m);
 
-			laoc = xacThing.subtract(getTransformedGeometry(laoc), getTransformedGeometry(cutPlane.m), laoc.material);
+			this._cutPlane = cutPlane;
+			// delay execution - here simply remember the cutting plane
+			// laoc = xacThing.subtract(getTransformedGeometry(laoc), getTransformedGeometry(cutPlane.m), laoc.material);
 		}
 		return laoc;
 	}
 
 	// TODO: vForceToExert
 	_optimizeGrip(a, ctrl, gripFactor, vMotionAgainst, vForceToExert) {
+		// EXPERIMENTAL: don't bother if the grip factor is too small
+		if (gripFactor < 0.2) {
+			return a;
+		}
+
 		var aGrippable = a;
 
 		a.material.side = THREE.DoubleSide;
@@ -163,20 +170,17 @@ class xacAdaptation {
 
 		var ctr = getBoundingBoxCenter(a);
 
-		// var aspectRatios = getAspectRatios(a);
-		// log(aspectRatios);
-		var n = 72;
-		// // log("n: " + n);
+		var nRays = 72;
 
 		// TODO: make this programatic - should be a function of the object's size
-		var rHole = Math.pow(getBoundingBoxVolume(a), 1.0 / 3) / 10;
+		var rParticle = Math.pow(getBoundingBoxVolume(a), 1.0 / 3) / 15;
 		// TODO: make this programatic
-		var spacing = rHole * (2 + 9 * (1 - gripFactor));
+		var spacing = rParticle * (2 + 9 * (1 - gripFactor));
 		var gripPoints = [];
 
 		var rays = [];
-		for (var i = 0; i < float2int(n); i++) {
-			var phi = Math.PI * 2 * i / n;
+		for (var i = 0; i < nRays; i++) {
+			var phi = Math.PI * 2 * i / nRays;
 			var xRay = Math.cos(phi);
 			var zRay = Math.sin(phi);
 			rays.push(new THREE.Vector3(xRay, 0, zRay));
@@ -184,42 +188,62 @@ class xacAdaptation {
 
 		if (vMotionAgainst != undefined) {
 			var endPoints = getEndPointsAlong(a, vMotionAgainst);
+
 			// var ddir = endPoints[1].clone().sub(endPoints[0]).multiplyScalar(1.0 / n);
 			var axis = endPoints[1].clone().sub(endPoints[0]);
+
+			endPoints[0].add(axis.clone().normalize().multiplyScalar(rParticle * 2));
+			endPoints[1].sub(axis.clone().normalize().multiplyScalar(rParticle * 2));
+
 			var ddir = axis.clone().normalize().multiplyScalar(spacing);
-			var n = axis.length() / spacing;
-			log("n: " + n);
-			for (var j = 0; j < n; j += 1) {
+			var nAxis = axis.length() / spacing;
+
+			var gripPoints = [];
+			for (var j = 0; j < nAxis; j += 1) {
 
 				var ctrj = endPoints[0].clone().add(ddir.clone().multiplyScalar(j))
 					// addABall(ctrj, 0x44ee55);
 
+				var gripPointsPerRound = [];
 				for (var i = rays.length - 1; i >= 0; i--) {
 					var dirCast = rays[i].clone();
 					rotateVectorTo(dirCast, vMotionAgainst);
 					var ctrj2 = ctrj.clone().add(dirCast.clone().normalize().multiplyScalar(1000));
-					// addALine(ctrj, ctrj2);
+
 
 					var rayCaster = new THREE.Raycaster();
 					rayCaster.ray.set(ctrj2, dirCast.clone().multiplyScalar(-1).normalize());
 					var ints = rayCaster.intersectObjects([a]);
 					if (ints.length > 0) {
-						var thisPoint = ints[0].point; //.add(dirCast.normalize().multiplyScalar(rHole * 0.5));
-						var lastPoint = gripPoints.slice(-1)[0];
-						if (lastPoint == undefined || lastPoint.distanceTo(thisPoint) > spacing) {
-							gripPoints.push(thisPoint);
-							// addABall(thisPoint);
+						var thisPoint = ints[0].point.sub(dirCast.normalize().multiplyScalar(rParticle * 0.5));
+
+						var lastPoint = gripPointsPerRound[gripPointsPerRound.length - 1];
+						if (lastPoint != undefined && lastPoint.distanceTo(thisPoint) <= spacing) {
+							continue;
 						}
+
+						var firstPoint = gripPointsPerRound[0];
+						if (firstPoint != undefined && firstPoint.distanceTo(thisPoint) <= spacing) {
+							// addALine(ctrj, ctrj2, 0x0000ff);
+							break;
+						}
+
+						// if (gripPointsPerRound.length == 0) {
+						// 	addABall(thisPoint, 0xff0000, 3)
+						// }
+
+						gripPointsPerRound.push(thisPoint);
+						// addALine(ctrj, ctrj2);
 					}
 				}
-			}
 
-			// log("making " + gripPoints.length + " dents");
+				gripPoints = gripPoints.concat(gripPointsPerRound);
+			}
 
 			var sphereSet = undefined;
 			var parentPos = undefined;
 			for (var i = gripPoints.length - 1; i >= 0; i--) {
-				var sphere = new xacSphere(rHole, MATERIALCONTRAST);
+				var sphere = new xacSphere(rParticle, MATERIALCONTRAST);
 
 				if (sphereSet == undefined) {
 					sphere.m.position.copy(gripPoints[i]);
@@ -235,7 +259,11 @@ class xacAdaptation {
 			if (sphereSet != undefined) {
 				var tmpObj = new THREE.Mesh(getTransformedGeometry(sphereSet), sphereSet.material);
 				scene.remove(a);
-				aGrippable = xacThing.subtract(ag, getTransformedGeometry(sphereSet), MATERIALHIGHLIGHT);
+
+				// approach #1: make dents
+				// aGrippable = xacThing.subtract(ag, getTransformedGeometry(sphereSet), MATERIALHIGHLIGHT);
+				// approach #2: make bumps
+				aGrippable = xacThing.union(ag, getTransformedGeometry(sphereSet), MATERIALHIGHLIGHT);
 			}
 
 		} else if (vForceToExert != undefined) {
@@ -495,6 +523,7 @@ class xacEnlargement extends xacAdaptation {
 		this._update = function(pid) {
 			var a = this._extrude(this._pc.parts[pid], this._sizeFactor, this._fingerFactor, undefined);
 			a = this._optimizeGrip(a, this._pc.ctrl, this._gripFactor, new THREE.Vector3(0, -1, 0), undefined);
+			a = xacThing.subtract(getTransformedGeometry(a), getTransformedGeometry(this._cutPlane.m), a.material);
 			a = xacThing.subtract(getTransformedGeometry(a), getTransformedGeometry(this._pc.obj), a.material);
 			return a;
 		}

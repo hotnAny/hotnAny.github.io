@@ -1,4 +1,3 @@
-
 /*
 	scale an object around its center by factor
 */
@@ -245,8 +244,24 @@ function getDimAlong(obj, dir) {
 	return range[1] - range[0];
 }
 
-// TODO: possibly rewrite this - don't need raycasting
 function getEndPointsAlong(obj, dir) {
+	var ctr = getBoundingBoxCenter(obj);
+	var ctrVal = dir.dot(ctr);
+	log("ctr: " + ctrVal);
+	var gt = getTransformedGeometry(obj);
+	var range = project(gt.vertices, dir);
+
+	var endMin = ctr.clone().add(dir.clone().normalize().multiplyScalar(range[0] - ctrVal));
+	var endMax = ctr.clone().add(dir.clone().normalize().multiplyScalar(range[1] - ctrVal));
+
+	log(endMin)
+	log(endMax)
+
+	return [endMin, endMax];
+}
+
+// TODO: possibly rewrite this - don't need raycasting
+function getEndPointsAlong2(obj, dir) {
 	var bbox = new THREE.BoundingBoxHelper(obj, 0x00ff00);
 	var ctr = getBoundingBoxCenter(obj);
 	bbox.update();

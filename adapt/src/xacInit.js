@@ -176,7 +176,7 @@ var FINGERSIZE = 15;
 var HANDSIZE = 150;
 
 // specifying accessible area
-var gAccessSel;
+var gAccessSel = [];
 
 // the hand for selecting grasp area
 var HANDMODELPATH = 'things/small_hand.stl';
