@@ -146,9 +146,9 @@ smAdapts.append('<option value=2>Lever</option>');
 smAdapts.append('<option value=3>Anchor</option>');
 smAdapts.append('<option value=4>Guide</option>');
 smAdapts.append('<option value=5>Mechanism</option>');
-smAdapts.append('<option value=5.1>&nbsp;&nbsp;&#149; Clamp</option>');
-smAdapts.append('<option value=5.2>&nbsp;&nbsp;&#149; Universal joint</option>');
-smAdapts.append('<option value=5.3>&nbsp;&nbsp;&#149; Cam</option>');
+smAdapts.append('<option value=51>&nbsp;&nbsp;&#149; Clamp</option>');
+smAdapts.append('<option value=52>&nbsp;&nbsp;&#149; Universal joint</option>');
+smAdapts.append('<option value=53>&nbsp;&nbsp;&#149; Cam</option>');
 trAddAdaptations.append(smAdapts);
 adaptations.append(trAddAdaptations);
 

@@ -7,9 +7,9 @@ var LEVER = 2;
 var ANCHOR = 3;
 var GUIDE = 4;
 var MECHANISM = 5;
-var HANDHELDCLAMP = 5.1;
-var UNIVJOINT = 5.2;
-var CAM = 5.3;
+var HANDHELDCLAMP = 51;
+var UNIVJOINT = 52;
+var CAM = 53;
 
 var FINGERINIT = 2;
 var GRIPINIT = 0;
@@ -36,8 +36,6 @@ class xacAdaptation {
 	}
 
 	update(params) {
-		// this._update(params);
-
 		if (params != undefined) {
 			this._fingerFactor = params.fingerFactor == undefined ? this._fingerFactor : params.fingerFactor;
 			this._gripFactor = params.gripFactor == undefined ? this._gripFactor : params.gripFactor;
@@ -144,7 +142,6 @@ class xacAdaptation {
 				}
 			}
 
-			// addALine(ctrPart, ctrPart.clone().add(dirCut.clone().multiplyScalar(100)));
 			var cutPlane = new xacRectPrism(1000, 2, 1000, MATERIALCONTRAST);
 			var nmlPlane = new THREE.Vector3().crossVectors(part.normal, dirCut).normalize();
 			rotateObjTo(cutPlane.m, nmlPlane);
@@ -252,7 +249,7 @@ class xacAdaptation {
 		cut off inaccessible part
 	*/
 	_cutOff(a, pc) {
-		if(pc.obj.accessibleBoundaries == undefined) {
+		if (pc.obj.accessibleBoundaries == undefined) {
 			return a;
 		}
 
@@ -279,6 +276,102 @@ class xacAdaptation {
 		}
 
 		return aCutOff;
+	}
+}
+
+class xacMechanism extends xacAdaptation {
+	constructor(type, pc, params) {
+		super(pc);
+
+		this._type = type;
+
+		this._update = function() {
+			var a;
+			switch (this._type) {
+				case HANDHELDCLAMP:
+					break;
+				case CAM:
+					this._axisRadius = 3;
+					this._axisLength = 20;
+					a = this._makeCam(this._pc);
+					break;
+				case UNIVJOINT:
+					break;
+			}
+
+			if (a != undefined) {
+				scene.remove(this._a);
+				scene.add(a);
+				this._a = a;
+			}
+
+		}
+
+		this.update();
+	}
+
+	// this version is currently specific to clutching
+	// fulcrum - the position of the axis
+	// dir axis - the orientation of the axis
+	// fixed point - where a wrapper can be attached, and a scaffold can be extended
+	_makeCam(pc) {
+		var ctrl = pc.ctrl;
+		var freeEnd = pc.parts['Part 1'];
+		var fixedEnd = pc.parts['Part 2'];
+		var nmlRotation = new THREE.Vector3(ctrl.plane.A, ctrl.plane.B, ctrl.plane.C).normalize();
+
+		// 1. generate an axis (free end)
+		var dirLeverFree = ctrl.pocFree.clone().sub(ctrl.fulcrum);
+		var dirToAxis = getVerticalOnPlane(dirLeverFree, ctrl.plane.A, ctrl.plane.B, ctrl.plane.C, ctrl.plane.D); // how to go from free end to the axis
+		var rCam = 10 * this._sizeFactor;
+		var ctrAxis = ctrl.pocFree.clone().add(dirToAxis.clone().normalize().multiplyScalar(rCam));
+		// addABall(ctrAxis, 0xf00fff);
+
+		var camAxis = new xacCylinder(this._axisRadius, this._axisLength, MATERIALHIGHLIGHT).m;
+		rotateObjTo(camAxis, nmlRotation);
+		camAxis.position.copy(ctrAxis);
+		// scene.add(camAxis);
+
+		// 2. generate a wrapper (fixed end)
+		var camAnchor = this._extrude(fixedEnd, this._sizeFactor, this._fingerFactor);
+		var ctrAnchor = getBoundingBoxCenter(camAnchor);
+		// scene.add(camAnchor);
+
+		// 3. generate bar 1 (holding the axis)
+		var endAxis = ctrAxis.clone().sub(nmlRotation.clone().multiplyScalar(this._axisLength * 0.5));
+		addABall(endAxis, 0x0000ff);
+		var lenBar = ctrAnchor.distanceTo(endAxis) + this._axisRadius * 2;
+		var ctrBar = ctrAnchor.clone().add(endAxis).multiplyScalar(0.5);
+		var nmlBar = ctrAnchor.clone().sub(endAxis).normalize();
+
+		var camBar = new xacCylinder(this._axisRadius, lenBar, MATERIALHIGHLIGHT).m;
+		rotateObjTo(camBar, nmlBar);
+		camBar.position.copy(ctrBar);
+		// scene.add(camBar);
+
+		var camStruct = xacThing.union(getTransformedGeometry(camAxis), getTransformedGeometry(camAnchor));
+		camStruct = xacThing.union(getTransformedGeometry(camStruct), getTransformedGeometry(camBar), MATERIALHIGHLIGHT);
+
+		// 4. generate bar 2 (holding bar 1)
+		// skip this for now
+
+		// 5. put the cam in place
+		scene.remove(this._cam);
+		this._cam = new THREE.Mesh(gCam.geometry, MATERIALHIGHLIGHT);
+		var dimsCam = getBoundingBoxDimensions(this._cam);
+		this._cam.scale.set(this._sizeFactor, this._sizeFactor, this._sizeFactor);
+
+		var posCam = ctrAxis.clone().add(nmlRotation.clone().multiplyScalar(this._axisLength * 0.5 + dimsCam[1]));
+
+		// manually align the cam with the axis to make it look better
+		posCam.add(dirToAxis.clone().multiplyScalar(dimsCam[0] * 0.5));
+
+		// addABall(posCam, 0x44ee55);
+		rotateObjTo(this._cam, nmlRotation);
+		this._cam.position.copy(posCam);
+		scene.add(this._cam);
+
+		return camStruct;
 	}
 }
 

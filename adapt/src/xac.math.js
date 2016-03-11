@@ -1,5 +1,5 @@
 /*
-	based on numeric.js
+	requiring numeric.js and three.js
 */
 
 
@@ -70,4 +70,11 @@ function getPlaneFromPointVectors(pt, v1, v2) {
 function getProjection(v, a, b, c, d) {
 	var t = -(a * v.x + b * v.y + c * v.z + d) / (a * a + b * b + c * c);
 	return new THREE.Vector3(v.x + a * t, v.y + b * t, v.z + c * t);
+}
+
+function getVerticalOnPlane(v, a, b, c, d) {
+	var ux = c * v.y - b * v.z;
+	var uy = a * v.z - c * v.x;
+	var uz = b * v.x - a * v.y;
+	return new THREE.Vector3(ux, uy, uz).normalize();
 }

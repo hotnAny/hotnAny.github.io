@@ -37,6 +37,9 @@ class xacFlexiblePart extends xacConnector {
 		this._awc = xacThing.subtract(getTransformedGeometry(this._a.adaptation), getTransformedGeometry(fp), this._a.adaptation.material);
 		scene.remove(this._a.adaptation);
 		scene.add(this._awc);
+
+		this._a.awc = this._awc;
+		this._a.fp = this._flexiblePart;
 	}
 }
 

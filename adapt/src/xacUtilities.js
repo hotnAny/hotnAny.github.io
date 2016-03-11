@@ -50,16 +50,16 @@ function contains(array, elm) {
 	return false;
 }
 
-function calCtrMass(obj) {
-	var ctrMass = new THREE.Vector3(0, 0, 0);
-	var numVertices = obj.geometry.vertices.length;
-	for (var i = 0; i < numVertices; i++) {
-		ctrMass.add(obj.geometry.vertices[i].clone().applyMatrix4(obj.matrixWorld));
-	}
+// function calCtrMass(obj) {
+// 	var ctrMass = new THREE.Vector3(0, 0, 0);
+// 	var numVertices = obj.geometry.vertices.length;
+// 	for (var i = 0; i < numVertices; i++) {
+// 		ctrMass.add(obj.geometry.vertices[i].clone().applyMatrix4(obj.matrixWorld));
+// 	}
 
-	ctrMass.divideScalar(numVertices);
-	return ctrMass;
-}
+// 	ctrMass.divideScalar(numVertices);
+// 	return ctrMass;
+// }
 
 function triangleArea(va, vb, vc) {
 	var ab = vb.clone().sub(va);

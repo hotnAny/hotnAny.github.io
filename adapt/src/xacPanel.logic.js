@@ -9,9 +9,6 @@ $(document.body).append(container);
 
 var initPanel = function() {
 
-	// faster debug
-	// showElm(connectors);
-
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -195,7 +192,7 @@ var initPanel = function() {
 		smCtrls.append('<option value=0>Grasp</option>');
 		smCtrls.append('<option value=1>Push/Pull</option>');
 		smCtrls.append('<option value=2>Rotate</option>');
-		smCtrls.append('<option value=3>Clutch</option>');
+		smCtrls.append('<option value=3>Clutch/Squeeze</option>');
 		smCtrls.append('<option value=4>Join/Separate</option>');
 		trPartsCtrls.tdCtrls.append(smCtrls);
 		smCtrls.selectmenu({
@@ -288,6 +285,13 @@ var initPanel = function() {
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	// preload some models
+	loadStlFromFile(CAMMODELPATH, MATERIALHIGHLIGHT);
+	setTimeout(function() {
+		gCam = objectDelay;
+	}, 250);
+
 	smAdapts.selectmenu({
 		change: function(event, data) {
 			// $("*").css("cursor", "progress");
@@ -335,6 +339,9 @@ var initPanel = function() {
 					gAdaptations.push(new xacGuide(pc));
 					break;
 				case UNIVJOINT:
+					break;
+				case CAM:
+					gAdaptations.push(new xacMechanism(CAM, pc));
 					break;
 			}
 
@@ -506,18 +513,32 @@ var initPanel = function() {
 		}
 	});
 
-
+	// TODO: fix downloading only the last adaptation?
 	btnExport.click(function(e) {
 		for (var i = objects.length - 1; i >= 0; i--) {
 			scene.remove(objects[i]);
 		}
 
-		// TODO: deal with multiple exports
-		var stlStr = stlFromGeometry(gAdaptations.slice(-1)[0].awc.geometry);
+		// normal download
+		var modelToSave = undefined;
+		if (e.shiftKey == false) {
+			modelToSave = gAdaptations.slice(-1)[0].awc;
+		}
+		// download the extra flexible part
+		else {
+			modelToSave = gAdaptations.slice(-1)[0].fp;
+		}
+
+		if (modelToSave == undefined) {
+			modelToSave = gAdaptations.slice(-1)[0].adaptation;
+		}
+		var stlStr = stlFromGeometry(modelToSave.geometry);
 		var blob = new Blob([stlStr], {
 			type: 'text/plain'
 		});
 		saveAs(blob, 'adaptation.stl');
+
+		log("saved!")
 
 	});
 

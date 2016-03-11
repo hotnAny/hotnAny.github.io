@@ -518,7 +518,7 @@ class PartSelector {
 		setTimeout(function(hand) {
 			gHand = new THREE.Object3D();
 
-			gHand.add(objectDelay);
+			gHand.add(objectDelay.clone());
 
 			var ctr = getBoundingBoxCenter(objectDelay);
 			var dirFingers = new THREE.Vector3(1, 0, 0);

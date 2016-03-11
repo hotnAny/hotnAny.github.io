@@ -182,6 +182,9 @@ var gAccessSel;
 var HANDMODELPATH = 'things/small_hand.stl';
 var gHand = undefined;
 
+var CAMMODELPATH = 'things/cam_crank.stl';
+var gCam = undefined;
+
 var gStep = 0;
 var gItems = [];
 var gPartSerial = 0;
