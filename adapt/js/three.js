@@ -32505,19 +32505,19 @@ Object.defineProperties( THREE.Vector3.prototype, {
 	},
 	getPositionFromMatrix: {
 		value: function ( m ) {
-			console.warn( 'THREE.Vector3: .getPositionFromMatrix() has been renamed to .setFromMatrixPosition().' );
+			// console.warn( 'THREE.Vector3: .getPositionFromMatrix() has been renamed to .setFromMatrixPosition().' );
 			return this.setFromMatrixPosition( m );
 		}
 	},
 	getScaleFromMatrix: {
 		value: function ( m ) {
-			console.warn( 'THREE.Vector3: .getScaleFromMatrix() has been renamed to .setFromMatrixScale().' );
+			// console.warn( 'THREE.Vector3: .getScaleFromMatrix() has been renamed to .setFromMatrixScale().' );
 			return this.setFromMatrixScale( m );
 		}
 	},
 	getColumnFromMatrix: {
 		value: function ( index, matrix ) {
-			console.warn( 'THREE.Vector3: .getColumnFromMatrix() has been renamed to .setFromMatrixColumn().' );
+			// console.warn( 'THREE.Vector3: .getColumnFromMatrix() has been renamed to .setFromMatrixColumn().' );
 			return this.setFromMatrixColumn( index, matrix );
 		}
 	}
