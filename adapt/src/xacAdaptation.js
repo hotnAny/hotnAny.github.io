@@ -1,7 +1,7 @@
 "use strict";
 
 // TODO: link these to the values in the select menu
-var ENLARGEMENT = 0;
+var WRAPPER = 0;
 var HANDLE = 1;
 var LEVER = 2;
 var ANCHOR = 3;
@@ -11,11 +11,12 @@ var HANDHELDCLAMP = 51;
 var UNIVJOINT = 52;
 var CAM = 53;
 
+// the initial values
 var FINGERINIT = 2;
 var GRIPINIT = 0;
 var STRENGTHINT = 1.5;
 var SIZEINIT = 1.25;
-var COORDINIT = 0.25;
+var TARGETINIT = 0.25;
 
 class xacAdaptation {
 	constructor(pc) {
@@ -25,7 +26,7 @@ class xacAdaptation {
 		this._sizeFactor = SIZEINIT;
 		this._fingerFactor = FINGERINIT;
 		this._gripFactor = GRIPINIT;
-		this._coordFactor = COORDINIT;
+		this._targetFactor = TARGETINIT;
 	}
 
 	get adaptation() {
@@ -41,7 +42,7 @@ class xacAdaptation {
 			this._gripFactor = params.gripFactor == undefined ? this._gripFactor : params.gripFactor;
 			this._strengthFactor = params.strengthFactor == undefined ? this._strengthFactor : params.strengthFactor;
 			this._sizeFactor = params.sizeFactor == undefined ? this._sizeFactor : params.sizeFactor;
-			this._coordFactor = params.coordFactor == undefined ? this._coordFactor : params.coordFactor;
+			this._targetFactor = params.targetFactor == undefined ? this._targetFactor : params.targetFactor;
 		}
 
 		for (var pid in this._pc.parts) {
@@ -54,7 +55,7 @@ class xacAdaptation {
 			}
 
 			if (this._pc.parts[pid] != undefined) {
-				scene.remove(this._pc.parts[pid]);
+				scene.remove(this._pc.parts[pid].display);
 			}
 
 			var a = this._update(pid);
@@ -71,6 +72,7 @@ class xacAdaptation {
 
 			// associate to the original object
 			a.obj = this._pc.obj;
+			a.part = this._pc.parts[pid];
 
 			// keep adaptations in a list
 			this._as[pid] = a;
@@ -78,29 +80,30 @@ class xacAdaptation {
 		}
 	}
 
-	_extrude(part, sizeFactor, fingerFactor) {
+	_extrude(part, sizeFactor, fingerFactor, targetFactor) {
 		var r0 = 20; // temp: finger size
 		var r = fingerFactor * r0;
-
+		targetFactor = targetFactor == undefined ? 0 : targetFactor;
+		//
 		//	handling 'press' selection
+		//
 		if (part.type == 'press') {
-			var cylinderSel = new xacCylinder(r / 2, part.cylHeight, MATERIALCONTRAST);
-			rotateObjTo(cylinderSel.m, part.normal);
-			cylinderSel.m.position.copy(part.cylCenter);
+			var rLarge = r;
+			var rSmall =r / 2 * (sizeFactor-1);
 
-			// select which bounding geometry to use
-			var spaceSel = cylinderSel.m;
-			var aoc = xacThing.intersect(getTransformedGeometry(part), getTransformedGeometry(spaceSel), part.material);
-
-			var laoc = new THREE.Mesh(aoc.geometry.clone(), aoc.material.clone());
-			scaleAlongVector(laoc, Math.pow(10, sizeFactor - 1), part.normal);
-			scaleAroundVector(laoc, sizeFactor, part.normal);
-			laoc = xacThing.intersect(getTransformedGeometry(laoc), getTransformedGeometry(part.selCyl), part.material);
+			var laoc = new xacCylinder([rLarge, rSmall], part.cylHeight, MATERIALHIGHLIGHT).m;
+			rotateObjTo(laoc, part.normal);
+			laoc.position.copy(part.cylCenter);
+		
+			// scaleAroundVector(laoc, sizeFactor, part.normal);
+			scaleAlongVector(laoc, sizeFactor/2, part.normal);
 		}
+		//
 		//	handling 'wrap' selection
+		//
 		else if (part.type == 'wrap') {
 			var ctrPart = part.ctrSel;
-			if (D == true) addABall(ctrPart);
+			// if (D == true) addABall(ctrPart);
 
 			// bounding cylinder
 			var cylinderSel = new xacCylinder(100, r, MATERIALCONTRAST);
@@ -110,6 +113,12 @@ class xacAdaptation {
 			// select which bounding geometry to use
 			var spaceSel = cylinderSel.m;
 			var aoc = xacThing.intersect(getTransformedGeometry(part), getTransformedGeometry(spaceSel), part.material);
+
+			// EXPERIMENTAL
+			var aocBcyl = getBoundingCylinder(aoc, part.normal);
+			aoc = new xacCylinder(aocBcyl.radius, aocBcyl.height, MATERIALHIGHLIGHT).m;
+			rotateObjTo(aoc, part.normal);
+			aoc.position.copy(ctrPart);
 
 			var laoc = aoc.clone();
 			scaleAroundVector(laoc, sizeFactor, part.normal);
@@ -121,7 +130,6 @@ class xacAdaptation {
 			var n = 36;
 			var dirCut = 0;
 			var minDist = 1000;
-			// addABall(ctrPart);
 			for (var i = 0; i < n; i++) {
 				var theta = Math.PI * 2 * i / n;
 				var dir = new THREE.Vector3(Math.cos(theta), 0, Math.sin(theta));
@@ -165,7 +173,10 @@ class xacAdaptation {
 		var aGrippable = a;
 
 		a.material.side = THREE.DoubleSide;
-		var ag = a.geometry;
+
+		// EXPERIMENTAL
+		var ag = getTransformedGeometry(a);
+
 		ag.computeFaceNormals();
 
 		var ctr = getBoundingBoxCenter(a);
@@ -228,12 +239,7 @@ class xacAdaptation {
 							break;
 						}
 
-						// if (gripPointsPerRound.length == 0) {
-						// 	addABall(thisPoint, 0xff0000, 3)
-						// }
-
 						gripPointsPerRound.push(thisPoint);
-						// addALine(ctrj, ctrj2);
 					}
 				}
 
@@ -418,7 +424,7 @@ class xacGuide extends xacAdaptation {
 	// params:
 	// pc: the parts-ctrl pair
 	// - total length: sizeFactor
-	// - opening ratio: coordFactor
+	// - opening ratio: targetFactor
 	// - friction: gripFactor
 	_makeGuide(pc) {
 		var ctrl = pc.ctrl;
@@ -463,7 +469,7 @@ class xacGuide extends xacAdaptation {
 		//
 		// 3. make the tunnel's openning
 		//
-		var lenOpen = lenGuide * this._coordFactor;
+		var lenOpen = lenGuide * this._targetFactor;
 		var rOpen = rGuide * (0.5 + this._sizeFactor);
 		var guideOpen = new xacCylinder([rOpen, rGuide], lenOpen, MATERIALHIGHLIGHT);
 		var stubOpen = new xacCylinder([rMobile * rOpen / rGuide, rMobile], lenOpen, MATERIALHIGHLIGHT);
@@ -516,14 +522,19 @@ class xacLever extends xacAdaptation {
 	}
 }
 
-class xacEnlargement extends xacAdaptation {
+class xacWrapper extends xacAdaptation {
 	constructor(pc, params) {
 		super(pc);
 
 		this._update = function(pid) {
-			var a = this._extrude(this._pc.parts[pid], this._sizeFactor, this._fingerFactor, undefined);
+			var a = this._extrude(this._pc.parts[pid], this._sizeFactor, this._fingerFactor, this._targetFactor);
 			a = this._optimizeGrip(a, this._pc.ctrl, this._gripFactor, new THREE.Vector3(0, -1, 0), undefined);
-			a = xacThing.subtract(getTransformedGeometry(a), getTransformedGeometry(this._cutPlane.m), a.material);
+
+			// need to cut in half for wraps
+			if (this._cutPlane != undefined) {
+				a = xacThing.subtract(getTransformedGeometry(a), getTransformedGeometry(this._cutPlane.m), a.material);
+			}
+
 			a = xacThing.subtract(getTransformedGeometry(a), getTransformedGeometry(this._pc.obj), a.material);
 			return a;
 		}

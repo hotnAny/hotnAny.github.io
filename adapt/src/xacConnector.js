@@ -17,7 +17,7 @@ class xacFlexiblePart extends xacConnector {
 		this._flexiblePart = undefined;
 
 		// TODO: this can be improved by considering interpolating btwn the adaptation & the object
-		this._ratio = 0.4; // in the adaptation, about this percentage the size of the original object will be flexible
+		this._ratio = 0.8; 
 
 		this._makeFlexiblePart();
 
@@ -25,17 +25,23 @@ class xacFlexiblePart extends xacConnector {
 
 	_makeFlexiblePart() {
 		// enlarge the original object
-		var objInflated = this._a.adaptation.obj.clone();
+		// var objInflated = this._a.adaptation.obj.clone();
 
-		objInflated.scale.set(1 + this._ratio, 1 + this._ratio, 1 + this._ratio);
+		// objInflated.scale.set(1 + this._ratio, 1 + this._ratio, 1 + this._ratio);
+		// scaleAroundCenter(objInflated, 1 + this._ratio);
 
 		// get its intersection with the adaptation
-		var fp = xacThing.intersect(getTransformedGeometry(objInflated), getTransformedGeometry(this._a.adaptation), MATERIALOVERLAY);
+
+		var aDeflated = new THREE.Mesh(this._a.adaptation.geometry.clone(), MATERIALOVERLAY);
+
+		scaleAroundVector(aDeflated, this._ratio, this._a.adaptation.part.normal);
+		scaleAlongVector(aDeflated, 1.01, this._a.adaptation.part.normal);
+
+		var fp = xacThing.subtract(getTransformedGeometry(aDeflated), getTransformedGeometry(this._a.adaptation.obj), MATERIALOVERLAY);
 		scene.add(fp);
 		this._flexiblePart = fp;
 		
 		this._awc = xacThing.subtract(getTransformedGeometry(this._a.adaptation), getTransformedGeometry(fp), this._a.adaptation.material);
-		scene.remove(this._a.adaptation);
 		scene.add(this._awc);
 
 		this._a.awc = this._awc;

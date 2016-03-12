@@ -149,6 +149,11 @@ var initPanel = function() {
 		// highlight current row
 		if (gCurrPartCtrl != undefined) {
 			gCurrPartCtrl.css('background-color', 'rgba(255, 255, 255, 0.25)');
+			showPartsInSelectedRow(false);
+			if (justFocusedUIs[gStep] != undefined) {
+				triggerUI2ObjAction(justFocusedUIs[gStep], FOCUSACTION);
+				justFocusedUIs[gStep] = undefined;
+			}
 		}
 		gCurrPartCtrl = trPartsCtrls.tdParts;
 		gCurrPartCtrl.css('background-color', 'rgba(128, 128, 128, 0.25)');
@@ -161,19 +166,37 @@ var initPanel = function() {
 			ctrl: undefined
 		};
 
+		//
 		// click to acitivate a set of parts (to be modified or extended)
+		//
 		trPartsCtrls.tdParts.click(function(event) {
+
+			// EXPERIMENTAL: remove all the display/visuals of the last selected row
+			if (gCurrPartCtrl != undefined) {
+				showPartsInSelectedRow(false);
+
+				if (justFocusedUIs[gStep] != undefined) {
+					triggerUI2ObjAction(justFocusedUIs[gStep], FOCUSACTION);
+					justFocusedUIs[gStep] = undefined;
+				}
+			}
 
 			// if it's (1) directly (2) clikcing the same row
 			if ($(event.target).is('td') && gCurrPartCtrl != undefined && gCurrPartCtrl.attr('pcId') == $(this).attr('pcId')) {
 				$(this).css('background-color', '#rgba(255, 255, 255, 0.25)');
 				gCurrPartCtrl = undefined;
+
 			} else {
 				if (gCurrPartCtrl != undefined) {
 					gCurrPartCtrl.css('background-color', 'rgba(255, 255, 255, 0.25)');
 				}
 				$(this).css('background-color', 'rgba(128, 128, 128, 0.25)');
 				gCurrPartCtrl = $(this);
+			}
+
+			// EXPERIMENTAL: show all the display/visuals of the newly selected row
+			if (gCurrPartCtrl != undefined) {
+				showPartsInSelectedRow(true);
 			}
 		});
 
@@ -204,6 +227,9 @@ var initPanel = function() {
 					case GRASPCTRL:
 						gPartsCtrls[pcId].ctrl = new xacGrasp();
 						break;
+					case PUSHPULLCTRL:
+						gPartsCtrls[pcId].ctrl = new xacPushPull();
+						break;
 					case ROTATECTRL:
 						gPartsCtrls[pcId].ctrl = new xacRotate();
 						break;
@@ -225,7 +251,7 @@ var initPanel = function() {
 
 				// once a button is pressed, the step becomes 2 specifying parts
 				gStep = 2;
-				
+
 				for (var i = gAccessSel.length - 1; i >= 0; i--) {
 					gAccessSel[i].clear();
 				}
@@ -238,8 +264,7 @@ var initPanel = function() {
 		// copy button
 		//
 		trPartsCtrls.tdCopy = $("<td></td>");
-		var iconCopy = $('<span></span>')
-			.addClass('ui-icon ui-icon-copy');
+		var iconCopy = $('<span></span>').addClass('ui-icon ui-icon-copy');
 		trPartsCtrls.tdCopy.append(iconCopy);
 		iconCopy.click(function(event) {
 
@@ -333,11 +358,11 @@ var initPanel = function() {
 
 			var type = parseInt(data['item'].value);
 			switch (type) {
-				case ENLARGEMENT:
+				case WRAPPER:
 
 					// experimental: only dealing with 1st parts-ctrls now
 					// TODO: fix this
-					gAdaptations.push(new xacEnlargement(pc));
+					gAdaptations.push(new xacWrapper(pc));
 					break;
 				case LEVER:
 					gAdaptations.push(new xacLever(pc));
@@ -377,23 +402,25 @@ var initPanel = function() {
 
 	// # of fingers
 	$('#sldFingers').slider({
-		max: 54,
-		min: 1,
+		max: 70,
+		min: 5,
 		range: 'max',
 		change: function(e) {
-			var value = $('#sldFingers').slider('value') / 10;
+			var value = $('#sldFingers').slider('value');
+			value = value * value / 100 / 10;
 			var valueInt = Math.max(1, float2int(value + 0.5));
 			$('#lbFingers').html(valueInt + ' Finger' + (valueInt > 1 ? 's' : ''));
+
 			gOptParams.fingerFactor = value;
 		},
 		slide: function(e) {
-			var minValue = $("#sldFingers").slider("option", "min");
-			var value = float2int($('#sldFingers').slider('value') / 10);
+			var value = $('#sldFingers').slider('value');
+			value = value * value / 100 / 10;
 			var valueInt = Math.max(1, float2int(value + 0.5));
 			$('#lbFingers').html(valueInt + ' Finger' + (valueInt > 1 ? 's' : ' '));
 		}
 	});
-	$('#sldFingers').slider('value', FINGERINIT * 10);
+	$('#sldFingers').slider('value', Math.sqrt(FINGERINIT * 1000));
 	$('#sldFingers').css('background-color', '#b7b7b4');
 
 	// grip
@@ -438,13 +465,13 @@ var initPanel = function() {
 			var minValue = $("#sldCoord").slider("option", "min");
 			var maxValue = $("#sldCoord").slider("option", "max");
 			var value = $('#sldCoord').slider('value');
-			gOptParams.coordFactor = (value - minValue) * 1.0 / (maxValue - minValue);
+			gOptParams.targetFactor = (value - minValue) * 1.0 / (maxValue - minValue);
 		}
 	})
 	$('#sldCoord').css('background-color', '#b7b7b4');
 	var minsldCoordValue = $("#sldCoord").slider("option", "min");
 	var maxsldCoordValue = $("#sldCoord").slider("option", "max");
-	var valuesldCoord = minsldCoordValue + COORDINIT * (maxsldCoordValue - minsldCoordValue);
+	var valuesldCoord = minsldCoordValue + TARGETINIT * (maxsldCoordValue - minsldCoordValue);
 	$('#sldCoord').slider('value', valuesldCoord);
 
 	// size
@@ -566,16 +593,15 @@ function triggerUI2ObjAction(ui, action, key) {
 			if (justFocusedUIs[gStep] != undefined) {
 				justFocusedUIs[gStep].removeClass('ui-state-highlight');
 			}
-			if (!wasHighlighted) {
+			if (wasHighlighted == false) {
 				ui.addClass('ui-state-highlight');
 			}
 			justFocusedUIs[gStep] = ui;
 
 			// the obj part
 			if (justFocusedObjs[gStep] != undefined) {
-				justFocusedObjs[gStep].material.color.setHex(colorOverlay); // = MATERIALOVERLAY;
-				// log('material changed to overlay')
-				justFocusedObjs[gStep].material.needsUpdate = true;
+				justFocusedObjs[gStep].display.material.color.setHex(colorOverlay);
+				justFocusedObjs[gStep].display.material.needsUpdate = true;
 			}
 
 			// log(gCurrPartCtrl.attr('pcId'))
@@ -585,9 +611,9 @@ function triggerUI2ObjAction(ui, action, key) {
 			// log(namePart)
 			var part = parts[namePart];
 
-			if (!wasHighlighted) {
-				part.material.color.setHex(colorHighlight); // = MATERIALHIGHLIGHT;
-				part.material.needsUpdate = true;
+			if (part != undefined && wasHighlighted == false) {
+				part.display.material.color.setHex(colorHighlight);
+				part.display.material.needsUpdate = true;
 				justFocusedObjs[gStep] = part;
 			}
 
@@ -599,7 +625,8 @@ function triggerUI2ObjAction(ui, action, key) {
 			var part = parts[namePart];
 			part.deleted = true;
 			gPartSel.clear();
-			scene.remove(part);
+			scene.remove(part.display);
+
 
 			// ctrl
 			var ctrl = gPartsCtrls[gCurrPartCtrl.attr('pcId')].ctrl;
@@ -625,5 +652,20 @@ function numValidPartsCtrl() {
 function getActiveCtrl() {
 	if (gCurrPartCtrl != undefined) {
 		return gPartsCtrls[gCurrPartCtrl.attr('pcId')].ctrl;
+	}
+}
+
+function showPartsInSelectedRow(flag) {
+	var pcId = gCurrPartCtrl.attr('pcId');
+	var parts = gPartsCtrls[pcId].parts;
+	for (var idx in parts) {
+		// scene.remove(parts[idx]);
+		if (parts[idx].display != undefined) {
+			if (flag == true) {
+				scene.add(parts[idx].display);
+			} else {
+				scene.remove(parts[idx].display);
+			}
+		}
 	}
 }

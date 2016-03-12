@@ -479,3 +479,23 @@
 
 		// 	}
 		// }
+
+
+	// var cylinderSel = new xacCylinder([rLarge, rSmall], part.cylHeight, MATERIALCONTRAST);
+			// rotateObjTo(cylinderSel.m, part.normal);
+			// cylinderSel.m.position.copy(part.cylCenter);
+
+			// scene.remove(gObjTemp);
+			// scene.add(cylinderSel.m);
+			// gObjTemp = cylinderSel.m;
+
+			// var aoc = new THREE.Mesh(part.geometry.clone(), part.material.clone());
+			// var laoc = scaleAroundVector(aoc, sizeFactor, part.normal);
+			// scaleAlongVector(laoc, Math.pow(10, sizeFactor - 1), part.normal);
+
+			// laoc = xacThing.intersect(getTransformedGeometry(laoc), getTransformedGeometry(cylinderSel.m), part.material);
+
+			// var laoc = new THREE.Mesh(aoc.geometry.clone(), aoc.material.clone());
+			
+			
+			// laoc = xacThing.intersect(getTransformedGeometry(laoc), getTransformedGeometry(part.selCyl), part.material);

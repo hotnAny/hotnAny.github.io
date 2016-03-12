@@ -194,6 +194,8 @@ var gAdaptations = [];
 var gOptParams = new Array();
 var gConnMethod = undefined;  // connection method
 
+var gObjTemp;
+
 //
 //   Global
 //   TODO: rename them

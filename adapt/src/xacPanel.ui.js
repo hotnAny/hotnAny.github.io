@@ -140,7 +140,7 @@ var trAddAdaptations = $('<tr></tr>');
 var smAdapts = $('<select></select>');
 smAdapts.width('128px');
 smAdapts.append('<option id="noAdaptSel"> Add adaptations </option>');
-smAdapts.append('<option value=0>Enlargement</option>');
+smAdapts.append('<option value=0>Wrapper</option>');
 smAdapts.append('<option value=1>Handle</option>');
 smAdapts.append('<option value=2>Lever</option>');
 smAdapts.append('<option value=3>Anchor</option>');

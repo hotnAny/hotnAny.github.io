@@ -21,7 +21,16 @@ function scaleAroundCenter(obj, factor) {
 	scale an object along the plane ┴ to dir
 */
 function scaleAroundVector(obj, factor, dir) {
-	scaleWithVector(obj, [factor, 1, factor], dir);
+	// have different scales for the rest of the two axes
+	if (Array.isArray(factor)) {
+		if(factor.length >= 2) {
+			scaleWithVector(obj, [factor[0], 1, factor[1]], dir);
+		}
+	} 
+	// have uniform scales for the rest of the axes
+	else {
+		scaleWithVector(obj, [factor, 1, factor], dir);
+	}
 }
 
 /*
@@ -77,10 +86,6 @@ function rotateVectorTo(v, dir) {
 	var axisToRotate = new THREE.Vector3().crossVectors(yUp, dir).normalize();
 	v.applyAxisAngle(axisToRotate, angleToRotate);
 }
-
-// function tessellate(obj, minArea) {
-
-// }
 
 function computeFaceArea(obj) {
 	var g = getTransformedGeometry(obj);

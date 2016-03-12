@@ -161,16 +161,19 @@ class BboxResizer extends BboxUI {
 
 }
 
+/*
+	a visual selector for specifying which of the six faces on the bounding box
+*/
 class BboxSelector extends BboxUI {
 	constructor(obj) {
 		super(obj);
 	}
 
 	select(pl) {
-		for (var i = this._box.length - 1; i >= 0; i--) {
-			this._box[i].material.opacity = 0.25;
-		}
-		pl.material.opacity = 0.5;
+		// for (var i = this._box.length - 1; i >= 0; i--) {
+		// 	this._box[i].material.opacity = 0.25;
+		// }
+		// pl.material.opacity = 0.5;
 	}
 }
 
@@ -185,17 +188,17 @@ class PlaneSelector {
 		this._dim = 1000;
 		this._planes = new THREE.Object3D();
 
-		// generate a plane based on pt and a vector nml from it
+		//
+		// generate a plane based on pt (multiple points) and a vector nml from it
+		//
 		if (Array.isArray(pt)) {
 			this._pt = pt;
 
 			this._pl = new xacRectPrism(this._dim, 0.1, this._dim, MATERIALINVISIBLE);
 			rotateObjTo(this._pl.m, nml);
 			this._pl.m.normal = nml;
-			// this._pl.m.position.copy(pt);
 
 			this._planes.add(this._pl.m);
-
 			this._planes.position.copy(getCenter(pt));
 		}
 		// generate xy, yz, zx plane surrounding pt
@@ -228,7 +231,6 @@ class PlaneSelector {
 
 		if (intPlane[0] != undefined) {
 			if (this._point == undefined) {
-
 				if (this._pxy != undefined && this._pyz != undefined && this._pzx != undefined) {
 					this._planes.remove(this._pxy.m);
 					this._planes.remove(this._pyz.m);
@@ -244,7 +246,7 @@ class PlaneSelector {
 				rotateObjTo(circle, intPlane[0].object.normal, true);
 				// rotateObjTo(circle, new THREE.Vector3(0, 0, 1), true);
 
-				this._point.add(circle);
+				// this._point.add(circle);
 				this._point.add(new xacSphere(1, MATERIALFOCUS, true).m);
 
 				scene.add(this._point);
@@ -338,7 +340,12 @@ class PartSelector {
 		var nmlOpp = nml.clone().multiplyScalar(-1);
 
 		var rPartSelection = isSmall == true ? FINGERSIZE : HANDSIZE;
+
+		// before: hardcoded, usually too mcuh
 		var distAbove = HANDSIZE * 2; // hyperthetical dist between finger(s) and the ctrl point
+		// now: use the bbox to estimate
+		var distAbove = getDimAlong(obj, nml) / 2;
+
 
 		var yUp = new THREE.Vector3(0, 1, 0);
 		var angleToRotate = yUp.angleTo(nml);
@@ -395,10 +402,10 @@ class PartSelector {
 
 		// eat out a little for better display
 		this._part.translateOnAxis(vEatIn.clone().normalize().multiplyScalar(-1), 1);
-		scene.add(this._part);
+
 
 		//
-		//	5. wrap up
+		//	4. finish up
 		//
 		this._part.type = 'press';
 		this._part.normal = nml;
@@ -406,6 +413,9 @@ class PartSelector {
 		this._part.cylCenter = cylPartSelection.m.position;
 		this._part.cylHeight = maxDist2PartSelection;
 		this._part.selCyl = cylPartSelectionOut; //xacThing.intersect(cylPartSelection.gt, obj, MATERIALCONTRAST);
+
+		this._part.display = this._part.clone();
+		scene.add(this._part.display);
 	}
 
 	_doWrap(obj, pt, planeParams) {
@@ -441,7 +451,6 @@ class PartSelector {
 				var v = gtObj.vertices[indices[j]];
 				var dist = (a * v.x + b * v.y + c * v.z + d) / Math.sqrt(a * a + b * b + c * c);
 				if (Math.abs(dist) < HANDSIZE / 2) {
-					// if (Math.abs(dist) < HANDSIZE && dist < 2 * scale) {	
 					ptsWrap.push(v);
 					// addABall(v, 0xffffff)
 					maxDistAbove = Math.max(maxDistAbove, dist);
@@ -486,7 +495,7 @@ class PartSelector {
 		this.wrapIn = xacThing.intersect(gtCylWrap, obj, this._part == undefined ? MATERIALCONTRAST : this._part.material);
 
 		var gtCylWrapDisplay = getTransformedGeometry(wrapDisplay.m);
-		var wrapInDisplay = xacThing.intersect(gtCylWrapDisplay, obj, MATERIALHIGHLIGHT);
+		var wrapInDisplay = xacThing.intersect(gtCylWrapDisplay, obj, MATERIALOVERLAY);
 		scene.add(wrapInDisplay);
 
 		if (this._part != undefined)
@@ -507,6 +516,8 @@ class PartSelector {
 		//
 		this._part.type = 'wrap';
 		this._part.ctrSel = getProjection(ctrWrap, a, b, c, d);
+		this._part.display = wrapInDisplay;
+
 		this.isWrapping = false;
 
 		return wrapInDisplay;
@@ -521,10 +532,17 @@ class PartSelector {
 			gHand.add(objectDelay.clone());
 
 			var ctr = getBoundingBoxCenter(objectDelay);
-			var dirFingers = new THREE.Vector3(1, 0, 0);
-			var arrow = xacThing.line(ctr, dirFingers);
-			gHand.add(arrow);
-			gHand.arrow = arrow;
+
+			// thumb pointer
+			var dirThumb = new THREE.Vector3(1, 0, 0);
+			var arrowThumb = xacThing.line(ctr, dirThumb, MATERIALINVISIBLE);
+			gHand.add(arrowThumb);
+			gHand.arrowThumb = arrowThumb;
+
+			// fingers pointer
+			var dirFingers = new THREE.Vector3(0, 0, 1);
+			var arrowFingers = xacThing.line(ctr, dirFingers);
+			gHand.add(arrowFingers);
 
 			rotateObjTo(gHand, fnml);
 			gHand.fnml = fnml;
@@ -548,14 +566,12 @@ class PartSelector {
 		var p1 = p0.clone().add(gHand.fnml.clone().multiplyScalar(100));
 		// addALine(p0, p1, 0xff00ff);
 
-		var gtFingers = getTransformedGeometry(gHand.arrow); //new THREE.Vector3(1, 0, 0);
-		var dirFingers = gtFingers.vertices[1].clone().sub(gtFingers.vertices[0]);
-		// dirFingers = getTransformedVector(dirFingers, gHand.arrow);
-		var p2 = p0.clone().add(dirFingers.clone().multiplyScalar(100));
-		// addALine(p0, p2, 0x00ff00);
-		// }
+		var gtFingers = getTransformedGeometry(gHand.arrowThumb); //new THREE.Vector3(1, 0, 0);
+		var dirThumb = gtFingers.vertices[1].clone().sub(gtFingers.vertices[0]);
+		// dirThumb = getTransformedVector(dirThumb, gHand.arrowThumb);
+		var p2 = p0.clone().add(dirThumb.clone().multiplyScalar(100));
 
-		var params = getPlaneFromPointVectors(p0, gHand.fnml.clone().normalize(), dirFingers.clone().normalize());
+		var params = getPlaneFromPointVectors(p0, gHand.fnml.clone().normalize(), dirThumb.clone().normalize());
 
 		var wrapDisplayed = this._doWrap(this._obj, this._pt, params);
 

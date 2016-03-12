@@ -60,17 +60,18 @@ class xacThing {
 		return xacThing._boolean(obj1, obj2, INTERSECT).toMesh(material == undefined ? MATERIALNORMAL.clone() : material.clone());
 	}
 
-	static line(v, dir) {
+	/*
+		draw and return a line
+	*/
+	static line(v, dir, mat) {
 		var clr = 0xff0000;
-
 		var geometry = new THREE.Geometry();
 		geometry.vertices.push(v);
-		geometry.vertices.push(v.clone().add(dir.clone().normalize().multiplyScalar(100)));
-		var material = new THREE.LineBasicMaterial({
+		geometry.vertices.push(v.clone().add(dir.clone().normalize().multiplyScalar(1000)));
+		var material = (mat == undefined) ? new THREE.LineBasicMaterial({
 			color: clr
-		});
+		}) : mat;
 		var line = new THREE.Line(geometry, material);
-
 		return line;
 	}
 }

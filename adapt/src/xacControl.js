@@ -22,7 +22,22 @@ class xacControl {
 			scene.remove(this._ve[i]);
 		}
 	}
+}
 
+class xacPushPull extends xacControl {
+	constructor(type) {
+		super(PUSHPULLCTRL);
+	}
+
+	mouseDown(e, obj, pt, fnml) {
+		this._dirForce = fnml.clone();
+		gPartSel.press(obj, pt, this._dirForce, true);
+		gPartSel.finishUp();
+	}
+
+	mouseMove(e, obj, pt, fnml) {}
+
+	mouseUp(e, obj, pt, fnml) {}
 }
 
 class xacClutch extends xacControl {
