@@ -499,3 +499,19 @@
 			
 			
 			// laoc = xacThing.intersect(getTransformedGeometry(laoc), getTransformedGeometry(part.selCyl), part.material);
+
+
+
+var cylinderSel = new xacCylinder(r / 2, part.cylHeight, MATERIALCONTRAST);
+			rotateObjTo(cylinderSel.m, part.normal);
+			cylinderSel.m.position.copy(part.cylCenter);
+
+			// select which bounding geometry to use
+			var spaceSel = cylinderSel.m;
+			var aoc = xacThing.intersect(getTransformedGeometry(part), getTransformedGeometry(spaceSel), part.material);
+
+			var laoc = new THREE.Mesh(aoc.geometry.clone(), aoc.material.clone());
+			scaleAlongVector(laoc, Math.pow(10, sizeFactor - 1), part.normal);
+			scaleAroundVector(laoc, sizeFactor, part.normal);
+			laoc = xacThing.intersect(getTransformedGeometry(laoc), getTransformedGeometry(part.selCyl), part.material);
+		

@@ -80,31 +80,46 @@ class xacAdaptation {
 		}
 	}
 
-	_extrude(part, sizeFactor, fingerFactor, targetFactor) {
+	_extrude(part, ctrl, sizeFactor, fingerFactor) {
 		var r0 = 20; // temp: finger size
 		var r = fingerFactor * r0;
-		targetFactor = targetFactor == undefined ? 0 : targetFactor;
+		// targetFactor = targetFactor == undefined ? 0 : targetFactor;
 		//
 		//	handling 'press' selection
 		//
 		if (part.type == 'press') {
-			var rLarge = r;
-			var rSmall =r / 2 * (sizeFactor-1);
+			var laoc = undefined;
 
-			var laoc = new xacCylinder([rLarge, rSmall], part.cylHeight, MATERIALHIGHLIGHT).m;
-			rotateObjTo(laoc, part.normal);
-			laoc.position.copy(part.cylCenter);
-		
-			// scaleAroundVector(laoc, sizeFactor, part.normal);
-			scaleAlongVector(laoc, sizeFactor/2, part.normal);
+			if (ctrl != undefined && ctrl.type == PUSHPULLCTRL) {
+				var rLarge = r;
+				var rSmall = r / 2 * (sizeFactor - 1);
+
+				laoc = new xacCylinder([rLarge, rSmall], part.cylHeight, MATERIALHIGHLIGHT).m;
+				rotateObjTo(laoc, part.normal);
+				laoc.position.copy(part.cylCenter);
+
+				// scaleAroundVector(laoc, sizeFactor, part.normal);
+				scaleAlongVector(laoc, sizeFactor / 2, part.normal);
+			} else {
+				var cylinderSel = new xacCylinder(r / 2, part.cylHeight, MATERIALCONTRAST);
+				rotateObjTo(cylinderSel.m, part.normal);
+				cylinderSel.m.position.copy(part.cylCenter);
+
+				// select which bounding geometry to use
+				var spaceSel = cylinderSel.m;
+				var aoc = xacThing.intersect(getTransformedGeometry(part), getTransformedGeometry(spaceSel), part.material);
+
+				var laoc = new THREE.Mesh(aoc.geometry.clone(), aoc.material.clone());
+				scaleAlongVector(laoc, Math.pow(10, sizeFactor - 1), part.normal);
+				scaleAroundVector(laoc, sizeFactor, part.normal);
+				laoc = xacThing.intersect(getTransformedGeometry(laoc), getTransformedGeometry(part.selCyl), part.material);
+			}
 		}
 		//
 		//	handling 'wrap' selection
 		//
 		else if (part.type == 'wrap') {
 			var ctrPart = part.ctrSel;
-			// if (D == true) addABall(ctrPart);
-
 			// bounding cylinder
 			var cylinderSel = new xacCylinder(100, r, MATERIALCONTRAST);
 			rotateObjTo(cylinderSel.m, part.normal);
@@ -313,6 +328,113 @@ class xacAdaptation {
 	}
 }
 
+class xacAnchor extends xacAdaptation {
+	constructor(pc, params) {
+		super(pc);
+
+		this._update = function() {
+			if (this._partAnchor == undefined) {
+				return;
+			}
+			// extrude
+			var extrusion = this._extrude(this._partAnchor, undefined, this._sizeFactor, this._fingerFactor);
+
+			// make anchor
+			var a = this._makeAnchor(extrusion);
+			return a;
+		}
+
+		// this.update();
+	}
+
+	_makeAnchor(extrusion) {
+
+		//	1. make a cube of the extrusion's bounding box
+		// var bbox = getBoundingBoxMesh(extrusion);
+		// scene.add(bbox);
+		var ctrExtrusion = getBoundingBoxCenter(extrusion);
+		var bboxDim = getDimAlong(extrusion, this._partAnchor.normal);
+		// scaleAlongVector(bbox, this._partAnchor.normal, )
+
+
+		//	2. compute anchor params
+		var bboxObj = getBoundingBoxMesh(this._pc.obj);
+		bboxObj.material.side = THREE.DoubleSide;
+		scene.add(bboxObj);
+
+		var rayCaster = new THREE.Raycaster();
+
+		// addAVector(bbox.position, this._partAnchor.normal);
+		rayCaster.ray.set(ctrExtrusion, this._partAnchor.normal);
+
+		var ints = rayCaster.intersectObjects([bboxObj]);
+		var heightAnchor = getDimAlong(bboxObj, this._partAnchor.normal); // overly large
+		if (ints[0] != undefined) {
+			heightAnchor = ctrExtrusion.distanceTo(ints[0].point) * 1.5;
+			// addALine(bbox.position, ints[0].point);
+		}
+
+		//	3. make the anchor stand
+		var ctrAnchorStand = ctrExtrusion.clone().add(this._partAnchor.normal.clone().multiplyScalar((heightAnchor + bboxDim) / 2));
+		var bcylParams = getBoundingCylinder(extrusion, this._partAnchor.normal);
+		var anchorStand = new xacCylinder([bcylParams.radius, bcylParams.radius / 2], heightAnchor, MATERIALHIGHLIGHT).m;
+		rotateObjTo(anchorStand, this._partAnchor.normal);
+		anchorStand.position.copy(ctrAnchorStand);
+		// scene.add(anchorStand);
+		// log(heightAnchor/(bboxDim/2))
+
+		//	4. connect it to a platform for clamping
+		var paramsPlatform = {
+			l: 50,
+			w: 30,
+			h: 5
+		};
+		var ctrAnchorPlatform = ctrAnchorStand.clone().add(this._partAnchor.normal.clone().multiplyScalar((heightAnchor + paramsPlatform.h) / 2));
+		var anchorPlatform = new xacRectPrism(paramsPlatform.l, paramsPlatform.h, paramsPlatform.w, MATERIALHIGHLIGHT).m;
+		rotateObjTo(anchorPlatform, this._partAnchor.normal);
+		anchorPlatform.position.copy(ctrAnchorPlatform);
+		// scene.add(anchorPlatform);
+
+		scene.remove(bboxObj);
+
+		this._anchor = xacThing.union(getTransformedGeometry(anchorStand), getTransformedGeometry(anchorPlatform), MATERIALHIGHLIGHT);
+
+		return this._anchor;
+	}
+
+	mouseDown(e, obj, pt, fnml) {
+
+		// var arrParts = [];
+		// for (var idx in this._pc.parts) {
+		// 	arrParts.push(this._pc.parts[idx].display);
+		// }
+		// var intersects = rayCast(e.clientX, e.clientY, arrParts);
+
+		// if (intersects.length == 0) {
+		intersects = rayCast(e.clientX, e.clientY, [this._pc.obj]);
+		// }
+
+		if (intersects[0] != undefined) {
+			// addABall(intersects[0].point);
+
+			if (intersects[0].object == this._pc.obj) {
+				// log("obj!")
+				gPartSel.clear();
+				gPartSel.press(intersects[0].object, intersects[0].point, intersects[0].face.normal, true);
+				this._partAnchor = gPartSel.part;
+			} else {
+				// log("part");
+				this._partAnchor = intersects[0].object.parentPart;
+			}
+
+		}
+
+		scene.remove(this._partAnchor.display);
+		// scene.remove(this._partAnchor);
+		this.update(this._partAnchor);
+	}
+}
+
 class xacMechanism extends xacAdaptation {
 	constructor(type, pc, params) {
 		super(pc);
@@ -367,7 +489,7 @@ class xacMechanism extends xacAdaptation {
 		// scene.add(camAxis);
 
 		// 2. generate a wrapper (fixed end)
-		var camAnchor = this._extrude(fixedEnd, this._sizeFactor, this._fingerFactor);
+		var camAnchor = this._extrude(fixedEnd, ctrl, this._sizeFactor, this._fingerFactor);
 		var ctrAnchor = getBoundingBoxCenter(camAnchor);
 		// scene.add(camAnchor);
 
@@ -499,7 +621,7 @@ class xacLever extends xacAdaptation {
 		this._update = function(pid) {
 			var ctrPart = getCenter(this._pc.parts[pid]);
 
-			var a1 = this._extrude(this._pc.parts[pid], Math.sqrt(this._sizeFactor), this._fingerFactor, undefined);
+			var a1 = this._extrude(this._pc.parts[pid], this._pc.ctrl, Math.sqrt(this._sizeFactor), this._fingerFactor, undefined);
 			// scene.add(a1);
 			var a2 = this._makeLever(a1);
 			return a2;
@@ -527,7 +649,7 @@ class xacWrapper extends xacAdaptation {
 		super(pc);
 
 		this._update = function(pid) {
-			var a = this._extrude(this._pc.parts[pid], this._sizeFactor, this._fingerFactor, this._targetFactor);
+			var a = this._extrude(this._pc.parts[pid], this._pc.ctrl, this._sizeFactor, this._fingerFactor, this._targetFactor);
 			a = this._optimizeGrip(a, this._pc.ctrl, this._gripFactor, new THREE.Vector3(0, -1, 0), undefined);
 
 			// need to cut in half for wraps

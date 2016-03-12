@@ -349,33 +349,28 @@ var initPanel = function() {
 			// get the selected parts-ctrl
 			var pc = gPartsCtrls[gCurrPartCtrl.attr('pcId')];
 
-			// var i = 0;
-			// var part = undefined;
-			// // TODO: mark pc pair deteled when deleted
-			// while (part == undefined || part.deleted == true) {
-			// 	part = gPartsCtrls['pc' + i++];
-			// }
-
 			var type = parseInt(data['item'].value);
 			switch (type) {
 				case WRAPPER:
-
-					// experimental: only dealing with 1st parts-ctrls now
-					// TODO: fix this
-					gAdaptations.push(new xacWrapper(pc));
+					gCurrAdapt = new xacWrapper(pc);
 					break;
 				case LEVER:
-					gAdaptations.push(new xacLever(pc));
+					gCurrAdapt = new xacLever(pc);
 					break;
 				case GUIDE:
-					gAdaptations.push(new xacGuide(pc));
+					gCurrAdapt = new xacGuide(pc);
+					break;
+				case ANCHOR:
+					gCurrAdapt = new xacAnchor(pc);
 					break;
 				case UNIVJOINT:
 					break;
 				case CAM:
-					gAdaptations.push(new xacMechanism(CAM, pc));
+					gCurrAdapt = new xacMechanism(CAM, pc);
 					break;
 			}
+
+			gAdaptations.push(gCurrAdapt);
 
 			// reset the selection from the list
 			var optionSelected = $("option:selected", this);
@@ -457,6 +452,7 @@ var initPanel = function() {
 	var valuesldStrength = minsldStrengthValue + (STRENGTHINT - 1) * (maxsldStrengthValue - minsldStrengthValue);
 	$('#sldStrength').slider('value', valuesldStrength);
 
+	// TODO: make it 'target'?
 	// coord
 	$('#sldCoord').slider({
 		max: 100,

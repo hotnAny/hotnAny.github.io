@@ -415,6 +415,7 @@ class PartSelector {
 		this._part.selCyl = cylPartSelectionOut; //xacThing.intersect(cylPartSelection.gt, obj, MATERIALCONTRAST);
 
 		this._part.display = this._part.clone();
+		this._part.display.parentPart = this._part;
 		scene.add(this._part.display);
 	}
 
@@ -517,6 +518,7 @@ class PartSelector {
 		this._part.type = 'wrap';
 		this._part.ctrSel = getProjection(ctrWrap, a, b, c, d);
 		this._part.display = wrapInDisplay;
+		this._part.display.parentPart = this._part;
 
 		this.isWrapping = false;
 

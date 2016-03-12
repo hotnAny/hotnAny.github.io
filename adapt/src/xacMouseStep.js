@@ -29,7 +29,6 @@ function onMouseDownStep(e) {
 			for (var i = gAccessSel.length - 1; i >= 0; i--) {
 				gAccessSel[i].mousedown(e);
 			}
-			// gAccessSel.mousedown(e);
 			break;
 		case 2:
 			if (activeCtrl != undefined) {
@@ -42,7 +41,11 @@ function onMouseDownStep(e) {
 			}
 
 			break;
-
+		case 3:
+			if (gCurrAdapt != undefined && gCurrAdapt.mouseDown != undefined) {
+				gCurrAdapt.mouseDown(e);
+			}
+			break;
 		case 5:
 			if (gConnMethod != undefined) {
 				if (objInt != undefined) {
@@ -78,7 +81,6 @@ function onMouseMoveStep(e) {
 			for (var i = gAccessSel.length - 1; i >= 0; i--) {
 				gAccessSel[i].mousemove(e);
 			}
-			// gAccessSel.mousemove(e);
 			break;
 		case 2:
 			if (activeCtrl != undefined) {
@@ -87,6 +89,11 @@ function onMouseMoveStep(e) {
 				} else {
 					activeCtrl.mouseMove(e);
 				}
+			}
+			break;
+		case 3:
+			if (gCurrAdapt != undefined && gCurrAdapt.mouseMove != undefined) {
+				gCurrAdapt.mouseMove(e);//, objInt.object, objInt.point.clone(), objInt.face.normal);
 			}
 			break;
 		case 5:
@@ -113,13 +120,17 @@ function onMouseUpStep(e) {
 			for (var i = gAccessSel.length - 1; i >= 0; i--) {
 				gAccessSel[i].mouseup(e);
 			}
-			// gAccessSel.mouseup(e);
 			break;
 		case 2:
 			if (e.which == LEFTMOUSE) {
 				if (activeCtrl != undefined) {
 					activeCtrl.mouseUp(e);
 				}
+			}
+			break;
+		case 3:
+			if (gCurrAdapt != undefined && gCurrAdapt.mouseUp != undefined) {
+				gCurrAdapt.mouseUp(e);//, objInt.object, objInt.point.clone(), objInt.face.normal);
 			}
 			break;
 		case 5:

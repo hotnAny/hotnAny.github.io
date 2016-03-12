@@ -190,11 +190,14 @@ var gItems = [];
 var gPartSerial = 0;
 var gPartsCtrls = new Array();
 var gCurrPartCtrl = undefined; // the parts-controls that is currently selected to be interacted with
+
 var gAdaptations = [];
+var gCurrAdapt = undefined; // the adaptation that is currently being worked on
+
 var gOptParams = new Array();
 var gConnMethod = undefined;  // connection method
 
-var gObjTemp;
+var gObjTemp;  // temp object for visual debugging
 
 //
 //   Global
