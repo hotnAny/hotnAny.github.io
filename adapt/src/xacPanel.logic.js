@@ -323,7 +323,12 @@ var initPanel = function() {
 	loadStlFromFile(CAMMODELPATH, MATERIALHIGHLIGHT);
 	setTimeout(function() {
 		gCam = objectDelay;
+		loadStlFromFile(CLAMPMODELPATH, MATERIALHIGHLIGHT);
 	}, 250);
+
+	setTimeout(function() {
+		gClamp = objectDelay;
+	}, 500);
 
 	smAdapts.selectmenu({
 		change: function(event, data) {
@@ -354,6 +359,9 @@ var initPanel = function() {
 				case WRAPPER:
 					gCurrAdapt = new xacWrapper(pc);
 					break;
+				case HANDLE:
+					gCurrAdapt = new xacHandle(pc);
+					break;
 				case LEVER:
 					gCurrAdapt = new xacLever(pc);
 					break;
@@ -362,6 +370,9 @@ var initPanel = function() {
 					break;
 				case ANCHOR:
 					gCurrAdapt = new xacAnchor(pc);
+					break;
+				case CLAMP:
+					gCurrAdapt = new xacMechanism(CLAMP, pc);
 					break;
 				case UNIVJOINT:
 					break;

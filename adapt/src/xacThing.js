@@ -132,3 +132,11 @@ class xacCircle extends xacThing {
 		this._m = new THREE.Mesh(this._g, material == undefined ? MATERIALNORMAL.clone() : material.clone());
 	}
 }
+
+class xacTorus extends xacThing {
+	constructor(ro, ri, arc, material) {
+		super();
+		this._g = new THREE.TorusGeometry(ro, ri, 16, 100, arc == undefined ? Math.PI * 2 : arc);
+		this._m = new THREE.Mesh(this._g, material == undefined ? MATERIALNORMAL.clone() : material.clone());
+	}
+}

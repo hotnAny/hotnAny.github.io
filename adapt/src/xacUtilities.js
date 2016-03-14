@@ -29,13 +29,12 @@ function log(msg) {
 	console.log(msg);
 }
 
-function toggleOctreeVisibility() {
-	// controlPanel.log("showing/hiding octree visibility ...");
-	octree.setVisibility(controlPanel.checkbox2.checked);
-
-	for (var i = 0, len = octreesProj.length; i < len; i++) {
-		octreesProj[i].setVisibility(controlPanel.checkbox2.checked);
+function getMax(values) {
+	var theMax = Number.MIN_VALUE;
+	for (var i = values.length - 1; i >= 0; i--) {
+		theMax = Math.max(theMax, values[i]);
 	}
+	return theMax;
 }
 
 function contains(array, elm) {

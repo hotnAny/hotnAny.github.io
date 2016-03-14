@@ -1,5 +1,7 @@
 "use strict";
 
+var FINGERDIM = 20;
+
 // TODO: link these to the values in the select menu
 var WRAPPER = 0;
 var HANDLE = 1;
@@ -7,7 +9,7 @@ var LEVER = 2;
 var ANCHOR = 3;
 var GUIDE = 4;
 var MECHANISM = 5;
-var HANDHELDCLAMP = 51;
+var CLAMP = 51;
 var UNIVJOINT = 52;
 var CAM = 53;
 
@@ -81,8 +83,7 @@ class xacAdaptation {
 	}
 
 	_extrude(part, ctrl, sizeFactor, fingerFactor) {
-		var r0 = 20; // temp: finger size
-		var r = fingerFactor * r0;
+		var r = fingerFactor * FINGERDIM;
 		// targetFactor = targetFactor == undefined ? 0 : targetFactor;
 		//
 		//	handling 'press' selection
@@ -404,12 +405,18 @@ class xacAnchor extends xacAdaptation {
 
 	mouseDown(e, obj, pt, fnml) {
 
+		//
+		// consider already-selected parts first
+		//
 		// var arrParts = [];
 		// for (var idx in this._pc.parts) {
 		// 	arrParts.push(this._pc.parts[idx].display);
 		// }
 		// var intersects = rayCast(e.clientX, e.clientY, arrParts);
 
+		//
+		// only consider object
+		//
 		// if (intersects.length == 0) {
 		intersects = rayCast(e.clientX, e.clientY, [this._pc.obj]);
 		// }
@@ -426,7 +433,6 @@ class xacAnchor extends xacAdaptation {
 				// log("part");
 				this._partAnchor = intersects[0].object.parentPart;
 			}
-
 		}
 
 		scene.remove(this._partAnchor.display);
@@ -441,10 +447,11 @@ class xacMechanism extends xacAdaptation {
 
 		this._type = type;
 
-		this._update = function() {
+		this._update = function(pid) {
 			var a;
 			switch (this._type) {
-				case HANDHELDCLAMP:
+				case CLAMP:
+					a = this._makeClamp(this._pc.parts[pid]);
 					break;
 				case CAM:
 					this._axisRadius = 3;
@@ -463,7 +470,9 @@ class xacMechanism extends xacAdaptation {
 
 		}
 
-		this.update();
+		if (this._type == CAM) {
+			this.update();
+		}
 	}
 
 	// this version is currently specific to clutching
@@ -528,6 +537,106 @@ class xacMechanism extends xacAdaptation {
 		scene.add(this._cam);
 
 		return camStruct;
+	}
+
+	// assume the part is a wrapping selection
+	_makeClamp(part) {
+		//	0. params
+		var widthCluth = 50; // the width of the clutch part (how wide to leave an openning for the wrap)
+		var depthClampNeck = 10; // the 'depth' of the part that sticks out to be connected to the clutch
+		var thicknessClampNeck = 5;
+
+		//	1. make a wrap
+		// use the wrap display as wrap
+
+		//	2. add & cut a fixed size extrusion as piple clamp openning material
+		var cylParams = getBoundingCylinder(part.display, part.normal);
+
+		// one exit possibility - cross section too small
+		if (cylParams.radius < depthClampNeck) {
+			return;
+		}
+
+		var clampNeck = new xacRectPrism(widthCluth, 1.5 * FINGERDIM, (depthClampNeck + cylParams.radius), MATERIALHIGHLIGHT).m;
+		var clampNeckStub = new xacRectPrism(widthCluth - thicknessClampNeck * 2, 2 * FINGERDIM, (depthClampNeck + cylParams.radius), MATERIALHIGHLIGHT).m;
+
+		var ctrNeck = this._pt.clone().sub(this._nml.clone().multiplyScalar((cylParams.radius - depthClampNeck) * 0.5));
+		var ctrWrapDisplay = getBoundingBoxCenter(part.display);
+
+		var projctrNeck = ctrNeck.clone();
+		projctrNeck.y = 0;
+		var projCtrWrapDisplay = ctrWrapDisplay.clone();
+		projCtrWrapDisplay.y = 0;
+
+		var dirToCtr = projctrNeck.clone().sub(projCtrWrapDisplay);
+		addAVector(ctrNeck, dirToCtr);
+		addAVector(new THREE.Vector3(), new THREE.Vector3(1, 0, 0));
+		addAVector(new THREE.Vector3(), new THREE.Vector3(0, 0, 1));
+
+		var angleToAlign = new THREE.Vector3(0, 0, 1).angleTo(dirToCtr);
+		var axisToRotate = new THREE.Vector3(0, 0, 1).cross(dirToCtr).normalize();
+		var matRotate = new THREE.Matrix4();
+		matRotate.makeRotationAxis(axisToRotate, angleToAlign);
+
+		rotateObjTo(clampNeck, part.normal);
+		clampNeck.applyMatrix(matRotate);
+		clampNeck.position.copy(ctrNeck);
+
+		rotateObjTo(clampNeckStub, part.normal);
+		clampNeckStub.applyMatrix(matRotate);
+		clampNeckStub.position.copy(ctrNeck);
+
+		clampNeck = xacThing.subtract(getTransformedGeometry(clampNeck), getTransformedGeometry(clampNeckStub));
+		var clamp = xacThing.union(getTransformedGeometry(part.display), getTransformedGeometry(clampNeck));
+		clamp = xacThing.subtract(getTransformedGeometry(clamp), getTransformedGeometry(clampNeckStub));
+		clamp = xacThing.subtract(getTransformedGeometry(clamp), getTransformedGeometry(this._pc.obj));
+
+		// scene.remove(this._pc.obj);
+
+		//
+		//	3. drill holes for bolts
+		//
+		var screwStub = new xacCylinder(RADIUSM3, widthCluth * 1.5).m;
+		screwStub.geometry.rotateZ(Math.PI / 2);
+		// scene.add(screwStub);
+		rotateObjTo(screwStub, part.normal);
+		screwStub.applyMatrix(matRotate);
+		screwStub.position.copy(this._pt.clone();//.add(this._nml.clone().multiplyScalar(depthClampNeck/10)));
+		clamp = xacThing.subtract(getTransformedGeometry(clamp), getTransformedGeometry(screwStub), MATERIALHIGHLIGHT);
+
+		//
+		//	4. connect it with the clutch
+		//
+		scene.remove(this._clamp);
+
+		var clampCopy = new THREE.Mesh(gClamp.geometry.clone(), gClamp.material.clone());
+		rotateObjTo(clampCopy, part.normal);
+		clampCopy.applyMatrix(matRotate);
+		clampCopy.position.copy(this._pt.clone().add(this._nml.clone().multiplyScalar(50)));
+		scene.add(clampCopy);
+
+		this._clamp = clampCopy;
+
+		return clamp;
+	}
+
+	mouseDown(e) {
+		var arrParts = [];
+		for (var idx in this._pc.parts) {
+			arrParts.push(this._pc.parts[idx].display);
+		}
+		var intersects = rayCast(e.clientX, e.clientY, arrParts);
+
+		if (intersects.length == 0) {
+			intersects = rayCast(e.clientX, e.clientY, [this._pc.obj]);
+		}
+
+		if (intersects[0] != undefined) {
+			this._pt = intersects[0].point;
+			this._nml = intersects[0].face.normal;
+
+			this.update();
+		}
 	}
 }
 
@@ -662,5 +771,82 @@ class xacWrapper extends xacAdaptation {
 		}
 
 		this.update();
+	}
+}
+
+class xacHandle extends xacAdaptation {
+	constructor(pc, params) {
+		super(pc);
+
+		this._update = function(pid) {
+			var a = this._makeHandle(this._pc.parts[pid]);
+			return a;
+		}
+
+		// require mouse input
+		// this.update();
+	}
+
+	_makeHandle(part) {
+		//	0. compute upright direction
+		var dirUp = undefined;
+		if (part.type == 'press') {
+			// find an optimal up direction
+		} else if (part.type == 'wrap') {
+			// already given
+			dirUp = part.normal;
+		}
+
+		//	1. extrude as the connector btwn handle & obj
+		var extrusion = this._extrude(part, undefined, this._sizeFactor, this._fingerFactor); //, this._targetFactor);
+
+		//	2. get a bbox of the extrusion, use it to determine to size and position of the torus handle
+		var bbox = getBoundingBoxMesh(extrusion);
+
+		// size
+		var rHandle = dirUp != undefined ? getDimAlong(extrusion, dirUp) : getMax(getBoundingBoxDimensions(extrusion));
+		var ratio = 2 / Math.sqrt(3);
+		rHandle *= ratio;
+
+		// position
+		var ctrHandle = this._pt.clone().add(this._nml.clone().normalize().multiplyScalar(rHandle * 0.25));
+
+		//	3. install the handle and merge with extrusion
+		var handle = new xacTorus(FINGERDIM * this._fingerFactor, FINGERDIM * (0.25 + this._fingerFactor * 0.1), 2 * Math.PI, MATERIALHIGHLIGHT).m;
+		handle.geometry.rotateX(Math.PI / 2);
+
+		// if it's grasping, then up direction matters
+		if (dirUp != undefined) {
+			rotateObjTo(handle, this._nml.clone().cross(dirUp));
+		}
+		// otherwise it doesn't
+		else {
+			rotateObjTo(handle, this._nml);
+		}
+		handle.position.copy(ctrHandle);
+		// scene.add(handle);
+
+		// TODO: 4. remove extra parts
+
+		return handle;
+	}
+
+	mouseDown(e) {
+		var arrParts = [];
+		for (var idx in this._pc.parts) {
+			arrParts.push(this._pc.parts[idx].display);
+		}
+		var intersects = rayCast(e.clientX, e.clientY, arrParts);
+
+		if (intersects.length == 0) {
+			intersects = rayCast(e.clientX, e.clientY, [this._pc.obj]);
+		}
+
+		if (intersects[0] != undefined) {
+			this._pt = intersects[0].point;
+			this._nml = intersects[0].face.normal;
+
+			this._makeHandle(intersects[0].object);
+		}
 	}
 }

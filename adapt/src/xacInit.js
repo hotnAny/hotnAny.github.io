@@ -185,6 +185,10 @@ var gHand = undefined;
 var CAMMODELPATH = 'things/cam_crank.stl';
 var gCam = undefined;
 
+var CLAMPMODELPATH = 'things/clamp_clutch.stl';
+var gClamp = undefined;
+var RADIUSM3 = 1.65;
+
 var gStep = 0;
 var gItems = [];
 var gPartSerial = 0;
