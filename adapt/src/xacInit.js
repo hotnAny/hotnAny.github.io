@@ -182,12 +182,20 @@ var gAccessSel = [];
 var HANDMODELPATH = 'things/small_hand.stl';
 var gHand = undefined;
 
+// cam mechanism
 var CAMMODELPATH = 'things/cam_crank.stl';
 var gCam = undefined;
 
+// clamp mechanism
 var CLAMPMODELPATH = 'things/clamp_clutch.stl';
 var gClamp = undefined;
 var RADIUSM3 = 1.65;
+
+// universal joint mechanism
+var YOKEPATH = 'things/yoke.stl';
+var YOKECROSSPATH = 'things/yoke_cross.stl';
+var gYoke = undefined;
+var gYokeCross = undefined;
 
 var gStep = 0;
 var gItems = [];

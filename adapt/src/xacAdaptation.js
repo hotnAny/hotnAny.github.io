@@ -459,6 +459,7 @@ class xacMechanism extends xacAdaptation {
 					a = this._makeCam(this._pc);
 					break;
 				case UNIVJOINT:
+					a = this._makeUnivJoint(this._pc.parts[pid]);
 					break;
 			}
 
@@ -468,9 +469,11 @@ class xacMechanism extends xacAdaptation {
 				this._a = a;
 			}
 
+			return a;
+
 		}
 
-		if (this._type == CAM) {
+		if (this._type == CAM || this._type == UNIVJOINT) {
 			this.update();
 		}
 	}
@@ -601,7 +604,7 @@ class xacMechanism extends xacAdaptation {
 		// scene.add(screwStub);
 		rotateObjTo(screwStub, part.normal);
 		screwStub.applyMatrix(matRotate);
-		screwStub.position.copy(this._pt.clone();//.add(this._nml.clone().multiplyScalar(depthClampNeck/10)));
+		screwStub.position.copy(this._pt.clone()); //.add(this._nml.clone().multiplyScalar(depthClampNeck/10)));
 		clamp = xacThing.subtract(getTransformedGeometry(clamp), getTransformedGeometry(screwStub), MATERIALHIGHLIGHT);
 
 		//
@@ -618,6 +621,41 @@ class xacMechanism extends xacAdaptation {
 		this._clamp = clampCopy;
 
 		return clamp;
+	}
+
+	_makeUnivJoint(part) {
+		var uj = undefined;
+		var ctrl = this._pc.ctrl;
+
+		if (ctrl.type != ROTATECTRL) {
+			return;
+		}
+
+		//	1. extrude a base to situate the yoke
+		var base = this._extrude(part, undefined, this._sizeFactor, this._fingerFactor);
+		var ctrBase = getBoundingBoxCenter(base);
+		//	2. situate one of the two yokes
+		var yoke1 = new THREE.Mesh(gYoke.geometry.clone(), gYoke.material.clone());
+		var dimsYoke = getBoundingBoxDimensions(yoke1);
+
+		scene.remove(gYoke);
+		var ctrYoke1 = ctrBase.clone().add(part.normal.clone().multiplyScalar(dimsYoke[1] * 0.5));
+		rotateObjTo(yoke1, part.normal);
+		yoke1.position.copy(ctrYoke1);
+
+		//	3. display the other yoke and cross
+		scene.remove(gYokeCross);
+		var yoke2cross = new THREE.Mesh(gYokeCross.geometry.clone(), gYokeCross.material.clone());
+		rotateObjTo(yoke2cross, part.normal);
+		var dimsYokeCross = getBoundingBoxDimensions(yoke2cross);
+		yoke2cross.position.copy(ctrYoke1.clone().add(part.normal.clone().multiplyScalar((dimsYoke[1] + dimsYokeCross[1]) * 0.5)));
+
+		scene.remove(this._yoke2cross);
+		scene.add(yoke2cross);
+		this._yoke2cross = yoke2cross;
+
+		uj = xacThing.union(getTransformedGeometry(base), getTransformedGeometry(yoke1), MATERIALHIGHLIGHT);
+		return uj;
 	}
 
 	mouseDown(e) {
@@ -802,12 +840,10 @@ class xacHandle extends xacAdaptation {
 
 		//	2. get a bbox of the extrusion, use it to determine to size and position of the torus handle
 		var bbox = getBoundingBoxMesh(extrusion);
-
 		// size
 		var rHandle = dirUp != undefined ? getDimAlong(extrusion, dirUp) : getMax(getBoundingBoxDimensions(extrusion));
 		var ratio = 2 / Math.sqrt(3);
 		rHandle *= ratio;
-
 		// position
 		var ctrHandle = this._pt.clone().add(this._nml.clone().normalize().multiplyScalar(rHandle * 0.25));
 
@@ -846,7 +882,8 @@ class xacHandle extends xacAdaptation {
 			this._pt = intersects[0].point;
 			this._nml = intersects[0].face.normal;
 
-			this._makeHandle(intersects[0].object);
+			// this._makeHandle(intersects[0].object);
+			this.update();
 		}
 	}
 }

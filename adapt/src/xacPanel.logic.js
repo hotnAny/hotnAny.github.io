@@ -328,7 +328,20 @@ var initPanel = function() {
 
 	setTimeout(function() {
 		gClamp = objectDelay;
+		loadStlFromFile(YOKEPATH, MATERIALHIGHLIGHT);
 	}, 500);
+
+	setTimeout(function() {
+		gYoke = objectDelay;
+		loadStlFromFile(YOKECROSSPATH, MATERIALHIGHLIGHT);
+		// scene.add(gYoke);
+	}, 750);
+
+	setTimeout(function() {
+		gYokeCross = objectDelay;
+		// loadStlFromFile(YOKECROSSPATH, MATERIALHIGHLIGHT);
+		// scene.add(gYokeCross)
+	}, 1000);
 
 	smAdapts.selectmenu({
 		change: function(event, data) {
@@ -375,6 +388,7 @@ var initPanel = function() {
 					gCurrAdapt = new xacMechanism(CLAMP, pc);
 					break;
 				case UNIVJOINT:
+					gCurrAdapt = new xacMechanism(UNIVJOINT, pc);
 					break;
 				case CAM:
 					gCurrAdapt = new xacMechanism(CAM, pc);

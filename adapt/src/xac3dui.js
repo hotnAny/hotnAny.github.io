@@ -339,7 +339,7 @@ class PartSelector {
 		nml = nml.normalize();
 		var nmlOpp = nml.clone().multiplyScalar(-1);
 
-		var rPartSelection = isSmall == true ? FINGERSIZE : HANDSIZE;
+		var rPartSelection = isSmall == true ? FINGERSIZE/2 : HANDSIZE;
 
 		// before: hardcoded, usually too mcuh
 		var distAbove = HANDSIZE * 2; // hyperthetical dist between finger(s) and the ctrl point
