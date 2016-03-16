@@ -23,10 +23,10 @@ function scaleAroundCenter(obj, factor) {
 function scaleAroundVector(obj, factor, dir) {
 	// have different scales for the rest of the two axes
 	if (Array.isArray(factor)) {
-		if(factor.length >= 2) {
+		if (factor.length >= 2) {
 			scaleWithVector(obj, [factor[0], 1, factor[1]], dir);
 		}
-	} 
+	}
 	// have uniform scales for the rest of the axes
 	else {
 		scaleWithVector(obj, [factor, 1, factor], dir);
@@ -304,4 +304,37 @@ function getEndPointsAlong2(obj, dir) {
 
 	// log(endPoints);
 	return endPoints;
+}
+
+function removeDisconnectedComponents(pt, pts, dist) {
+	var ctr = getCenter(pts);
+	var axis = ctr.clone().sub(pt);
+	var midDist = axis.length();
+	axis.normalize();
+	var minPosDist = Infinity;
+	var maxNegDist = -Infinity;
+
+
+	var toKeep = [];
+	for (var i = pts.length - 1; i >= 0; i--) {
+		// determine the sign of the dist measure
+		var dToPt = (pts[i].clone().sub(pt)).dot(axis);
+		var sign = dToPt < midDist ? 1 : -1;
+
+		// measure the abs dist to ctr
+		var d = (pts[i].clone().sub(ctr)).dot(axis);
+		if (sign > 0) {
+			minPosDist = Math.min(Math.abs(d), minPosDist);
+			toKeep.push(pts[i]);
+		} else {
+			maxNegDist = Math.max(-Math.abs(d), maxNegDist);
+		}
+	}
+
+	// if there is a 'gap', discard the set of far away points
+	if (minPosDist - maxNegDist > dist) {
+		return toKeep;
+	} else {
+		return pts;
+	}
 }

@@ -32,10 +32,18 @@ class xacAdaptation {
 	}
 
 	get adaptation() {
-		// TODO: merge them!
+		// return the first (and perhaps only) adaptation
 		for (var pid in this._pc.parts) {
 			return this._as[pid];
 		}
+	}
+
+	get adaptations() {
+		return this._as;
+	}
+
+	get obj() {
+		return this._pc.obj;
 	}
 
 	update(params) {
@@ -350,41 +358,42 @@ class xacAnchor extends xacAdaptation {
 
 	_makeAnchor(extrusion) {
 
+		//
 		//	1. make a cube of the extrusion's bounding box
-		// var bbox = getBoundingBoxMesh(extrusion);
-		// scene.add(bbox);
+		//
 		var ctrExtrusion = getBoundingBoxCenter(extrusion);
 		var bboxDim = getDimAlong(extrusion, this._partAnchor.normal);
-		// scaleAlongVector(bbox, this._partAnchor.normal, )
 
-
+		//
 		//	2. compute anchor params
+		//
 		var bboxObj = getBoundingBoxMesh(this._pc.obj);
 		bboxObj.material.side = THREE.DoubleSide;
 		scene.add(bboxObj);
 
 		var rayCaster = new THREE.Raycaster();
-
-		// addAVector(bbox.position, this._partAnchor.normal);
 		rayCaster.ray.set(ctrExtrusion, this._partAnchor.normal);
 
 		var ints = rayCaster.intersectObjects([bboxObj]);
 		var heightAnchor = getDimAlong(bboxObj, this._partAnchor.normal); // overly large
 		if (ints[0] != undefined) {
-			heightAnchor = ctrExtrusion.distanceTo(ints[0].point) * 1.5;
+			heightAnchor = ctrExtrusion.distanceTo(ints[0].point) * 2;
 			// addALine(bbox.position, ints[0].point);
 		}
 
+		//
 		//	3. make the anchor stand
-		var ctrAnchorStand = ctrExtrusion.clone().add(this._partAnchor.normal.clone().multiplyScalar((heightAnchor + bboxDim) / 2));
+		//
+		var ctrAnchorStand = ctrExtrusion.clone().add(this._partAnchor.normal.clone().multiplyScalar(heightAnchor / 2));
 		var bcylParams = getBoundingCylinder(extrusion, this._partAnchor.normal);
-		var anchorStand = new xacCylinder([bcylParams.radius, bcylParams.radius / 2], heightAnchor, MATERIALHIGHLIGHT).m;
+		var anchorStand = new xacCylinder([bcylParams.radius * 1.25, bcylParams.radius / 2 * 1.25], heightAnchor, MATERIALHIGHLIGHT).m;
 		rotateObjTo(anchorStand, this._partAnchor.normal);
 		anchorStand.position.copy(ctrAnchorStand);
 		// scene.add(anchorStand);
-		// log(heightAnchor/(bboxDim/2))
 
+		//
 		//	4. connect it to a platform for clamping
+		//
 		var paramsPlatform = {
 			l: 50,
 			w: 30,
@@ -396,7 +405,7 @@ class xacAnchor extends xacAdaptation {
 		anchorPlatform.position.copy(ctrAnchorPlatform);
 		// scene.add(anchorPlatform);
 
-		scene.remove(bboxObj);
+		// scene.remove(bboxObj);
 
 		this._anchor = xacThing.union(getTransformedGeometry(anchorStand), getTransformedGeometry(anchorPlatform), MATERIALHIGHLIGHT);
 
@@ -418,13 +427,18 @@ class xacAnchor extends xacAdaptation {
 		// only consider object
 		//
 		// if (intersects.length == 0) {
+		if (this._pc.obj == undefined) {
+			this._pc.obj = objects[0];
+		}
+
 		intersects = rayCast(e.clientX, e.clientY, [this._pc.obj]);
 		// }
 
 		if (intersects[0] != undefined) {
 			// addABall(intersects[0].point);
 
-			if (intersects[0].object == this._pc.obj) {
+			var obj = (this._pc == undefined || this._pc.object == undefined) ? objects[0] : this._pc.obj;
+			if (intersects[0].object == obj) {
 				// log("obj!")
 				gPartSel.clear();
 				gPartSel.press(intersects[0].object, intersects[0].point, intersects[0].face.normal, true);
@@ -437,7 +451,14 @@ class xacAnchor extends xacAdaptation {
 
 		scene.remove(this._partAnchor.display);
 		// scene.remove(this._partAnchor);
-		this.update(this._partAnchor);
+
+
+
+		if (Object.keys(this._pc.parts).length == 0) {
+			this._pc.parts['Part ' + gPartSerial] = this._partAnchor;
+		}
+
+		this.update();
 	}
 }
 
@@ -488,7 +509,9 @@ class xacMechanism extends xacAdaptation {
 		var fixedEnd = pc.parts['Part 2'];
 		var nmlRotation = new THREE.Vector3(ctrl.plane.A, ctrl.plane.B, ctrl.plane.C).normalize();
 
+		//
 		// 1. generate an axis (free end)
+		//
 		var dirLeverFree = ctrl.pocFree.clone().sub(ctrl.fulcrum);
 		var dirToAxis = getVerticalOnPlane(dirLeverFree, ctrl.plane.A, ctrl.plane.B, ctrl.plane.C, ctrl.plane.D); // how to go from free end to the axis
 		var rCam = 10 * this._sizeFactor;
@@ -500,12 +523,16 @@ class xacMechanism extends xacAdaptation {
 		camAxis.position.copy(ctrAxis);
 		// scene.add(camAxis);
 
+		//
 		// 2. generate a wrapper (fixed end)
+		//
 		var camAnchor = this._extrude(fixedEnd, ctrl, this._sizeFactor, this._fingerFactor);
 		var ctrAnchor = getBoundingBoxCenter(camAnchor);
 		// scene.add(camAnchor);
 
+		//
 		// 3. generate bar 1 (holding the axis)
+		//
 		var endAxis = ctrAxis.clone().sub(nmlRotation.clone().multiplyScalar(this._axisLength * 0.5));
 		addABall(endAxis, 0x0000ff);
 		var lenBar = ctrAnchor.distanceTo(endAxis) + this._axisRadius * 2;
@@ -520,10 +547,13 @@ class xacMechanism extends xacAdaptation {
 		var camStruct = xacThing.union(getTransformedGeometry(camAxis), getTransformedGeometry(camAnchor));
 		camStruct = xacThing.union(getTransformedGeometry(camStruct), getTransformedGeometry(camBar), MATERIALHIGHLIGHT);
 
+		//
 		// 4. generate bar 2 (holding bar 1)
 		// skip this for now
 
+		//
 		// 5. put the cam in place
+		//
 		scene.remove(this._cam);
 		this._cam = new THREE.Mesh(gCam.geometry, MATERIALHIGHLIGHT);
 		var dimsCam = getBoundingBoxDimensions(this._cam);
@@ -544,7 +574,9 @@ class xacMechanism extends xacAdaptation {
 
 	// assume the part is a wrapping selection
 	_makeClamp(part) {
+		//
 		//	0. params
+		//
 		var widthCluth = 50; // the width of the clutch part (how wide to leave an openning for the wrap)
 		var depthClampNeck = 10; // the 'depth' of the part that sticks out to be connected to the clutch
 		var thicknessClampNeck = 5;
@@ -552,7 +584,9 @@ class xacMechanism extends xacAdaptation {
 		//	1. make a wrap
 		// use the wrap display as wrap
 
+		//
 		//	2. add & cut a fixed size extrusion as piple clamp openning material
+		//
 		var cylParams = getBoundingCylinder(part.display, part.normal);
 
 		// one exit possibility - cross section too small
@@ -560,7 +594,7 @@ class xacMechanism extends xacAdaptation {
 			return;
 		}
 
-		var clampNeck = new xacRectPrism(widthCluth, 1.5 * FINGERDIM, (depthClampNeck + cylParams.radius), MATERIALHIGHLIGHT).m;
+		var clampNeck = new xacRectPrism(widthCluth, 0.75 * FINGERDIM, (depthClampNeck + cylParams.radius), MATERIALHIGHLIGHT).m;
 		var clampNeckStub = new xacRectPrism(widthCluth - thicknessClampNeck * 2, 2 * FINGERDIM, (depthClampNeck + cylParams.radius), MATERIALHIGHLIGHT).m;
 
 		var ctrNeck = this._pt.clone().sub(this._nml.clone().multiplyScalar((cylParams.radius - depthClampNeck) * 0.5));
@@ -770,15 +804,25 @@ class xacLever extends xacAdaptation {
 
 			var a1 = this._extrude(this._pc.parts[pid], this._pc.ctrl, Math.sqrt(this._sizeFactor), this._fingerFactor, undefined);
 			// scene.add(a1);
-			var a2 = this._makeLever(a1);
+			var a2 = this._makeLever(a1, pid);
 			return a2;
 		}
 
 		this.update();
 	}
 
-	_makeLever(a) {
-		var dirLever = this._pc.ctrl.dirLever.clone().normalize();
+	_makeLever(a, pid) {
+		var dirLever;
+
+		if (this._pc.ctrl.type == ROTATECTRL) {
+			dirLever = this._pc.ctrl.dirLever.clone().normalize();
+		} else if (this._pc.ctrl.type == CLUTCHCTRL) {
+			dirLever = this._pc.ctrl.partArms[pid];
+		} else {
+			return a;
+		}
+
+
 		var aNew = new THREE.Mesh(a.geometry.clone(), a.material);
 		scaleAlongVector(aNew, Math.pow(3, this._strengthFactor), dirLever);
 
@@ -799,9 +843,9 @@ class xacWrapper extends xacAdaptation {
 			var a = this._extrude(this._pc.parts[pid], this._pc.ctrl, this._sizeFactor, this._fingerFactor, this._targetFactor);
 			a = this._optimizeGrip(a, this._pc.ctrl, this._gripFactor, new THREE.Vector3(0, -1, 0), undefined);
 
-			// need to cut in half for wraps
+			// to or not to cut in half for wraps
 			if (this._cutPlane != undefined) {
-				a = xacThing.subtract(getTransformedGeometry(a), getTransformedGeometry(this._cutPlane.m), a.material);
+				// a = xacThing.subtract(getTransformedGeometry(a), getTransformedGeometry(this._cutPlane.m), a.material);
 			}
 
 			a = xacThing.subtract(getTransformedGeometry(a), getTransformedGeometry(this._pc.obj), a.material);
@@ -826,6 +870,7 @@ class xacHandle extends xacAdaptation {
 	}
 
 	_makeHandle(part) {
+		//
 		//	0. compute upright direction
 		var dirUp = undefined;
 		if (part.type == 'press') {
@@ -835,21 +880,35 @@ class xacHandle extends xacAdaptation {
 			dirUp = part.normal;
 		}
 
+		//
 		//	1. extrude as the connector btwn handle & obj
-		var extrusion = this._extrude(part, undefined, this._sizeFactor, this._fingerFactor); //, this._targetFactor);
+		//
+		// only need basicly small wrapper
+		var extrusion = this._extrude(part, undefined, 1.0, 1); //, this._targetFactor);
+		scene.remove(this._base);
+		// scene.add(extrusion);
+		// this._base = extrusion;
 
+		//
 		//	2. get a bbox of the extrusion, use it to determine to size and position of the torus handle
+		//
 		var bbox = getBoundingBoxMesh(extrusion);
 		// size
-		var rHandle = dirUp != undefined ? getDimAlong(extrusion, dirUp) : getMax(getBoundingBoxDimensions(extrusion));
-		var ratio = 2 / Math.sqrt(3);
-		rHandle *= ratio;
-		// position
-		var ctrHandle = this._pt.clone().add(this._nml.clone().normalize().multiplyScalar(rHandle * 0.25));
+		// var rHandle = dirUp != undefined ? getDimAlong(extrusion, dirUp) : getMax(getBoundingBoxDimensions(extrusion));
 
+
+		//
 		//	3. install the handle and merge with extrusion
-		var handle = new xacTorus(FINGERDIM * this._fingerFactor, FINGERDIM * (0.25 + this._fingerFactor * 0.1), 2 * Math.PI, MATERIALHIGHLIGHT).m;
+		//
+		var ri = FINGERDIM * 0.05 * (1 + this._fingerFactor);
+		var ro = FINGERDIM * 0.5 * this._fingerFactor + ri * 2;
+		var handle = new xacTorus(ro, ri, 2 * Math.PI, MATERIALHIGHLIGHT).m;
 		handle.geometry.rotateX(Math.PI / 2);
+
+		// var ratio = 2 / Math.sqrt(3);
+		// var rHandle = ratio;
+		// position
+		var ctrHandle = this._pt.clone().add(this._nml.clone().normalize().multiplyScalar(ro));
 
 		// if it's grasping, then up direction matters
 		if (dirUp != undefined) {
@@ -862,7 +921,15 @@ class xacHandle extends xacAdaptation {
 		handle.position.copy(ctrHandle);
 		// scene.add(handle);
 
-		// TODO: 4. remove extra parts
+		// TODO: allowing users to flip
+		if (true) {
+			handle.rotateOnAxis(this._nml, Math.PI / 2);
+		}
+
+		//
+		// TODO: 4. combine or remove extra parts
+		//
+		handle = xacThing.union(getTransformedGeometry(handle), getTransformedGeometry(extrusion), MATERIALHIGHLIGHT);
 
 		return handle;
 	}

@@ -6,6 +6,9 @@
 
 "use strict";
 
+/*
+	a base class for a range of bounding box based UI
+*/
 class BboxUI {
 	constructor(obj) {
 		this._obj = obj;
@@ -60,6 +63,9 @@ class BboxUI {
 	}
 }
 
+/*
+	a bounding box surrounding an object that allows for resizing it to specify parts of the objects
+*/
 class BboxResizer extends BboxUI {
 	constructor(obj) {
 		super(obj);
@@ -339,7 +345,7 @@ class PartSelector {
 		nml = nml.normalize();
 		var nmlOpp = nml.clone().multiplyScalar(-1);
 
-		var rPartSelection = isSmall == true ? FINGERSIZE/2 : HANDSIZE;
+		var rPartSelection = isSmall == true ? FINGERSIZE / 2 : HANDSIZE;
 
 		// before: hardcoded, usually too mcuh
 		var distAbove = HANDSIZE * 2; // hyperthetical dist between finger(s) and the ctrl point
@@ -436,6 +442,8 @@ class PartSelector {
 
 		var nmlWrap = new THREE.Vector3(a, b, c);
 
+		var dimObj = getDimAlong(obj, nmlWrap);
+
 		var ptsWrap = []; // points sampled to rep the wrap
 		var maxDistAbove = 0; // max signed distances to the cross section
 		var maxDistBelow = 0;
@@ -451,7 +459,11 @@ class PartSelector {
 				// var v = obj.geometry.vertices[indices[j]].clone().applyMatrix4(obj.matrixWorld);
 				var v = gtObj.vertices[indices[j]];
 				var dist = (a * v.x + b * v.y + c * v.z + d) / Math.sqrt(a * a + b * b + c * c);
-				if (Math.abs(dist) < HANDSIZE / 2) {
+
+				// BEFORE
+				// if (Math.abs(dist) < HANDSIZE / 2) {
+				// NOW	
+				if (Math.abs(dist) < dimObj / 4) {
 					ptsWrap.push(v);
 					// addABall(v, 0xffffff)
 					maxDistAbove = Math.max(maxDistAbove, dist);
@@ -460,14 +472,13 @@ class PartSelector {
 			}
 		}
 
+		ptsWrap = removeDisconnectedComponents(pt, ptsWrap, 10);
+
 		//
 		//	2. find a wrapping cylinder
 		//
 		var ctrObjInHold = getCenter(ptsWrap);
-		// addABall(ctrObjInHold, 0x0000ff);
 		var ctrWrap = getProjection(ctrObjInHold, a, b, c, d);
-		// addABall(ctrWrap, 0x00ff00)
-
 		nmlWrap.normalize();
 
 		var rWrap = 0;
@@ -479,7 +490,7 @@ class PartSelector {
 		rWrap *= 1.1;
 
 		this.cylWrap = new xacCylinder(rWrap, HANDSIZE, MATERIALCONTRAST);
-		var wrapDisplay = new xacCylinder(rWrap, FINGERSIZE * 2, MATERIALCONTRAST);
+		var wrapDisplay = new xacCylinder(rWrap, FINGERSIZE, MATERIALCONTRAST);
 		rotateObjTo(this.cylWrap.m, nmlWrap);
 		rotateObjTo(wrapDisplay.m, nmlWrap);
 		this.cylWrap.m.position.copy(ctrWrap.clone());

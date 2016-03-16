@@ -49,37 +49,37 @@ class xacClutch extends xacControl {
 		this._TOSELECTFULCRUM = 2;
 
 		this._step = this._TOSELECTFREEEND;
+
+		// index arm/lever by part name
+		this._partArms = new Array();
+		this._partFree = undefined;
+		this._partFixed = undefined;
 	}
 
 	mouseDown(e, obj, pt, fnml) {
 		switch (this._step) {
 			case this._TOSELECTFREEEND:
-				// select free end
 				if (obj != undefined && pt != undefined && fnml != undefined) {
 					gPartSel.press(obj, pt, fnml, true);
 					this._pocFree = pt.clone(); // poc: point of contact
 					this._nmlFree = fnml.clone();
-					// addAVector(this._pocFree, this._nmlFree);
 					gPartSel.finishUp();
+					this._partFree = 'Part ' + gPartSerial;
 					this._step = this._TOSELECTANCHOR;
 				}
 
 				break;
 			case this._TOSELECTANCHOR:
-				// select anchor
 				if (obj != undefined && pt != undefined && fnml != undefined) {
 					gPartSel.clear();
 					gPartSel.press(obj, pt, fnml, true);
-					this._pocAnchor = pt.clone(); // poc: point of contact
+					this._pocFixed = pt.clone(); // poc: point of contact
 					this._nmlAnchor = fnml.clone();
-					// addAVector(this._pocAnchor, this._nmlAnchor);
 					gPartSel.finishUp();
-
-					// var midPoint = new THREE.Vector3().addVectors(this._pocFree, this._pocAnchor).multiplyScalar(0.5);
+					this._partFixed = 'Part ' + gPartSerial;
 					var midNml = new THREE.Vector3().addVectors(this._nmlFree, this._nmlAnchor).multiplyScalar(0.5);
-					// addAVector(midPoint, midNml);
 
-					this._planeSel = new PlaneSelector([this._pocFree, this._pocAnchor], midNml, true);
+					this._planeSel = new PlaneSelector([this._pocFree, this._pocFixed], midNml, true);
 					gSticky = true;
 					this._step = this._TOSELECTFULCRUM;
 				}
@@ -87,9 +87,11 @@ class xacClutch extends xacControl {
 			case this._TOSELECTFULCRUM:
 				this._planeSel.clear();
 				this._fulcrum = this._planeSel.selection;
-				this._plane = getPlaneFromPointVectors(this._fulcrum, this._pocFree.clone().sub(this._fulcrum), this._pocAnchor.clone().sub(this._fulcrum));
+				this._plane = getPlaneFromPointVectors(this._fulcrum, this._pocFree.clone().sub(this._fulcrum), this._pocFixed.clone().sub(this._fulcrum));
 
-				// this._dirLeverFree = this._pocFree.clone().sub(this._fulcrum);
+				this._partArms[this._partFree] = this._pocFree.clone().sub(this._fulcrum).normalize();
+				this._partArms[this._partFixed] = this._pocFixed.clone().sub(this._fulcrum).normalize();
+
 				gSticky = false;
 				this._step = this._TOSELECTOBJ;
 				break;
@@ -114,8 +116,12 @@ class xacClutch extends xacControl {
 		return this._pocFree;
 	}
 
-	get pocAnchor() {
-		return this._pocAnchor;
+	get pocFixed() {
+		return this._pocFixed;
+	}
+
+	get partArms() {
+		return this._partArms;
 	}
 
 	// TODO: return the plane of clutching

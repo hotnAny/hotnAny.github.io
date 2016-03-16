@@ -30,7 +30,7 @@ function log(msg) {
 }
 
 function getMax(values) {
-	var theMax = Number.MIN_VALUE;
+	var theMax = -Infinity;
 	for (var i = values.length - 1; i >= 0; i--) {
 		theMax = Math.max(theMax, values[i]);
 	}

@@ -171,6 +171,11 @@ var initPanel = function() {
 		//
 		trPartsCtrls.tdParts.click(function(event) {
 
+			if (gStep != 2) {
+				gStep = 2;
+				return;
+			}
+
 			// EXPERIMENTAL: remove all the display/visuals of the last selected row
 			if (gCurrPartCtrl != undefined) {
 				showPartsInSelectedRow(false);
@@ -572,30 +577,48 @@ var initPanel = function() {
 
 	// TODO: fix downloading only the last adaptation?
 	btnExport.click(function(e) {
-		for (var i = objects.length - 1; i >= 0; i--) {
-			scene.remove(objects[i]);
-		}
+		// do not remove the objects
+		// for (var i = objects.length - 1; i >= 0; i--) {
+		// 	scene.remove(objects[i]);
+		// }
 
-		// normal download
+		var adaptation = gAdaptations.slice(-1)[0];
 		var modelToSave = undefined;
-		if (e.shiftKey == false) {
-			modelToSave = gAdaptations.slice(-1)[0].awc;
-		}
-		// download the extra flexible part
-		else {
-			modelToSave = gAdaptations.slice(-1)[0].fp;
+		var objOriginal = adaptation.obj;
+
+		var idx = 0;
+
+		// shift key downloads flexible part, if there is any
+		if (e.shiftKey == true) {
+			modelToSave = adaptations[idx].fp;
+		} else {
+			// alt key download secondary/paired adaptation
+			idx = e.altKey == true ? 1 : 0;
+
+			var cnt = 0;
+			for (var pid in adaptation.adaptations) {
+				if (cnt == idx) {
+					modelToSave = adaptation.adaptations[pid].awc;
+					if (modelToSave == undefined) {
+						modelToSave = adaptation.adaptations[pid];
+						break;
+					}
+				}
+				cnt++;
+			}
 		}
 
 		if (modelToSave == undefined) {
-			modelToSave = gAdaptations.slice(-1)[0].adaptation;
+			modelToSave = adaptation.adaptation;
 		}
+
+		modelToSave = xacThing.subtract(getTransformedGeometry(modelToSave), getTransformedGeometry(objOriginal), MATERIALHIGHLIGHT);
+
 		var stlStr = stlFromGeometry(modelToSave.geometry);
 		var blob = new Blob([stlStr], {
 			type: 'text/plain'
 		});
 		saveAs(blob, 'adaptation.stl');
-
-		log("saved!")
 
 	});
 
