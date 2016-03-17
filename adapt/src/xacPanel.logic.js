@@ -411,7 +411,6 @@ var initPanel = function() {
 			showElm(customization);
 			showElm(connectors);
 
-			// $("*").css("cursor", "default");
 		}
 	});
 

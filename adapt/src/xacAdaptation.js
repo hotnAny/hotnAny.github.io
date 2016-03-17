@@ -578,7 +578,7 @@ class xacMechanism extends xacAdaptation {
 		//	0. params
 		//
 		var widthCluth = 50; // the width of the clutch part (how wide to leave an openning for the wrap)
-		var depthClampNeck = 10; // the 'depth' of the part that sticks out to be connected to the clutch
+		var depthClampNeck = 15; // the 'depth' of the part that sticks out to be connected to the clutch
 		var thicknessClampNeck = 5;
 
 		//	1. make a wrap
@@ -631,7 +631,7 @@ class xacMechanism extends xacAdaptation {
 		// scene.remove(this._pc.obj);
 
 		//
-		//	3. drill holes for bolts
+		//	3. drill TWO holes for bolts
 		//
 		var screwStub = new xacCylinder(RADIUSM3, widthCluth * 1.5).m;
 		screwStub.geometry.rotateZ(Math.PI / 2);
@@ -639,6 +639,8 @@ class xacMechanism extends xacAdaptation {
 		rotateObjTo(screwStub, part.normal);
 		screwStub.applyMatrix(matRotate);
 		screwStub.position.copy(this._pt.clone()); //.add(this._nml.clone().multiplyScalar(depthClampNeck/10)));
+		clamp = xacThing.subtract(getTransformedGeometry(clamp), getTransformedGeometry(screwStub), MATERIALHIGHLIGHT);
+		screwStub.position.add(this._nml.clone().multiplyScalar(10));
 		clamp = xacThing.subtract(getTransformedGeometry(clamp), getTransformedGeometry(screwStub), MATERIALHIGHLIGHT);
 
 		//
@@ -814,22 +816,32 @@ class xacLever extends xacAdaptation {
 	_makeLever(a, pid) {
 		var dirLever;
 
+		// lever applies to both rotation and clutching
 		if (this._pc.ctrl.type == ROTATECTRL) {
 			dirLever = this._pc.ctrl.dirLever.clone().normalize();
 		} else if (this._pc.ctrl.type == CLUTCHCTRL) {
-			dirLever = this._pc.ctrl.partArms[pid];
+			dirLever = this._pc.ctrl.partArms[pid].clone();
 		} else {
 			return a;
 		}
 
+		dirLever.normalize();
 
-		var aNew = new THREE.Mesh(a.geometry.clone(), a.material);
-		scaleAlongVector(aNew, Math.pow(3, this._strengthFactor), dirLever);
+		// BEFORE: based on extrusion
+		// var aNew = new THREE.Mesh(a.geometry.clone(), a.material);
+		// scaleAlongVector(aNew, Math.pow(3, this._strengthFactor), dirLever);
+		// var l = getDimAlong(aNew, dirLever);
+		// // TODO: make 0.3 programmatic
+		// aNew.translateOnAxis(dirLever, l * 0.3);
 
-		var l = getDimAlong(aNew, dirLever);
-
-		// TODO: make 0.3 programmatic
-		aNew.translateOnAxis(dirLever, l * 0.3);
+		// NOW: use bounding cylinder
+		var bcylParams = getBoundingCylinder(a, dirLever);
+		var lever = new xacCylinder([bcylParams.radius], bcylParams.height * Math.pow(3, this._strengthFactor), MATERIALHIGHLIGHT).m;
+		rotateObjTo(lever, dirLever);
+		var offsetLever = l * 0.5 * (this._pc.ctrl.type == CLUTCHCTRL ? -1 : 1);
+		lever.position.copy(getBoundingBoxCenter(a).add(dirLever.clone().multiplyScalar(offsetLever)));
+		var l = getDimAlong(lever, dirLever);
+		var aNew = lever;
 
 		return aNew;
 	}
