@@ -448,7 +448,7 @@ class PartSelector {
 		var maxDistAbove = 0; // max signed distances to the cross section
 		var maxDistBelow = 0;
 
-		var obj = this._obj;
+		var obj = this._obj != undefined ? this._obj : obj;
 		var gtObj = getTransformedGeometry(obj);
 		for (var i = 0; i < gtObj.faces.length; i++) {
 			var f = gtObj.faces[i];
@@ -577,7 +577,6 @@ class PartSelector {
 
 		var p0 = gHand.position;
 		var p1 = p0.clone().add(gHand.fnml.clone().multiplyScalar(100));
-		// addALine(p0, p1, 0xff00ff);
 
 		var gtFingers = getTransformedGeometry(gHand.arrowThumb); //new THREE.Vector3(1, 0, 0);
 		var dirThumb = gtFingers.vertices[1].clone().sub(gtFingers.vertices[0]);

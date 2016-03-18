@@ -562,6 +562,7 @@ var initPanel = function() {
 			$('#noConnSel').attr('selected', 'selected');
 			smConns.selectmenu("refresh");
 
+			// TODO: fix the gAdaptations[0] hard coding
 			switch (data.item.value) {
 				case 'Strap':
 					// stub value
@@ -569,6 +570,9 @@ var initPanel = function() {
 					break;
 				case 'Flexible part':
 					gConnMethod = new xacFlexiblePart(gAdaptations[0]);
+					break;
+				case 'Bolt':
+					gConnMethod = new xacBolt(gAdaptations[0]);
 					break;
 			}
 		}
@@ -597,7 +601,7 @@ var initPanel = function() {
 			var cnt = 0;
 			for (var pid in adaptation.adaptations) {
 				if (cnt == idx) {
-					modelToSave = adaptation.adaptations[pid].awc;
+					modelToSave = adaptation.awc;
 					if (modelToSave == undefined) {
 						modelToSave = adaptation.adaptations[pid];
 						break;

@@ -17,12 +17,13 @@ class xacFlexiblePart extends xacConnector {
 		this._flexiblePart = undefined;
 
 		// TODO: this can be improved by considering interpolating btwn the adaptation & the object
-		this._ratio = 0.8; 
+		this._ratio = 0.8;
 
 		this._makeFlexiblePart();
 
 	}
 
+	// TODO: further debug this
 	_makeFlexiblePart() {
 		// enlarge the original object
 		// var objInflated = this._a.adaptation.obj.clone();
@@ -40,7 +41,7 @@ class xacFlexiblePart extends xacConnector {
 		var fp = xacThing.subtract(getTransformedGeometry(aDeflated), getTransformedGeometry(this._a.adaptation.obj), MATERIALOVERLAY);
 		scene.add(fp);
 		this._flexiblePart = fp;
-		
+
 		this._awc = xacThing.subtract(getTransformedGeometry(this._a.adaptation), getTransformedGeometry(fp), this._a.adaptation.material);
 		scene.add(this._awc);
 
@@ -72,7 +73,10 @@ class xacStrap extends xacConnector {
 		if (this._strokePoints.length > 3) {
 			this._makeStrapFor(this._strokePoints, this._obj, this._a);
 		}
-		removeBalls();
+
+		setTimeout(function() {
+			removeBalls();
+		}, 250);
 	}
 
 	// strapping adaptation(a) to object(obj)
@@ -86,6 +90,7 @@ class xacStrap extends xacConnector {
 		var d = planeParams.D;
 
 		var ctrStroke = getCenter(this._strokePoints);
+		// TODO: 100 is a bug if the object has multiple disconnected components
 		var cutter = new xacCylinder(100, this._strapWidth);
 		rotateObjTo(cutter.m, new THREE.Vector3(a, b, c));
 		cutter.m.position.copy(ctrStroke);
@@ -116,5 +121,118 @@ class xacStrap extends xacConnector {
 		setTimeout(function(strap) {
 			scene.remove(strap)
 		}, 1000, strap);
+	}
+}
+
+class xacBolt extends xacConnector {
+	constructor(a) {
+		super(a);
+	}
+
+	mousedown(e, obj, pt, fnml) {
+		this._strokePoints = [];
+	}
+
+	mousemove(e, obj, pt, fnml) {
+		this._obj = obj;
+		this._strokePoints.push(pt);
+		addABall(pt, colorHighlight);
+	}
+
+	mouseup(e) {
+		if (this._strokePoints.length > 3) {
+			this._makeBoltStruct(this._strokePoints, this._obj);
+		}
+
+		setTimeout(function() {
+			removeBalls();
+		}, 500);
+	}
+
+	_makeBoltStruct(pts, obj) {
+		var widthCluth = 10;
+		var depthClampNeck = 10;
+		var thicknessClampNeck = 3;
+
+		//
+		//	0. get a wrap
+		var planeParams = findPlaneToFitPoints(this._strokePoints);
+
+		this._pt = this._strokePoints[float2int(this._strokePoints.length / 2)];
+		var partSel = new PartSelector();
+		partSel._doWrap(this._obj, this._pt, planeParams);
+
+		//
+		//	1. make a partial bounding cylinder
+		var part = partSel.part;
+		var ctrDisplay = getBoundingBoxCenter(part.display);
+		this._nml = this._pt.clone().sub(ctrDisplay).normalize();
+		
+		var cylParams = getBoundingCylinder(part.display, part.normal);
+		cylParams.radius *= 1.1;
+
+		var clampBody = new xacCylinder(cylParams.radius, cylParams.height).m;
+		rotateObjTo(clampBody, part.normal);
+		clampBody.position.copy(getBoundingBoxCenter(part.display));
+
+		var clampNeck = new xacRectPrism(widthCluth, 0.5 * FINGERDIM, (depthClampNeck + cylParams.radius), MATERIALHIGHLIGHT).m;
+		var clampNeckStub = new xacRectPrism(widthCluth - thicknessClampNeck * 2, 2 * FINGERDIM, (depthClampNeck + cylParams.radius), MATERIALHIGHLIGHT).m;
+
+		var ctrNeck = this._pt.clone().sub(this._nml.clone().multiplyScalar((cylParams.radius - depthClampNeck) * 0.5));
+		var ctrClampBody = getBoundingBoxCenter(clampBody);
+
+		var projctrNeck = ctrNeck.clone();
+		projctrNeck.y = 0;
+		var projctrClampBody = ctrClampBody.clone();
+		projctrClampBody.y = 0;
+
+		var dirToCtr = projctrNeck.clone().sub(projctrClampBody);
+
+		var angleToAlign = new THREE.Vector3(0, 0, 1).angleTo(dirToCtr);
+		var axisToRotate = new THREE.Vector3(0, 0, 1).cross(dirToCtr).normalize();
+		var matRotate = new THREE.Matrix4();
+		matRotate.makeRotationAxis(axisToRotate, angleToAlign);
+
+		rotateObjTo(clampNeck, part.normal);
+		clampNeck.applyMatrix(matRotate);
+		clampNeck.position.copy(ctrNeck);
+
+		rotateObjTo(clampNeckStub, part.normal);
+		clampNeckStub.applyMatrix(matRotate);
+		clampNeckStub.position.copy(ctrNeck);
+
+		clampNeck = xacThing.subtract(getTransformedGeometry(clampNeck), getTransformedGeometry(clampNeckStub));
+		var clamp = xacThing.union(getTransformedGeometry(clampBody), getTransformedGeometry(clampNeck));
+		clamp = xacThing.subtract(getTransformedGeometry(clamp), getTransformedGeometry(clampNeckStub));
+		clamp = xacThing.subtract(getTransformedGeometry(clamp), getTransformedGeometry(this._obj));
+
+		//
+		//	2. drill a hole for bolts
+		//
+		var screwStub = new xacCylinder(RADIUSM3, widthCluth * 1.5).m;
+		screwStub.geometry.rotateZ(Math.PI / 2);
+		// scene.add(screwStub);
+		rotateObjTo(screwStub, part.normal);
+		screwStub.applyMatrix(matRotate);
+		
+		screwStub.position.copy(this._pt.clone().add(this._nml.multiplyScalar(depthClampNeck * 0.5)));
+
+		scene.remove(this._clamp);
+		this._clamp = xacThing.subtract(getTransformedGeometry(clamp), getTransformedGeometry(screwStub), MATERIALHIGHLIGHT);
+
+		scene.remove(part.display);
+		scene.add(this._clamp);
+
+
+		//
+		//	3. finish up
+		this._awc = xacThing.union(getTransformedGeometry(this._clamp), getTransformedGeometry(this._a.adaptation), MATERIALHIGHLIGHT);
+		if (this._a != undefined) {
+			scene.remove(this._awc);
+			scene.remove(this._a.adaptation);
+			// this._awc = xacThing.subtract(getTransformedGeometry(this._a.adaptation), getTransformedGeometry(strap), this._a.adaptation.material);
+			scene.add(this._awc);
+			this._a.awc = this._awc;
+		}
 	}
 }

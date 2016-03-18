@@ -361,6 +361,7 @@ class xacAnchor extends xacAdaptation {
 		//
 		//	1. make a cube of the extrusion's bounding box
 		//
+		// scene.add(extrusion);
 		var ctrExtrusion = getBoundingBoxCenter(extrusion);
 		var bboxDim = getDimAlong(extrusion, this._partAnchor.normal);
 
@@ -373,6 +374,7 @@ class xacAnchor extends xacAdaptation {
 
 		var rayCaster = new THREE.Raycaster();
 		rayCaster.ray.set(ctrExtrusion, this._partAnchor.normal);
+		addAVector(ctrExtrusion, this._partAnchor.normal);
 
 		var ints = rayCaster.intersectObjects([bboxObj]);
 		var heightAnchor = getDimAlong(bboxObj, this._partAnchor.normal); // overly large
@@ -405,7 +407,7 @@ class xacAnchor extends xacAdaptation {
 		anchorPlatform.position.copy(ctrAnchorPlatform);
 		// scene.add(anchorPlatform);
 
-		// scene.remove(bboxObj);
+		scene.remove(bboxObj);
 
 		this._anchor = xacThing.union(getTransformedGeometry(anchorStand), getTransformedGeometry(anchorPlatform), MATERIALHIGHLIGHT);
 
@@ -435,24 +437,22 @@ class xacAnchor extends xacAdaptation {
 		// }
 
 		if (intersects[0] != undefined) {
-			// addABall(intersects[0].point);
-
 			var obj = (this._pc == undefined || this._pc.object == undefined) ? objects[0] : this._pc.obj;
 			if (intersects[0].object == obj) {
-				// log("obj!")
 				gPartSel.clear();
 				gPartSel.press(intersects[0].object, intersects[0].point, intersects[0].face.normal, true);
+				// addAVector(intersects[0].point, intersects[0].face.normal);
+				// addABall(intersects[0].point)
 				this._partAnchor = gPartSel.part;
-			} else {
-				// log("part");
-				this._partAnchor = intersects[0].object.parentPart;
-			}
+			} 
+			// else {
+			// 	// log("part");
+			// 	this._partAnchor = intersects[0].object.parentPart;
+			// }
 		}
 
 		scene.remove(this._partAnchor.display);
-		// scene.remove(this._partAnchor);
-
-
+		scene.remove(this._partAnchor);
 
 		if (Object.keys(this._pc.parts).length == 0) {
 			this._pc.parts['Part ' + gPartSerial] = this._partAnchor;
