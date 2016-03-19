@@ -179,7 +179,7 @@ var HANDSIZE = 150;
 var gAccessSel = [];
 
 // the hand for selecting grasp area
-var HANDMODELPATH = 'things/small_hand.stl';
+var HANDMODELPATH = 'things/big_hand.stl';
 var gHand = undefined;
 
 // cam mechanism
@@ -220,3 +220,5 @@ var justFocusedObjs = new Array();
 var FOCUSACTION = 0;
 var DELETEACTION = 1;
 var ADDACTION = 2;
+
+var gAdaptationComponents = new Array();

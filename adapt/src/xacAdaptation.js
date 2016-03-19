@@ -20,10 +20,15 @@ var STRENGTHINT = 1.5;
 var SIZEINIT = 1.25;
 var TARGETINIT = 0.25;
 
+/*
+	base class for a series of adaptation strategies
+*/
 class xacAdaptation {
 	constructor(pc) {
-		this._pc = pc;
+		this._pc = pc; // parts-control pair
 		this._as = new Array(); // adaptation mesh
+
+		// customization parameters
 		this._strengthFactor = STRENGTHINT;
 		this._sizeFactor = SIZEINIT;
 		this._fingerFactor = FINGERINIT;
@@ -87,12 +92,28 @@ class xacAdaptation {
 			// keep adaptations in a list
 			this._as[pid] = a;
 			scene.add(this._as[pid]);
+
+			if(this._singular) {
+				break;
+			}
+		}
+
+		for (var aid in this._as) {
+			var a = this._as[aid];
+
+			// finish up
+			gAdaptId += 1;
+			var tagName = gAdaptId + ' ' + this._label;
+			var tag = lsAdapts.tagit('createTag', tagName); // + String.fromCharCode(charCode));
+
+			gAdaptationComponents[tagName] = a;
+
+			triggerUI2ObjAction(tag, FOCUSACTION);
 		}
 	}
 
 	_extrude(part, ctrl, sizeFactor, fingerFactor) {
 		var r = fingerFactor * FINGERDIM;
-		// targetFactor = targetFactor == undefined ? 0 : targetFactor;
 		//
 		//	handling 'press' selection
 		//
@@ -103,7 +124,7 @@ class xacAdaptation {
 				var rLarge = r;
 				var rSmall = r / 2 * (sizeFactor - 1);
 
-				laoc = new xacCylinder([rLarge, rSmall], part.cylHeight, MATERIALHIGHLIGHT).m;
+				laoc = new xacCylinder([rLarge, rSmall], part.cylHeight, MATERIALOVERLAY).m;
 				rotateObjTo(laoc, part.normal);
 				laoc.position.copy(part.cylCenter);
 
@@ -140,7 +161,7 @@ class xacAdaptation {
 
 			// EXPERIMENTAL
 			var aocBcyl = getBoundingCylinder(aoc, part.normal);
-			aoc = new xacCylinder(aocBcyl.radius, aocBcyl.height, MATERIALHIGHLIGHT).m;
+			aoc = new xacCylinder(aocBcyl.radius, aocBcyl.height, MATERIALOVERLAY).m;
 			rotateObjTo(aoc, part.normal);
 			aoc.position.copy(ctrPart);
 
@@ -293,9 +314,9 @@ class xacAdaptation {
 				scene.remove(a);
 
 				// approach #1: make dents
-				// aGrippable = xacThing.subtract(ag, getTransformedGeometry(sphereSet), MATERIALHIGHLIGHT);
+				// aGrippable = xacThing.subtract(ag, getTransformedGeometry(sphereSet), MATERIALOVERLAY);
 				// approach #2: make bumps
-				aGrippable = xacThing.union(ag, getTransformedGeometry(sphereSet), MATERIALHIGHLIGHT);
+				aGrippable = xacThing.union(ag, getTransformedGeometry(sphereSet), MATERIALOVERLAY);
 			}
 
 		} else if (vForceToExert != undefined) {
@@ -332,7 +353,7 @@ class xacAdaptation {
 			var offsetStub = [stub.position.x, stub.position.y, stub.position.z];
 			offsetStub[idx] = pc.obj.accessibleBoundaries[i] + Math.pow(-1, i + 1) * aDims[idx] / 2;
 			stub.position.copy(new THREE.Vector3(offsetStub[0], offsetStub[1], offsetStub[2]));
-			aCutOff = xacThing.subtract(getTransformedGeometry(aCutOff), getTransformedGeometry(stub), MATERIALHIGHLIGHT);
+			aCutOff = xacThing.subtract(getTransformedGeometry(aCutOff), getTransformedGeometry(stub), MATERIALOVERLAY);
 		}
 
 		return aCutOff;
@@ -342,6 +363,7 @@ class xacAdaptation {
 class xacAnchor extends xacAdaptation {
 	constructor(pc, params) {
 		super(pc);
+		this._label = 'Anchor';
 
 		this._update = function() {
 			if (this._partAnchor == undefined) {
@@ -356,6 +378,7 @@ class xacAnchor extends xacAdaptation {
 		}
 
 		// this.update();
+		this._singular = true;
 	}
 
 	_makeAnchor(extrusion) {
@@ -390,7 +413,7 @@ class xacAnchor extends xacAdaptation {
 		//
 		var ctrAnchorStand = ctrExtrusion.clone().add(this._partAnchor.normal.clone().multiplyScalar(heightAnchor / 2));
 		var bcylParams = getBoundingCylinder(extrusion, this._partAnchor.normal);
-		var anchorStand = new xacCylinder([bcylParams.radius * 1.25, bcylParams.radius / 2 * 1.25], heightAnchor, MATERIALHIGHLIGHT).m;
+		var anchorStand = new xacCylinder([bcylParams.radius * 1.25, bcylParams.radius / 2 * 1.25], heightAnchor, MATERIALOVERLAY).m;
 		rotateObjTo(anchorStand, this._partAnchor.normal);
 		anchorStand.position.copy(ctrAnchorStand);
 		// scene.add(anchorStand);
@@ -404,14 +427,14 @@ class xacAnchor extends xacAdaptation {
 			h: 5
 		};
 		var ctrAnchorPlatform = ctrAnchorStand.clone().add(this._partAnchor.normal.clone().multiplyScalar((heightAnchor + paramsPlatform.h) / 2));
-		var anchorPlatform = new xacRectPrism(paramsPlatform.l, paramsPlatform.h, paramsPlatform.w, MATERIALHIGHLIGHT).m;
+		var anchorPlatform = new xacRectPrism(paramsPlatform.l, paramsPlatform.h, paramsPlatform.w, MATERIALOVERLAY).m;
 		rotateObjTo(anchorPlatform, this._partAnchor.normal);
 		anchorPlatform.position.copy(ctrAnchorPlatform);
 		// scene.add(anchorPlatform);
 
 		scene.remove(bboxObj);
 
-		this._anchor = xacThing.union(getTransformedGeometry(anchorStand), getTransformedGeometry(anchorPlatform), MATERIALHIGHLIGHT);
+		this._anchor = xacThing.union(getTransformedGeometry(anchorStand), getTransformedGeometry(anchorPlatform), MATERIALOVERLAY);
 
 		return this._anchor;
 	}
@@ -467,6 +490,9 @@ class xacAnchor extends xacAdaptation {
 class xacMechanism extends xacAdaptation {
 	constructor(type, pc, params) {
 		super(pc);
+
+		// TODO: be more specific
+		this._label = 'Mechanism';
 
 		this._type = type;
 
@@ -524,7 +550,7 @@ class xacMechanism extends xacAdaptation {
 		var ctrAxis = ctrl.pocFree.clone().add(dirToAxis.clone().normalize().multiplyScalar(rCam));
 		// addABall(ctrAxis, 0xf00fff);
 
-		var camAxis = new xacCylinder(this._axisRadius, this._axisLength, MATERIALHIGHLIGHT).m;
+		var camAxis = new xacCylinder(this._axisRadius, this._axisLength, MATERIALOVERLAY).m;
 		rotateObjTo(camAxis, nmlRotation);
 		camAxis.position.copy(ctrAxis);
 		// scene.add(camAxis);
@@ -545,13 +571,13 @@ class xacMechanism extends xacAdaptation {
 		var ctrBar = ctrAnchor.clone().add(endAxis).multiplyScalar(0.5);
 		var nmlBar = ctrAnchor.clone().sub(endAxis).normalize();
 
-		var camBar = new xacCylinder(this._axisRadius, lenBar, MATERIALHIGHLIGHT).m;
+		var camBar = new xacCylinder(this._axisRadius, lenBar, MATERIALOVERLAY).m;
 		rotateObjTo(camBar, nmlBar);
 		camBar.position.copy(ctrBar);
 		// scene.add(camBar);
 
 		var camStruct = xacThing.union(getTransformedGeometry(camAxis), getTransformedGeometry(camAnchor));
-		camStruct = xacThing.union(getTransformedGeometry(camStruct), getTransformedGeometry(camBar), MATERIALHIGHLIGHT);
+		camStruct = xacThing.union(getTransformedGeometry(camStruct), getTransformedGeometry(camBar), MATERIALOVERLAY);
 
 		//
 		// 4. generate bar 2 (holding bar 1)
@@ -561,7 +587,7 @@ class xacMechanism extends xacAdaptation {
 		// 5. put the cam in place
 		//
 		scene.remove(this._cam);
-		this._cam = new THREE.Mesh(gCam.geometry, MATERIALHIGHLIGHT);
+		this._cam = new THREE.Mesh(gCam.geometry, MATERIALOVERLAY);
 		var dimsCam = getBoundingBoxDimensions(this._cam);
 		this._cam.scale.set(this._sizeFactor, this._sizeFactor, this._sizeFactor);
 
@@ -600,8 +626,8 @@ class xacMechanism extends xacAdaptation {
 			return;
 		}
 
-		var clampNeck = new xacRectPrism(widthCluth, 0.75 * FINGERDIM, (depthClampNeck + cylParams.radius), MATERIALHIGHLIGHT).m;
-		var clampNeckStub = new xacRectPrism(widthCluth - thicknessClampNeck * 2, 2 * FINGERDIM, (depthClampNeck + cylParams.radius), MATERIALHIGHLIGHT).m;
+		var clampNeck = new xacRectPrism(widthCluth, 0.75 * FINGERDIM, (depthClampNeck + cylParams.radius), MATERIALOVERLAY).m;
+		var clampNeckStub = new xacRectPrism(widthCluth - thicknessClampNeck * 2, 2 * FINGERDIM, (depthClampNeck + cylParams.radius), MATERIALOVERLAY).m;
 
 		var ctrNeck = this._pt.clone().sub(this._nml.clone().multiplyScalar((cylParams.radius - depthClampNeck) * 0.5));
 		var ctrWrapDisplay = getBoundingBoxCenter(part.display);
@@ -645,9 +671,9 @@ class xacMechanism extends xacAdaptation {
 		rotateObjTo(screwStub, part.normal);
 		screwStub.applyMatrix(matRotate);
 		screwStub.position.copy(this._pt.clone()); //.add(this._nml.clone().multiplyScalar(depthClampNeck/10)));
-		clamp = xacThing.subtract(getTransformedGeometry(clamp), getTransformedGeometry(screwStub), MATERIALHIGHLIGHT);
+		clamp = xacThing.subtract(getTransformedGeometry(clamp), getTransformedGeometry(screwStub), MATERIALOVERLAY);
 		screwStub.position.add(this._nml.clone().multiplyScalar(10));
-		clamp = xacThing.subtract(getTransformedGeometry(clamp), getTransformedGeometry(screwStub), MATERIALHIGHLIGHT);
+		clamp = xacThing.subtract(getTransformedGeometry(clamp), getTransformedGeometry(screwStub), MATERIALOVERLAY);
 
 		//
 		//	4. connect it with the clutch
@@ -696,7 +722,7 @@ class xacMechanism extends xacAdaptation {
 		scene.add(yoke2cross);
 		this._yoke2cross = yoke2cross;
 
-		// uj = xacThing.union(getTransformedGeometry(base), getTransformedGeometry(yoke1), MATERIALHIGHLIGHT);
+		// uj = xacThing.union(getTransformedGeometry(base), getTransformedGeometry(yoke1), MATERIALOVERLAY);
 		uj = yoke1;
 		return uj;
 	}
@@ -724,6 +750,7 @@ class xacMechanism extends xacAdaptation {
 class xacGuide extends xacAdaptation {
 	constructor(pc, params) {
 		super(pc);
+		this._label = 'Guide';
 
 		this._update = function(pid) {
 			var a = this._makeGuide(this._pc);
@@ -755,7 +782,7 @@ class xacGuide extends xacAdaptation {
 		var margin = 0.1;
 
 		var rMobile = bcylMobile.radius * (1 + margin);
-		var cylMobile = new xacCylinder(rMobile, lenMobile, MATERIALHIGHLIGHT);
+		var cylMobile = new xacCylinder(rMobile, lenMobile, MATERIALOVERLAY);
 		rotateObjTo(cylMobile.m, ctrl.dir);
 		var posCylMobile = ctrStatic.clone().add(ctrl.dir.clone().normalize().multiplyScalar((lenMobile + lenStatic) * 0.5));
 		cylMobile.m.position.copy(posCylMobile);
@@ -768,7 +795,7 @@ class xacGuide extends xacAdaptation {
 		var lenGuide = lenMobile * 0.25 + lenStatic * 0.5;
 		var posGuide = ctrStatic.clone().add(ctrl.dir.clone().normalize().multiplyScalar(lenGuide * 0.5));
 
-		var guideBody = new xacCylinder(rGuide, lenGuide, MATERIALHIGHLIGHT);
+		var guideBody = new xacCylinder(rGuide, lenGuide, MATERIALOVERLAY);
 		rotateObjTo(guideBody.m, ctrl.dir);
 		guideBody.m.position.copy(posGuide);
 		// scene.add(guideBody.m);
@@ -776,20 +803,20 @@ class xacGuide extends xacAdaptation {
 		//
 		// 2. make the tunnel's finishing part
 		//
-		var guideEnd = xacThing.subtract(getTransformedGeometry(guideBody.m), getTransformedGeometry(cylMobile.m), MATERIALHIGHLIGHT);
+		var guideEnd = xacThing.subtract(getTransformedGeometry(guideBody.m), getTransformedGeometry(cylMobile.m), MATERIALOVERLAY);
 
 		//
 		// 3. make the tunnel's openning
 		//
 		var lenOpen = lenGuide * this._targetFactor;
 		var rOpen = rGuide * (0.5 + this._sizeFactor);
-		var guideOpen = new xacCylinder([rOpen, rGuide], lenOpen, MATERIALHIGHLIGHT);
-		var stubOpen = new xacCylinder([rMobile * rOpen / rGuide, rMobile], lenOpen, MATERIALHIGHLIGHT);
-		var guideOpenCut = xacThing.subtract(getTransformedGeometry(guideOpen.m), getTransformedGeometry(stubOpen.m), MATERIALHIGHLIGHT);
+		var guideOpen = new xacCylinder([rOpen, rGuide], lenOpen, MATERIALOVERLAY);
+		var stubOpen = new xacCylinder([rMobile * rOpen / rGuide, rMobile], lenOpen, MATERIALOVERLAY);
+		var guideOpenCut = xacThing.subtract(getTransformedGeometry(guideOpen.m), getTransformedGeometry(stubOpen.m), MATERIALOVERLAY);
 		rotateObjTo(guideOpenCut, ctrl.dir);
 		guideOpenCut.position.copy(posGuide.clone().add(ctrl.dir.clone().normalize().multiplyScalar((lenGuide + lenOpen) * 0.5)));
 
-		var guide = xacThing.union(getTransformedGeometry(guideEnd), getTransformedGeometry(guideOpenCut), MATERIALHIGHLIGHT);
+		var guide = xacThing.union(getTransformedGeometry(guideEnd), getTransformedGeometry(guideOpenCut), MATERIALOVERLAY);
 
 		//
 		// 4. cut the tunnel in half
@@ -798,7 +825,7 @@ class xacGuide extends xacAdaptation {
 		cutHalfStub.m.position.set(ctrStatic.x - rOpen / 2, posGuide.y + lenOpen / 2, ctrStatic.z);
 		// scene.add(cutHalfStub.m);
 
-		guide = xacThing.subtract(getTransformedGeometry(guide), getTransformedGeometry(cutHalfStub.m), MATERIALHIGHLIGHT);
+		guide = xacThing.subtract(getTransformedGeometry(guide), getTransformedGeometry(cutHalfStub.m), MATERIALOVERLAY);
 
 		return guide;
 	}
@@ -807,14 +834,13 @@ class xacGuide extends xacAdaptation {
 class xacLever extends xacAdaptation {
 	constructor(pc, params) {
 		super(pc);
+		this._label = 'Lever';
 
 		this._update = function(pid) {
 			var ctrPart = getCenter(this._pc.parts[pid]);
-
-			var a1 = this._extrude(this._pc.parts[pid], this._pc.ctrl, Math.sqrt(this._sizeFactor), this._fingerFactor, undefined);
-			// scene.add(a1);
-			var a2 = this._makeLever(a1, pid);
-			return a2;
+			var extrusion = this._extrude(this._pc.parts[pid], this._pc.ctrl, Math.sqrt(this._sizeFactor), this._fingerFactor, undefined);
+			var lever = this._makeLever(extrusion, pid);
+			return lever;
 		}
 
 		this.update();
@@ -843,21 +869,22 @@ class xacLever extends xacAdaptation {
 
 		// NOW: use bounding cylinder
 		var bcylParams = getBoundingCylinder(a, dirLever);
-		var lever = new xacCylinder([bcylParams.radius], bcylParams.height * Math.pow(3, this._strengthFactor), MATERIALHIGHLIGHT).m;
+		var lever = new xacCylinder([bcylParams.radius], bcylParams.height * Math.pow(3, this._strengthFactor), MATERIALOVERLAY).m;
 		rotateObjTo(lever, dirLever);
 		var l = getDimAlong(lever, dirLever);
-		var offsetLever = l * 0.3 * (this._pc.ctrl.type == CLUTCHCTRL ? 1 : -1);
+		var offsetLever = l * 0.3; // * (this._pc.ctrl.type == CLUTCHCTRL ? 1 : -1);
 		lever.position.copy(getBoundingBoxCenter(a).add(dirLever.clone().multiplyScalar(offsetLever)));
 
-		var aNew = lever;
+		// var aNew = lever;
 
-		return aNew;
+		return lever;
 	}
 }
 
 class xacWrapper extends xacAdaptation {
 	constructor(pc, params) {
 		super(pc);
+		this._label = 'Wrapper';
 
 		this._update = function(pid) {
 			var a = this._extrude(this._pc.parts[pid], this._pc.ctrl, this._sizeFactor, this._fingerFactor, this._targetFactor);
@@ -879,6 +906,7 @@ class xacWrapper extends xacAdaptation {
 class xacHandle extends xacAdaptation {
 	constructor(pc, params) {
 		super(pc);
+		this._label = 'Handle';
 
 		this._update = function(pid) {
 			var a = this._makeHandle(this._pc.parts[pid]);
@@ -922,7 +950,7 @@ class xacHandle extends xacAdaptation {
 		//
 		var ri = FINGERDIM * 0.05 * (1 + this._fingerFactor);
 		var ro = FINGERDIM * 0.5 * this._fingerFactor + ri * 2;
-		var handle = new xacTorus(ro, ri, 2 * Math.PI, MATERIALHIGHLIGHT).m;
+		var handle = new xacTorus(ro, ri, 2 * Math.PI, MATERIALOVERLAY).m;
 		handle.geometry.rotateX(Math.PI / 2);
 
 		// var ratio = 2 / Math.sqrt(3);
@@ -949,7 +977,7 @@ class xacHandle extends xacAdaptation {
 		//
 		// TODO: 4. combine or remove extra parts
 		//
-		handle = xacThing.union(getTransformedGeometry(handle), getTransformedGeometry(extrusion), MATERIALHIGHLIGHT);
+		handle = xacThing.union(getTransformedGeometry(handle), getTransformedGeometry(extrusion), MATERIALOVERLAY);
 
 		return handle;
 	}

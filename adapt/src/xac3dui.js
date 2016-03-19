@@ -289,7 +289,6 @@ class PlaneSelector {
 	}
 
 	clear() {
-		// setTimeout(function(planes, point) {
 		this._planes.children.length = 0;
 		scene.remove(this._planes);
 		scene.remove(this._point);
@@ -299,8 +298,6 @@ class PlaneSelector {
 				scene.remove(this._leverLines[i]);
 			}
 		}
-
-		// }, 1000, this._planes, this._point);
 	}
 
 	get selection() {
@@ -336,6 +333,7 @@ class PartSelector {
 	clear() {
 		this._part = undefined;
 		this._strokePoints = [];
+		scene.remove(gHand);
 	}
 
 	/*
@@ -415,7 +413,6 @@ class PartSelector {
 		// eat out a little for better display
 		this._part.translateOnAxis(vEatIn.clone().normalize().multiplyScalar(-1), 1);
 
-
 		//
 		//	4. finish up
 		//
@@ -425,12 +422,15 @@ class PartSelector {
 		this._part.cylCenter = cylPartSelection.m.position;
 		this._part.cylHeight = maxDist2PartSelection;
 		this._part.selCyl = cylPartSelectionOut; //xacThing.intersect(cylPartSelection.gt, obj, MATERIALCONTRAST);
-
 		this._part.display = this._part.clone();
 		this._part.display.parentPart = this._part;
+
 		scene.add(this._part.display);
 	}
 
+	/*
+		cutting an object with a plane then wrap it around the cross section
+	*/
 	_doWrap(obj, pt, planeParams) {
 		//
 		//	1. compute points of interest/in range

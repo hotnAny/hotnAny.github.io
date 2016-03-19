@@ -206,6 +206,7 @@ class xacBolt extends xacConnector {
 		clamp = xacThing.subtract(getTransformedGeometry(clamp), getTransformedGeometry(clampNeckStub));
 		clamp = xacThing.subtract(getTransformedGeometry(clamp), getTransformedGeometry(this._obj));
 
+
 		//
 		//	2. drill a hole for bolts
 		//
@@ -226,6 +227,7 @@ class xacBolt extends xacConnector {
 
 		//
 		//	3. finish up
+		//
 		this._awc = xacThing.union(getTransformedGeometry(this._clamp), getTransformedGeometry(this._a.adaptation), MATERIALHIGHLIGHT);
 		if (this._a != undefined) {
 			scene.remove(this._awc);

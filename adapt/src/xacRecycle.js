@@ -515,3 +515,23 @@ var cylinderSel = new xacCylinder(r / 2, part.cylHeight, MATERIALCONTRAST);
 			scaleAroundVector(laoc, sizeFactor, part.normal);
 			laoc = xacThing.intersect(getTransformedGeometry(laoc), getTransformedGeometry(part.selCyl), part.material);
 		
+
+		
+		//
+		// copy button
+		// NOW: don't do it
+		//
+		// trPartsCtrls.tdCopy = $("<td></td>");
+		// var iconCopy = $('<span></span>').addClass('ui-icon ui-icon-copy');
+		// trPartsCtrls.tdCopy.append(iconCopy);
+		// iconCopy.click(function(event) {
+
+		// 	//
+		// 	// TODO: copying the previous row and insert it to the end of the table
+		// 	//
+		// 	// var row = tblPartsCtrls.rows.slice(-1)[0]; // the row to copy
+		// 	// var rowNew = $('<tr></tr>');
+		// 	// rowNew.html(row.html());
+		// 	// tblPartsCtrls.append(rowNew);
+
+		// })

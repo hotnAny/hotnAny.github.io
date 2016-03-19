@@ -1,5 +1,5 @@
 /**
- * user interface for Adapt
+ * user interface for Reprise
  * 	- only the UI part
  * @author Xiang 'Anthony' Chen http://xiangchen.me
  */
@@ -30,7 +30,7 @@ container.css('font-size', '12px');
 container.css('overflow', 'auto');
 
 var title = $('<h3></h3>');
-title.html('ADAPT');
+title.html('REPRISE');
 title.css('margin-top', '10px');
 title.css('margin-bottom', '10px');
 title.css('margin-left', '10px');
@@ -234,7 +234,7 @@ panels.append('<br/><br/>');
 //
 //	Final step - export
 //
-var btnExport = $('<button style="margin-left:10px"><b>Export models</b></button>');
+var btnExport = $('<button style="margin-left:10px"><b>Export</b></button>');
 btnExport.button();
 
 panels.append(btnExport);

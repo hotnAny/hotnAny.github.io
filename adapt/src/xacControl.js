@@ -24,6 +24,44 @@ class xacControl {
 	}
 }
 
+/*
+	grasping control
+*/
+class xacGrasp extends xacControl {
+	constructor() {
+		super(GRASPCTRL);
+		this._g = new THREE.Vector3(0, -1, 0);
+	}
+
+	mouseDown(e, obj, pt, fnml) {
+		if (gSticky == false) {
+			if (obj != undefined && pt != undefined && fnml != undefined) {
+				gPartSel.grab(obj, pt, fnml);
+			}
+		} else if (gSticky) {
+			this._ve.push(gPartSel.release());
+			gPartSel.finishUp();
+		}
+	}
+
+	mouseMove(e, obj, pt, fml) {
+		if (gSticky) {
+			gPartSel.rotateHand(e.ptMove, e.ptDown);
+		}
+	}
+
+	mouseUp(e, obj, pt, fml) {}
+
+	cancel() {
+		this.clear();
+		gPartSel.clear();
+		gSticky = false;
+	}
+}
+
+/*
+	push/pull control
+*/
 class xacPushPull extends xacControl {
 	constructor(type) {
 		super(PUSHPULLCTRL);
@@ -85,7 +123,7 @@ class xacClutch extends xacControl {
 				}
 				break;
 			case this._TOSELECTFULCRUM:
-				this._planeSel.clear();
+				// this._planeSel.clear();
 				this._fulcrum = this._planeSel.selection;
 				this._plane = getPlaneFromPointVectors(this._fulcrum, this._pocFree.clone().sub(this._fulcrum), this._pocFixed.clone().sub(this._fulcrum));
 
@@ -135,7 +173,6 @@ class xacClutch extends xacControl {
 		this._planeSel.clear();
 		gPartSel.clear();
 	}
-
 }
 
 class xacJoinSeparate extends xacControl {
@@ -207,31 +244,7 @@ class xacJoinSeparate extends xacControl {
 	mouseUp(e, obj, pt, fnml) {}
 }
 
-class xacGrasp extends xacControl {
-	constructor() {
-		super(GRASPCTRL);
-		this._g = new THREE.Vector3(0, -1, 0);
-	}
 
-	mouseDown(e, obj, pt, fnml) {
-		if (gSticky == false) {
-			if (obj != undefined && pt != undefined && fnml != undefined) {
-				gPartSel.grab(obj, pt, fnml);
-			}
-		} else if (gSticky) {
-			this._ve.push(gPartSel.release());
-			gPartSel.finishUp();
-		}
-	}
-
-	mouseMove(e, obj, pt, fml) {
-		if (gSticky) {
-			gPartSel.rotateHand(e.ptMove, e.ptDown);
-		}
-	}
-
-	mouseUp(e, obj, pt, fml) {}
-}
 
 /*
 	routines to specify a rotation control

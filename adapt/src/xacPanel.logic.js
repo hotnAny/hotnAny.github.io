@@ -1,5 +1,5 @@
 /**
- * user interface for Adapt
+ * user interface for Reprise
  * 	- only the logic part
  * @author Xiang 'Anthony' Chen http://xiangchen.me
  */
@@ -169,7 +169,6 @@ var initPanel = function() {
 			}
 		});
 
-
 		// highlight current row
 		if (gCurrPartCtrl != undefined) {
 			gCurrPartCtrl.css('background-color', 'rgba(255, 255, 255, 0.25)');
@@ -287,25 +286,6 @@ var initPanel = function() {
 		});
 
 		//
-		// copy button
-		// NOW: don't do it
-		//
-		// trPartsCtrls.tdCopy = $("<td></td>");
-		// var iconCopy = $('<span></span>').addClass('ui-icon ui-icon-copy');
-		// trPartsCtrls.tdCopy.append(iconCopy);
-		// iconCopy.click(function(event) {
-
-		// 	//
-		// 	// TODO: copying the previous row and insert it to the end of the table
-		// 	//
-		// 	// var row = tblPartsCtrls.rows.slice(-1)[0]; // the row to copy
-		// 	// var rowNew = $('<tr></tr>');
-		// 	// rowNew.html(row.html());
-		// 	// tblPartsCtrls.append(rowNew);
-
-		// })
-
-		//
 		// del button
 		//
 		trPartsCtrls.tdDel = $("<td></td>");
@@ -370,6 +350,15 @@ var initPanel = function() {
 		// scene.add(gYokeCross)
 	}, 1000);
 
+	lsAdapts.tagit({
+		onTagClicked: function(event, ui) {
+			triggerUI2ObjAction(ui.tag, FOCUSACTION);
+		},
+		afterTagRemoved: function(event, ui) {
+			triggerUI2ObjAction(ui.tag, DELETEACTION);
+		}
+	});
+
 	smAdapts.selectmenu({
 		change: function(event, data) {
 			gStep = 3;
@@ -383,12 +372,6 @@ var initPanel = function() {
 					}
 				});
 				trAdaptations.prepend(lsAdapts);
-			}
-
-			// create a 'tag' to represent an added adaptation
-			if (data.item.index > 0) {
-				gAdaptId += 1;
-				lsAdapts.tagit('createTag', gAdaptId + ' ' + data.item.value);
 			}
 
 			// get the selected parts-ctrl
@@ -423,6 +406,19 @@ var initPanel = function() {
 			}
 
 			gAdaptations.push(gCurrAdapt);
+
+			// create a 'tag' to represent an added adaptation
+			// if (data.item.index > 0) {
+			// 	for (pid in gCurrAdapt.adaptations) {
+			// 		// gAdaptId += 1;
+			// 		// var tagName = gAdaptId + ' ' + data.item.label;
+			// 		// var tag = lsAdapts.tagit('createTag', tagName); // + String.fromCharCode(charCode));
+
+			// 		// gAdaptationComponents[tagName] = gCurrAdapt.adaptations[pid];
+
+			// 		// triggerUI2ObjAction(tag, FOCUSACTION);
+			// 	}
+			// }
 
 			// reset the selection from the list
 			var optionSelected = $("option:selected", this);
@@ -655,6 +651,8 @@ $(document).ready(function() {
 
 
 function triggerUI2ObjAction(ui, action, key) {
+	var nameUI = $(ui[0]).text().slice(0, -1);
+
 	switch (action) {
 		case FOCUSACTION:
 			// the ui part
@@ -669,37 +667,57 @@ function triggerUI2ObjAction(ui, action, key) {
 
 			// the obj part
 			if (justFocusedObjs[gStep] != undefined) {
-				justFocusedObjs[gStep].display.material.color.setHex(colorOverlay);
-				justFocusedObjs[gStep].display.material.needsUpdate = true;
+				justFocusedObjs[gStep].material.color.setHex(colorOverlay);
+				justFocusedObjs[gStep].material.needsUpdate = true;
 			}
 
-			// log(gCurrPartCtrl.attr('pcId'))
-			var parts = gPartsCtrls[gCurrPartCtrl.attr('pcId')].parts;
-
-			var namePart = $(ui[0]).text().slice(0, -1);
-			// log(namePart)
-			var part = parts[namePart];
-
-			if (part != undefined && wasHighlighted == false) {
-				part.display.material.color.setHex(colorHighlight);
-				part.display.material.needsUpdate = true;
-				justFocusedObjs[gStep] = part;
+			switch (gStep) {
+				case 2:
+					var parts = gPartsCtrls[gCurrPartCtrl.attr('pcId')].parts;
+					var part = parts[nameUI];
+					if (part != undefined && wasHighlighted == false) {
+						part.display.material.color.setHex(colorHighlight);
+						part.display.material.needsUpdate = true;
+						justFocusedObjs[gStep] = part.display;
+					}
+					break;
+				case 3:
+					var adaptationComponent = gAdaptationComponents[nameUI];
+					if (adaptationComponent != undefined && wasHighlighted == false) {
+						adaptationComponent.material.color.setHex(colorHighlight);
+						adaptationComponent.material.needsUpdate = true;
+						justFocusedObjs[gStep] = adaptationComponent;
+					}
+					break;
+				case 5:
+					break;
 			}
 
 			break;
 		case DELETEACTION:
-			// part
-			var parts = gPartsCtrls[gCurrPartCtrl.attr('pcId')].parts;
-			var namePart = $(ui[0]).text().slice(0, -1);
-			var part = parts[namePart];
-			part.deleted = true;
-			gPartSel.clear();
-			scene.remove(part.display);
+			switch (gStep) {
+				case 2:
+					// setTimeout(function() {
+					// part
+					var parts = gPartsCtrls[gCurrPartCtrl.attr('pcId')].parts;
+					var part = parts[nameUI];
+					part.deleted = true;
+					gPartSel.clear();
+					scene.remove(part.display);
 
-
-			// ctrl
-			var ctrl = gPartsCtrls[gCurrPartCtrl.attr('pcId')].ctrl;
-			ctrl.clear();
+					// ctrl
+					var ctrl = gPartsCtrls[gCurrPartCtrl.attr('pcId')].ctrl;
+					ctrl.clear();
+					// }, 250, nameUI);
+					break;
+				case 3:
+					var adaptation = gAdaptationComponents[nameUI];
+					adaptation.deleted = true;
+					scene.remove(adaptation);
+					break;
+				case 5:
+					break;
+			}
 
 			break;
 	}
@@ -730,7 +748,7 @@ function showPartsInSelectedRow(flag) {
 	for (var idx in parts) {
 		// scene.remove(parts[idx]);
 		if (parts[idx].display != undefined) {
-			if (flag == true) {
+			if (flag == true && parts[idx].deleted != true) {
 				scene.add(parts[idx].display);
 			} else {
 				scene.remove(parts[idx].display);
