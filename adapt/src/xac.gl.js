@@ -221,6 +221,14 @@ function getBoundingBoxCenter(obj) {
 	return new THREE.Vector3(x, y, z);
 }
 
+function getBoundingBoxHelperCenter(obj) {
+	var bbox = new THREE.BoundingBoxHelper(obj, 0x00ff00);
+	bbox.update();
+	// 	scene.add(bbox);
+	// 	addABall(bbox.object.position, 0x00ffff, 5);
+	return bbox.object.position;
+}
+
 function getBoundingBoxDimensions(obj) {
 	var g = obj.geometry;
 	g.computeBoundingBox();
@@ -250,9 +258,8 @@ function getDimAlong(obj, dir) {
 }
 
 function getEndPointsAlong(obj, dir) {
-	var ctr = getBoundingBoxCenter(obj);
+	var ctr = getBoundingBoxHelperCenter(obj);
 	var ctrVal = dir.dot(ctr);
-	log("ctr: " + ctrVal);
 	var gt = getTransformedGeometry(obj);
 	var range = project(gt.vertices, dir);
 

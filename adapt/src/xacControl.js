@@ -129,6 +129,12 @@ class xacClutch extends xacControl {
 		return this._plane;
 	}
 
+	cancel() {
+		this._step = this._TOSELECTFREEEND;
+		this.clear();
+		this._planeSel.clear();
+		gPartSel.clear();
+	}
 
 }
 
@@ -290,4 +296,11 @@ class xacRotate extends xacControl {
 	}
 
 	mouseUp(e, obj, pt, fml) {}
+
+	cancel() {
+		this._step = this._TOSELECTOBJ;
+		this.clear();
+		this._planeSel.clear();
+		gPartSel.clear();
+	}
 }

@@ -7,6 +7,29 @@
 
 $(document.body).append(container);
 
+$(document.body).keydown(function(e) {
+	// escape key to cancle to current selection
+	if (e.which == 27) {
+		gToCancel = true;
+		var pc = gPartsCtrls[gCurrPartCtrl.attr('pcId')];
+
+		// clean up control
+		var ctrl = pc.ctrl;
+		if (ctrl.cancel != undefined) {
+			ctrl.cancel();
+		}
+
+		// clean up parts
+		var parts = pc.parts;
+		var lsParts = $(gCurrPartCtrl.children()[0]);
+		for (pid in parts) {
+			var part = parts[pid];
+			triggerUI2ObjAction(part.tag, DELETEACTION);
+			lsParts.tagit("removeTagByLabel", pid);
+		}
+	}
+});
+
 var initPanel = function() {
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -146,6 +169,7 @@ var initPanel = function() {
 			}
 		});
 
+
 		// highlight current row
 		if (gCurrPartCtrl != undefined) {
 			gCurrPartCtrl.css('background-color', 'rgba(255, 255, 255, 0.25)');
@@ -170,11 +194,6 @@ var initPanel = function() {
 		// click to acitivate a set of parts (to be modified or extended)
 		//
 		trPartsCtrls.tdParts.click(function(event) {
-
-			if (gStep != 2) {
-				gStep = 2;
-				return;
-			}
 
 			// EXPERIMENTAL: remove all the display/visuals of the last selected row
 			if (gCurrPartCtrl != undefined) {
@@ -203,6 +222,8 @@ var initPanel = function() {
 			if (gCurrPartCtrl != undefined) {
 				showPartsInSelectedRow(true);
 			}
+
+			gStep = 2;
 		});
 
 		trPartsCtrls.tdParts.append(lsParts);
@@ -267,21 +288,22 @@ var initPanel = function() {
 
 		//
 		// copy button
+		// NOW: don't do it
 		//
-		trPartsCtrls.tdCopy = $("<td></td>");
-		var iconCopy = $('<span></span>').addClass('ui-icon ui-icon-copy');
-		trPartsCtrls.tdCopy.append(iconCopy);
-		iconCopy.click(function(event) {
+		// trPartsCtrls.tdCopy = $("<td></td>");
+		// var iconCopy = $('<span></span>').addClass('ui-icon ui-icon-copy');
+		// trPartsCtrls.tdCopy.append(iconCopy);
+		// iconCopy.click(function(event) {
 
-			//
-			// TODO: copying the previous row and insert it to the end of the table
-			//
-			// var row = tblPartsCtrls.rows.slice(-1)[0]; // the row to copy
-			// var rowNew = $('<tr></tr>');
-			// rowNew.html(row.html());
-			// tblPartsCtrls.append(rowNew);
+		// 	//
+		// 	// TODO: copying the previous row and insert it to the end of the table
+		// 	//
+		// 	// var row = tblPartsCtrls.rows.slice(-1)[0]; // the row to copy
+		// 	// var rowNew = $('<tr></tr>');
+		// 	// rowNew.html(row.html());
+		// 	// tblPartsCtrls.append(rowNew);
 
-		})
+		// })
 
 		//
 		// del button

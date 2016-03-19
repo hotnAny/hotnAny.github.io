@@ -203,7 +203,9 @@ class xacAdaptation {
 
 		ag.computeFaceNormals();
 
-		var ctr = getBoundingBoxCenter(a);
+		var ctr = getBoundingBoxHelperCenter(a); //getBoundingBoxCenter(a);
+		// showBoundingBox(a);
+		// 		addABall(ctr)
 
 		var nRays = 72;
 
@@ -259,7 +261,7 @@ class xacAdaptation {
 
 						var firstPoint = gripPointsPerRound[0];
 						if (firstPoint != undefined && firstPoint.distanceTo(thisPoint) <= spacing) {
-							// addALine(ctrj, ctrj2, 0x0000ff);
+							addALine(ctrj, ctrj2, 0x0000ff);
 							break;
 						}
 
@@ -444,7 +446,7 @@ class xacAnchor extends xacAdaptation {
 				// addAVector(intersects[0].point, intersects[0].face.normal);
 				// addABall(intersects[0].point)
 				this._partAnchor = gPartSel.part;
-			} 
+			}
 			// else {
 			// 	// log("part");
 			// 	this._partAnchor = intersects[0].object.parentPart;
@@ -508,6 +510,10 @@ class xacMechanism extends xacAdaptation {
 		var freeEnd = pc.parts['Part 1'];
 		var fixedEnd = pc.parts['Part 2'];
 		var nmlRotation = new THREE.Vector3(ctrl.plane.A, ctrl.plane.B, ctrl.plane.C).normalize();
+
+		if (nmlRotation.angleTo(freeEnd.normal) < Math.PI / 2) {
+			nmlRotation.multiplyScalar(-1);
+		}
 
 		//
 		// 1. generate an axis (free end)
@@ -690,7 +696,8 @@ class xacMechanism extends xacAdaptation {
 		scene.add(yoke2cross);
 		this._yoke2cross = yoke2cross;
 
-		uj = xacThing.union(getTransformedGeometry(base), getTransformedGeometry(yoke1), MATERIALHIGHLIGHT);
+		// uj = xacThing.union(getTransformedGeometry(base), getTransformedGeometry(yoke1), MATERIALHIGHLIGHT);
+		uj = yoke1;
 		return uj;
 	}
 
@@ -838,9 +845,10 @@ class xacLever extends xacAdaptation {
 		var bcylParams = getBoundingCylinder(a, dirLever);
 		var lever = new xacCylinder([bcylParams.radius], bcylParams.height * Math.pow(3, this._strengthFactor), MATERIALHIGHLIGHT).m;
 		rotateObjTo(lever, dirLever);
-		var offsetLever = l * 0.5 * (this._pc.ctrl.type == CLUTCHCTRL ? -1 : 1);
-		lever.position.copy(getBoundingBoxCenter(a).add(dirLever.clone().multiplyScalar(offsetLever)));
 		var l = getDimAlong(lever, dirLever);
+		var offsetLever = l * 0.3 * (this._pc.ctrl.type == CLUTCHCTRL ? 1 : -1);
+		lever.position.copy(getBoundingBoxCenter(a).add(dirLever.clone().multiplyScalar(offsetLever)));
+
 		var aNew = lever;
 
 		return aNew;

@@ -189,7 +189,7 @@ class BboxSelector extends BboxUI {
 */
 class PlaneSelector {
 	constructor(pt, nml) {
-		addABall(pt);
+		// addABall(pt);
 
 		this._dim = 1000;
 		this._planes = new THREE.Object3D();
@@ -224,7 +224,6 @@ class PlaneSelector {
 
 			this._planes.position.copy(pt);
 		}
-
 
 		scene.add(this._planes);
 	}
@@ -290,11 +289,18 @@ class PlaneSelector {
 	}
 
 	clear() {
-		setTimeout(function(planes, point) {
-			planes.children.length = 0;
-			scene.remove(planes);
-			scene.remove(point);
-		}, 1000, this._planes, this._point);
+		// setTimeout(function(planes, point) {
+		this._planes.children.length = 0;
+		scene.remove(this._planes);
+		scene.remove(this._point);
+		scene.remove(this._leverLine);
+		if (this._leverLines != undefined) {
+			for (var i = this._leverLines.length - 1; i >= 0; i--) {
+				scene.remove(this._leverLines[i]);
+			}
+		}
+
+		// }, 1000, this._planes, this._point);
 	}
 
 	get selection() {
@@ -348,9 +354,9 @@ class PartSelector {
 		var rPartSelection = isSmall == true ? FINGERSIZE / 2 : HANDSIZE;
 
 		// before: hardcoded, usually too mcuh
-		var distAbove = HANDSIZE * 2; // hyperthetical dist between finger(s) and the ctrl point
+		// var distAbove = HANDSIZE * 2; // hyperthetical dist between finger(s) and the ctrl point
 		// now: use the bbox to estimate
-		var distAbove = getDimAlong(obj, nml) / 2;
+		var distAbove = Math.max(FINGERSIZE, getDimAlong(obj, nml) / 2);
 
 
 		var yUp = new THREE.Vector3(0, 1, 0);
@@ -567,7 +573,6 @@ class PartSelector {
 
 		}, 250);
 		gSticky = true;
-		log("xac3dui")
 		this._obj = obj;
 		this._pt = pt;
 	}
@@ -610,6 +615,9 @@ class PartSelector {
 		this._anglePrev = angle;
 	}
 
+	/*
+		finishing up a selection
+	*/
 	finishUp() {
 		if (this._part != undefined) {
 			var parts = gPartsCtrls[gCurrPartCtrl.attr('pcId')].parts;
@@ -619,6 +627,7 @@ class PartSelector {
 			var lsParts = $(gCurrPartCtrl.children()[0]); //.attr('lsParts');
 			var tag = lsParts.tagit('createTag', tagName);
 			parts[tagName] = this._part;
+			this._part.tag = tag;
 			triggerUI2ObjAction(tag, FOCUSACTION);
 		}
 	}

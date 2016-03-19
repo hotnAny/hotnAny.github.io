@@ -6,6 +6,7 @@
 
 var gPartSel = new PartSelector();
 
+// TODO: make them jquery fashion
 document.addEventListener('mousedown', onMouseDownStep, false);
 document.addEventListener('mousemove', onMouseMoveStep, false);
 document.addEventListener('mouseup', onMouseUpStep, false);
