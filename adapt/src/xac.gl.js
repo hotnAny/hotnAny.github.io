@@ -167,15 +167,29 @@ function getBoundingCylinder(obj, dir) {
 	var d = -a * ctr.x - b * ctr.y - c * ctr.z;
 
 	var gt = getTransformedGeometry(obj);
+	// ctr = getProjection(ctr, a, b, c, d);
 	var r = 0;
+	var vMax;
 	for (var i = gt.vertices.length - 1; i >= 0; i--) {
 		var v = getProjection(gt.vertices[i], a, b, c, d);
-		r = Math.max(r, v.distanceTo(ctr));
+
+		// BEFORE
+		// r = Math.max(r, v.distanceTo(ctr));
+		// NOW
+		var dist = v.distanceTo(ctr);
+		if (dist > r) {
+			r = dist;
+			vMax = v
+		}
 	}
 
+	dirRadius = vMax.clone().sub(ctr);
+	
 	return {
 		radius: r,
-		height: h
+		height: h,
+		dirRadius: dirRadius,
+		vMax: vMax
 	};
 }
 

@@ -265,7 +265,7 @@ var initPanel = function() {
 						gPartsCtrls[pcId].ctrl = new xacJoinSeparate(objects);
 
 						// TODO fix these stub values
-						gPartsCtrls[pcId].parts = objects[0]; // as a placeholder
+						gPartsCtrls[pcId].parts['Part 1'] = objects[0]; // as a placeholder
 						gPartsCtrls[pcId].obj = objects[0];
 						break;
 				}
@@ -633,7 +633,11 @@ var initPanel = function() {
 			modelToSave = adaptation.adaptation;
 		}
 
-		modelToSave = xacThing.subtract(getTransformedGeometry(modelToSave), getTransformedGeometry(objOriginal), MATERIALHIGHLIGHT);
+		// 		modelToSave = xacThing.subtract(getTransformedGeometry(modelToSave), getTransformedGeometry(objOriginal), MATERIALHIGHLIGHT);
+
+		for (var i = objects.length - 1; i >= 0; i--) {
+			modelToSave = xacThing.subtract(getTransformedGeometry(modelToSave), getTransformedGeometry(objects[i]), MATERIALHIGHLIGHT);
+		}
 
 		var stlStr = stlFromGeometry(modelToSave.geometry);
 		var blob = new Blob([stlStr], {

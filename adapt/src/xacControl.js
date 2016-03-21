@@ -200,11 +200,17 @@ class xacJoinSeparate extends xacControl {
 	get mobile() {
 		return this._mobile;
 	}
+
 	get static() {
 		return this._static;
 	}
+
 	get dir() {
 		return this._dir;
+	}
+
+	get dirMobile() {
+		return this._dirMobile
 	}
 
 	mouseDown(e, obj, pt, fnml) {
@@ -229,11 +235,12 @@ class xacJoinSeparate extends xacControl {
 			// first is the mobile one
 			this._mobile = obj;
 			this._ve.push(addABall(intersects[0].point));
+			this._dirMobile = intersects[0].object.normal;
 		} else if (this._static == undefined) {
 			// second is the static one
 			if (obj != this._mobile) {
 				this._static = obj;
-				this._dir = intersects[0].face.normal;
+				this._dir = intersects[0].object.normal;
 				this._ve.push(addAVector(intersects[0].point, this._dir));
 			}
 		}

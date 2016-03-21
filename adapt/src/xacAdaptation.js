@@ -93,7 +93,7 @@ class xacAdaptation {
 			this._as[pid] = a;
 			scene.add(this._as[pid]);
 
-			if(this._singular) {
+			if (this._singular) {
 				break;
 			}
 		}
@@ -769,7 +769,7 @@ class xacGuide extends xacAdaptation {
 		var ctrl = pc.ctrl;
 
 		//
-		// 0. compute the bounding cylinder
+		// 0. compute the bounding space
 		//
 		var bcylMobile = getBoundingCylinder(ctrl.mobile, ctrl.dir);
 		var bcylStatic = getBoundingCylinder(ctrl.static, ctrl.dir);
@@ -781,51 +781,89 @@ class xacGuide extends xacAdaptation {
 
 		var margin = 0.1;
 
-		var rMobile = bcylMobile.radius * (1 + margin);
-		var cylMobile = new xacCylinder(rMobile, lenMobile, MATERIALOVERLAY);
-		rotateObjTo(cylMobile.m, ctrl.dir);
-		var posCylMobile = ctrStatic.clone().add(ctrl.dir.clone().normalize().multiplyScalar((lenMobile + lenStatic) * 0.5));
-		cylMobile.m.position.copy(posCylMobile);
-		// scene.add(cylMobile.m);
+		// decide which one to use: bounding cylinder or bounding box
+		var bboxDimsMobile = getBoundingBoxDimensions(ctrl.mobile);
+		var maxDimMobile = getMax(bboxDimsMobile);
+		var useBbox = false;
+
+		// 
+		//	abandon using bounding box to make guide
+		//
+		// for (var i = bboxDimsMobile.length - 1; i >= 0; i--) {
+		// 	if (maxDimMobile / bboxDimsMobile[i] > 2) {
+		// 		// 				useBbox = true;
+		// 		break;
+		// 	}
+		// }
+
+		var boundMobile;
+		if (useBbox) {
+			boundMobile = getBoundingBoxMesh(ctrl.mobile);
+			boundMobile.scale.set(1 + margin, 1 + margin, 1 + margin);
+			rotateObjTo(boundMobile, ctrl.dirMobile, true);
+			boundMobile.r = bcylMobile.radius * (1 + margin);
+		} else {
+			var rMobile = bcylMobile.radius * (1 + margin);
+			boundMobile = new xacCylinder(rMobile * this._sizeFactor, lenMobile, MATERIALOVERLAY).m;
+			boundMobile.r = rMobile;
+		}
+
+		rotateObjTo(boundMobile, ctrl.dir);
+		var posBoundMobile = ctrStatic.clone().add(ctrl.dir.clone().normalize().multiplyScalar((lenMobile + lenStatic) * 0.45));
+		boundMobile.position.copy(posBoundMobile);
+		// scene.add(boundMobile);
 
 		//
 		// 1. make the tunnel body
 		//
-		var rGuide = Math.max(bcylMobile.radius * (1 + margin) * this._sizeFactor, bcylStatic.radius);
-		var lenGuide = lenMobile * 0.25 + lenStatic * 0.5;
-		var posGuide = ctrStatic.clone().add(ctrl.dir.clone().normalize().multiplyScalar(lenGuide * 0.5));
-
+		var rGuide = Math.max(boundMobile.r * (this._sizeFactor + margin), bcylStatic.radius);
+		var lenGuide = lenMobile * 0.25 * this._sizeFactor; // + lenStatic * 0.5;
+		var posGuide = ctrStatic.clone().add(ctrl.dir.clone().normalize().multiplyScalar(lenGuide * 0.45));
 		var guideBody = new xacCylinder(rGuide, lenGuide, MATERIALOVERLAY);
 		rotateObjTo(guideBody.m, ctrl.dir);
 		guideBody.m.position.copy(posGuide);
+		// guideBody.m.position.copy(boundMobile.position);
 		// scene.add(guideBody.m);
 
 		//
 		// 2. make the tunnel's finishing part
 		//
-		var guideEnd = xacThing.subtract(getTransformedGeometry(guideBody.m), getTransformedGeometry(cylMobile.m), MATERIALOVERLAY);
+		var guideEnd = xacThing.subtract(getTransformedGeometry(guideBody.m), getTransformedGeometry(boundMobile), MATERIALOVERLAY);
 
 		//
 		// 3. make the tunnel's openning
 		//
-		var lenOpen = lenGuide * this._targetFactor;
-		var rOpen = rGuide * (0.5 + this._sizeFactor);
+		var lenOpen = lenGuide * (0.5 + this._sizeFactor);
+		var rOpen = rGuide * (1 + this._targetFactor);
 		var guideOpen = new xacCylinder([rOpen, rGuide], lenOpen, MATERIALOVERLAY);
-		var stubOpen = new xacCylinder([rMobile * rOpen / rGuide, rMobile], lenOpen, MATERIALOVERLAY);
+		var stubOpen = new xacCylinder([boundMobile.r * this._sizeFactor * rOpen / rGuide, boundMobile.r * this._sizeFactor], lenOpen, MATERIALOVERLAY);
 		var guideOpenCut = xacThing.subtract(getTransformedGeometry(guideOpen.m), getTransformedGeometry(stubOpen.m), MATERIALOVERLAY);
 		rotateObjTo(guideOpenCut, ctrl.dir);
 		guideOpenCut.position.copy(posGuide.clone().add(ctrl.dir.clone().normalize().multiplyScalar((lenGuide + lenOpen) * 0.5)));
 
 		var guide = xacThing.union(getTransformedGeometry(guideEnd), getTransformedGeometry(guideOpenCut), MATERIALOVERLAY);
+		// 	scene.add(guide)
 
 		//
 		// 4. cut the tunnel in half
 		//
-		var cutHalfStub = new xacRectPrism(rOpen, lenOpen + lenGuide + lenStatic / 2, rOpen * 2);
-		cutHalfStub.m.position.set(ctrStatic.x - rOpen / 2, posGuide.y + lenOpen / 2, ctrStatic.z);
-		// scene.add(cutHalfStub.m);
+		var cutHalfStub = new xacRectPrism(rOpen * 3, lenOpen + lenGuide + lenStatic / 2, rOpen * 3).m;
+		rotateObjTo(cutHalfStub, ctrl.dir);
 
-		guide = xacThing.subtract(getTransformedGeometry(guide), getTransformedGeometry(cutHalfStub.m), MATERIALOVERLAY);
+		// find cutting direction
+		boundMobile.updateMatrixWorld();
+		var bcylMobileNew = getBoundingCylinder(ctrl.mobile, ctrl.dir);
+		var dirOffsetCut = bcylMobileNew.dirRadius.clone().normalize();
+		// prefer upright
+		if (dirOffsetCut.angleTo(new THREE.Vector3(0, 1, 0)) > Math.PI / 2) {
+			dirOffsetCut.multiplyScalar(-1);
+		}
+		cutHalfStub.position.copy(getBoundingBoxCenter(guide).clone().add(dirOffsetCut.multiplyScalar(rOpen * 3 / 2)));
+		// addAVector(ctrStatic, dirOffsetCut, 0x0000ff);
+		// addABall(getBoundingBoxCenter(guide), 0x0000ff, 5);
+		// scene.add(cutHalfStub);
+
+		guide = xacThing.subtract(getTransformedGeometry(guide), getTransformedGeometry(cutHalfStub), MATERIALOVERLAY);
 
 		return guide;
 	}
