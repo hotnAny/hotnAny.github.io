@@ -535,11 +535,12 @@ var initPanel = function() {
 	$('#sldSize').slider('value', valuesldSize);
 
 	btnUpdate.click(function(e) {
-		$("*").css("cursor", "progress");
+		gStep = 3;
+		justFocusedObjs[gStep] = undefined;
 		for (var i = gAdaptations.length - 1; i >= 0; i--) {
 			gAdaptations[i].update(gOptParams);
 		}
-		$("*").css("cursor", "default");
+		
 	});
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////

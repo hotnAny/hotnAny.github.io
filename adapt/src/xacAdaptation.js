@@ -27,6 +27,7 @@ class xacAdaptation {
 	constructor(pc) {
 		this._pc = pc; // parts-control pair
 		this._as = new Array(); // adaptation mesh
+		this._tags = new Array(); // the tags representing the adaptations
 
 		// customization parameters
 		this._strengthFactor = STRENGTHINT;
@@ -98,19 +99,29 @@ class xacAdaptation {
 			}
 		}
 
+		// assign tag if it's first time created
+		if (this._created != true) {
+			for (var aid in this._as) {
+				var a = this._as[aid];
+				gAdaptId += 1;
+				var tagName = gAdaptId + ' ' + this._label;
+				var tag = lsAdapts.tagit('createTag', tagName); // + String.fromCharCode(charCode));
+				this._tags[aid] = tag;
+				
+			}
+		}
+		this._created = true;
+
+		// update the adaptations indexed globally
 		for (var aid in this._as) {
 			var a = this._as[aid];
-
-			// finish up
-			gAdaptId += 1;
-			var tagName = gAdaptId + ' ' + this._label;
-			var tag = lsAdapts.tagit('createTag', tagName); // + String.fromCharCode(charCode));
-
+			var tagName = $(this._tags[aid][0]).text().slice(0, -1);
 			gAdaptationComponents[tagName] = a;
-
-			triggerUI2ObjAction(tag, FOCUSACTION);
+			triggerUI2ObjAction(this._tags[aid], FOCUSACTION);
 		}
+
 	}
+
 
 	_extrude(part, ctrl, sizeFactor, fingerFactor) {
 		var r = fingerFactor * FINGERDIM;
