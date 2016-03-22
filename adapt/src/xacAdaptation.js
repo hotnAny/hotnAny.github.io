@@ -107,7 +107,7 @@ class xacAdaptation {
 				var tagName = gAdaptId + ' ' + this._label;
 				var tag = lsAdapts.tagit('createTag', tagName); // + String.fromCharCode(charCode));
 				this._tags[aid] = tag;
-				
+
 			}
 		}
 		this._created = true;
@@ -170,13 +170,17 @@ class xacAdaptation {
 			var spaceSel = cylinderSel.m;
 			var aoc = xacThing.intersect(getTransformedGeometry(part), getTransformedGeometry(spaceSel), part.material);
 
-			// EXPERIMENTAL
+			// EXPERIMENTAL: use cylindrical structure
 			var aocBcyl = getBoundingCylinder(aoc, part.normal);
+			var laoc;
+			// if (aocBcyl.radius < FINGERDIM * 2) {
 			aoc = new xacCylinder(aocBcyl.radius, aocBcyl.height, MATERIALOVERLAY).m;
+			// }
+
 			rotateObjTo(aoc, part.normal);
 			aoc.position.copy(ctrPart);
-
-			var laoc = aoc.clone();
+			laoc = aoc.clone();
+			laoc.radius = aocBcyl.radius;
 			scaleAroundVector(laoc, sizeFactor, part.normal);
 
 			// finally need to cut it in half
@@ -980,11 +984,15 @@ class xacHandle extends xacAdaptation {
 		//
 		//	1. extrude as the connector btwn handle & obj
 		//
-		// only need basicly small wrapper
-		var extrusion = this._extrude(part, undefined, 1.0, 1); //, this._targetFactor);
+		// assume a cylindrical wrap is okay
+		var extrusion = this._extrude(part, undefined, 1.0, 1);
+
+		// see if only need basicly small wrapper
+		if (extrusion.radius > FINGERDIM * 2) {
+			extrusion = part.display;
+		}
 		scene.remove(this._base);
 		// scene.add(extrusion);
-		// this._base = extrusion;
 
 		//
 		//	2. get a bbox of the extrusion, use it to determine to size and position of the torus handle
@@ -999,43 +1007,56 @@ class xacHandle extends xacAdaptation {
 		//
 		var ri = FINGERDIM * 0.05 * (1 + this._fingerFactor);
 		var ro = FINGERDIM * 0.5 * this._fingerFactor + ri * 2;
-		var handle = new xacTorus(ro, ri, 2 * Math.PI, MATERIALOVERLAY).m;
-		handle.geometry.rotateX(Math.PI / 2);
+		this._handle = new xacTorus(ro, ri, 2 * Math.PI, MATERIALOVERLAY).m;
 
-		// var ratio = 2 / Math.sqrt(3);
-		// var rHandle = ratio;
+		var ratioScale = 1 + 2 * (this._sizeFactor - SIZEINIT);
+		scaleAlongVector(this._handle, ratioScale, this._nml);
+		addAVector(this._pt, this._nml);
+		this._handle.geometry.rotateX(Math.PI / 2);
+
 		// position
-		var ctrHandle = this._pt.clone().add(this._nml.clone().normalize().multiplyScalar(ro));
+		var ctrHandle = this._pt.clone().add(this._nml.clone().normalize().multiplyScalar(ro * ratioScale));
 
 		// if it's grasping, then up direction matters
 		if (dirUp != undefined) {
-			rotateObjTo(handle, this._nml.clone().cross(dirUp));
+			rotateObjTo(this._handle, this._nml.clone().cross(dirUp));
 		}
 		// otherwise it doesn't
 		else {
-			rotateObjTo(handle, this._nml);
+			rotateObjTo(this._handle, this._nml);
 		}
-		handle.position.copy(ctrHandle);
+		this._handle.position.copy(ctrHandle);
 		// scene.add(handle);
 
 		// TODO: allowing users to flip
-		if (true) {
-			handle.rotateOnAxis(this._nml, Math.PI / 2);
+		if (this._toFlip == true) {
+			this._handle.rotateOnAxis(this._nml, Math.PI / 2);
 		}
 
 		//
 		// TODO: 4. combine or remove extra parts
 		//
-		handle = xacThing.union(getTransformedGeometry(handle), getTransformedGeometry(extrusion), MATERIALOVERLAY);
+		var a = xacThing.union(getTransformedGeometry(this._handle), getTransformedGeometry(extrusion), MATERIALOVERLAY);
 
-		return handle;
+		return a;
 	}
 
 	mouseDown(e) {
+		if (this._handle != undefined) {
+			var intersects = rayCast(e.clientX, e.clientY, [this._handle]);
+			if (intersects[0] != undefined && intersects[0].object == this._handle) {
+				if (this._handle != undefined) {
+					this._toFlip = this._toFlip == false ? true : false;
+					this.update();
+				}
+			}
+		}
+
 		var arrParts = [];
 		for (var idx in this._pc.parts) {
 			arrParts.push(this._pc.parts[idx].display);
 		}
+
 		var intersects = rayCast(e.clientX, e.clientY, arrParts);
 
 		if (intersects.length == 0) {
