@@ -414,9 +414,11 @@ class xacAnchor extends xacAdaptation {
 
 		var rayCaster = new THREE.Raycaster();
 		rayCaster.ray.set(ctrExtrusion, this._partAnchor.normal);
-		addAVector(ctrExtrusion, this._partAnchor.normal);
+		// addAVector(ctrExtrusion, this._partAnchor.normal);
 
 		var ints = rayCaster.intersectObjects([bboxObj]);
+
+		// BEFORE
 		var heightAnchor = getDimAlong(bboxObj, this._partAnchor.normal); // overly large
 		if (ints[0] != undefined) {
 			heightAnchor = ctrExtrusion.distanceTo(ints[0].point) * 2;
@@ -426,9 +428,16 @@ class xacAnchor extends xacAdaptation {
 		//
 		//	3. make the anchor stand
 		//
-		var ctrAnchorStand = ctrExtrusion.clone().add(this._partAnchor.normal.clone().multiplyScalar(heightAnchor / 2));
+
 		var bcylParams = getBoundingCylinder(extrusion, this._partAnchor.normal);
-		var anchorStand = new xacCylinder([bcylParams.radius * 1.25, bcylParams.radius / 2 * 1.25], heightAnchor, MATERIALOVERLAY).m;
+
+		// NOW
+		heightAnchor = Math.max(heightAnchor, bcylParams.radius * 0.25);
+
+		var ctrAnchorStand = ctrExtrusion.clone().add(this._partAnchor.normal.clone().multiplyScalar(heightAnchor / 2));
+		var rBtmStand = bcylParams.radius * 1.25 * this._sizeFactor;
+		var rTopStand = rBtmStand / 2;
+		var anchorStand = new xacCylinder([rBtmStand, rTopStand], heightAnchor, MATERIALOVERLAY).m;
 		rotateObjTo(anchorStand, this._partAnchor.normal);
 		anchorStand.position.copy(ctrAnchorStand);
 		// scene.add(anchorStand);
@@ -437,9 +446,9 @@ class xacAnchor extends xacAdaptation {
 		//	4. connect it to a platform for clamping
 		//
 		var paramsPlatform = {
-			l: 50,
-			w: 30,
-			h: 5
+			l: rBtmStand * 2 + 20,
+			w: rBtmStand * 2 + 10,
+			h: Math.max(5, rBtmStand * 0.1)
 		};
 		var ctrAnchorPlatform = ctrAnchorStand.clone().add(this._partAnchor.normal.clone().multiplyScalar((heightAnchor + paramsPlatform.h) / 2));
 		var anchorPlatform = new xacRectPrism(paramsPlatform.l, paramsPlatform.h, paramsPlatform.w, MATERIALOVERLAY).m;
@@ -455,16 +464,6 @@ class xacAnchor extends xacAdaptation {
 	}
 
 	mouseDown(e, obj, pt, fnml) {
-
-		//
-		// consider already-selected parts first
-		//
-		// var arrParts = [];
-		// for (var idx in this._pc.parts) {
-		// 	arrParts.push(this._pc.parts[idx].display);
-		// }
-		// var intersects = rayCast(e.clientX, e.clientY, arrParts);
-
 		//
 		// only consider object
 		//
@@ -480,19 +479,13 @@ class xacAnchor extends xacAdaptation {
 			var obj = (this._pc == undefined || this._pc.object == undefined) ? objects[0] : this._pc.obj;
 			if (intersects[0].object == obj) {
 				gPartSel.clear();
-				gPartSel.press(intersects[0].object, intersects[0].point, intersects[0].face.normal, true);
-				// addAVector(intersects[0].point, intersects[0].face.normal);
-				// addABall(intersects[0].point)
+				gPartSel.press(intersects[0].object, intersects[0].point, intersects[0].face.normal);
 				this._partAnchor = gPartSel.part;
 			}
-			// else {
-			// 	// log("part");
-			// 	this._partAnchor = intersects[0].object.parentPart;
-			// }
 		}
 
-		scene.remove(this._partAnchor.display);
-		scene.remove(this._partAnchor);
+		// scene.remove(this._partAnchor.display);
+		// scene.remove(this._partAnchor);
 
 		if (Object.keys(this._pc.parts).length == 0) {
 			this._pc.parts['Part ' + gPartSerial] = this._partAnchor;
@@ -998,9 +991,6 @@ class xacHandle extends xacAdaptation {
 		//	2. get a bbox of the extrusion, use it to determine to size and position of the torus handle
 		//
 		var bbox = getBoundingBoxMesh(extrusion);
-		// size
-		// var rHandle = dirUp != undefined ? getDimAlong(extrusion, dirUp) : getMax(getBoundingBoxDimensions(extrusion));
-
 
 		//
 		//	3. install the handle and merge with extrusion
@@ -1009,6 +999,7 @@ class xacHandle extends xacAdaptation {
 		var ro = FINGERDIM * 0.5 * this._fingerFactor + ri * 2;
 		this._handle = new xacTorus(ro, ri, 2 * Math.PI, MATERIALOVERLAY).m;
 
+		// resizing the handle
 		var ratioScale = 1 + 2 * (this._sizeFactor - SIZEINIT);
 		scaleAlongVector(this._handle, ratioScale, this._nml);
 		addAVector(this._pt, this._nml);
