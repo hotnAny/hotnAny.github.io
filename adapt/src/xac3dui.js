@@ -183,6 +183,10 @@ class BboxSelector extends BboxUI {
 	}
 }
 
+class SphereSelector {
+	
+}
+
 /*
 	showing xy-yz-zx planes for selection
 	specific to adapt, also let the user subsequently select a point on the selected plane

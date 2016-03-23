@@ -175,6 +175,13 @@ function addAVector(v1, dir, clr) {
 	return addALine(v1, v2, clr);
 }
 
+function addAPlane(a, b, c, d) {
+	var v1 = new THREE.Vector3(-d/a, 0, 0);
+	var v2 = new THREE.Vector3(0, -b/d, 0);
+	var v3 = new THREE.Vector3(0, 0, -c/d);
+	addATriangle(v1, v2, v3, 0x0ff00f);
+}
+
 /*
 	remove the balls
 */

@@ -272,7 +272,7 @@ class xacAdaptation {
 			var nAxis = axis.length() / spacing;
 
 			var gripPoints = [];
-			for (var j = 0; j < nAxis; j += 1) {
+			for (var j = 1; j < nAxis-1; j += 1) {
 
 				var ctrj = endPoints[0].clone().add(ddir.clone().multiplyScalar(j))
 					// addABall(ctrj, 0x44ee55);
@@ -297,7 +297,7 @@ class xacAdaptation {
 
 						var firstPoint = gripPointsPerRound[0];
 						if (firstPoint != undefined && firstPoint.distanceTo(thisPoint) <= spacing) {
-							addALine(ctrj, ctrj2, 0x0000ff);
+// 							addALine(ctrj, ctrj2, 0x0000ff);
 							break;
 						}
 

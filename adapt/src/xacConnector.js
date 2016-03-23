@@ -167,7 +167,7 @@ class xacBolt extends xacConnector {
 		var part = partSel.part;
 		var ctrDisplay = getBoundingBoxCenter(part.display);
 		this._nml = this._pt.clone().sub(ctrDisplay).normalize();
-		
+
 		var cylParams = getBoundingCylinder(part.display, part.normal);
 		cylParams.radius *= 1.1;
 
@@ -215,7 +215,7 @@ class xacBolt extends xacConnector {
 		// scene.add(screwStub);
 		rotateObjTo(screwStub, part.normal);
 		screwStub.applyMatrix(matRotate);
-		
+
 		screwStub.position.copy(this._pt.clone().add(this._nml.multiplyScalar(depthClampNeck * 0.5)));
 
 		scene.remove(this._clamp);
@@ -236,5 +236,66 @@ class xacBolt extends xacConnector {
 			scene.add(this._awc);
 			this._a.awc = this._awc;
 		}
+	}
+}
+
+/*
+	let users split the object for assembling
+*/
+class xacSplit extends xacConnector {
+	constructor(a) {
+		super(a);
+		this._as = [];
+		for (var aid in this._a.adaptations) {
+			this._as.push(this._a.adaptations[aid]);
+		}
+	}
+
+	mousedown(e) {
+		this._strokePoints = [];
+		this._splitee = undefined;
+		this._pt1 = undefined;
+		this._pt2 = undefined;
+	}
+
+	mousemove(e) {
+		var intersects = rayCast(e.clientX, e.clientY, this._as);
+		if (intersects[0] != undefined) {
+			if (this._splitee == undefined) {
+				this._splitee = intersects[0].object;
+			}
+
+			var pt = intersects[0].point;
+
+			if (this._pt1 == undefined) {
+				this._pt1 = pt;
+				this._pt1.normal = intersects[0].face.normal;
+			}
+			this._pt2 = pt;
+			this._pt2.normal = intersects[0].face.normal;
+
+			this._strokePoints.push(pt);
+			addABall(pt, colorHighlight);
+		}
+	}
+
+	mouseup(e) {
+		removeBalls();
+		//	1. find the split plane
+		var midPt = new THREE.Vector3().addVectors(this._pt1, this._pt2);
+		var meanNml = new THREE.Vector3().addVectors(this._pt1.normal, this._pt2.normal).normalize();
+		var splitLine = this._pt2.clone().sub(this._pt1);
+		this._splitPlane = getPlaneFromPointVectors(midPt, meanNml, splitLine);
+
+		//	2. perform the cutting
+		var cutPlane = new xacRectPrism(1000, 2, 1000, MATERIALCONTRAST).m;
+		var nmlPlane = new THREE.Vector3(this._splitPlane.A, this._splitPlane.B, this._splitPlane.C);
+		rotateObjTo(cutPlane, nmlPlane);
+		cutPlane.position.copy(getBoundingBoxCenter(this._splitee));
+
+		//	3. update models
+		scene.remove(this._splitee);
+		this._splitee.awc = xacThing.subtract(getTransformedGeometry(this._splitee), getTransformedGeometry(cutPlane), this._splitee.material);
+		scene.add(this._awc);
 	}
 }

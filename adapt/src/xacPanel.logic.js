@@ -327,28 +327,28 @@ var initPanel = function() {
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	// preload some models
-	loadStlFromFile(CAMMODELPATH, MATERIALHIGHLIGHT);
-	setTimeout(function() {
-		gCam = objectDelay;
-		loadStlFromFile(CLAMPMODELPATH, MATERIALHIGHLIGHT);
-	}, 250);
+	// loadStlFromFile(CAMMODELPATH, MATERIALHIGHLIGHT);
+	// setTimeout(function() {
+	// 	gCam = objectDelay;
+	// 	loadStlFromFile(CLAMPMODELPATH, MATERIALHIGHLIGHT);
+	// }, 250);
 
-	setTimeout(function() {
-		gClamp = objectDelay;
-		loadStlFromFile(YOKEPATH, MATERIALHIGHLIGHT);
-	}, 500);
+	// setTimeout(function() {
+	// 	gClamp = objectDelay;
+	// 	loadStlFromFile(YOKEPATH, MATERIALHIGHLIGHT);
+	// }, 500);
 
-	setTimeout(function() {
-		gYoke = objectDelay;
-		loadStlFromFile(YOKECROSSPATH, MATERIALHIGHLIGHT);
-		// scene.add(gYoke);
-	}, 750);
+	// setTimeout(function() {
+	// 	gYoke = objectDelay;
+	// 	loadStlFromFile(YOKECROSSPATH, MATERIALHIGHLIGHT);
+	// 	// scene.add(gYoke);
+	// }, 750);
 
-	setTimeout(function() {
-		gYokeCross = objectDelay;
-		// loadStlFromFile(YOKECROSSPATH, MATERIALHIGHLIGHT);
-		// scene.add(gYokeCross)
-	}, 1000);
+	// setTimeout(function() {
+	// 	gYokeCross = objectDelay;
+	// 	// loadStlFromFile(YOKECROSSPATH, MATERIALHIGHLIGHT);
+	// 	// scene.add(gYokeCross)
+	// }, 1000);
 
 	lsAdapts.tagit({
 		onTagClicked: function(event, ui) {
@@ -540,7 +540,7 @@ var initPanel = function() {
 		for (var i = gAdaptations.length - 1; i >= 0; i--) {
 			gAdaptations[i].update(gOptParams);
 		}
-		
+
 	});
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -583,8 +583,10 @@ var initPanel = function() {
 
 			// TODO: fix the gAdaptations[0] hard coding
 			switch (data.item.value) {
+				case 'Split':
+					gConnMethod = new xacSplit(gAdaptations[0]);
+					break;
 				case 'Strap':
-					// stub value
 					gConnMethod = new xacStrap(gAdaptations[0]);
 					break;
 				case 'Flexible part':

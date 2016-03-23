@@ -202,7 +202,7 @@ panels.append('<br/><br/>');
 
 
 //
-//	Step 5 - Connector
+//	Step 5 - Fitting
 //
 panels.append(_genSectionBar('Connectors'));
 var connectors = $("<table class='ui-step-area' cellspacing='10'></table>");
@@ -218,11 +218,11 @@ var trAddConns = $('<tr></tr>');
 var smConns = $('<select></select>');
 smConns.width('128px');
 smConns.append('<option id="noConnSel"> Add connectors </option>');
+smConns.append('<option>Split</option>');
 smConns.append('<option>Clamp</option>');
 smConns.append('<option>Strap</option>');
-smConns.append('<option>Bolt</option>');
-smConns.append('<option>Adhesive</option>');
-smConns.append('<option>Flexible part</option>');
+// smConns.append('<option>Adhesive</option>');
+// smConns.append('<option>Flexible part</option>');
 trAddConns.append(smConns);
 connectors.append(trAddConns);
 
