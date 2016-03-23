@@ -53,6 +53,10 @@ class xacAdaptation {
 	}
 
 	update(params) {
+		if(this._pc == undefined) {
+			return;
+		}
+		
 		if (params != undefined) {
 			this._fingerFactor = params.fingerFactor == undefined ? this._fingerFactor : params.fingerFactor;
 			this._gripFactor = params.gripFactor == undefined ? this._gripFactor : params.gripFactor;
@@ -117,7 +121,7 @@ class xacAdaptation {
 			var a = this._as[aid];
 			var tagName = $(this._tags[aid][0]).text().slice(0, -1);
 			gAdaptationComponents[tagName] = a;
-			triggerUI2ObjAction(this._tags[aid], FOCUSACTION);
+			// triggerUI2ObjAction(this._tags[aid], FOCUSACTION);
 		}
 
 	}
@@ -210,13 +214,14 @@ class xacAdaptation {
 				}
 			}
 
-			var cutPlane = new xacRectPrism(1000, 2, 1000, MATERIALCONTRAST);
-			var nmlPlane = new THREE.Vector3().crossVectors(part.normal, dirCut).normalize();
-			rotateObjTo(cutPlane.m, nmlPlane);
-			cutPlane.m.position.copy(ctrPart);
+			// NOW: do cutting later in attachment
+			// var cutPlane = new xacRectPrism(1000, 2, 1000, MATERIALCONTRAST);
+			// var nmlPlane = new THREE.Vector3().crossVectors(part.normal, dirCut).normalize();
+			// rotateObjTo(cutPlane.m, nmlPlane);
+			// cutPlane.m.position.copy(ctrPart);
 			// scene.add(cutPlane.m);
 
-			this._cutPlane = cutPlane;
+			// this._cutPlane = cutPlane;
 			// delay execution - here simply remember the cutting plane
 			// laoc = xacThing.subtract(getTransformedGeometry(laoc), getTransformedGeometry(cutPlane.m), laoc.material);
 		}
@@ -272,7 +277,7 @@ class xacAdaptation {
 			var nAxis = axis.length() / spacing;
 
 			var gripPoints = [];
-			for (var j = 1; j < nAxis-1; j += 1) {
+			for (var j = 1; j < nAxis - 1; j += 1) {
 
 				var ctrj = endPoints[0].clone().add(ddir.clone().multiplyScalar(j))
 					// addABall(ctrj, 0x44ee55);
@@ -297,7 +302,7 @@ class xacAdaptation {
 
 						var firstPoint = gripPointsPerRound[0];
 						if (firstPoint != undefined && firstPoint.distanceTo(thisPoint) <= spacing) {
-// 							addALine(ctrj, ctrj2, 0x0000ff);
+							// addALine(ctrj, ctrj2, 0x0000ff);
 							break;
 						}
 
@@ -824,7 +829,10 @@ class xacGuide extends xacAdaptation {
 		//
 		// 1. make the tunnel body
 		//
-		var rGuide = Math.max(boundMobile.r * (this._sizeFactor + margin), bcylStatic.radius);
+		// BEFORE
+		// 		var rGuide = Math.max(boundMobile.r * (this._sizeFactor + margin), bcylStatic.radius);
+		// NOW
+		var rGuide = boundMobile.r * (this._sizeFactor + margin);
 		var lenGuide = lenMobile * 0.25 * this._sizeFactor; // + lenStatic * 0.5;
 		var posGuide = ctrStatic.clone().add(ctrl.dir.clone().normalize().multiplyScalar(lenGuide * 0.45));
 		var guideBody = new xacCylinder(rGuide, lenGuide, MATERIALOVERLAY);

@@ -102,7 +102,7 @@ trSelectArea.append(tblShapeOptions);
 //
 //	Step 2 - Parts & Controls
 //
-panels.append(_genSectionBar('Parts & Controls'));
+panels.append(_genSectionBar('Actions'));
 var partsCtrls = $("<table class='ui-step-area' cellspacing='10'></table>");
 
 // 2.1	a table of specified parts & controls
@@ -145,10 +145,10 @@ smAdapts.append('<option value=1>Handle</option>');
 smAdapts.append('<option value=2>Lever</option>');
 smAdapts.append('<option value=3>Anchor</option>');
 smAdapts.append('<option value=4>Guide</option>');
-smAdapts.append('<option value=5>Mechanism</option>');
-smAdapts.append('<option value=51>&nbsp;&nbsp;&#149; Clamp</option>');
-smAdapts.append('<option value=52>&nbsp;&nbsp;&#149; Universal joint</option>');
-smAdapts.append('<option value=53>&nbsp;&nbsp;&#149; Cam</option>');
+// smAdapts.append('<option value=5>Mechanism</option>');
+// smAdapts.append('<option value=51>&nbsp;&nbsp;&#149; Clamp</option>');
+// smAdapts.append('<option value=52>&nbsp;&nbsp;&#149; Universal joint</option>');
+// smAdapts.append('<option value=53>&nbsp;&nbsp;&#149; Cam</option>');
 trAddAdaptations.append(smAdapts);
 adaptations.append(trAddAdaptations);
 
@@ -160,7 +160,7 @@ panels.append('<br/><br/>');
 //
 //	Step 4 - Customization
 //
-panels.append(_genSectionBar('Customization'));
+panels.append(_genSectionBar('Adjustment'));
 var customization = $("<table class='ui-step-area' cellspacing='10'></table>");
 
 // 4.1	what to optimize
@@ -204,7 +204,7 @@ panels.append('<br/><br/>');
 //
 //	Step 5 - Fitting
 //
-panels.append(_genSectionBar('Connectors'));
+panels.append(_genSectionBar('Attachment'));
 var connectors = $("<table class='ui-step-area' cellspacing='10'></table>");
 
 // 5.1	a list of added connectors

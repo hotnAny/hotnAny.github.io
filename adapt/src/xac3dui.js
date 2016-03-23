@@ -184,7 +184,7 @@ class BboxSelector extends BboxUI {
 }
 
 class SphereSelector {
-	
+
 }
 
 /*
@@ -482,7 +482,8 @@ class PartSelector {
 			}
 		}
 
-		ptsWrap = removeDisconnectedComponents(pt, ptsWrap, 10);
+		// TODO: change the hard coded value
+		ptsWrap = removeDisconnectedComponents(pt, ptsWrap, 20);
 
 		//
 		//	2. find a wrapping cylinder

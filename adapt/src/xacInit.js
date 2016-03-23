@@ -45,6 +45,7 @@ var colorOverlay = 0xF2F2F2;  //colorContrast;
 var colorHighlight = 0xfffa90; //
 var colors = [0xdd0044, 0x00dd44, 0x4400dd];
 var colorsBold = [0xff0000, 0x00ff00, 0x0000ff];
+var colorStroke = 0xff0000;
 
 var renderer = new THREE.WebGLRenderer({
      antialias: true

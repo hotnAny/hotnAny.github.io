@@ -535,3 +535,16 @@ var cylinderSel = new xacCylinder(r / 2, part.cylHeight, MATERIALCONTRAST);
 		// 	// tblPartsCtrls.append(rowNew);
 
 		// })
+
+		// create a 'tag' to represent an added adaptation
+			// if (data.item.index > 0) {
+			// 	for (pid in gCurrAdapt.adaptations) {
+			// 		// gAdaptId += 1;
+			// 		// var tagName = gAdaptId + ' ' + data.item.label;
+			// 		// var tag = lsAdapts.tagit('createTag', tagName); // + String.fromCharCode(charCode));
+
+			// 		// gAdaptationComponents[tagName] = gCurrAdapt.adaptations[pid];
+
+			// 		// triggerUI2ObjAction(tag, FOCUSACTION);
+			// 	}
+			// }

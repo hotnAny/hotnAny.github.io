@@ -344,16 +344,20 @@ function removeDisconnectedComponents(pt, pts, dist) {
 
 		// measure the abs dist to ctr
 		var d = (pts[i].clone().sub(ctr)).dot(axis);
-		if (sign > 0) {
+
+		// add a distance threshold so that only nearby points are selected
+		if (sign > 0 && Math.abs(d) > dist) {
 			minPosDist = Math.min(Math.abs(d), minPosDist);
 			toKeep.push(pts[i]);
+			// addABall(pts[i], 0x00ff00)
 		} else {
 			maxNegDist = Math.max(-Math.abs(d), maxNegDist);
+			// addABall(pts[i], 0x0000ff)
 		}
 	}
 
 	// if there is a 'gap', discard the set of far away points
-	if (minPosDist - maxNegDist > dist) {
+	if (minPosDist != Infinity && maxNegDist != -Infinity && minPosDist - maxNegDist > dist) {
 		return toKeep;
 	} else {
 		return pts;

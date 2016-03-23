@@ -407,19 +407,6 @@ var initPanel = function() {
 
 			gAdaptations.push(gCurrAdapt);
 
-			// create a 'tag' to represent an added adaptation
-			// if (data.item.index > 0) {
-			// 	for (pid in gCurrAdapt.adaptations) {
-			// 		// gAdaptId += 1;
-			// 		// var tagName = gAdaptId + ' ' + data.item.label;
-			// 		// var tag = lsAdapts.tagit('createTag', tagName); // + String.fromCharCode(charCode));
-
-			// 		// gAdaptationComponents[tagName] = gCurrAdapt.adaptations[pid];
-
-			// 		// triggerUI2ObjAction(tag, FOCUSACTION);
-			// 	}
-			// }
-
 			// reset the selection from the list
 			var optionSelected = $("option:selected", this);
 			optionSelected.removeAttr("selected");
@@ -436,7 +423,7 @@ var initPanel = function() {
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//
-	//	Step 4 - customization
+	//	Step 4 - adjustment
 	//
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -547,7 +534,7 @@ var initPanel = function() {
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//
-	//	Step 5 - connector
+	//	Step 5 - attachment
 	//
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -592,8 +579,8 @@ var initPanel = function() {
 				case 'Flexible part':
 					gConnMethod = new xacFlexiblePart(gAdaptations[0]);
 					break;
-				case 'Bolt':
-					gConnMethod = new xacBolt(gAdaptations[0]);
+				case 'Clamp':
+					gConnMethod = new xacClamp(gAdaptations[0]);
 					break;
 			}
 		}
@@ -635,8 +622,6 @@ var initPanel = function() {
 		if (modelToSave == undefined) {
 			modelToSave = adaptation.adaptation;
 		}
-
-		// 		modelToSave = xacThing.subtract(getTransformedGeometry(modelToSave), getTransformedGeometry(objOriginal), MATERIALHIGHLIGHT);
 
 		for (var i = objects.length - 1; i >= 0; i--) {
 			modelToSave = xacThing.subtract(getTransformedGeometry(modelToSave), getTransformedGeometry(objects[i]), MATERIALHIGHLIGHT);
