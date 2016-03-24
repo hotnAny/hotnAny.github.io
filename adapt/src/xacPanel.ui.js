@@ -215,15 +215,15 @@ connectors.append(trConns);
 
 // 5.2 a dropdownlist of various connectors
 var trAddConns = $('<tr></tr>');
-var smConns = $('<select></select>');
-smConns.width('128px');
-smConns.append('<option id="noConnSel"> Add connectors </option>');
-smConns.append('<option>Split</option>');
-smConns.append('<option>Clamp</option>');
-smConns.append('<option>Strap</option>');
-// smConns.append('<option>Adhesive</option>');
-// smConns.append('<option>Flexible part</option>');
-trAddConns.append(smConns);
+var smAttachments = $('<select></select>');
+smAttachments.width('128px');
+smAttachments.append('<option id="noConnSel"> Add connectors </option>');
+smAttachments.append('<option>Split</option>');
+smAttachments.append('<option>Clamp</option>');
+smAttachments.append('<option>Strap</option>');
+// smAttachments.append('<option>Adhesive</option>');
+// smAttachments.append('<option>Flexible part</option>');
+trAddConns.append(smAttachments);
 connectors.append(trAddConns);
 
 panels.append(connectors);

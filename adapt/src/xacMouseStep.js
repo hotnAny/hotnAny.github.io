@@ -33,7 +33,7 @@ function onMouseDownStep(e) {
 			break;
 		case 2:
 			if (activeCtrl != undefined) {
-				var objInt = getClosestIntersected();
+				var objInt = intersects[0];
 				if (objInt != undefined) {
 					activeCtrl.mouseDown(e, objInt.object, objInt.point.clone(), objInt.face.normal);
 				} else {
@@ -68,7 +68,7 @@ function onMouseMoveStep(e) {
 		if (e.clientX < WIDTHCONTAINER) return;
 
 		intersects = rayCast(e.clientX, e.clientY, objects);
-		var objInt = getClosestIntersected();
+		var objInt = intersects[0];
 	}
 
 	var ptMove = [e.clientX, e.clientY];
@@ -94,13 +94,15 @@ function onMouseMoveStep(e) {
 			break;
 		case 3:
 			if (gCurrAdapt != undefined && gCurrAdapt.mouseMove != undefined) {
-				gCurrAdapt.mouseMove(e);//, objInt.object, objInt.point.clone(), objInt.face.normal);
+				gCurrAdapt.mouseMove(e); //, objInt.object, objInt.point.clone(), objInt.face.normal);
 			}
 			break;
 		case 5:
 			if (gConnMethod != undefined) {
 				if (objInt != undefined) {
 					gConnMethod.mousemove(e, objInt.object, objInt.point.clone(), objInt.face.normal);
+				} else {
+					gConnMethod.mousemove(e);
 				}
 			}
 			break;
@@ -131,7 +133,7 @@ function onMouseUpStep(e) {
 			break;
 		case 3:
 			if (gCurrAdapt != undefined && gCurrAdapt.mouseUp != undefined) {
-				gCurrAdapt.mouseUp(e);//, objInt.object, objInt.point.clone(), objInt.face.normal);
+				gCurrAdapt.mouseUp(e); //, objInt.object, objInt.point.clone(), objInt.face.normal);
 			}
 			break;
 		case 5:

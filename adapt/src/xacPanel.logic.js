@@ -543,7 +543,7 @@ var initPanel = function() {
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	smConns.selectmenu({
+	smAttachments.selectmenu({
 		change: function(event, data) {
 			gStep = 5;
 
@@ -569,7 +569,7 @@ var initPanel = function() {
 			var optionSelected = $("option:selected", this);
 			optionSelected.removeAttr("selected");
 			$('#noConnSel').attr('selected', 'selected');
-			smConns.selectmenu("refresh");
+			smAttachments.selectmenu("refresh");
 
 			// TODO: fix the gAdaptations[0] hard coding
 			switch (data.item.value) {
@@ -579,8 +579,8 @@ var initPanel = function() {
 				case 'Strap':
 					gConnMethod = new xacStrap(gAdaptations[0]);
 					break;
-				case 'Flexible part':
-					gConnMethod = new xacFlexiblePart(gAdaptations[0]);
+				// case 'Flexible part':
+				// 	gConnMethod = new xacFlexiblePart(gAdaptations[0]);
 					break;
 				case 'Clamp':
 					gConnMethod = new xacClamp(gAdaptations[0]);

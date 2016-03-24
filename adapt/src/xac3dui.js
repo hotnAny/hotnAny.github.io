@@ -547,8 +547,8 @@ class PartSelector {
 		return wrapInDisplay;
 	}
 
-	grab(obj, pt, fnml, done) {
-		loadStlFromFile(HANDMODELPATH, MATERIALCONTRAST);
+	grab(obj, pt, fnml, hideHand) {
+		loadStlFromFile(HANDMODELPATH, hideHand == undefined ? MATERIALCONTRAST : MATERIALINVISIBLE);
 
 		setTimeout(function(hand) {
 			gHand = new THREE.Object3D();

@@ -105,7 +105,7 @@ class xacClutch extends xacControl {
 					this._partFree = 'Part ' + gPartSerial;
 					this._step = this._TOSELECTANCHOR;
 
-					addAVector(this._pocFree, this._nmlFree);
+					// addAVector(this._pocFree, this._nmlFree);
 				}
 
 				break;
@@ -118,7 +118,7 @@ class xacClutch extends xacControl {
 					gPartSel.finishUp();
 					this._partFixed = 'Part ' + gPartSerial;
 
-					addAVector(this._pocFixed, this._nmlAnchor);
+					// addAVector(this._pocFixed, this._nmlAnchor);
 
 					// BEFORE: naively summing the normals
 					// var midNml = new THREE.Vector3().addVectors(this._nmlFree, this._nmlAnchor).multiplyScalar(0.5);
@@ -126,7 +126,7 @@ class xacClutch extends xacControl {
 					var midPt = new THREE.Vector3().addVectors(this._pocFree, this._pocFixed).multiplyScalar(0.5);
 					var pl = getPlaneFromPointVectors(midPt, this._nmlFree, this._nmlAnchor);
 					var midNml = new THREE.Vector3(pl.A, pl.B, pl.C).normalize();
-					addAVector(midPt, midNml);
+					// addAVector(midPt, midNml);
 
 					this._planeSel = new PlaneSelector([this._pocFree, this._pocFixed], midNml, true);
 					gSticky = true;

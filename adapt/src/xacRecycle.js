@@ -708,3 +708,15 @@
 // 		this._a.fp = this._flexiblePart;
 // 	}
 // }
+
+// var partSel = new PartSelector();
+			// partSel._doWrap(this._obj, midPt, drawnPlane);
+			// scene.remove(this._awc);
+			// scene.remove(this._pipe);
+			// // this._pipe = partSel._doWrap(this._obj, midPt, drawnPlane); //new xacWrapper()._extrude(partSel.part, undefined, 1, 1.5);
+			// this._pipe = this._partSel.part.display;
+			// scaleAroundVector(this._pipe, 1.5, nmlPlane);
+			// scene.add(this._pipe);
+
+			// this._awc = this._pipe;
+			// this._step = this._TOMAKEBOLTHOLE;

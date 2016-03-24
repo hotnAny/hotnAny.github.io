@@ -1,3 +1,8 @@
+var gBalls = [];
+
+/*
+	routines for time stamping
+*/
 var ts = new Date().getTime();
 
 function now() {
@@ -48,17 +53,6 @@ function contains(array, elm) {
 	}
 	return false;
 }
-
-// function calCtrMass(obj) {
-// 	var ctrMass = new THREE.Vector3(0, 0, 0);
-// 	var numVertices = obj.geometry.vertices.length;
-// 	for (var i = 0; i < numVertices; i++) {
-// 		ctrMass.add(obj.geometry.vertices[i].clone().applyMatrix4(obj.matrixWorld));
-// 	}
-
-// 	ctrMass.divideScalar(numVertices);
-// 	return ctrMass;
-// }
 
 function triangleArea(va, vb, vc) {
 	var ab = vb.clone().sub(va);
@@ -132,11 +126,6 @@ function showBoundingBox(obj) {
 	scene.add(bbox);
 }
 
-/*
-	add a ball as visualization
-*/
-var balls = [];
-
 function addABall(pt, clr, radius) {
 	clr = clr == undefined ? 0xff0000 : clr;
 	radius = radius == undefined ? 1 : radius;
@@ -148,7 +137,7 @@ function addABall(pt, clr, radius) {
 	var ball = new THREE.Mesh(geometry, material);
 	ball.position.set(pt.x, pt.y, pt.z);
 
-	balls.push(ball);
+	gBalls.push(ball);
 	scene.add(ball);
 
 	return ball;
@@ -182,12 +171,34 @@ function addAPlane(a, b, c, d) {
 	addATriangle(v1, v2, v3, 0x0ff00f);
 }
 
+function addATriangle(v1, v2, v3, clr) {
+	var vs = [v1.x, v1.y, v1.z, v2.x, v2.y, v2.z, v3.x, v3.y, v3.z];
+	var fs = new THREE.Face3(0, 1, 2);
+
+	var geometry = new THREE.Geometry(); //PolyhedronGeometry(vs, fs, 1, 1);
+	geometry.vertices.push(v1);
+	geometry.vertices.push(v2);
+	geometry.vertices.push(v3);
+	geometry.faces.push(new THREE.Face3(0, 1, 2));
+	var material = new THREE.MeshBasicMaterial({
+		color: clr,
+		transparent: true,
+		opacity: 0.5
+	});
+	var tri = new THREE.Mesh(geometry, material);
+	tri.material.side = THREE.DoubleSide;
+
+	scene.add(tri);
+
+	return tri;
+}
+
 /*
-	remove the balls
+	remove all the gBalls
 */
 function removeBalls() {
-	for (var i = balls.length - 1; i >= 0; i--) {
-		scene.remove(balls[i]);
+	for (var i = gBalls.length - 1; i >= 0; i--) {
+		scene.remove(gBalls[i]);
 	}
 }
 
@@ -259,20 +270,22 @@ function getCenter(pts) {
 }
 
 
-function getClosestIntersected() {
-	var objInt = undefined;
-	var distObj = INFINITY;
-	for (var i = intersects.length - 1; i >= 0; i--) {
-		if (intersects[i].distance < distObj) {
-			distObj = intersects[i].distance;
-			objInt = intersects[i];
-		}
-	}
-	return objInt;
-}
+// function getClosestIntersected() {
+// 	var objInt = undefined;
+// 	var distObj = INFINITY;
+// 	for (var i = intersects.length - 1; i >= 0; i--) {
+// 		if (intersects[i].distance < distObj) {
+// 			distObj = intersects[i].distance;
+// 			objInt = intersects[i];
+// 		}
+// 	}
+// 	return objInt;
+// }
 
 
-
+/*
+	get parameter values from url
+*/
 function gup(name, url) {
 	if (!url) url = location.href;
 	name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
@@ -282,29 +295,9 @@ function gup(name, url) {
 	return results == null ? null : results[1];
 }
 
-
+/*
+	float to int conversion
+*/
 function float2int(value) {
 	return value | 0;
-}
-
-function addATriangle(v1, v2, v3, clr) {
-	var vs = [v1.x, v1.y, v1.z, v2.x, v2.y, v2.z, v3.x, v3.y, v3.z];
-	var fs = new THREE.Face3(0, 1, 2);
-
-	var geometry = new THREE.Geometry(); //PolyhedronGeometry(vs, fs, 1, 1);
-	geometry.vertices.push(v1);
-	geometry.vertices.push(v2);
-	geometry.vertices.push(v3);
-	geometry.faces.push(new THREE.Face3(0, 1, 2));
-	var material = new THREE.MeshBasicMaterial({
-		color: clr,
-		transparent: true,
-		opacity: 0.5
-	});
-	var tri = new THREE.Mesh(geometry, material);
-	tri.material.side = THREE.DoubleSide;
-
-	scene.add(tri);
-
-	return tri;
 }

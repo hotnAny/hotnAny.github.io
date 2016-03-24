@@ -168,72 +168,92 @@ class xacClamp extends xacAttachment {
 	constructor(a) {
 		super(a);
 
-		this._TOMAKEPIPE = 0;
-		this._TOMAKEBOLTHOLE = 1;
-		this._step = this._TOMAKEPIPE;
+		this._TOSELECTPIPE = 0;	// select the cross section for generating pipes
+		this._TOMAKEPIPE = 1;	// make the pipe
+		this._TOMAKEBOLTHOLE = 2;	// make the bolt holes
+		this._step = this._TOSELECTPIPE;
+
+		this._ve = [];
+
 	}
 
 	mousedown(e) {
-		this._strokePoints = [];
-		this._obj = undefined;
-		this._pt1 = undefined;
-		this._pt2 = undefined;
+		if (this._step == this._TOSELECTPIPE) {
+			scene.remove(this._awc);
+			scene.remove(this._pipe);
+
+			var intersects = rayCast(e.clientX, e.clientY, e.shiftKey == true ? this._as : objects);
+			var obj = intersects[0].object;
+			var pt = intersects[0].point;
+			var fnml = intersects[0].face.normal;
+			if (obj != undefined && pt != undefined && fnml != undefined) {
+				this._partSel = new PartSelector();
+				this._partSel.grab(obj, pt, fnml, true);
+			}
+		} else if (this._step == this._TOMAKEPIPE) {
+			this._pipe = this._partSel.release();
+			scaleAroundVector(this._pipe, 1.5, this._partSel.part.normal);
+			scene.add(this._pipe);
+			this._awc = this._pipe;
+		} else if (this._step == this._TOMAKEBOLTHOLE) {
+			this._strokePoints = [];
+			this._obj = undefined;
+			this._pt1 = undefined;
+			this._pt2 = undefined;
+		}
 	}
 
 	mousemove(e) {
-		var intersects = rayCast(e.clientX, e.clientY, e.shiftKey == true ? this._as : objects);
-		if (intersects[0] != undefined) {
-			var pt = intersects[0].point;
+		if (this._step == this._TOMAKEPIPE) {
+			this._partSel.rotateHand(e.ptMove, e.ptDown);
+		} else if (this._step == this._TOMAKEBOLTHOLE) {
+			var intersects = rayCast(e.clientX, e.clientY, e.shiftKey == true ? this._as : objects);
+			if (intersects[0] != undefined) {
+				var pt = intersects[0].point;
 
-			if (this._obj == undefined) {
-				if (e.shiftKey == true) {
-					for (var i = this._as.length - 1; i >= 0; i--) {
-						if (this._as[i] == intersects[0].object) {
-							this._obj = this._as[i];
+				if (this._obj == undefined) {
+					if (e.shiftKey == true) {
+						for (var i = this._as.length - 1; i >= 0; i--) {
+							if (this._as[i] == intersects[0].object) {
+								this._obj = this._as[i];
+							}
 						}
-					}
-				} else {
-					for (var i = objects.length - 1; i >= 0; i--) {
-						if (objects[i] == intersects[0].object) {
-							this._obj = objects[i];
+					} else {
+						for (var i = objects.length - 1; i >= 0; i--) {
+							if (objects[i] == intersects[0].object) {
+								this._obj = objects[i];
+							}
 						}
 					}
 				}
-			}
 
-			if (this._pt1 == undefined) {
-				this._pt1 = pt;
-				this._pt1.normal = intersects[0].face.normal;
-			}
-			this._pt2 = pt;
-			this._pt2.normal = intersects[0].face.normal;
+				if (this._pt1 == undefined) {
+					this._pt1 = pt;
+					this._pt1.normal = intersects[0].face.normal;
+				}
+				this._pt2 = pt;
+				this._pt2.normal = intersects[0].face.normal;
 
-			this._strokePoints.push(pt);
-			addABall(pt, colorStroke);
+				this._strokePoints.push(pt);
+				addABall(pt, colorStroke);
+			}
 		}
 	}
 
 	mouseup(e) {
 		removeBalls();
 
-		var midPt = new THREE.Vector3().addVectors(this._pt1, this._pt2).multiplyScalar(0.5);
-		var meanNml = new THREE.Vector3().addVectors(this._pt1.normal, this._pt2.normal).normalize();
-		var drawnLine = this._pt2.clone().sub(this._pt1);
-		var drawnPlane = getPlaneFromPointVectors(midPt, meanNml, drawnLine);
-		var nmlPlane = new THREE.Vector3(drawnPlane.A, drawnPlane.B, drawnPlane.C).normalize();
-
-		if (this._step == this._TOMAKEPIPE) {
-			var partSel = new PartSelector();
-			// partSel._doWrap(this._obj, midPt, drawnPlane);
-			scene.remove(this._awc);
-			scene.remove(this._pipe);
-			this._pipe = partSel._doWrap(this._obj, midPt, drawnPlane); //new xacWrapper()._extrude(partSel.part, undefined, 1, 1.5);
-			scaleAroundVector(this._pipe, 1.5, nmlPlane);
-			scene.add(this._pipe);
-
-			this._awc = this._pipe;
+		if (this._step == this._TOSELECTPIPE) {
+			this._step = this._TOMAKEPIPE;
+		} else if (this._step == this._TOMAKEPIPE) {
 			this._step = this._TOMAKEBOLTHOLE;
 		} else if (this._step == this._TOMAKEBOLTHOLE) {
+			var midPt = new THREE.Vector3().addVectors(this._pt1, this._pt2).multiplyScalar(0.5);
+			var meanNml = new THREE.Vector3().addVectors(this._pt1.normal, this._pt2.normal).normalize();
+			var drawnLine = this._pt2.clone().sub(this._pt1);
+			var drawnPlane = getPlaneFromPointVectors(midPt, meanNml, drawnLine);
+			var nmlPlane = new THREE.Vector3(drawnPlane.A, drawnPlane.B, drawnPlane.C).normalize();
+
 			scene.remove(this._pipe);
 
 			//	1. cut the pipe 
@@ -246,10 +266,6 @@ class xacClamp extends xacAttachment {
 			var ctrCutPlane = midPt.clone().add(meanNml.clone().multiplyScalar(depthCutPlane * 0.5));
 			cutPlane.position.copy(ctrCutPlane);
 
-			// 			scene.remove(this._cutPlane);
-			// 			this._cutPlane = cutPlane;
-			// 			scene.add(this._cutPlane);
-
 			this._pipe = xacThing.subtract(getTransformedGeometry(this._pipe), getTransformedGeometry(cutPlane), this._pipe.material);
 
 			//
@@ -258,7 +274,7 @@ class xacClamp extends xacAttachment {
 			// stub values
 			var rPlank = 8;
 			var hPlank = 3;
-			var ctrPlank = midPt.clone().add(meanNml.clone().multiplyScalar(rPlank * 0.25));
+			var ctrPlank = midPt.clone().add(meanNml.clone().multiplyScalar(rPlank * 0.5));
 
 			var plank1 = new xacCylinder(rPlank, hPlank, MATERIALHIGHLIGHT).m;
 			rotateObjTo(plank1, nmlPlane);
@@ -276,7 +292,7 @@ class xacClamp extends xacAttachment {
 			//
 			var screwStub = new xacCylinder(RADIUSM3, hPlank * 4).m;
 			rotateObjTo(screwStub, nmlPlane);
-			screwStub.position.copy(ctrPlank.clone().add(meanNml.clone().multiplyScalar(rPlank * 0.25)));
+			screwStub.position.copy(ctrPlank.clone().add(meanNml.clone().multiplyScalar(rPlank * 0.5)));
 			this._plank = xacThing.subtract(getTransformedGeometry(this._plank), getTransformedGeometry(screwStub), MATERIALHIGHLIGHT);
 
 			//
@@ -289,7 +305,7 @@ class xacClamp extends xacAttachment {
 			// TODO: change it to active adaptation
 			this._a.awc = xacThing.union(getTransformedGeometry(justFocusedObjs[3]), getTransformedGeometry(this._awc), MATERIALHIGHLIGHT);
 
-			this._step = this._TOMAKEPIPE;
+			this._step = this._TOSELECTPIPE;
 		}
 	}
 }
