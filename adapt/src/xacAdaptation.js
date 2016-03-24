@@ -119,6 +119,9 @@ class xacAdaptation {
 		// update the adaptations indexed globally
 		for (var aid in this._as) {
 			var a = this._as[aid];
+			if (a.deleted == true) {
+				continue;
+			}
 			var tagName = $(this._tags[aid][0]).text().slice(0, -1);
 			gAdaptationComponents[tagName] = a;
 			this._tags[aid].removeClass('ui-state-highlight');
@@ -130,6 +133,7 @@ class xacAdaptation {
 
 	_extrude(part, ctrl, sizeFactor, fingerFactor) {
 		var r = fingerFactor * FINGERDIM;
+
 		//
 		//	handling 'press' selection
 		//
@@ -140,12 +144,12 @@ class xacAdaptation {
 				var rLarge = r;
 				var rSmall = r / 2 * (sizeFactor - 1);
 
-				laoc = new xacCylinder([rLarge, rSmall], part.cylHeight, MATERIALOVERLAY).m;
-				rotateObjTo(laoc, part.normal);
-				laoc.position.copy(part.cylCenter);
+				laoc = new xacCylinder([rLarge, rSmall], part.cylHeight * sizeFactor, MATERIALOVERLAY).m;
+				rotateObjTo(laoc, ctrl.type == PUSHPULLCTRL ? ctrl.dirForce : part.normal);
+				laoc.position.copy(ctrl.type == PUSHPULLCTRL ? ctrl.pt : part.cylCenter);
 
 				// scaleAroundVector(laoc, sizeFactor, part.normal);
-				scaleAlongVector(laoc, sizeFactor / 2, part.normal);
+				// 				scaleAlongVector(laoc, sizeFactor / 2, ctrl.type == PUSHPULLCTRL ? ctrl.dirForce : part.normal);
 			} else {
 				var cylinderSel = new xacCylinder(r / 2, part.cylHeight, MATERIALCONTRAST);
 				rotateObjTo(cylinderSel.m, part.normal);
@@ -215,16 +219,6 @@ class xacAdaptation {
 				}
 			}
 
-			// NOW: do cutting later in attachment
-			// var cutPlane = new xacRectPrism(1000, 2, 1000, MATERIALCONTRAST);
-			// var nmlPlane = new THREE.Vector3().crossVectors(part.normal, dirCut).normalize();
-			// rotateObjTo(cutPlane.m, nmlPlane);
-			// cutPlane.m.position.copy(ctrPart);
-			// scene.add(cutPlane.m);
-
-			// this._cutPlane = cutPlane;
-			// delay execution - here simply remember the cutting plane
-			// laoc = xacThing.subtract(getTransformedGeometry(laoc), getTransformedGeometry(cutPlane.m), laoc.material);
 		}
 		return laoc;
 	}
@@ -302,7 +296,8 @@ class xacAdaptation {
 						}
 
 						var firstPoint = gripPointsPerRound[0];
-						if (firstPoint != undefined && firstPoint.distanceTo(thisPoint) <= spacing) {
+
+						if (firstPoint != undefined && firstPoint.distanceTo(thisPoint) <= spacing / 2) {
 							// addALine(ctrj, ctrj2, 0x0000ff);
 							break;
 						}
@@ -407,7 +402,7 @@ class xacAnchor extends xacAdaptation {
 		//
 		//	1. make a cube of the extrusion's bounding box
 		//
-		// scene.add(extrusion);
+		// 		scene.add(extrusion);
 		var ctrExtrusion = getBoundingBoxCenter(extrusion);
 		var bboxDim = getDimAlong(extrusion, this._partAnchor.normal);
 
@@ -425,10 +420,9 @@ class xacAnchor extends xacAdaptation {
 		var ints = rayCaster.intersectObjects([bboxObj]);
 
 		// BEFORE
-		var heightAnchor = getDimAlong(bboxObj, this._partAnchor.normal); // overly large
+		var heightAnchor = 0; //getDimAlong(bboxObj, this._partAnchor.normal); // overly large
 		if (ints[0] != undefined) {
-			heightAnchor = ctrExtrusion.distanceTo(ints[0].point) * 2;
-			// addALine(bbox.position, ints[0].point);
+			heightAnchor = ctrExtrusion.distanceTo(ints[0].point) * 2 * this._sizeFactor;
 		}
 
 		//
@@ -436,13 +430,25 @@ class xacAnchor extends xacAdaptation {
 		//
 
 		var bcylParams = getBoundingCylinder(extrusion, this._partAnchor.normal);
+		var bcylObj = getBoundingCylinder(this._pc.obj, this._partAnchor.normal);
+		heightAnchor = Math.max(heightAnchor, bcylParams.radius * 0.25) * this._sizeFactor;
 
+		var ctrAnchorStand;
+
+		if (this._fingerFactor < 2) {
+			ctrAnchorStand = ctrExtrusion.clone().add(this._partAnchor.normal.clone().multiplyScalar(heightAnchor / 2));
+		} else {
+			var amntRaised = Math.min(heightAnchor / 2, bcylObj.height / 10 * this._sizeFactor);
+			ctrAnchorStand = ctrExtrusion.clone().sub(this._partAnchor.normal.clone().multiplyScalar(amntRaised));
+		}
+
+		// BEFORE
+		// var rBtmStand = bcylParams.radius * 1.25 * this._sizeFactor;
+		// var rTopStand = rBtmStand / 2;
 		// NOW
-		heightAnchor = Math.max(heightAnchor, bcylParams.radius * 0.25);
+		var rTopStand = bcylParams.radius * 1.25 * this._sizeFactor / 2;
+		var rBtmStand = bcylObj.radius * (this._sizeFactor - 1) + rTopStand;
 
-		var ctrAnchorStand = ctrExtrusion.clone().add(this._partAnchor.normal.clone().multiplyScalar(heightAnchor / 2));
-		var rBtmStand = bcylParams.radius * 1.25 * this._sizeFactor;
-		var rTopStand = rBtmStand / 2;
 		var anchorStand = new xacCylinder([rBtmStand, rTopStand], heightAnchor, MATERIALOVERLAY).m;
 		rotateObjTo(anchorStand, this._partAnchor.normal);
 		anchorStand.position.copy(ctrAnchorStand);

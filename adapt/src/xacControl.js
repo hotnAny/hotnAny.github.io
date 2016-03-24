@@ -65,17 +65,65 @@ class xacGrasp extends xacControl {
 class xacPushPull extends xacControl {
 	constructor(type) {
 		super(PUSHPULLCTRL);
+
+		this._TOSHOWSPHERE = 0;
+		this._TOSELECTDIR = 1;
+		this._step = this._TOSHOWSPHERE;
+
+		this._pt = undefined;
+		this._dirForce = undefined;
 	}
 
 	mouseDown(e, obj, pt, fnml) {
-		this._dirForce = fnml.clone();
-		gPartSel.press(obj, pt, this._dirForce, true);
-		gPartSel.finishUp();
+		if (this._step == this._TOSHOWSPHERE) {
+			// this._dirForce = fnml.clone();
+			this._pt = pt;
+			gPartSel.press(obj, pt, fnml, true);
+			gPartSel.finishUp();
+
+			this._sphereSel = new SphereSelector(pt);
+			gSticky = true;
+		} else if (this._step == this._TOSELECTDIR) {
+
+		}
 	}
 
-	mouseMove(e, obj, pt, fnml) {}
+	mouseMove(e, obj, pt, fnml) {
+		if (this._step == this._TOSHOWSPHERE) {
 
-	mouseUp(e, obj, pt, fnml) {}
+		} else if (this._step == this._TOSELECTDIR) {
+			this._sphereSel.hitTest(e);
+		}
+	}
+
+	mouseUp(e, obj, pt, fnml) {
+		if (this._step == this._TOSHOWSPHERE) {
+			this._step = this._TOSELECTDIR;
+		} else if (this._step == this._TOSELECTDIR) {
+			this._dirForce = this._sphereSel.selection.clone().sub(this._pt).normalize();
+			this._ve.push(addAVector(this._pt, this._dirForce));
+
+			gSticky = false;
+			setTimeout(function(ctrl) {
+				ctrl._sphereSel.clear();
+			}, 500, this);
+		}
+	}
+
+	cancel() {
+		if (this._sphereSel != undefined) {
+			this._sphereSel.clear();
+		}
+		this._step = this._TOSHOWSPHERE;
+	}
+
+	get dirForce() {
+		return this._dirForce;
+	}
+
+	get pt() {
+		return this._pt;
+	}
 }
 
 class xacClutch extends xacControl {

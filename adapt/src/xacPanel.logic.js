@@ -612,7 +612,7 @@ var initPanel = function() {
 			var cnt = 0;
 			for (var pid in adaptation.adaptations) {
 				if (cnt == idx) {
-					modelToSave = adaptation.awc;
+					modelToSave = adaptation.adaptations[pid].awc;
 					if (modelToSave == undefined) {
 						modelToSave = adaptation.adaptations[pid];
 						break;

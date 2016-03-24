@@ -101,41 +101,35 @@ class BboxResizer extends BboxUI {
 		if (ints.length > 0) {
 			var dirDrag = ints[0].point.clone().sub(this._point);
 
-			// DEBUG
-			// scene.remove(this._tmpVE);
-			// removeBalls();
-			// addABall(ints[0].point, 0x00ff00)
-			// this._tmpVE = addAVector(this._point, dirDrag);
-
 			var lenOff = dirDrag.dot(this._normal);
 			var vecOff = this._normal.clone().multiplyScalar(lenOff);
 			var sign = dirDrag.angleTo(this._normal) < Math.PI / 2 ? 1 : -1;
 			var posNew = this._pl.position.clone().add(vecOff);
 
 			// a plane cannot go across the centroid to the other side
-			if (posNew.clone().sub(this._ctrObj).angleTo(this._normal) < Math.PI / 2) {
-				this._pl.position.copy(posNew);
+			// if (posNew.clone().sub(this._ctrObj).angleTo(this._normal) < Math.PI / 2) {
+			this._pl.position.copy(posNew);
 
-				this._bboxParmas.ctrx += vecOff.x / 2;
-				this._bboxParmas.ctry += vecOff.y / 2;
-				this._bboxParmas.ctrz += vecOff.z / 2;
+			this._bboxParmas.ctrx += vecOff.x / 2;
+			this._bboxParmas.ctry += vecOff.y / 2;
+			this._bboxParmas.ctrz += vecOff.z / 2;
 
-				this._bboxParmas.lenx += sign * Math.abs(vecOff.x);
-				this._bboxParmas.leny += sign * Math.abs(vecOff.y);
-				this._bboxParmas.lenz += sign * Math.abs(vecOff.z);
+			this._bboxParmas.lenx += sign * Math.abs(vecOff.x);
+			this._bboxParmas.leny += sign * Math.abs(vecOff.y);
+			this._bboxParmas.lenz += sign * Math.abs(vecOff.z);
 
-				this._bboxParmas.cmin.x = this._bboxParmas.ctrx - this._bboxParmas.lenx * 0.5;
-				this._bboxParmas.cmax.x = this._bboxParmas.ctrx + this._bboxParmas.lenx * 0.5;
-				this._bboxParmas.cmin.y = this._bboxParmas.ctry - this._bboxParmas.leny * 0.5;
-				this._bboxParmas.cmax.y = this._bboxParmas.ctry + this._bboxParmas.leny * 0.5;
-				this._bboxParmas.cmin.z = this._bboxParmas.ctrz - this._bboxParmas.lenz * 0.5;
-				this._bboxParmas.cmax.z = this._bboxParmas.ctrz + this._bboxParmas.lenz * 0.5;
+			this._bboxParmas.cmin.x = this._bboxParmas.ctrx - this._bboxParmas.lenx * 0.5;
+			this._bboxParmas.cmax.x = this._bboxParmas.ctrx + this._bboxParmas.lenx * 0.5;
+			this._bboxParmas.cmin.y = this._bboxParmas.ctry - this._bboxParmas.leny * 0.5;
+			this._bboxParmas.cmax.y = this._bboxParmas.ctry + this._bboxParmas.leny * 0.5;
+			this._bboxParmas.cmin.z = this._bboxParmas.ctrz - this._bboxParmas.lenz * 0.5;
+			this._bboxParmas.cmax.z = this._bboxParmas.ctrz + this._bboxParmas.lenz * 0.5;
 
-				this._point.add(vecOff);
+			this._point.add(vecOff);
 
-				// update the other planes
-				this._update(this._bboxParmas);
-			}
+			// update the other planes
+			this._update(this._bboxParmas);
+			// }
 		}
 	}
 
@@ -184,7 +178,33 @@ class BboxSelector extends BboxUI {
 }
 
 class SphereSelector {
+	constructor(pt) {
+		this._pt0 = pt;
+		this._sphere = new xacSphere(FINGERSIZE, MATERIALCONTRAST, true).m;
+		this._sphere.position.copy(pt);
+		scene.add(this._sphere);
+	}
 
+	hitTest(e) {
+		scene.remove(this._dot);
+		scene.remove(this._line);
+		var intSphere = rayCast(e.clientX, e.clientY, [this._sphere]);
+		if (intSphere[0] != undefined) {
+			this._pt = intSphere[0].point;
+			this._dot = addABall(this._pt);
+			this._line = addAVector(this._pt0, this._pt.clone().sub(this._pt0));
+		}
+	}
+
+	clear() {
+		scene.remove(this._sphere);
+		scene.remove(this._dot);
+		scene.remove(this._line);
+	}
+
+	get selection() {
+		return this._pt;
+	}
 }
 
 /*

@@ -94,7 +94,9 @@ class xacStrap extends xacAttachment {
 			scene.remove(this._a.adaptation);
 			this._awc = xacThing.subtract(getTransformedGeometry(this._a.adaptation), getTransformedGeometry(strap), this._a.adaptation.material);
 			scene.add(this._awc);
-			this._a.awc = this._awc;
+
+			var adaptation = justFocusedObjs[3];
+			adaptation.awc = this._awc;
 		}
 
 		setTimeout(function(strap) {
@@ -156,8 +158,8 @@ class xacSplit extends xacAttachment {
 
 		//	3. update models
 		scene.remove(this._splitee);
-		this._splitee._awc = xacThing.subtract(getTransformedGeometry(this._splitee), getTransformedGeometry(cutPlane), this._splitee.material);
-		scene.add(this._awc);
+		this._splitee.awc = xacThing.subtract(getTransformedGeometry(this._splitee), getTransformedGeometry(cutPlane), this._splitee.material);
+		scene.add(this._splitee.awc);
 	}
 }
 
@@ -303,7 +305,8 @@ class xacClamp extends xacAttachment {
 			scene.add(this._awc);
 
 			// TODO: change it to active adaptation
-			this._a.awc = xacThing.union(getTransformedGeometry(justFocusedObjs[3]), getTransformedGeometry(this._awc), MATERIALHIGHLIGHT);
+			var adaptation = justFocusedObjs[3];
+			adaptation.awc = xacThing.union(getTransformedGeometry(adaptation), getTransformedGeometry(this._awc), MATERIALHIGHLIGHT);
 
 			this._step = this._TOSELECTPIPE;
 		}
