@@ -1,5 +1,5 @@
 /**
- * mouse e handlers for the operation in the various steps
+ * mouse event handlers for the operation in the various steps
  *
  * @author Xiang 'Anthony' Chen http://xiangchen.me
  */

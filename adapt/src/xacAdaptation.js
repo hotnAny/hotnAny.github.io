@@ -53,10 +53,10 @@ class xacAdaptation {
 	}
 
 	update(params) {
-		if(this._pc == undefined) {
+		if (this._pc == undefined) {
 			return;
 		}
-		
+
 		if (params != undefined) {
 			this._fingerFactor = params.fingerFactor == undefined ? this._fingerFactor : params.fingerFactor;
 			this._gripFactor = params.gripFactor == undefined ? this._gripFactor : params.gripFactor;
@@ -66,7 +66,7 @@ class xacAdaptation {
 		}
 
 		for (var pid in this._pc.parts) {
-			if (this._pc.parts[pid].deleted == true) {
+			if (this._pc.parts[pid].deleted == true || (this._as[pid] != undefined && this._as[pid].deleted == true)) {
 				continue;
 			}
 
@@ -121,7 +121,8 @@ class xacAdaptation {
 			var a = this._as[aid];
 			var tagName = $(this._tags[aid][0]).text().slice(0, -1);
 			gAdaptationComponents[tagName] = a;
-			// triggerUI2ObjAction(this._tags[aid], FOCUSACTION);
+			this._tags[aid].removeClass('ui-state-highlight');
+			triggerUI2ObjAction(this._tags[aid], FOCUSACTION);
 		}
 
 	}

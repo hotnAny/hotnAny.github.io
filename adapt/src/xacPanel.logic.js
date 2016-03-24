@@ -525,6 +525,9 @@ var initPanel = function() {
 		gStep = 3;
 		justFocusedObjs[gStep] = undefined;
 		for (var i = gAdaptations.length - 1; i >= 0; i--) {
+			if (gAdaptations[i] == undefined) {
+				continue;
+			}
 			gAdaptations[i].update(gOptParams);
 		}
 
@@ -689,7 +692,6 @@ function triggerUI2ObjAction(ui, action, key) {
 		case DELETEACTION:
 			switch (gStep) {
 				case 2:
-					// setTimeout(function() {
 					// part
 					var parts = gPartsCtrls[gCurrPartCtrl.attr('pcId')].parts;
 					var part = parts[nameUI];
@@ -700,7 +702,6 @@ function triggerUI2ObjAction(ui, action, key) {
 					// ctrl
 					var ctrl = gPartsCtrls[gCurrPartCtrl.attr('pcId')].ctrl;
 					ctrl.clear();
-					// }, 250, nameUI);
 					break;
 				case 3:
 					var adaptation = gAdaptationComponents[nameUI];

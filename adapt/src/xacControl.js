@@ -104,6 +104,8 @@ class xacClutch extends xacControl {
 					gPartSel.finishUp();
 					this._partFree = 'Part ' + gPartSerial;
 					this._step = this._TOSELECTANCHOR;
+
+					addAVector(this._pocFree, this._nmlFree);
 				}
 
 				break;
@@ -115,7 +117,16 @@ class xacClutch extends xacControl {
 					this._nmlAnchor = fnml.clone();
 					gPartSel.finishUp();
 					this._partFixed = 'Part ' + gPartSerial;
-					var midNml = new THREE.Vector3().addVectors(this._nmlFree, this._nmlAnchor).multiplyScalar(0.5);
+
+					addAVector(this._pocFixed, this._nmlAnchor);
+
+					// BEFORE: naively summing the normals
+					// var midNml = new THREE.Vector3().addVectors(this._nmlFree, this._nmlAnchor).multiplyScalar(0.5);
+					// NOW: compute the plane
+					var midPt = new THREE.Vector3().addVectors(this._pocFree, this._pocFixed).multiplyScalar(0.5);
+					var pl = getPlaneFromPointVectors(midPt, this._nmlFree, this._nmlAnchor);
+					var midNml = new THREE.Vector3(pl.A, pl.B, pl.C).normalize();
+					addAVector(midPt, midNml);
 
 					this._planeSel = new PlaneSelector([this._pocFree, this._pocFixed], midNml, true);
 					gSticky = true;
@@ -123,7 +134,7 @@ class xacClutch extends xacControl {
 				}
 				break;
 			case this._TOSELECTFULCRUM:
-				// this._planeSel.clear();
+
 				this._fulcrum = this._planeSel.selection;
 				this._plane = getPlaneFromPointVectors(this._fulcrum, this._pocFree.clone().sub(this._fulcrum), this._pocFixed.clone().sub(this._fulcrum));
 
@@ -132,6 +143,10 @@ class xacClutch extends xacControl {
 
 				gSticky = false;
 				this._step = this._TOSELECTOBJ;
+
+				setTimeout(function(ctrl) {
+					ctrl._planeSel.clear();
+				}, 500, this);
 				break;
 		}
 	}
