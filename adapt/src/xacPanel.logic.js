@@ -329,23 +329,23 @@ var initPanel = function() {
 	// preload some models
 	// loadStlFromFile(CAMMODELPATH, MATERIALHIGHLIGHT);
 	// setTimeout(function() {
-	// 	gCam = objectDelay;
+	// 	gCam = gObjectDelay;
 	// 	loadStlFromFile(CLAMPMODELPATH, MATERIALHIGHLIGHT);
 	// }, 250);
 
 	// setTimeout(function() {
-	// 	gClamp = objectDelay;
+	// 	gClamp = gObjectDelay;
 	// 	loadStlFromFile(YOKEPATH, MATERIALHIGHLIGHT);
 	// }, 500);
 
 	// setTimeout(function() {
-	// 	gYoke = objectDelay;
+	// 	gYoke = gObjectDelay;
 	// 	loadStlFromFile(YOKECROSSPATH, MATERIALHIGHLIGHT);
 	// 	// scene.add(gYoke);
 	// }, 750);
 
 	// setTimeout(function() {
-	// 	gYokeCross = objectDelay;
+	// 	gYokeCross = gObjectDelay;
 	// 	// loadStlFromFile(YOKECROSSPATH, MATERIALHIGHLIGHT);
 	// 	// scene.add(gYokeCross)
 	// }, 1000);
@@ -363,7 +363,7 @@ var initPanel = function() {
 		change: function(event, data) {
 			gStep = 3;
 
-			// init the container for adaptations
+			// clicking at the tags highlights adaptations and show sliders accordingly
 			if (gAdaptId == 0) {
 				lsAdapts.tagit({
 					onTagClicked: function(event, ui) {
@@ -415,7 +415,6 @@ var initPanel = function() {
 
 			showElm(customization);
 			showElm(connectors);
-
 		}
 	});
 
@@ -523,13 +522,15 @@ var initPanel = function() {
 
 	btnUpdate.click(function(e) {
 		gStep = 3;
-		justFocusedObjs[gStep] = undefined;
-		for (var i = gAdaptations.length - 1; i >= 0; i--) {
-			if (gAdaptations[i] == undefined) {
-				continue;
-			}
-			gAdaptations[i].update(gOptParams);
-		}
+		justFocusedObjs[gStep].parentAdaptation.update();
+		// justFocusedObjs[gStep] = undefined;
+
+		// for (var i = gAdaptations.length - 1; i >= 0; i--) {
+		// 	if (gAdaptations[i] == undefined) {
+		// 		continue;
+		// 	}
+		// 	gAdaptations[i].update(gOptParams);
+		// }
 
 	});
 
@@ -579,8 +580,8 @@ var initPanel = function() {
 				case 'Strap':
 					gConnMethod = new xacStrap(gAdaptations[0]);
 					break;
-				// case 'Flexible part':
-				// 	gConnMethod = new xacFlexiblePart(gAdaptations[0]);
+					// case 'Flexible part':
+					// 	gConnMethod = new xacFlexiblePart(gAdaptations[0]);
 					break;
 				case 'Clamp':
 					gConnMethod = new xacClamp(gAdaptations[0]);
@@ -682,6 +683,7 @@ function triggerUI2ObjAction(ui, action, key) {
 						adaptationComponent.material.color.setHex(colorHighlight);
 						adaptationComponent.material.needsUpdate = true;
 						justFocusedObjs[gStep] = adaptationComponent;
+						adaptationComponent.parentAdaptation.renderSliders();
 					}
 					break;
 				case 5:

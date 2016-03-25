@@ -442,7 +442,9 @@ class PartSelector {
 		//
 		this._part.type = 'press';
 		this._part.normal = nml;
+		this._part.nmlPt = nml;
 		this._part.center = pt;
+		this._part.pt = pt;
 		this._part.cylCenter = cylPartSelection.m.position;
 		this._part.cylHeight = maxDist2PartSelection;
 		this._part.selCyl = cylPartSelectionOut; //xacThing.intersect(cylPartSelection.gt, obj, MATERIALCONTRAST);
@@ -558,6 +560,8 @@ class PartSelector {
 		//	5. finishing up
 		//
 		this._part.type = 'wrap';
+		this._part.pt = pt;
+		this._part.nmlPt = this._nmlPt;
 		this._part.ctrSel = getProjection(ctrWrap, a, b, c, d);
 		this._part.display = wrapInDisplay;
 		this._part.display.parentPart = this._part;
@@ -573,9 +577,9 @@ class PartSelector {
 		setTimeout(function(hand) {
 			gHand = new THREE.Object3D();
 
-			gHand.add(objectDelay.clone());
+			gHand.add(gObjectDelay.clone());
 
-			var ctr = getBoundingBoxCenter(objectDelay);
+			var ctr = getBoundingBoxCenter(gObjectDelay);
 
 			// thumb pointer
 			var dirThumb = new THREE.Vector3(1, 0, 0);
@@ -597,9 +601,11 @@ class PartSelector {
 			scene.add(gHand);
 
 		}, 250);
+
 		gSticky = true;
 		this._obj = obj;
 		this._pt = pt;
+		this._nmlPt = fnml.clone().normalize();
 	}
 
 	release() {

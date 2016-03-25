@@ -184,7 +184,7 @@ function getBoundingCylinder(obj, dir) {
 	}
 
 	dirRadius = vMax.clone().sub(ctr);
-	
+
 	return {
 		radius: r,
 		height: h,
@@ -362,4 +362,11 @@ function removeDisconnectedComponents(pt, pts, dist) {
 	} else {
 		return pts;
 	}
+}
+
+function computeFaceNormal(u, v, w) {
+	var uv = v.clone().sub(u);
+	var vw = w.clone().sub(v);
+	var nml = new THREE.Vector3().crossVectors(uv, vw);
+	return nml;
 }

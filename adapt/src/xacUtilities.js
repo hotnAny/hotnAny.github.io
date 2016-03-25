@@ -1,4 +1,5 @@
 var gBalls = [];
+var gObjectDelay; // loaded from file
 
 /*
 	routines for time stamping
@@ -43,7 +44,6 @@ function getMax(values) {
 }
 
 function contains(array, elm) {
-
 	if (array instanceof Array) {
 		for (var i = 0; i < array.length; i++) {
 			if (array[i] === elm) {
@@ -52,24 +52,6 @@ function contains(array, elm) {
 		}
 	}
 	return false;
-}
-
-function triangleArea(va, vb, vc) {
-	var ab = vb.clone().sub(va);
-	var ac = vc.clone().sub(va);
-
-	var x1 = ab.x,
-		x2 = ab.y,
-		x3 = ab.z,
-		y1 = ac.x,
-		y2 = ac.y,
-		y3 = ac.z;
-
-	return 0.5 * Math.sqrt(
-		Math.pow((x2 * y3 - x3 * y2), 2) +
-		Math.pow((x3 * y1 - x1 * y3), 2) +
-		Math.pow((x1 * y2 - x2 * y1), 2)
-	);
 }
 
 
@@ -93,7 +75,6 @@ function loadStl(data) {
 	scene.add(gGrid);
 
 	// relocate the camera
-	// var upperLeft = object.position.clone().add(new THREE.Vector3(-dims[0] / 2, dims[1] / 2, dims[2] / 2));
 	var r = Math.max(25, getBoundingSphereRadius(object));
 	camera.position.copy(gPosCam.clone().normalize().multiplyScalar(r * 2));
 
@@ -107,24 +88,22 @@ function loadStl(data) {
 	// store the object
 	objects.push(object);
 
-	// TODO package non-regular objects
-	// gItems.push(object);
 }
 
-var objectDelay; // loaded from file
+
 function loadStlFromFile(objPath, material) {
 	var stlLoader = new THREE.STLLoader();
 	stlLoader.load(objPath, function(geometry) {
 		THREE.GeometryUtils.center(geometry);
-		objectDelay = new THREE.Mesh(geometry, material.clone());
+		gObjectDelay = new THREE.Mesh(geometry, material.clone());
 	});
 }
 
-function showBoundingBox(obj) {
-	var bbox = new THREE.BoundingBoxHelper(obj, 0x00ff00);
-	bbox.update();
-	scene.add(bbox);
-}
+// function showBoundingBox(obj) {
+// 	var bbox = new THREE.BoundingBoxHelper(obj, 0x00ff00);
+// 	bbox.update();
+// 	scene.add(bbox);
+// }
 
 function addABall(pt, clr, radius) {
 	clr = clr == undefined ? 0xff0000 : clr;
@@ -165,9 +144,9 @@ function addAVector(v1, dir, clr) {
 }
 
 function addAPlane(a, b, c, d) {
-	var v1 = new THREE.Vector3(-d/a, 0, 0);
-	var v2 = new THREE.Vector3(0, -b/d, 0);
-	var v3 = new THREE.Vector3(0, 0, -c/d);
+	var v1 = new THREE.Vector3(-d / a, 0, 0);
+	var v2 = new THREE.Vector3(0, -b / d, 0);
+	var v3 = new THREE.Vector3(0, 0, -c / d);
 	addATriangle(v1, v2, v3, 0x0ff00f);
 }
 
@@ -202,23 +181,26 @@ function removeBalls() {
 	}
 }
 
-function getRandom(min, max) {
-	return Math.random() * (max - min) + min;
-}
+// function getRandom(min, max) {
+// 	return Math.random() * (max - min) + min;
+// }
 
-function getRandomInt(min, max) {
-	return Math.floor(Math.random() * (max - min)) + min;
-}
+// function getRandomInt(min, max) {
+// 	return Math.floor(Math.random() * (max - min)) + min;
+// }
 
-function getRandomVector(scale) {
-	return new THREE.Vector3(getRandom(-scale, scale), getRandom(-scale, scale), getRandom(-scale, scale));
-}
+// function getRandomVector(scale) {
+// 	return new THREE.Vector3(getRandom(-scale, scale), getRandom(-scale, scale), getRandom(-scale, scale));
+// }
 
-function removeFromArray(arr, elm) {
-	var idx = arr.indexOf(elm);
-	arr.splice(idx, 1);
-}
+// function removeFromArray(arr, elm) {
+// 	var idx = arr.indexOf(elm);
+// 	arr.splice(idx, 1);
+// }
 
+/*
+	show a ui element
+*/
 function showElm(elm, actionUponShow) {
 	if (elm.is(":visible") == false) {
 		elm.show('slow');
@@ -230,19 +212,18 @@ function showElm(elm, actionUponShow) {
 	}
 }
 
+/*
+	hide a ui element
+*/
 function hideElm(elm) {
 	if (elm.is(":visible") == true) {
 		elm.hide();
 	}
 }
 
-function computeFaceNormal(u, v, w) {
-	var uv = v.clone().sub(u);
-	var vw = w.clone().sub(v);
-	var nml = new THREE.Vector3().crossVectors(uv, vw);
-	return nml;
-}
-
+/*
+	get the euclidean distance between two R^d points
+*/
 function getDist(p1, p2) {
 	var len = Math.min(p1.length, p2.length);
 	var d = 0;
@@ -268,20 +249,6 @@ function getCenter(pts) {
 
 	return ctr;
 }
-
-
-// function getClosestIntersected() {
-// 	var objInt = undefined;
-// 	var distObj = INFINITY;
-// 	for (var i = intersects.length - 1; i >= 0; i--) {
-// 		if (intersects[i].distance < distObj) {
-// 			distObj = intersects[i].distance;
-// 			objInt = intersects[i];
-// 		}
-// 	}
-// 	return objInt;
-// }
-
 
 /*
 	get parameter values from url

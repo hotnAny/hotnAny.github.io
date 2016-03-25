@@ -164,30 +164,30 @@ panels.append(_genSectionBar('Adjustment'));
 var customization = $("<table class='ui-step-area' cellspacing='10'></table>");
 
 // 4.1	what to optimize
-var trOptim = $('<tr></tr>');
-var divOptim = $('<div align="center"></div>');
-// divOptim.append($('<input type="checkbox" id="cbFingers"><label id="lbFingers" for="cbFingers">finger</label>'));
-divOptim.append($('<input type="checkbox" id="cbGrip"><label for="cbGrip">Grip</label>'));
-divOptim.append($('<input type="checkbox" id="cbStrength"><label for="cbStrength">Strength</label>'));
-divOptim.append($('<input type="checkbox" id="cbCoord"><label for="cbCoord">Coordination</label>'));
-divOptim.buttonset().find('label').css('width', '30%');
-// customization.append(divOptim);
+var trAdjust = $('<tr></tr>');
+var divAdjust = $('<div align="center"></div>');
+// divAdjust.append($('<input type="checkbox" id="cbFingers"><label id="lbFingers" for="cbFingers">finger</label>'));
+divAdjust.append($('<input type="checkbox" id="cbGrip"><label for="cbGrip">Grip</label>'));
+divAdjust.append($('<input type="checkbox" id="cbStrength"><label for="cbStrength">Strength</label>'));
+divAdjust.append($('<input type="checkbox" id="cbCoord"><label for="cbCoord">Coordination</label>'));
+divAdjust.buttonset().find('label').css('width', '30%');
+// customization.append(divAdjust);
 
 // 4.2	other sliderable optimizations
-var tblSldrOptim = $('<table cellspacing="5" cellpadding="5"></table>');
+var tblSldrAdjust = $('<table cellspacing="5" cellpadding="5"></table>');
 var trFingers = $('<tr><td><label id="lbFingers" class="ui-widget">X finger </label></td><td width="200px"><div id="sldFingers"></div></td></tr>');
 var trGrip = $('<tr><td><label class="ui-widget">Grip </label></td><td width="200px"><div id="sldGrip"></div></td></tr>');
 var trStrength = $('<tr><td><label class="ui-widget">Strength </label></td><td width="200px"><div id="sldStrength"></div></td></tr>');
 var trCoord = $('<tr><td><label class="ui-widget">Coordination </label></td><td width="200px"><div id="sldCoord"></div></td></tr>');
 var trSize = $('<tr><td><label class="ui-widget">Size </label></td><td width="200px"><div id="sldSize"></div></td></tr>');
-tblSldrOptim.append(trFingers);
-tblSldrOptim.append(trGrip);
-tblSldrOptim.append(trStrength);
-tblSldrOptim.append(trCoord);
-tblSldrOptim.append(trSize);
-// tblSldrOptim.append(trAttach);
-trOptim.append(tblSldrOptim);
-customization.append(trOptim);
+// tblSldrAdjust.append(trFingers);
+// tblSldrAdjust.append(trGrip);
+// tblSldrAdjust.append(trStrength);
+// tblSldrAdjust.append(trCoord);
+// tblSldrAdjust.append(trSize);
+// tblSldrAdjust.append(trAttach);
+trAdjust.append(tblSldrAdjust);
+customization.append(trAdjust);
 
 // 4.3	the update button
 var trUpdate = $('<tr></tr>');

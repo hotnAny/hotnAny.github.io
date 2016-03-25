@@ -1,7 +1,8 @@
 /*
+	math routines
+	
 	requiring numeric.js and three.js
 */
-
 
 /*
 	assuming @param points is THREE.Vector3, or something that has x, y, z components
@@ -9,14 +10,12 @@
 	svd related: http://www.mathworks.com/help/matlab/ref/svd.html
 */
 function findPlaneToFitPoints(points) {
-	// package the points into a matrix
 	var G = [];
 
 	for (var i = 0; i < points.length; i++) {
 		G.push([points[i].x, points[i].y, points[i].z, 1]);
 	}
 
-	// console.log(G);
 	var usv = numeric.svd(G);
 
 	var a = usv.V[0][3];
@@ -32,7 +31,9 @@ function findPlaneToFitPoints(points) {
 	};
 }
 
-
+/*
+	project a set of points onto an axis and get the range
+*/
 function project(points, axis) {
 	var min = 1000;
 	var max = -1000;
@@ -46,7 +47,9 @@ function project(points, axis) {
 	return [min, max];
 }
 
-
+/*
+	get a plance from a point and two vectors
+*/
 function getPlaneFromPointVectors(pt, v1, v2) {
 	var cp = new THREE.Vector3().crossVectors(v1, v2);
 
@@ -72,9 +75,30 @@ function getProjection(v, a, b, c, d) {
 	return new THREE.Vector3(v.x + a * t, v.y + b * t, v.z + c * t);
 }
 
+/*
+	?
+*/
 function getVerticalOnPlane(v, a, b, c, d) {
 	var ux = c * v.y - b * v.z;
 	var uy = a * v.z - c * v.x;
 	var uz = b * v.x - a * v.y;
 	return new THREE.Vector3(ux, uy, uz).normalize();
+}
+
+function triangleArea(va, vb, vc) {
+	var ab = vb.clone().sub(va);
+	var ac = vc.clone().sub(va);
+
+	var x1 = ab.x,
+		x2 = ab.y,
+		x3 = ab.z,
+		y1 = ac.x,
+		y2 = ac.y,
+		y3 = ac.z;
+
+	return 0.5 * Math.sqrt(
+		Math.pow((x2 * y3 - x3 * y2), 2) +
+		Math.pow((x3 * y1 - x1 * y3), 2) +
+		Math.pow((x1 * y2 - x2 * y1), 2)
+	);
 }

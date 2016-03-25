@@ -35,6 +35,10 @@ class xacAdaptation {
 		this._fingerFactor = FINGERINIT;
 		this._gripFactor = GRIPINIT;
 		this._targetFactor = TARGETINIT;
+
+		if (this.renderSliders != undefined) {
+			this.renderSliders();
+		}
 	}
 
 	get adaptation() {
@@ -124,6 +128,7 @@ class xacAdaptation {
 			}
 			var tagName = $(this._tags[aid][0]).text().slice(0, -1);
 			gAdaptationComponents[tagName] = a;
+			a.parentAdaptation = this;
 			this._tags[aid].removeClass('ui-state-highlight');
 			triggerUI2ObjAction(this._tags[aid], FOCUSACTION);
 		}
@@ -374,7 +379,361 @@ class xacAdaptation {
 
 		return aCutOff;
 	}
+
+	_genSlider(id, label, min, max, value, parent) {
+		var sldrRow = $('<tr></tr>');
+		var sldrCell = $('<td><label class="ui-widget">' + label + '</label></td><td width="200px"></td>');
+		var sldr = $('<div id="' + id + '"></div>');
+		sldrCell.append(sldr);
+		sldrRow.append(sldrCell);
+
+		sldr.slider({
+			max: max,
+			min: min,
+			range: 'max'
+		});
+
+		sldr.slider('value', value);
+
+		parent.append(sldrRow);
+		sldr.row = sldrRow;
+		return sldr;
+	}
 }
+
+class xacWrapper extends xacAdaptation {
+	constructor(pc, params) {
+		super(pc);
+		this._label = 'Wrapper';
+
+		this._update = function(pid) {
+
+			var l = this._sldrLength.tv();
+			var g = this._sldrGrip.tv();
+			var f = this._sldrFriction.tv();
+
+			var a = this._extrude(this._pc.parts[pid], this._pc.ctrl, g, l);
+			a = this._optimizeGrip(a, this._pc.ctrl, f, new THREE.Vector3(0, -1, 0), undefined);
+
+			// // to or not to cut in half for wraps
+			// if (this._cutPlane != undefined) {
+			// 	// a = xacThing.subtract(getTransformedGeometry(a), getTransformedGeometry(this._cutPlane.m), a.material);
+			// }
+
+			a = xacThing.subtract(getTransformedGeometry(a), getTransformedGeometry(this._pc.obj), a.material);
+			return a;
+		}
+
+		this.update();
+	}
+
+	renderSliders() {
+		var panel = tblSldrAdjust;
+
+		for (var i = panel.children().length - 1; i >= 0; i--) {
+			panel.children()[i].remove();
+		}
+
+		if (this._sldrLength == undefined) {
+			this._sldrLength = this._genSlider('sldrLength', 'Length', 5, 70, 40, panel);
+			this._sldrLength.tv = function() {
+				var value = this.slider('value');
+				return value * value / 1000;
+			};
+		} else {
+			panel.append(this._sldrLength.row);
+		}
+
+		if (this._sldrGrip == undefined) {
+			this._sldrGrip = this._genSlider('sldrGrip', 'Grip', 0, 100, 25, panel);
+			this._sldrGrip.tv = function() {
+				var value = this.slider('value');
+				var minValue = this.slider("option", "min");
+				var maxValue = this.slider("option", "max");
+				return 1 + (value - minValue) * 1.0 / (maxValue - minValue);
+			};
+		} else {
+			panel.append(this._sldrGrip.row);
+		}
+
+		if (this._sldrFriction == undefined) {
+			this._sldrFriction = this._genSlider('sldrFriction', 'Friction', 0, 100, 0, panel);
+			this._sldrFriction.tv = function() {
+				var value = this.slider('value');
+				var minValue = this.slider("option", "min");
+				var maxValue = this.slider("option", "max");
+				return (value - minValue) * 1.0 / (maxValue - minValue);
+			};
+		} else {
+			panel.append(this._sldrFriction.row);
+		}
+	}
+}
+
+class xacHandle extends xacAdaptation {
+	constructor(pc, params) {
+		super(pc);
+		this._label = 'Handle';
+
+		this._update = function(pid) {
+			var a = this._makeHandle(this._pc.parts[pid]);
+			return a;
+		}
+
+		this.update();
+	}
+
+	_makeHandle(part) {
+		if (this._pt == undefined) {
+			this._pt = part.pt;
+		}
+
+		if (this._nml == undefined) {
+			this._nml = part.nmlPt;
+		}
+
+		var s = this._sldrSize.tv();
+		var g = this._sldrGrip.tv();
+		var c = this._sldrCurvature.tv();
+
+		//
+		//	0. compute upright direction
+		//
+		var dirUp = undefined;
+		if (part.type == 'press') {
+			// find an optimal up direction
+		} else if (part.type == 'wrap') {
+			// already given
+			dirUp = part.normal;
+		}
+
+		//
+		//	1. extrude as the connector btwn handle & obj
+		//
+		// assume a cylindrical wrap is okay
+		var extrusion = this._extrude(part, undefined, 1.0, 1);
+
+		// see if only need basicly small wrapper
+		if (extrusion.radius > FINGERDIM * 2) {
+			extrusion = part.display;
+		}
+		// scene.remove(this._base);
+		// scene.add(extrusion);
+
+		//
+		//	2. get a bbox of the extrusion, use it to determine to size and position of the torus handle
+		//
+		var bbox = getBoundingBoxMesh(extrusion);
+
+		//
+		//	3. install the handle and merge with extrusion
+		//
+		// var ri = FINGERDIM * 0.05 * (1 + this._fingerFactor);
+		var ri = FINGERDIM * 0.5 * g * l;
+		// var ro = FINGERDIM * 0.5 * this._fingerFactor + ri * 2;
+		var ro = FINGERDIM * 0.5 * l + ri * 2;
+		this._handle = new xacTorus(ro, ri, 2 * Math.PI, MATERIALOVERLAY).m;
+
+		// resizing the handle
+		// var ratioScale = 1 + 2 * (this._sizeFactor - SIZEINIT);
+		var ratioScale = c * 0.75 + 0.25; // 1 + 2 * (c - SIZEINIT);
+
+		//addAVector(this._pt, this._nml);
+		this._handle.geometry.rotateX(Math.PI / 2);
+		scaleAlongVector(this._handle, ratioScale, this._nml);
+
+		// position
+		var ctrHandle = this._pt.clone().add(this._nml.clone().normalize().multiplyScalar(ro * ratioScale));
+
+		// if it's grasping, then up direction matters
+		if (dirUp != undefined) {
+			rotateObjTo(this._handle, this._nml.clone().cross(dirUp));
+		}
+		// otherwise it doesn't
+		else {
+			rotateObjTo(this._handle, this._nml);
+		}
+		this._handle.position.copy(ctrHandle);
+		// scene.add(handle);
+
+		// TODO: allowing users to flip
+		if (this._toFlip == true) {
+			this._handle.rotateOnAxis(this._nml, Math.PI / 2);
+		}
+
+		//
+		// TODO: 4. combine or remove extra parts
+		//
+		var a = xacThing.union(getTransformedGeometry(this._handle), getTransformedGeometry(extrusion), MATERIALOVERLAY);
+
+		return a;
+	}
+
+	mouseDown(e) {
+		if (this._handle != undefined) {
+			var intersects = rayCast(e.clientX, e.clientY, [this._handle]);
+			if (intersects[0] != undefined && intersects[0].object == this._handle) {
+				if (this._handle != undefined) {
+					this._toFlip = this._toFlip == true ? false : true;
+					this.update();
+				}
+			}
+		}
+
+		var arrParts = [];
+		for (var idx in this._pc.parts) {
+			arrParts.push(this._pc.parts[idx].display);
+		}
+
+		var intersects = rayCast(e.clientX, e.clientY, arrParts);
+
+		if (intersects.length == 0) {
+			intersects = rayCast(e.clientX, e.clientY, [this._pc.obj]);
+		}
+
+		if (intersects[0] != undefined) {
+			this._pt = intersects[0].point;
+			this._nml = intersects[0].face.normal;
+
+			this.update();
+		}
+	}
+
+	renderSliders() {
+		var panel = tblSldrAdjust;
+
+		for (var i = panel.children().length - 1; i >= 0; i--) {
+			panel.children()[i].remove();
+		}
+
+		if (this._sldrSize == undefined) {
+			this._sldrSize = this._genSlider('sldrSize', 'Size', 5, 70, 40, panel);
+			this._sldrSize.tv = function() {
+				var value = this.slider('value');
+				return value * value / 1000;
+			};
+		} else {
+			panel.append(this._sldrSize.row);
+		}
+
+		if (this._sldrGrip == undefined) {
+			this._sldrGrip = this._genSlider('sldrGrip', 'Grip', 0, 100, 25, panel);
+			this._sldrGrip.tv = function() {
+				var value = this.slider('value');
+				var minValue = this.slider("option", "min");
+				var maxValue = this.slider("option", "max");
+				return (1 + (value - minValue) * 1.0 / (maxValue - minValue)) * 0.1;
+			};
+		} else {
+			panel.append(this._sldrGrip.row);
+		}
+
+		if (this._sldrCurvature == undefined) {
+			this._sldrCurvature = this._genSlider('sldrCurvature', 'Curvature', 0, 100, 100, panel);
+			this._sldrCurvature.tv = function() {
+				var value = this.slider('value');
+				var minValue = this.slider("option", "min");
+				var maxValue = this.slider("option", "max");
+				return (value - minValue) * 1.0 / (maxValue - minValue);
+			};
+		} else {
+			panel.append(this._sldrCurvature.row);
+		}
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	LEVER
+//
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+class xacLever extends xacAdaptation {
+	constructor(pc, params) {
+		super(pc);
+		this._label = 'Lever';
+
+		this._update = function(pid) {
+			var ctrPart = getCenter(this._pc.parts[pid]);
+			var g = this._sldrGrip.tv();
+			var extrusion = this._extrude(this._pc.parts[pid], this._pc.ctrl, 1, g, undefined);
+			var lever = this._makeLever(extrusion, pid);
+			return lever;
+		}
+
+		this.update();
+	}
+
+	_makeLever(a, pid) {
+		var s = this._sldrStrength.tv();
+
+		var dirLever;
+
+		// lever applies to both rotation and clutching
+		if (this._pc.ctrl.type == ROTATECTRL) {
+			dirLever = this._pc.ctrl.dirLever.clone().normalize();
+		} else if (this._pc.ctrl.type == CLUTCHCTRL) {
+			dirLever = this._pc.ctrl.partArms[pid].clone();
+		} else {
+			return a;
+		}
+
+		dirLever.normalize();
+
+		var bcylParams = getBoundingCylinder(a, dirLever);
+		var lever = new xacCylinder([bcylParams.radius], bcylParams.height * Math.pow(3, s), MATERIALOVERLAY).m;
+		rotateObjTo(lever, dirLever);
+		// var l = getDimAlong(lever, dirLever);
+		var offsetLever = getDimAlong(lever, dirLever) * 0.3; // * (this._pc.ctrl.type == CLUTCHCTRL ? 1 : -1);
+		lever.position.copy(getBoundingBoxCenter(a).add(dirLever.clone().multiplyScalar(offsetLever)));
+
+		return lever;
+	}
+
+	renderSliders() {
+		var panel = tblSldrAdjust;
+
+		for (var i = panel.children().length - 1; i >= 0; i--) {
+			panel.children()[i].remove();
+		}
+
+		if (this._sldrStrength == undefined) {
+			this._sldrStrength = this._genSlider('sldrStrength', 'Strength', 0, 100, 50, panel);
+			this._sldrStrength.tv = function() {
+				var value = this.slider('value');
+				var minValue = this.slider("option", "min");
+				var maxValue = this.slider("option", "max");
+				return 1 + (value - minValue) * 1.0 / (maxValue - minValue);
+			};
+		} else {
+			panel.append(this._sldrStrength.row);
+		}
+
+		if (this._sldrGrip == undefined) {
+			this._sldrGrip = this._genSlider('sldrGrip', 'Grip', 5, 70, 40, panel);
+			this._sldrGrip.tv = function() {
+				var value = this.slider('value');
+				return value * value / 1000;
+			};
+		} else {
+			panel.append(this._sldrGrip.row);
+		}
+	}
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	Anchor
+//
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 class xacAnchor extends xacAdaptation {
 	constructor(pc, params) {
@@ -385,19 +744,23 @@ class xacAnchor extends xacAdaptation {
 			if (this._partAnchor == undefined) {
 				return;
 			}
+
 			// extrude
-			var extrusion = this._extrude(this._partAnchor, undefined, this._sizeFactor, this._fingerFactor);
+			var c = this._sldrContact.tv();
+			var extrusion = this._extrude(this._partAnchor, undefined, 1, c);
 
 			// make anchor
 			var a = this._makeAnchor(extrusion);
 			return a;
 		}
 
-		// this.update();
 		this._singular = true;
 	}
 
 	_makeAnchor(extrusion) {
+		var c = this._sldrContact.tv();
+		var h = this._sldrHeight.tv();
+		var s = this._sldrStability.tv();
 
 		//
 		//	1. make a cube of the extrusion's bounding box
@@ -419,10 +782,9 @@ class xacAnchor extends xacAdaptation {
 
 		var ints = rayCaster.intersectObjects([bboxObj]);
 
-		// BEFORE
 		var heightAnchor = 0; //getDimAlong(bboxObj, this._partAnchor.normal); // overly large
 		if (ints[0] != undefined) {
-			heightAnchor = ctrExtrusion.distanceTo(ints[0].point) * 2 * this._sizeFactor;
+			heightAnchor = ctrExtrusion.distanceTo(ints[0].point) * 2 * h;
 		}
 
 		//
@@ -431,14 +793,14 @@ class xacAnchor extends xacAdaptation {
 
 		var bcylParams = getBoundingCylinder(extrusion, this._partAnchor.normal);
 		var bcylObj = getBoundingCylinder(this._pc.obj, this._partAnchor.normal);
-		heightAnchor = Math.max(heightAnchor, bcylParams.radius * 0.25) * this._sizeFactor;
+		heightAnchor = Math.max(heightAnchor, bcylParams.radius * 0.25) * h;
 
 		var ctrAnchorStand;
 
-		if (this._fingerFactor < 2) {
+		if (c < 2) {
 			ctrAnchorStand = ctrExtrusion.clone().add(this._partAnchor.normal.clone().multiplyScalar(heightAnchor / 2));
 		} else {
-			var amntRaised = Math.min(heightAnchor / 2, bcylObj.height / 10 * this._sizeFactor);
+			var amntRaised = Math.min(heightAnchor / 2, bcylObj.height / 10 * h);
 			ctrAnchorStand = ctrExtrusion.clone().sub(this._partAnchor.normal.clone().multiplyScalar(amntRaised));
 		}
 
@@ -446,8 +808,8 @@ class xacAnchor extends xacAdaptation {
 		// var rBtmStand = bcylParams.radius * 1.25 * this._sizeFactor;
 		// var rTopStand = rBtmStand / 2;
 		// NOW
-		var rTopStand = bcylParams.radius * 1.25 * this._sizeFactor / 2;
-		var rBtmStand = bcylObj.radius * (this._sizeFactor - 1) + rTopStand;
+		var rTopStand = bcylParams.radius * 1.25 * s / 2;
+		var rBtmStand = bcylObj.radius * (s - 1) + rTopStand;
 
 		var anchorStand = new xacCylinder([rBtmStand, rTopStand], heightAnchor, MATERIALOVERLAY).m;
 		rotateObjTo(anchorStand, this._partAnchor.normal);
@@ -479,13 +841,11 @@ class xacAnchor extends xacAdaptation {
 		//
 		// only consider object
 		//
-		// if (intersects.length == 0) {
 		if (this._pc.obj == undefined) {
 			this._pc.obj = objects[0];
 		}
 
 		intersects = rayCast(e.clientX, e.clientY, [this._pc.obj]);
-		// }
 
 		if (intersects[0] != undefined) {
 			var obj = (this._pc == undefined || this._pc.object == undefined) ? objects[0] : this._pc.obj;
@@ -493,11 +853,9 @@ class xacAnchor extends xacAdaptation {
 				gPartSel.clear();
 				gPartSel.press(intersects[0].object, intersects[0].point, intersects[0].face.normal);
 				this._partAnchor = gPartSel.part;
+				scene.remove(gPartSel.part.display);
 			}
 		}
-
-		// scene.remove(this._partAnchor.display);
-		// scene.remove(this._partAnchor);
 
 		if (Object.keys(this._pc.parts).length == 0) {
 			this._pc.parts['Part ' + gPartSerial] = this._partAnchor;
@@ -505,264 +863,46 @@ class xacAnchor extends xacAdaptation {
 
 		this.update();
 	}
-}
 
-class xacMechanism extends xacAdaptation {
-	constructor(type, pc, params) {
-		super(pc);
+	renderSliders() {
+		var panel = tblSldrAdjust;
 
-		// TODO: be more specific
-		this._label = 'Mechanism';
-
-		this._type = type;
-
-		this._update = function(pid) {
-			var a;
-			switch (this._type) {
-				case CLAMP:
-					a = this._makeClamp(this._pc.parts[pid]);
-					break;
-				case CAM:
-					this._axisRadius = 3;
-					this._axisLength = 20;
-					a = this._makeCam(this._pc);
-					break;
-				case UNIVJOINT:
-					a = this._makeUnivJoint(this._pc.parts[pid]);
-					break;
-			}
-
-			if (a != undefined) {
-				scene.remove(this._a);
-				scene.add(a);
-				this._a = a;
-			}
-
-			return a;
-
+		for (var i = panel.children().length - 1; i >= 0; i--) {
+			panel.children()[i].remove();
 		}
 
-		if (this._type == CAM || this._type == UNIVJOINT) {
-			this.update();
-		}
-	}
-
-	// this version is currently specific to clutching
-	// fulcrum - the position of the axis
-	// dir axis - the orientation of the axis
-	// fixed point - where a wrapper can be attached, and a scaffold can be extended
-	_makeCam(pc) {
-		var ctrl = pc.ctrl;
-		var freeEnd = pc.parts['Part 1'];
-		var fixedEnd = pc.parts['Part 2'];
-		var nmlRotation = new THREE.Vector3(ctrl.plane.A, ctrl.plane.B, ctrl.plane.C).normalize();
-
-		if (nmlRotation.angleTo(freeEnd.normal) < Math.PI / 2) {
-			nmlRotation.multiplyScalar(-1);
+		if (this._sldrContact == undefined) {
+			this._sldrContact = this._genSlider('sldrContact', 'Contact', 5, 70, 40, panel);
+			this._sldrContact.tv = function() {
+				var value = this.slider('value');
+				return value * value / 1000;
+			};
+		} else {
+			panel.append(this._sldrContact.row);
 		}
 
-		//
-		// 1. generate an axis (free end)
-		//
-		var dirLeverFree = ctrl.pocFree.clone().sub(ctrl.fulcrum);
-		var dirToAxis = getVerticalOnPlane(dirLeverFree, ctrl.plane.A, ctrl.plane.B, ctrl.plane.C, ctrl.plane.D); // how to go from free end to the axis
-		var rCam = 10 * this._sizeFactor;
-		var ctrAxis = ctrl.pocFree.clone().add(dirToAxis.clone().normalize().multiplyScalar(rCam));
-		// addABall(ctrAxis, 0xf00fff);
-
-		var camAxis = new xacCylinder(this._axisRadius, this._axisLength, MATERIALOVERLAY).m;
-		rotateObjTo(camAxis, nmlRotation);
-		camAxis.position.copy(ctrAxis);
-		// scene.add(camAxis);
-
-		//
-		// 2. generate a wrapper (fixed end)
-		//
-		var camAnchor = this._extrude(fixedEnd, ctrl, this._sizeFactor, this._fingerFactor);
-		var ctrAnchor = getBoundingBoxCenter(camAnchor);
-		// scene.add(camAnchor);
-
-		//
-		// 3. generate bar 1 (holding the axis)
-		//
-		var endAxis = ctrAxis.clone().sub(nmlRotation.clone().multiplyScalar(this._axisLength * 0.5));
-		addABall(endAxis, 0x0000ff);
-		var lenBar = ctrAnchor.distanceTo(endAxis) + this._axisRadius * 2;
-		var ctrBar = ctrAnchor.clone().add(endAxis).multiplyScalar(0.5);
-		var nmlBar = ctrAnchor.clone().sub(endAxis).normalize();
-
-		var camBar = new xacCylinder(this._axisRadius, lenBar, MATERIALOVERLAY).m;
-		rotateObjTo(camBar, nmlBar);
-		camBar.position.copy(ctrBar);
-		// scene.add(camBar);
-
-		var camStruct = xacThing.union(getTransformedGeometry(camAxis), getTransformedGeometry(camAnchor));
-		camStruct = xacThing.union(getTransformedGeometry(camStruct), getTransformedGeometry(camBar), MATERIALOVERLAY);
-
-		//
-		// 4. generate bar 2 (holding bar 1)
-		// skip this for now
-
-		//
-		// 5. put the cam in place
-		//
-		scene.remove(this._cam);
-		this._cam = new THREE.Mesh(gCam.geometry, MATERIALOVERLAY);
-		var dimsCam = getBoundingBoxDimensions(this._cam);
-		this._cam.scale.set(this._sizeFactor, this._sizeFactor, this._sizeFactor);
-
-		var posCam = ctrAxis.clone().add(nmlRotation.clone().multiplyScalar(this._axisLength * 0.5 + dimsCam[1]));
-
-		// manually align the cam with the axis to make it look better
-		posCam.add(dirToAxis.clone().multiplyScalar(dimsCam[0] * 0.5));
-
-		// addABall(posCam, 0x44ee55);
-		rotateObjTo(this._cam, nmlRotation);
-		this._cam.position.copy(posCam);
-		scene.add(this._cam);
-
-		return camStruct;
-	}
-
-	// assume the part is a wrapping selection
-	_makeClamp(part) {
-		//
-		//	0. params
-		//
-		var widthCluth = 50; // the width of the clutch part (how wide to leave an openning for the wrap)
-		var depthClampNeck = 15; // the 'depth' of the part that sticks out to be connected to the clutch
-		var thicknessClampNeck = 5;
-
-		//	1. make a wrap
-		// use the wrap display as wrap
-
-		//
-		//	2. add & cut a fixed size extrusion as piple clamp openning material
-		//
-		var cylParams = getBoundingCylinder(part.display, part.normal);
-
-		// one exit possibility - cross section too small
-		if (cylParams.radius < depthClampNeck) {
-			return;
+		if (this._sldrHeight == undefined) {
+			this._sldrHeight = this._genSlider('sldrHeight', 'Height', 0, 100, 50, panel);
+			this._sldrHeight.tv = function() {
+				var value = this.slider('value');
+				var minValue = this.slider("option", "min");
+				var maxValue = this.slider("option", "max");
+				return 1 + (value - minValue) * 1.0 / (maxValue - minValue);
+			};
+		} else {
+			panel.append(this._sldrHeight.row);
 		}
 
-		var clampNeck = new xacRectPrism(widthCluth, 0.75 * FINGERDIM, (depthClampNeck + cylParams.radius), MATERIALOVERLAY).m;
-		var clampNeckStub = new xacRectPrism(widthCluth - thicknessClampNeck * 2, 2 * FINGERDIM, (depthClampNeck + cylParams.radius), MATERIALOVERLAY).m;
-
-		var ctrNeck = this._pt.clone().sub(this._nml.clone().multiplyScalar((cylParams.radius - depthClampNeck) * 0.5));
-		var ctrWrapDisplay = getBoundingBoxCenter(part.display);
-
-		var projctrNeck = ctrNeck.clone();
-		projctrNeck.y = 0;
-		var projCtrWrapDisplay = ctrWrapDisplay.clone();
-		projCtrWrapDisplay.y = 0;
-
-		var dirToCtr = projctrNeck.clone().sub(projCtrWrapDisplay);
-		addAVector(ctrNeck, dirToCtr);
-		addAVector(new THREE.Vector3(), new THREE.Vector3(1, 0, 0));
-		addAVector(new THREE.Vector3(), new THREE.Vector3(0, 0, 1));
-
-		var angleToAlign = new THREE.Vector3(0, 0, 1).angleTo(dirToCtr);
-		var axisToRotate = new THREE.Vector3(0, 0, 1).cross(dirToCtr).normalize();
-		var matRotate = new THREE.Matrix4();
-		matRotate.makeRotationAxis(axisToRotate, angleToAlign);
-
-		rotateObjTo(clampNeck, part.normal);
-		clampNeck.applyMatrix(matRotate);
-		clampNeck.position.copy(ctrNeck);
-
-		rotateObjTo(clampNeckStub, part.normal);
-		clampNeckStub.applyMatrix(matRotate);
-		clampNeckStub.position.copy(ctrNeck);
-
-		clampNeck = xacThing.subtract(getTransformedGeometry(clampNeck), getTransformedGeometry(clampNeckStub));
-		var clamp = xacThing.union(getTransformedGeometry(part.display), getTransformedGeometry(clampNeck));
-		clamp = xacThing.subtract(getTransformedGeometry(clamp), getTransformedGeometry(clampNeckStub));
-		clamp = xacThing.subtract(getTransformedGeometry(clamp), getTransformedGeometry(this._pc.obj));
-
-		// scene.remove(this._pc.obj);
-
-		//
-		//	3. drill TWO holes for bolts
-		//
-		var screwStub = new xacCylinder(RADIUSM3, widthCluth * 1.5).m;
-		screwStub.geometry.rotateZ(Math.PI / 2);
-		// scene.add(screwStub);
-		rotateObjTo(screwStub, part.normal);
-		screwStub.applyMatrix(matRotate);
-		screwStub.position.copy(this._pt.clone()); //.add(this._nml.clone().multiplyScalar(depthClampNeck/10)));
-		clamp = xacThing.subtract(getTransformedGeometry(clamp), getTransformedGeometry(screwStub), MATERIALOVERLAY);
-		screwStub.position.add(this._nml.clone().multiplyScalar(10));
-		clamp = xacThing.subtract(getTransformedGeometry(clamp), getTransformedGeometry(screwStub), MATERIALOVERLAY);
-
-		//
-		//	4. connect it with the clutch
-		//
-		scene.remove(this._clamp);
-
-		var clampCopy = new THREE.Mesh(gClamp.geometry.clone(), gClamp.material.clone());
-		rotateObjTo(clampCopy, part.normal);
-		clampCopy.applyMatrix(matRotate);
-		clampCopy.position.copy(this._pt.clone().add(this._nml.clone().multiplyScalar(50)));
-		scene.add(clampCopy);
-
-		this._clamp = clampCopy;
-
-		return clamp;
-	}
-
-	_makeUnivJoint(part) {
-		var uj = undefined;
-		var ctrl = this._pc.ctrl;
-
-		if (ctrl.type != ROTATECTRL) {
-			return;
-		}
-
-		//	1. extrude a base to situate the yoke
-		var base = this._extrude(part, undefined, this._sizeFactor, this._fingerFactor);
-		var ctrBase = getBoundingBoxCenter(base);
-		//	2. situate one of the two yokes
-		var yoke1 = new THREE.Mesh(gYoke.geometry.clone(), gYoke.material.clone());
-		var dimsYoke = getBoundingBoxDimensions(yoke1);
-
-		scene.remove(gYoke);
-		var ctrYoke1 = ctrBase.clone().add(part.normal.clone().multiplyScalar(dimsYoke[1] * 0.5));
-		rotateObjTo(yoke1, part.normal);
-		yoke1.position.copy(ctrYoke1);
-
-		//	3. display the other yoke and cross
-		scene.remove(gYokeCross);
-		var yoke2cross = new THREE.Mesh(gYokeCross.geometry.clone(), gYokeCross.material.clone());
-		rotateObjTo(yoke2cross, part.normal);
-		var dimsYokeCross = getBoundingBoxDimensions(yoke2cross);
-		yoke2cross.position.copy(ctrYoke1.clone().add(part.normal.clone().multiplyScalar((dimsYoke[1] + dimsYokeCross[1]) * 0.5)));
-
-		scene.remove(this._yoke2cross);
-		scene.add(yoke2cross);
-		this._yoke2cross = yoke2cross;
-
-		// uj = xacThing.union(getTransformedGeometry(base), getTransformedGeometry(yoke1), MATERIALOVERLAY);
-		uj = yoke1;
-		return uj;
-	}
-
-	mouseDown(e) {
-		var arrParts = [];
-		for (var idx in this._pc.parts) {
-			arrParts.push(this._pc.parts[idx].display);
-		}
-		var intersects = rayCast(e.clientX, e.clientY, arrParts);
-
-		if (intersects.length == 0) {
-			intersects = rayCast(e.clientX, e.clientY, [this._pc.obj]);
-		}
-
-		if (intersects[0] != undefined) {
-			this._pt = intersects[0].point;
-			this._nml = intersects[0].face.normal;
-
-			this.update();
+		if (this._sldrStability == undefined) {
+			this._sldrStability = this._genSlider('sldrStability', 'Stability', 0, 100, 50, panel);
+			this._sldrStability.tv = function() {
+				var value = this.slider('value');
+				var minValue = this.slider("option", "min");
+				var maxValue = this.slider("option", "max");
+				return 1 + (value - minValue) * 1.0 / (maxValue - minValue);
+			};
+		} else {
+			panel.append(this._sldrStability.row);
 		}
 	}
 }
@@ -786,6 +926,10 @@ class xacGuide extends xacAdaptation {
 	// - opening ratio: targetFactor
 	// - friction: gripFactor
 	_makeGuide(pc) {
+		var s = this._sldrSpace.tv();
+		var l = this._sldrLength.tv();
+		var o = this._sldrOpening.tv();
+
 		var ctrl = pc.ctrl;
 
 		//
@@ -824,7 +968,7 @@ class xacGuide extends xacAdaptation {
 			boundMobile.r = bcylMobile.radius * (1 + margin);
 		} else {
 			var rMobile = bcylMobile.radius * (1 + margin);
-			boundMobile = new xacCylinder(rMobile * this._sizeFactor, lenMobile, MATERIALOVERLAY).m;
+			boundMobile = new xacCylinder(rMobile * s, lenMobile, MATERIALOVERLAY).m;
 			boundMobile.r = rMobile;
 		}
 
@@ -836,11 +980,8 @@ class xacGuide extends xacAdaptation {
 		//
 		// 1. make the tunnel body
 		//
-		// BEFORE
-		// 		var rGuide = Math.max(boundMobile.r * (this._sizeFactor + margin), bcylStatic.radius);
-		// NOW
-		var rGuide = boundMobile.r * (this._sizeFactor + margin);
-		var lenGuide = lenMobile * 0.25 * this._sizeFactor; // + lenStatic * 0.5;
+		var rGuide = boundMobile.r * (s + margin);
+		var lenGuide = lenMobile * 0.25 * l; // + lenStatic * 0.5;
 		var posGuide = ctrStatic.clone().add(ctrl.dir.clone().normalize().multiplyScalar(lenGuide * 0.45));
 		var guideBody = new xacCylinder(rGuide, lenGuide, MATERIALOVERLAY);
 		rotateObjTo(guideBody.m, ctrl.dir);
@@ -856,10 +997,10 @@ class xacGuide extends xacAdaptation {
 		//
 		// 3. make the tunnel's openning
 		//
-		var lenOpen = lenGuide * (0.5 + this._sizeFactor);
-		var rOpen = rGuide * (1 + this._targetFactor);
+		var lenOpen = lenGuide * (s - 0.5);
+		var rOpen = rGuide * o;
 		var guideOpen = new xacCylinder([rOpen, rGuide], lenOpen, MATERIALOVERLAY);
-		var stubOpen = new xacCylinder([boundMobile.r * this._sizeFactor * rOpen / rGuide, boundMobile.r * this._sizeFactor], lenOpen, MATERIALOVERLAY);
+		var stubOpen = new xacCylinder([boundMobile.r * s * rOpen / rGuide, boundMobile.r * s], lenOpen, MATERIALOVERLAY);
 		var guideOpenCut = xacThing.subtract(getTransformedGeometry(guideOpen.m), getTransformedGeometry(stubOpen.m), MATERIALOVERLAY);
 		rotateObjTo(guideOpenCut, ctrl.dir);
 		guideOpenCut.position.copy(posGuide.clone().add(ctrl.dir.clone().normalize().multiplyScalar((lenGuide + lenOpen) * 0.5)));
@@ -890,191 +1031,48 @@ class xacGuide extends xacAdaptation {
 
 		return guide;
 	}
-}
 
-class xacLever extends xacAdaptation {
-	constructor(pc, params) {
-		super(pc);
-		this._label = 'Lever';
+	renderSliders() {
+		var panel = tblSldrAdjust;
 
-		this._update = function(pid) {
-			var ctrPart = getCenter(this._pc.parts[pid]);
-			var extrusion = this._extrude(this._pc.parts[pid], this._pc.ctrl, Math.sqrt(this._sizeFactor), this._fingerFactor, undefined);
-			var lever = this._makeLever(extrusion, pid);
-			return lever;
+		for (var i = panel.children().length - 1; i >= 0; i--) {
+			panel.children()[i].remove();
 		}
 
-		this.update();
-	}
-
-	_makeLever(a, pid) {
-		var dirLever;
-
-		// lever applies to both rotation and clutching
-		if (this._pc.ctrl.type == ROTATECTRL) {
-			dirLever = this._pc.ctrl.dirLever.clone().normalize();
-		} else if (this._pc.ctrl.type == CLUTCHCTRL) {
-			dirLever = this._pc.ctrl.partArms[pid].clone();
+		if (this._sldrSpace == undefined) {
+			this._sldrSpace = this._genSlider('sldrSpace', 'Space', 0, 100, 50, panel);
+			this._sldrSpace.tv = function() {
+				var value = this.slider('value');
+				var minValue = this.slider("option", "min");
+				var maxValue = this.slider("option", "max");
+				return 1 + (value - minValue) * 1.0 / (maxValue - minValue);
+			};
 		} else {
-			return a;
+			panel.append(this._sldrSpace.row);
 		}
 
-		dirLever.normalize();
-
-		// BEFORE: based on extrusion
-		// var aNew = new THREE.Mesh(a.geometry.clone(), a.material);
-		// scaleAlongVector(aNew, Math.pow(3, this._strengthFactor), dirLever);
-		// var l = getDimAlong(aNew, dirLever);
-		// // TODO: make 0.3 programmatic
-		// aNew.translateOnAxis(dirLever, l * 0.3);
-
-		// NOW: use bounding cylinder
-		var bcylParams = getBoundingCylinder(a, dirLever);
-		var lever = new xacCylinder([bcylParams.radius], bcylParams.height * Math.pow(3, this._strengthFactor), MATERIALOVERLAY).m;
-		rotateObjTo(lever, dirLever);
-		var l = getDimAlong(lever, dirLever);
-		var offsetLever = l * 0.3; // * (this._pc.ctrl.type == CLUTCHCTRL ? 1 : -1);
-		lever.position.copy(getBoundingBoxCenter(a).add(dirLever.clone().multiplyScalar(offsetLever)));
-
-		// var aNew = lever;
-
-		return lever;
-	}
-}
-
-class xacWrapper extends xacAdaptation {
-	constructor(pc, params) {
-		super(pc);
-		this._label = 'Wrapper';
-
-		this._update = function(pid) {
-			var a = this._extrude(this._pc.parts[pid], this._pc.ctrl, this._sizeFactor, this._fingerFactor, this._targetFactor);
-			a = this._optimizeGrip(a, this._pc.ctrl, this._gripFactor, new THREE.Vector3(0, -1, 0), undefined);
-
-			// to or not to cut in half for wraps
-			if (this._cutPlane != undefined) {
-				// a = xacThing.subtract(getTransformedGeometry(a), getTransformedGeometry(this._cutPlane.m), a.material);
-			}
-
-			a = xacThing.subtract(getTransformedGeometry(a), getTransformedGeometry(this._pc.obj), a.material);
-			return a;
+		if (this._sldrLength == undefined) {
+			this._sldrLength = this._genSlider('sldrLength', 'Length', 0, 100, 50, panel);
+			this._sldrLength.tv = function() {
+				var value = this.slider('value');
+				var minValue = this.slider("option", "min");
+				var maxValue = this.slider("option", "max");
+				return 1 + (value - minValue) * 1.0 / (maxValue - minValue);
+			};
+		} else {
+			panel.append(this._sldrLength.row);
 		}
 
-		this.update();
-	}
-}
-
-class xacHandle extends xacAdaptation {
-	constructor(pc, params) {
-		super(pc);
-		this._label = 'Handle';
-
-		this._update = function(pid) {
-			var a = this._makeHandle(this._pc.parts[pid]);
-			return a;
-		}
-
-		// require mouse input
-		// this.update();
-	}
-
-	_makeHandle(part) {
-		//
-		//	0. compute upright direction
-		var dirUp = undefined;
-		if (part.type == 'press') {
-			// find an optimal up direction
-		} else if (part.type == 'wrap') {
-			// already given
-			dirUp = part.normal;
-		}
-
-		//
-		//	1. extrude as the connector btwn handle & obj
-		//
-		// assume a cylindrical wrap is okay
-		var extrusion = this._extrude(part, undefined, 1.0, 1);
-
-		// see if only need basicly small wrapper
-		if (extrusion.radius > FINGERDIM * 2) {
-			extrusion = part.display;
-		}
-		scene.remove(this._base);
-		// scene.add(extrusion);
-
-		//
-		//	2. get a bbox of the extrusion, use it to determine to size and position of the torus handle
-		//
-		var bbox = getBoundingBoxMesh(extrusion);
-
-		//
-		//	3. install the handle and merge with extrusion
-		//
-		var ri = FINGERDIM * 0.05 * (1 + this._fingerFactor);
-		var ro = FINGERDIM * 0.5 * this._fingerFactor + ri * 2;
-		this._handle = new xacTorus(ro, ri, 2 * Math.PI, MATERIALOVERLAY).m;
-
-		// resizing the handle
-		var ratioScale = 1 + 2 * (this._sizeFactor - SIZEINIT);
-		scaleAlongVector(this._handle, ratioScale, this._nml);
-		addAVector(this._pt, this._nml);
-		this._handle.geometry.rotateX(Math.PI / 2);
-
-		// position
-		var ctrHandle = this._pt.clone().add(this._nml.clone().normalize().multiplyScalar(ro * ratioScale));
-
-		// if it's grasping, then up direction matters
-		if (dirUp != undefined) {
-			rotateObjTo(this._handle, this._nml.clone().cross(dirUp));
-		}
-		// otherwise it doesn't
-		else {
-			rotateObjTo(this._handle, this._nml);
-		}
-		this._handle.position.copy(ctrHandle);
-		// scene.add(handle);
-
-		// TODO: allowing users to flip
-		if (this._toFlip == true) {
-			this._handle.rotateOnAxis(this._nml, Math.PI / 2);
-		}
-
-		//
-		// TODO: 4. combine or remove extra parts
-		//
-		var a = xacThing.union(getTransformedGeometry(this._handle), getTransformedGeometry(extrusion), MATERIALOVERLAY);
-
-		return a;
-	}
-
-	mouseDown(e) {
-		if (this._handle != undefined) {
-			var intersects = rayCast(e.clientX, e.clientY, [this._handle]);
-			if (intersects[0] != undefined && intersects[0].object == this._handle) {
-				if (this._handle != undefined) {
-					this._toFlip = this._toFlip == false ? true : false;
-					this.update();
-				}
-			}
-		}
-
-		var arrParts = [];
-		for (var idx in this._pc.parts) {
-			arrParts.push(this._pc.parts[idx].display);
-		}
-
-		var intersects = rayCast(e.clientX, e.clientY, arrParts);
-
-		if (intersects.length == 0) {
-			intersects = rayCast(e.clientX, e.clientY, [this._pc.obj]);
-		}
-
-		if (intersects[0] != undefined) {
-			this._pt = intersects[0].point;
-			this._nml = intersects[0].face.normal;
-
-			// this._makeHandle(intersects[0].object);
-			this.update();
+		if (this._sldrOpening == undefined) {
+			this._sldrOpening = this._genSlider('sldrOpening', 'Opening', 0, 100, 50, panel);
+			this._sldrOpening.tv = function() {
+				var value = this.slider('value');
+				var minValue = this.slider("option", "min");
+				var maxValue = this.slider("option", "max");
+				return 1 + (value - minValue) * 1.0 / (maxValue - minValue);
+			};
+		} else {
+			panel.append(this._sldrOpening.row);
 		}
 	}
 }

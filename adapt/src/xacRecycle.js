@@ -720,3 +720,272 @@
 
 			// this._awc = this._pipe;
 			// this._step = this._TOMAKEBOLTHOLE;
+
+			// BEFORE: based on extrusion
+		// var aNew = new THREE.Mesh(a.geometry.clone(), a.material);
+		// scaleAlongVector(aNew, Math.pow(3, this._strengthFactor), dirLever);
+		// var l = getDimAlong(aNew, dirLever);
+		// // TODO: make 0.3 programmatic
+		// aNew.translateOnAxis(dirLever, l * 0.3);
+
+		// NOW: use bounding cylinder
+
+class xacMechanism extends xacAdaptation {
+	constructor(type, pc, params) {
+		super(pc);
+
+		// TODO: be more specific
+		this._label = 'Mechanism';
+
+		this._type = type;
+
+		this._update = function(pid) {
+			var a;
+			switch (this._type) {
+				case CLAMP:
+					a = this._makeClamp(this._pc.parts[pid]);
+					break;
+				case CAM:
+					this._axisRadius = 3;
+					this._axisLength = 20;
+					a = this._makeCam(this._pc);
+					break;
+				case UNIVJOINT:
+					a = this._makeUnivJoint(this._pc.parts[pid]);
+					break;
+			}
+
+			if (a != undefined) {
+				scene.remove(this._a);
+				scene.add(a);
+				this._a = a;
+			}
+
+			return a;
+
+		}
+
+		if (this._type == CAM || this._type == UNIVJOINT) {
+			this.update();
+		}
+	}
+
+	// this version is currently specific to clutching
+	// fulcrum - the position of the axis
+	// dir axis - the orientation of the axis
+	// fixed point - where a wrapper can be attached, and a scaffold can be extended
+	_makeCam(pc) {
+		var ctrl = pc.ctrl;
+		var freeEnd = pc.parts['Part 1'];
+		var fixedEnd = pc.parts['Part 2'];
+		var nmlRotation = new THREE.Vector3(ctrl.plane.A, ctrl.plane.B, ctrl.plane.C).normalize();
+
+		if (nmlRotation.angleTo(freeEnd.normal) < Math.PI / 2) {
+			nmlRotation.multiplyScalar(-1);
+		}
+
+		//
+		// 1. generate an axis (free end)
+		//
+		var dirLeverFree = ctrl.pocFree.clone().sub(ctrl.fulcrum);
+		var dirToAxis = getVerticalOnPlane(dirLeverFree, ctrl.plane.A, ctrl.plane.B, ctrl.plane.C, ctrl.plane.D); // how to go from free end to the axis
+		var rCam = 10 * this._sizeFactor;
+		var ctrAxis = ctrl.pocFree.clone().add(dirToAxis.clone().normalize().multiplyScalar(rCam));
+		// addABall(ctrAxis, 0xf00fff);
+
+		var camAxis = new xacCylinder(this._axisRadius, this._axisLength, MATERIALOVERLAY).m;
+		rotateObjTo(camAxis, nmlRotation);
+		camAxis.position.copy(ctrAxis);
+		// scene.add(camAxis);
+
+		//
+		// 2. generate a wrapper (fixed end)
+		//
+		var camAnchor = this._extrude(fixedEnd, ctrl, this._sizeFactor, this._fingerFactor);
+		var ctrAnchor = getBoundingBoxCenter(camAnchor);
+		// scene.add(camAnchor);
+
+		//
+		// 3. generate bar 1 (holding the axis)
+		//
+		var endAxis = ctrAxis.clone().sub(nmlRotation.clone().multiplyScalar(this._axisLength * 0.5));
+		addABall(endAxis, 0x0000ff);
+		var lenBar = ctrAnchor.distanceTo(endAxis) + this._axisRadius * 2;
+		var ctrBar = ctrAnchor.clone().add(endAxis).multiplyScalar(0.5);
+		var nmlBar = ctrAnchor.clone().sub(endAxis).normalize();
+
+		var camBar = new xacCylinder(this._axisRadius, lenBar, MATERIALOVERLAY).m;
+		rotateObjTo(camBar, nmlBar);
+		camBar.position.copy(ctrBar);
+		// scene.add(camBar);
+
+		var camStruct = xacThing.union(getTransformedGeometry(camAxis), getTransformedGeometry(camAnchor));
+		camStruct = xacThing.union(getTransformedGeometry(camStruct), getTransformedGeometry(camBar), MATERIALOVERLAY);
+
+		//
+		// 4. generate bar 2 (holding bar 1)
+		// skip this for now
+
+		//
+		// 5. put the cam in place
+		//
+		scene.remove(this._cam);
+		this._cam = new THREE.Mesh(gCam.geometry, MATERIALOVERLAY);
+		var dimsCam = getBoundingBoxDimensions(this._cam);
+		this._cam.scale.set(this._sizeFactor, this._sizeFactor, this._sizeFactor);
+
+		var posCam = ctrAxis.clone().add(nmlRotation.clone().multiplyScalar(this._axisLength * 0.5 + dimsCam[1]));
+
+		// manually align the cam with the axis to make it look better
+		posCam.add(dirToAxis.clone().multiplyScalar(dimsCam[0] * 0.5));
+
+		// addABall(posCam, 0x44ee55);
+		rotateObjTo(this._cam, nmlRotation);
+		this._cam.position.copy(posCam);
+		scene.add(this._cam);
+
+		return camStruct;
+	}
+
+	// assume the part is a wrapping selection
+	_makeClamp(part) {
+		//
+		//	0. params
+		//
+		var widthCluth = 50; // the width of the clutch part (how wide to leave an openning for the wrap)
+		var depthClampNeck = 15; // the 'depth' of the part that sticks out to be connected to the clutch
+		var thicknessClampNeck = 5;
+
+		//	1. make a wrap
+		// use the wrap display as wrap
+
+		//
+		//	2. add & cut a fixed size extrusion as piple clamp openning material
+		//
+		var cylParams = getBoundingCylinder(part.display, part.normal);
+
+		// one exit possibility - cross section too small
+		if (cylParams.radius < depthClampNeck) {
+			return;
+		}
+
+		var clampNeck = new xacRectPrism(widthCluth, 0.75 * FINGERDIM, (depthClampNeck + cylParams.radius), MATERIALOVERLAY).m;
+		var clampNeckStub = new xacRectPrism(widthCluth - thicknessClampNeck * 2, 2 * FINGERDIM, (depthClampNeck + cylParams.radius), MATERIALOVERLAY).m;
+
+		var ctrNeck = this._pt.clone().sub(this._nml.clone().multiplyScalar((cylParams.radius - depthClampNeck) * 0.5));
+		var ctrWrapDisplay = getBoundingBoxCenter(part.display);
+
+		var projctrNeck = ctrNeck.clone();
+		projctrNeck.y = 0;
+		var projCtrWrapDisplay = ctrWrapDisplay.clone();
+		projCtrWrapDisplay.y = 0;
+
+		var dirToCtr = projctrNeck.clone().sub(projCtrWrapDisplay);
+		addAVector(ctrNeck, dirToCtr);
+		addAVector(new THREE.Vector3(), new THREE.Vector3(1, 0, 0));
+		addAVector(new THREE.Vector3(), new THREE.Vector3(0, 0, 1));
+
+		var angleToAlign = new THREE.Vector3(0, 0, 1).angleTo(dirToCtr);
+		var axisToRotate = new THREE.Vector3(0, 0, 1).cross(dirToCtr).normalize();
+		var matRotate = new THREE.Matrix4();
+		matRotate.makeRotationAxis(axisToRotate, angleToAlign);
+
+		rotateObjTo(clampNeck, part.normal);
+		clampNeck.applyMatrix(matRotate);
+		clampNeck.position.copy(ctrNeck);
+
+		rotateObjTo(clampNeckStub, part.normal);
+		clampNeckStub.applyMatrix(matRotate);
+		clampNeckStub.position.copy(ctrNeck);
+
+		clampNeck = xacThing.subtract(getTransformedGeometry(clampNeck), getTransformedGeometry(clampNeckStub));
+		var clamp = xacThing.union(getTransformedGeometry(part.display), getTransformedGeometry(clampNeck));
+		clamp = xacThing.subtract(getTransformedGeometry(clamp), getTransformedGeometry(clampNeckStub));
+		clamp = xacThing.subtract(getTransformedGeometry(clamp), getTransformedGeometry(this._pc.obj));
+
+		// scene.remove(this._pc.obj);
+
+		//
+		//	3. drill TWO holes for bolts
+		//
+		var screwStub = new xacCylinder(RADIUSM3, widthCluth * 1.5).m;
+		screwStub.geometry.rotateZ(Math.PI / 2);
+		// scene.add(screwStub);
+		rotateObjTo(screwStub, part.normal);
+		screwStub.applyMatrix(matRotate);
+		screwStub.position.copy(this._pt.clone()); //.add(this._nml.clone().multiplyScalar(depthClampNeck/10)));
+		clamp = xacThing.subtract(getTransformedGeometry(clamp), getTransformedGeometry(screwStub), MATERIALOVERLAY);
+		screwStub.position.add(this._nml.clone().multiplyScalar(10));
+		clamp = xacThing.subtract(getTransformedGeometry(clamp), getTransformedGeometry(screwStub), MATERIALOVERLAY);
+
+		//
+		//	4. connect it with the clutch
+		//
+		scene.remove(this._clamp);
+
+		var clampCopy = new THREE.Mesh(gClamp.geometry.clone(), gClamp.material.clone());
+		rotateObjTo(clampCopy, part.normal);
+		clampCopy.applyMatrix(matRotate);
+		clampCopy.position.copy(this._pt.clone().add(this._nml.clone().multiplyScalar(50)));
+		scene.add(clampCopy);
+
+		this._clamp = clampCopy;
+
+		return clamp;
+	}
+
+	_makeUnivJoint(part) {
+		var uj = undefined;
+		var ctrl = this._pc.ctrl;
+
+		if (ctrl.type != ROTATECTRL) {
+			return;
+		}
+
+		//	1. extrude a base to situate the yoke
+		var base = this._extrude(part, undefined, this._sizeFactor, this._fingerFactor);
+		var ctrBase = getBoundingBoxCenter(base);
+		//	2. situate one of the two yokes
+		var yoke1 = new THREE.Mesh(gYoke.geometry.clone(), gYoke.material.clone());
+		var dimsYoke = getBoundingBoxDimensions(yoke1);
+
+		scene.remove(gYoke);
+		var ctrYoke1 = ctrBase.clone().add(part.normal.clone().multiplyScalar(dimsYoke[1] * 0.5));
+		rotateObjTo(yoke1, part.normal);
+		yoke1.position.copy(ctrYoke1);
+
+		//	3. display the other yoke and cross
+		scene.remove(gYokeCross);
+		var yoke2cross = new THREE.Mesh(gYokeCross.geometry.clone(), gYokeCross.material.clone());
+		rotateObjTo(yoke2cross, part.normal);
+		var dimsYokeCross = getBoundingBoxDimensions(yoke2cross);
+		yoke2cross.position.copy(ctrYoke1.clone().add(part.normal.clone().multiplyScalar((dimsYoke[1] + dimsYokeCross[1]) * 0.5)));
+
+		scene.remove(this._yoke2cross);
+		scene.add(yoke2cross);
+		this._yoke2cross = yoke2cross;
+
+		// uj = xacThing.union(getTransformedGeometry(base), getTransformedGeometry(yoke1), MATERIALOVERLAY);
+		uj = yoke1;
+		return uj;
+	}
+
+	mouseDown(e) {
+		var arrParts = [];
+		for (var idx in this._pc.parts) {
+			arrParts.push(this._pc.parts[idx].display);
+		}
+		var intersects = rayCast(e.clientX, e.clientY, arrParts);
+
+		if (intersects.length == 0) {
+			intersects = rayCast(e.clientX, e.clientY, [this._pc.obj]);
+		}
+
+		if (intersects[0] != undefined) {
+			this._pt = intersects[0].point;
+			this._nml = intersects[0].face.normal;
+
+			this.update();
+		}
+	}
+}
