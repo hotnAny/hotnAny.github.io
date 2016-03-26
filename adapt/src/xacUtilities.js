@@ -139,8 +139,28 @@ function addALine(v1, v2, clr) {
 }
 
 function addAVector(v1, dir, clr) {
-	var v2 = v1.clone().add(dir.clone().normalize().multiplyScalar(1000));
-	return addALine(v1, v2, clr);
+	// BEFORE: simplistic version
+	// var v2 = v1.clone().add(dir.clone().normalize().multiplyScalar(1000));
+	// return addALine(v1, v2, clr);
+
+	// NOW: make an arrow
+	var rArrow = 1;
+	var lArrow = 150;
+	var bodyArrow = new xacCylinder(rArrow, lArrow, MATERIALFOCUS).m;
+
+	var rArrowHead = rArrow * 5;
+	var headArrow = new xacCylinder([0, rArrowHead], rArrowHead * 2, MATERIALFOCUS).m;
+	headArrow.position.add(new THREE.Vector3(0, 1, 0).multiplyScalar(lArrow * 0.5 + rArrowHead));
+
+	var arrow = new THREE.Object3D();
+	arrow.add(bodyArrow);
+	arrow.add(headArrow);
+
+	rotateObjTo(arrow, dir.clone().normalize());
+	arrow.position.copy(v1.clone().add(dir.clone().normalize().multiplyScalar(lArrow * 0.5)));
+
+	scene.add(arrow);
+	return arrow;
 }
 
 function addAPlane(a, b, c, d) {
@@ -180,23 +200,6 @@ function removeBalls() {
 		scene.remove(gBalls[i]);
 	}
 }
-
-// function getRandom(min, max) {
-// 	return Math.random() * (max - min) + min;
-// }
-
-// function getRandomInt(min, max) {
-// 	return Math.floor(Math.random() * (max - min)) + min;
-// }
-
-// function getRandomVector(scale) {
-// 	return new THREE.Vector3(getRandom(-scale, scale), getRandom(-scale, scale), getRandom(-scale, scale));
-// }
-
-// function removeFromArray(arr, elm) {
-// 	var idx = arr.indexOf(elm);
-// 	arr.splice(idx, 1);
-// }
 
 /*
 	show a ui element

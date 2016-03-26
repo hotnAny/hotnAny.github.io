@@ -168,7 +168,7 @@ var MATERIALINVISIBLE= new THREE.MeshBasicMaterial({
 });
 
 var MATERIALFOCUS = new THREE.MeshPhongMaterial({
-     color: 0xff0000,
+     color: 0xE82C0C,
      transparent: true,
      opacity: 1.0
 });
