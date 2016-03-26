@@ -221,7 +221,7 @@ smAttachments.append('<option id="noConnSel"> Add connectors </option>');
 smAttachments.append('<option>Split</option>');
 smAttachments.append('<option>Clamp</option>');
 smAttachments.append('<option>Strap</option>');
-// smAttachments.append('<option>Adhesive</option>');
+smAttachments.append('<option>Beam</option>');
 // smAttachments.append('<option>Flexible part</option>');
 trAddConns.append(smAttachments);
 connectors.append(trAddConns);

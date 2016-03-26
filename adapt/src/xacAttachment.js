@@ -170,9 +170,9 @@ class xacClamp extends xacAttachment {
 	constructor(a) {
 		super(a);
 
-		this._TOSELECTPIPE = 0;	// select the cross section for generating pipes
-		this._TOMAKEPIPE = 1;	// make the pipe
-		this._TOMAKEBOLTHOLE = 2;	// make the bolt holes
+		this._TOSELECTPIPE = 0; // select the cross section for generating pipes
+		this._TOMAKEPIPE = 1; // make the pipe
+		this._TOMAKEBOLTHOLE = 2; // make the bolt holes
 		this._step = this._TOSELECTPIPE;
 
 		this._ve = [];
@@ -311,4 +311,61 @@ class xacClamp extends xacAttachment {
 			this._step = this._TOSELECTPIPE;
 		}
 	}
+}
+
+class xacBeam extends xacAttachment {
+	constructor(a) {
+		super(a);
+
+		this._TOMAKEENDONE = 0;
+		this._TOMAKEENDTWO = 1;
+		this._step = this._TOMAKEENDONE;
+
+		this._partSel = new PartSelector();
+		this._rBeam = 5;
+	}
+
+	mousedown(e) {
+		var intersects = rayCast(e.clientX, e.clientY, this._everything);
+
+		if (intersects[0] == undefined) {
+			return;
+		}
+
+		for (var i = objects.length - 1; i >= 0; i--) {
+			if (objects[i] == intersects[0].object) {
+				gPartSel.press(intersects[0].object, intersects[0].point, intersects[0].face.normal, true);
+				scene.remove(gPartSel.part.display);
+			}
+		}
+
+		if (this._step == this._TOMAKEENDONE) {
+			this._end1 = intersects[0].point;
+			this._step = this._TOMAKEENDTWO;
+		} else if (this._step == this._TOMAKEENDTWO) {
+			this._end2 = intersects[0].point;
+
+			// generate the beam
+			var ctrBeam = this._end1.clone().add(this._end2).multiplyScalar(0.5);
+			var nmlBeam = this._end2.clone().sub(this._end1).normalize();
+			var lBeam = this._end1.distanceTo(this._end2) + 2 * this._rBeam;
+			var beam = new xacCylinder(this._rBeam, lBeam, MATERIALHIGHLIGHT).m;
+			beam.position.copy(ctrBeam);
+			rotateObjTo(beam, nmlBeam);
+
+			// add a pad to conform to the object
+			var pad = gPartSel.part.display;
+			scaleAlongVector(pad, 2, gPartSel.part.nmlPt);
+			scaleAroundVector(pad, 1.5, gPartSel.part.nmlPt);
+
+			beam = xacThing.union(getTransformedGeometry(beam), getTransformedGeometry(pad), MATERIALHIGHLIGHT);
+			scene.add(beam);
+
+			this._step = this._TOMAKEENDONE;
+		}
+	}
+
+	mousemove(e) {}
+
+	mouseup(e) {}
 }
