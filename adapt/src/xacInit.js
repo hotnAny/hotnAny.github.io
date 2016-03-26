@@ -208,7 +208,9 @@ var gAdaptations = [];
 var gCurrAdapt = undefined; // the adaptation that is currently being worked on
 
 var gOptParams = new Array();
-var gConnMethod = undefined;  // connection method
+
+var gCurrAttach = undefined;
+var gAttachments = [];  // connection method
 
 var gObjTemp;  // temp object for visual debugging
 

@@ -573,27 +573,25 @@ var initPanel = function() {
 			smAttachments.selectmenu("refresh");
 
 			// TODO: fix the gAdaptations[0] hard coding
+			var activeAdaptation = justFocusedObjs[3].parentAdaptation;
 			switch (data.item.value) {
 				case 'Split':
-					gConnMethod = new xacSplit(gAdaptations[0]);
+					gCurrAttach = new xacSplit(activeAdaptation);
 					break;
 				case 'Strap':
-					gConnMethod = new xacStrap(gAdaptations[0]);
-					break;
-					// case 'Flexible part':
-					// 	gConnMethod = new xacFlexiblePart(gAdaptations[0]);
+					gCurrAttach = new xacStrap(activeAdaptation);
 					break;
 				case 'Clamp':
-					gConnMethod = new xacClamp(gAdaptations[0]);
+					gCurrAttach = new xacClamp(activeAdaptation);
 					break;
 				case 'Beam':
-					gConnMethod = new xacBeam(gAdaptations[0]);
+					gCurrAttach = new xacBeam(activeAdaptation);
 					break;
 			}
+
 		}
 	});
 
-	// TODO: fix downloading only the last adaptation?
 	btnExport.click(function(e) {
 		// do not remove the objects
 		// for (var i = objects.length - 1; i >= 0; i--) {
@@ -617,10 +615,18 @@ var initPanel = function() {
 			for (var pid in adaptation.adaptations) {
 				if (cnt == idx) {
 					modelToSave = adaptation.adaptations[pid].awc;
+					// no attachables added
 					if (modelToSave == undefined) {
 						modelToSave = adaptation.adaptations[pid];
-						break;
+						// 						break;
 					}
+					// need to merge attachables
+					// else {
+					for (var i = adaptation.attachables.length - 1; i >= 0; i--) {
+						modelToSave = xacThing.union(getTransformedGeometry(modelToSave), getTransformedGeometry(adaptation.attachables[i]), MATERIALHIGHLIGHT);
+					}
+					// }
+					break;
 				}
 				cnt++;
 			}

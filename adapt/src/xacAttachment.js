@@ -9,6 +9,9 @@
 class xacAttachment {
 	constructor(a) {
 		this._a = a; // the original adaptation 
+		if (this._a.attachables == undefined) {
+			this._a.attachables = [];
+		}
 		this._awc = undefined; // the adaptation with connector
 
 		this._as = []; // an array for each adaptation
@@ -19,11 +22,21 @@ class xacAttachment {
 		this._everything = []; // everything including objects and adaptations
 		this._everything = this._everything.concat(objects);
 		this._everything = this._everything.concat(this._as);
+
+		// this._attachables = [];
 	}
 
 	get awc() {
 		return this._awc;
 	}
+
+	// merge() {
+	// 	if(this._awc != undefined) {
+	// 		for (var i = this._attachables.length - 1; i >= 0; i--) {
+	// 			this._awc = xacThing.union(getTransformedGeometry(this._awc), getTransformedGeometry(this._attachables[i]), MATERIALHIGHLIGHT);
+	// 		}
+	// 	}
+	// }
 }
 
 /*
@@ -339,6 +352,12 @@ class xacBeam extends xacAttachment {
 			}
 		}
 
+		// for (var i = this._as.length - 1; i >= 0; i--) {
+		// 	if (this._as[i] == intersects[0].object) {
+		// 		this._adaptation = objects[i];
+		// 	}
+		// }
+
 		if (this._step == this._TOMAKEENDONE) {
 			this._end1 = intersects[0].point;
 			this._step = this._TOMAKEENDTWO;
@@ -360,6 +379,7 @@ class xacBeam extends xacAttachment {
 
 			beam = xacThing.union(getTransformedGeometry(beam), getTransformedGeometry(pad), MATERIALHIGHLIGHT);
 			scene.add(beam);
+			this._a.attachables.push(beam);
 
 			this._step = this._TOMAKEENDONE;
 		}

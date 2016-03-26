@@ -48,11 +48,11 @@ function onMouseDownStep(e) {
 			}
 			break;
 		case 5:
-			if (gConnMethod != undefined) {
+			if (gCurrAttach != undefined) {
 				if (objInt != undefined) {
-					gConnMethod.mousedown(e, objInt.object, objInt.point.clone(), objInt.face.normal);
+					gCurrAttach.mousedown(e, objInt.object, objInt.point.clone(), objInt.face.normal);
 				} else {
-					gConnMethod.mousedown(e);
+					gCurrAttach.mousedown(e);
 				}
 			}
 			break;
@@ -98,11 +98,11 @@ function onMouseMoveStep(e) {
 			}
 			break;
 		case 5:
-			if (gConnMethod != undefined) {
+			if (gCurrAttach != undefined) {
 				if (objInt != undefined) {
-					gConnMethod.mousemove(e, objInt.object, objInt.point.clone(), objInt.face.normal);
+					gCurrAttach.mousemove(e, objInt.object, objInt.point.clone(), objInt.face.normal);
 				} else {
-					gConnMethod.mousemove(e);
+					gCurrAttach.mousemove(e);
 				}
 			}
 			break;
@@ -137,9 +137,9 @@ function onMouseUpStep(e) {
 			}
 			break;
 		case 5:
-			if (gConnMethod != undefined) {
+			if (gCurrAttach != undefined) {
 				// if (objInt != undefined) {
-				gConnMethod.mouseup(e); //, objInt.object, objInt.point.clone(), objInt.face.normal);
+				gCurrAttach.mouseup(e); //, objInt.object, objInt.point.clone(), objInt.face.normal);
 				// }
 			}
 			break;
