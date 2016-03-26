@@ -11,7 +11,7 @@ $(document.body).keydown(function(e) {
 	// escape key to cancle to current selection
 	if (e.which == 27) {
 		gToCancel = true;
-		var pc = gPartsCtrls[gCurrPartCtrl.attr('pcId')];
+		var pc = gPartsActions[gCurrPartsAction.attr('pcId')];
 
 		// clean up control
 		var ctrl = pc.ctrl;
@@ -21,7 +21,7 @@ $(document.body).keydown(function(e) {
 
 		// clean up parts
 		var parts = pc.parts;
-		var lsParts = $(gCurrPartCtrl.children()[0]);
+		var lsParts = $(gCurrPartsAction.children()[0]);
 		for (pid in parts) {
 			var part = parts[pid];
 			triggerUI2ObjAction(part.tag, DELETEACTION);
@@ -170,20 +170,20 @@ var initPanel = function() {
 		});
 
 		// highlight current row
-		if (gCurrPartCtrl != undefined) {
-			gCurrPartCtrl.css('background-color', 'rgba(255, 255, 255, 0.25)');
+		if (gCurrPartsAction != undefined) {
+			gCurrPartsAction.css('background-color', 'rgba(255, 255, 255, 0.25)');
 			showPartsInSelectedRow(false);
-			if (justFocusedUIs[gStep] != undefined) {
-				triggerUI2ObjAction(justFocusedUIs[gStep], FOCUSACTION);
-				justFocusedUIs[gStep] = undefined;
+			if (gJustFocusedUIs[gStep] != undefined) {
+				triggerUI2ObjAction(gJustFocusedUIs[gStep], FOCUSACTION);
+				gJustFocusedUIs[gStep] = undefined;
 			}
 		}
-		gCurrPartCtrl = trPartsCtrls.tdParts;
-		gCurrPartCtrl.css('background-color', 'rgba(128, 128, 128, 0.25)');
+		gCurrPartsAction = trPartsCtrls.tdParts;
+		gCurrPartsAction.css('background-color', 'rgba(128, 128, 128, 0.25)');
 
 		// store the new row into a global array
-		gCurrPartCtrl.attr('pcId', 'pc' + Object.keys(gPartsCtrls).length);
-		gPartsCtrls[gCurrPartCtrl.attr('pcId')] = {
+		gCurrPartsAction.attr('pcId', 'pc' + Object.keys(gPartsActions).length);
+		gPartsActions[gCurrPartsAction.attr('pcId')] = {
 			obj: undefined,
 			parts: new Array(),
 			ctrl: undefined
@@ -195,30 +195,30 @@ var initPanel = function() {
 		trPartsCtrls.tdParts.click(function(event) {
 
 			// EXPERIMENTAL: remove all the display/visuals of the last selected row
-			if (gCurrPartCtrl != undefined) {
+			if (gCurrPartsAction != undefined) {
 				showPartsInSelectedRow(false);
 
-				if (justFocusedUIs[gStep] != undefined) {
-					triggerUI2ObjAction(justFocusedUIs[gStep], FOCUSACTION);
-					justFocusedUIs[gStep] = undefined;
+				if (gJustFocusedUIs[gStep] != undefined) {
+					triggerUI2ObjAction(gJustFocusedUIs[gStep], FOCUSACTION);
+					gJustFocusedUIs[gStep] = undefined;
 				}
 			}
 
 			// if it's (1) directly (2) clikcing the same row
-			if ($(event.target).is('td') && gCurrPartCtrl != undefined && gCurrPartCtrl.attr('pcId') == $(this).attr('pcId')) {
+			if ($(event.target).is('td') && gCurrPartsAction != undefined && gCurrPartsAction.attr('pcId') == $(this).attr('pcId')) {
 				$(this).css('background-color', '#rgba(255, 255, 255, 0.25)');
-				gCurrPartCtrl = undefined;
+				gCurrPartsAction = undefined;
 
 			} else {
-				if (gCurrPartCtrl != undefined) {
-					gCurrPartCtrl.css('background-color', 'rgba(255, 255, 255, 0.25)');
+				if (gCurrPartsAction != undefined) {
+					gCurrPartsAction.css('background-color', 'rgba(255, 255, 255, 0.25)');
 				}
 				$(this).css('background-color', 'rgba(128, 128, 128, 0.25)');
-				gCurrPartCtrl = $(this);
+				gCurrPartsAction = $(this);
 			}
 
 			// EXPERIMENTAL: show all the display/visuals of the newly selected row
-			if (gCurrPartCtrl != undefined) {
+			if (gCurrPartsAction != undefined) {
 				showPartsInSelectedRow(true);
 			}
 
@@ -250,23 +250,23 @@ var initPanel = function() {
 				var ctrl = undefined;
 				switch (type) {
 					case GRASPCTRL:
-						gPartsCtrls[pcId].ctrl = new xacGrasp();
+						gPartsActions[pcId].ctrl = new xacGrasp();
 						break;
 					case PUSHPULLCTRL:
-						gPartsCtrls[pcId].ctrl = new xacPushPull();
+						gPartsActions[pcId].ctrl = new xacPushPull();
 						break;
 					case ROTATECTRL:
-						gPartsCtrls[pcId].ctrl = new xacRotate();
+						gPartsActions[pcId].ctrl = new xacRotate();
 						break;
 					case CLUTCHCTRL:
-						gPartsCtrls[pcId].ctrl = new xacClutch();
+						gPartsActions[pcId].ctrl = new xacClutch();
 						break;
 					case JOINSEPCTRL:
-						gPartsCtrls[pcId].ctrl = new xacJoinSeparate(objects);
+						gPartsActions[pcId].ctrl = new xacJoinSeparate(objects);
 
 						// TODO fix these stub values
-						gPartsCtrls[pcId].parts['Part 1'] = objects[0]; // as a placeholder
-						gPartsCtrls[pcId].obj = objects[0];
+						gPartsActions[pcId].parts['Part 1'] = objects[0]; // as a placeholder
+						gPartsActions[pcId].obj = objects[0];
 						break;
 				}
 
@@ -375,7 +375,7 @@ var initPanel = function() {
 			}
 
 			// get the selected parts-ctrl
-			var pc = gPartsCtrls[gCurrPartCtrl.attr('pcId')];
+			var pc = gPartsActions[gCurrPartsAction.attr('pcId')];
 
 			var type = parseInt(data['item'].value);
 			switch (type) {
@@ -522,8 +522,8 @@ var initPanel = function() {
 
 	btnUpdate.click(function(e) {
 		gStep = 3;
-		justFocusedObjs[gStep].parentAdaptation.update();
-		// justFocusedObjs[gStep] = undefined;
+		gJustFocusedObjs[gStep].parentAdaptation.update();
+		// gJustFocusedObjs[gStep] = undefined;
 
 		// for (var i = gAdaptations.length - 1; i >= 0; i--) {
 		// 	if (gAdaptations[i] == undefined) {
@@ -573,7 +573,7 @@ var initPanel = function() {
 			smAttachments.selectmenu("refresh");
 
 			// TODO: fix the gAdaptations[0] hard coding
-			var activeAdaptation = justFocusedObjs[3].parentAdaptation;
+			var activeAdaptation = gJustFocusedObjs[3].parentAdaptation;
 			switch (data.item.value) {
 				case 'Split':
 					gCurrAttach = new xacSplit(activeAdaptation);
@@ -662,28 +662,28 @@ function triggerUI2ObjAction(ui, action, key) {
 		case FOCUSACTION:
 			// the ui part
 			var wasHighlighted = $(ui).hasClass('ui-state-highlight');
-			if (justFocusedUIs[gStep] != undefined) {
-				justFocusedUIs[gStep].removeClass('ui-state-highlight');
+			if (gJustFocusedUIs[gStep] != undefined) {
+				gJustFocusedUIs[gStep].removeClass('ui-state-highlight');
 			}
 			if (wasHighlighted == false) {
 				ui.addClass('ui-state-highlight');
 			}
-			justFocusedUIs[gStep] = ui;
+			gJustFocusedUIs[gStep] = ui;
 
 			// the obj part
-			if (justFocusedObjs[gStep] != undefined) {
-				justFocusedObjs[gStep].material.color.setHex(colorOverlay);
-				justFocusedObjs[gStep].material.needsUpdate = true;
+			if (gJustFocusedObjs[gStep] != undefined) {
+				gJustFocusedObjs[gStep].material.color.setHex(colorOverlay);
+				gJustFocusedObjs[gStep].material.needsUpdate = true;
 			}
 
 			switch (gStep) {
 				case 2:
-					var parts = gPartsCtrls[gCurrPartCtrl.attr('pcId')].parts;
+					var parts = gPartsActions[gCurrPartsAction.attr('pcId')].parts;
 					var part = parts[nameUI];
 					if (part != undefined && wasHighlighted == false) {
 						part.display.material.color.setHex(colorHighlight);
 						part.display.material.needsUpdate = true;
-						justFocusedObjs[gStep] = part.display;
+						gJustFocusedObjs[gStep] = part.display;
 					}
 					break;
 				case 3:
@@ -691,7 +691,7 @@ function triggerUI2ObjAction(ui, action, key) {
 					if (adaptationComponent != undefined && wasHighlighted == false) {
 						adaptationComponent.material.color.setHex(colorHighlight);
 						adaptationComponent.material.needsUpdate = true;
-						justFocusedObjs[gStep] = adaptationComponent;
+						gJustFocusedObjs[gStep] = adaptationComponent;
 						adaptationComponent.parentAdaptation.renderSliders();
 					}
 					break;
@@ -704,14 +704,14 @@ function triggerUI2ObjAction(ui, action, key) {
 			switch (gStep) {
 				case 2:
 					// part
-					var parts = gPartsCtrls[gCurrPartCtrl.attr('pcId')].parts;
+					var parts = gPartsActions[gCurrPartsAction.attr('pcId')].parts;
 					var part = parts[nameUI];
 					part.deleted = true;
 					gPartSel.clear();
 					scene.remove(part.display);
 
 					// ctrl
-					var ctrl = gPartsCtrls[gCurrPartCtrl.attr('pcId')].ctrl;
+					var ctrl = gPartsActions[gCurrPartsAction.attr('pcId')].ctrl;
 					ctrl.clear();
 					break;
 				case 3:
@@ -730,8 +730,8 @@ function triggerUI2ObjAction(ui, action, key) {
 // TODO: do not require to have parts
 function numValidPartsCtrl() {
 	var n = 0;
-	for (var pcId in gPartsCtrls) {
-		pc = gPartsCtrls[pcId];
+	for (var pcId in gPartsActions) {
+		pc = gPartsActions[pcId];
 		// either one is none empty is fine
 		if (Object.keys(pc.parts).length > 0 || pc.ctrl != undefined) {
 			n++;
@@ -741,14 +741,14 @@ function numValidPartsCtrl() {
 }
 
 function getActiveCtrl() {
-	if (gCurrPartCtrl != undefined) {
-		return gPartsCtrls[gCurrPartCtrl.attr('pcId')].ctrl;
+	if (gCurrPartsAction != undefined) {
+		return gPartsActions[gCurrPartsAction.attr('pcId')].ctrl;
 	}
 }
 
 function showPartsInSelectedRow(flag) {
-	var pcId = gCurrPartCtrl.attr('pcId');
-	var parts = gPartsCtrls[pcId].parts;
+	var pcId = gCurrPartsAction.attr('pcId');
+	var parts = gPartsActions[pcId].parts;
 	for (var idx in parts) {
 		// scene.remove(parts[idx]);
 		if (parts[idx].display != undefined) {

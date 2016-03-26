@@ -36,7 +36,7 @@
 	<script src="src/xacInit.js"></script>
 	<script src="src/xacThing.js"></script>
 	<script src="src/xac3dui.js"></script>
-	<script src="src/xacControl.js"></script>
+	<script src="src/xacAction.js"></script>
 	<script src="src/xacMouseControl.js"></script>
 	<script src="src/xacMouseStep.js"></script>
 	<script src="src/xacPanel.ui.js"></script>
@@ -45,7 +45,6 @@
 	<script src="src/xacAttachment.js"></script>
 	<script src="src/xac.math.js"></script>
 	<script src="src/xac.gl.js"></script>
-	<!-- <script src="src/xacStrapFabrication.js"></script> -->
 
 	<script>
 			/* 
@@ -63,17 +62,11 @@
 			renderer.setClearColor( BACKGROUNDCOLOR );
 
 			var render = function () {
-			  
 				requestAnimationFrame( render );
-
 				controls.update();
-
 				stats.update(); 
-			  
 				lights[0].position.copy(camera.position);
-
 				renderer.render(scene, camera);
-
 			};
 
 			render();

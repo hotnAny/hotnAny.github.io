@@ -651,11 +651,11 @@ class PartSelector {
 	*/
 	finishUp() {
 		if (this._part != undefined) {
-			var parts = gPartsCtrls[gCurrPartCtrl.attr('pcId')].parts;
-			gPartsCtrls[gCurrPartCtrl.attr('pcId')].obj = this._obj;
+			var parts = gPartsActions[gCurrPartsAction.attr('pcId')].parts;
+			gPartsActions[gCurrPartsAction.attr('pcId')].obj = this._obj;
 			gPartSerial += 1;
 			var tagName = 'Part ' + gPartSerial; //(Object.keys(parts).length + 1);
-			var lsParts = $(gCurrPartCtrl.children()[0]); //.attr('lsParts');
+			var lsParts = $(gCurrPartsAction.children()[0]); //.attr('lsParts');
 			var tag = lsParts.tagit('createTag', tagName);
 			parts[tagName] = this._part;
 			this._part.tag = tag;

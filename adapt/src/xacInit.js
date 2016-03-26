@@ -50,7 +50,6 @@ var renderer = new THREE.WebGLRenderer({
      antialias: true
 });
 renderer.setSize(window.innerWidth, window.innerHeight);
-// renderer.setPixelRatio( window.devicePixelRatio );
 document.body.appendChild(renderer.domElement);
 
 var scene = new THREE.Scene();
@@ -200,28 +199,30 @@ var gYokeCross = undefined;
 
 var gStep = 0;
 var gItems = [];
-var gPartSerial = 0;
-var gPartsCtrls = new Array();
-var gCurrPartCtrl = undefined; // the parts-controls that is currently selected to be interacted with
 
+// actions
+var gPartSerial = 0;
+var gPartsActions = new Array();
+var gCurrPartsAction = undefined; // the parts-controls that is currently selected to be interacted with
+
+// adaptations
 var gAdaptations = [];
 var gCurrAdapt = undefined; // the adaptation that is currently being worked on
+var gAdaptationComponents = new Array();
 
-var gOptParams = new Array();
+// var gOptParams = new Array();
 
+// attachment
 var gCurrAttach = undefined;
 var gAttachments = [];  // connection method
 
 var gObjTemp;  // temp object for visual debugging
 
 //
-//   Global
-//   TODO: rename them
+//   dealing with focus on ui-objects
 //
-var justFocusedUIs = new Array();
-var justFocusedObjs = new Array();
+var gJustFocusedUIs = new Array();
+var gJustFocusedObjs = new Array();
 var FOCUSACTION = 0;
 var DELETEACTION = 1;
 var ADDACTION = 2;
-
-var gAdaptationComponents = new Array();

@@ -6,7 +6,7 @@ var ROTATECTRL = 2;
 var CLUTCHCTRL = 3;
 var JOINSEPCTRL = 4;
 
-class xacControl {
+class xacAction {
 	constructor(type) {
 		this._type = type;
 		this._ve = []; // visual elements
@@ -27,7 +27,7 @@ class xacControl {
 /*
 	grasping control
 */
-class xacGrasp extends xacControl {
+class xacGrasp extends xacAction {
 	constructor() {
 		super(GRASPCTRL);
 		this._g = new THREE.Vector3(0, -1, 0);
@@ -62,7 +62,7 @@ class xacGrasp extends xacControl {
 /*
 	push/pull control
 */
-class xacPushPull extends xacControl {
+class xacPushPull extends xacAction {
 	constructor(type) {
 		super(PUSHPULLCTRL);
 
@@ -106,7 +106,7 @@ class xacPushPull extends xacControl {
 			gSticky = false;
 			setTimeout(function(ctrl) {
 				ctrl._sphereSel.clear();
-			}, 500, this);
+			}, 1000, this);
 		}
 	}
 
@@ -126,7 +126,83 @@ class xacPushPull extends xacControl {
 	}
 }
 
-class xacClutch extends xacControl {
+/*
+	routines to specify a rotation control
+*/
+class xacRotate extends xacAction {
+	constructor() {
+		super(ROTATECTRL);
+
+		// the steps
+		this._TOSELECTOBJ = 0;
+		this._TOSELECTPLANE = 1;
+		this._TOSELECTFULCRUM = 2;
+
+		this._step = this._TOSELECTOBJ;
+	}
+
+	get fulcrum() {
+		return this._fulcrum;
+	}
+
+	get dirLever() {
+		return this._dirLever;
+	}
+
+	mouseDown(e, obj, pt, fnml) {
+		switch (this._step) {
+			case this._TOSELECTOBJ:
+				// do 3dui press
+				if (obj != undefined && pt != undefined && fnml != undefined) {
+					gPartSel.press(obj, pt, fnml, true);
+					this._poc = pt.clone(); // poc: point of contact
+					gPartSel.finishUp();
+					this._step = this._TOSELECTPLANE;
+					this._planeSel = new PlaneSelector(pt);
+				}
+				break;
+			case this._TOSELECTPLANE:
+				// show planes
+				if (this._planeSel.hitTest(e) == true) {
+					gSticky = true;
+					this._step = this._TOSELECTFULCRUM;
+				}
+				break;
+			case this._TOSELECTFULCRUM:
+				this._fulcrum = this._planeSel.selection;
+				this._dirLever = this._poc.clone().sub(this._fulcrum);
+
+				this._step = this._TOSELECTOBJ;
+
+				gSticky = false;
+				setTimeout(function(ctrl) {
+					ctrl._planeSel.clear();
+				}, 1000, this);
+				break;
+		}
+	}
+
+	mouseMove(e, obj, pt, fml) {
+		switch (this._step) {
+			case this._TOSELECTPLANE:
+				break;
+			case this._TOSELECTFULCRUM:
+				this._planeSel.hitTest(e);
+				break;
+		}
+	}
+
+	mouseUp(e, obj, pt, fml) {}
+
+	cancel() {
+		this._step = this._TOSELECTOBJ;
+		this.clear();
+		this._planeSel.clear();
+		gPartSel.clear();
+	}
+}
+
+class xacClutch extends xacAction {
 	constructor(objs) {
 		super(CLUTCHCTRL);
 
@@ -194,7 +270,7 @@ class xacClutch extends xacControl {
 
 				setTimeout(function(ctrl) {
 					ctrl._planeSel.clear();
-				}, 500, this);
+				}, 1000, this);
 				break;
 		}
 	}
@@ -238,7 +314,7 @@ class xacClutch extends xacControl {
 	}
 }
 
-class xacJoinSeparate extends xacControl {
+class xacJoinSeparate extends xacAction {
 	constructor(objs) {
 		super(JOINSEPCTRL);
 
@@ -312,78 +388,4 @@ class xacJoinSeparate extends xacControl {
 	mouseMove(e, obj, pt, fnml) {}
 
 	mouseUp(e, obj, pt, fnml) {}
-}
-
-
-
-/*
-	routines to specify a rotation control
-*/
-class xacRotate extends xacControl {
-	constructor() {
-		super(ROTATECTRL);
-
-		// the steps
-		this._TOSELECTOBJ = 0;
-		this._TOSELECTPLANE = 1;
-		this._TOSELECTFULCRUM = 2;
-
-		this._step = this._TOSELECTOBJ;
-	}
-
-	get fulcrum() {
-		return this._fulcrum;
-	}
-
-	get dirLever() {
-		return this._dirLever;
-	}
-
-	mouseDown(e, obj, pt, fnml) {
-		switch (this._step) {
-			case this._TOSELECTOBJ:
-				// do 3dui press
-				if (obj != undefined && pt != undefined && fnml != undefined) {
-					gPartSel.press(obj, pt, fnml, true);
-					this._poc = pt.clone(); // poc: point of contact
-					gPartSel.finishUp();
-					this._step = this._TOSELECTPLANE;
-					this._planeSel = new PlaneSelector(pt);
-				}
-				break;
-			case this._TOSELECTPLANE:
-				// show planes
-				if (this._planeSel.hitTest(e) == true) {
-					gSticky = true;
-					this._step = this._TOSELECTFULCRUM;
-				}
-				break;
-			case this._TOSELECTFULCRUM:
-				this._planeSel.clear();
-				this._fulcrum = this._planeSel.selection;
-				this._dirLever = this._poc.clone().sub(this._fulcrum);
-				gSticky = false;
-				this._step = this._TOSELECTOBJ;
-				break;
-		}
-	}
-
-	mouseMove(e, obj, pt, fml) {
-		switch (this._step) {
-			case this._TOSELECTPLANE:
-				break;
-			case this._TOSELECTFULCRUM:
-				this._planeSel.hitTest(e);
-				break;
-		}
-	}
-
-	mouseUp(e, obj, pt, fml) {}
-
-	cancel() {
-		this._step = this._TOSELECTOBJ;
-		this.clear();
-		this._planeSel.clear();
-		gPartSel.clear();
-	}
 }

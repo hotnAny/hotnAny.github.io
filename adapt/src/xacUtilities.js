@@ -138,14 +138,14 @@ function addALine(v1, v2, clr) {
 	return line;
 }
 
-function addAVector(v1, dir, clr) {
+function addAVector(v1, dir, clr, len) {
 	// BEFORE: simplistic version
 	// var v2 = v1.clone().add(dir.clone().normalize().multiplyScalar(1000));
 	// return addALine(v1, v2, clr);
 
 	// NOW: make an arrow
 	var rArrow = 1;
-	var lArrow = 150;
+	var lArrow = len == undefined ? 100 : len;
 	var bodyArrow = new xacCylinder(rArrow, lArrow, MATERIALFOCUS).m;
 
 	var rArrowHead = rArrow * 5;
