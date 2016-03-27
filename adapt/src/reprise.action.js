@@ -1,4 +1,10 @@
-"use strict";
+/**
+ * means for specifying types of actions with 3d objects
+ * 	
+ * @author Xiang 'Anthony' Chen http://xiangchen.me
+ */
+
+"use strict"; 
 
 var GRASPCTRL = 0;
 var PUSHPULLCTRL = 1;
@@ -6,6 +12,9 @@ var ROTATECTRL = 2;
 var CLUTCHCTRL = 3;
 var JOINSEPCTRL = 4;
 
+/*
+	the base class for a type of action
+*/
 class xacAction {
 	constructor(type) {
 		this._type = type;
@@ -29,7 +38,7 @@ class xacAction {
 }
 
 /*
-	grasping control
+	grasping action
 */
 class xacGrasp extends xacAction {
 	constructor() {
@@ -64,7 +73,7 @@ class xacGrasp extends xacAction {
 }
 
 /*
-	push/pull control
+	push/pull action
 */
 class xacPushPull extends xacAction {
 	constructor(type) {
@@ -131,7 +140,7 @@ class xacPushPull extends xacAction {
 }
 
 /*
-	routines to specify a rotation control
+	rotation action
 */
 class xacRotate extends xacAction {
 	constructor() {
@@ -208,7 +217,7 @@ class xacRotate extends xacAction {
 }
 
 /*
-	clutching
+	clutching action
 */
 class xacClutch extends xacAction {
 	constructor(objs) {
@@ -337,7 +346,7 @@ class xacJoinSeparate extends xacAction {
 		// show bounding box
 		this._bboxes = [];
 		for (var i = objs.length - 1; i >= 0; i--) {
-			// var bbox = new THREE.BoundingBoxHelper(objs[i], colorHighlight);
+			// var bbox = new THREE.BoundingBoxHelper(objs[i], COLORHIGHLIGHT);
 			var bboxSel = new BboxSelector(objs[i]);
 			// scene.add(bboxSel.box);
 			// bboxSel.box.selector = bboxSel;

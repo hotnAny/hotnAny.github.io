@@ -432,7 +432,7 @@
 
 // 	// 	} else {
 // 	// 		this._obj = obj;
-// 	// 		addABall(pt, colorHighlight, 0.5);
+// 	// 		addABall(pt, COLORHIGHLIGHT, 0.5);
 // 	// 		this._strokePoints.push(pt);
 // 	// 	}
 // 	// }
@@ -563,7 +563,7 @@
 // 	mousemove(e, obj, pt, fnml) {
 // 		this._obj = obj;
 // 		this._strokePoints.push(pt);
-// 		addABall(pt, colorStroke);
+// 		addABall(pt, COLORSTROKE);
 // 	}
 
 // 	mouseup(e) {

@@ -1,22 +1,8 @@
-/*-----------------------------------------------------------------------------------------------
-     
-     template
-
------------------------------------------------------------------------------------------------*/
-// var D = false;
-
-var helpers = new Array();
-
-
-var boxes = new THREE.Object3D();
-
-// ///////////////
-var EPSILON = 10e-3;
-var INFINITY = 10e9;
-
-var BACKGROUNDCOLOR = 0xF2F0F0;
-var GROUNDCOLOR = 0xF2F0F0;
-var GRIDCOLOR = 0x888888;
+/**
+ * initialization of variables
+ *
+ * @author Xiang 'Anthony' Chen http://xiangchen.me
+ */
 
 var LEFTMOUSE = 1;
 var MIDMOUSE = 2;
@@ -24,28 +10,20 @@ var RIGHTMOUSE = 3;
 
 var WIDTHCONTAINER = 388;
 
-var ball;
-
-var objDynamic = null;
-var objStatic = null;
 var objects = new Array();
-var legends = new Array();
-var octrees = new Array();
-var voxelGrids = new Array();
-var supports = new Array();
-var objectPair; // = new THREE.Object3D();
 
-var objectMoved = new Array();
-var selected = new Array();
+// colors
+var BACKGROUNDCOLOR = 0xF2F0F0;
+var GROUNDCOLOR = 0xF2F0F0;
+var GRIDCOLOR = 0x888888;
 
-var colorNormal = 0xDB5B8A;
-var colorContrast = 0xD1D6E7; // is the contrast of the colorNormal
-var colorOverlay = 0xF2F2F2;  //colorContrast;
-var colorHighlight = 0xfffa90; //
-var colors = [0xdd0044, 0x00dd44, 0x4400dd];
-var colorsBold = [0xff0000, 0x00ff00, 0x0000ff];
-var colorStroke = 0xff0000;
+var COLORNORMAL = 0xDB5B8A; // the normal color
+var COLORCONTRAST = 0xD1D6E7; // is the contrast of the COLORNORMAL
+var COLOROVERLAY = 0xF2F2F2; // 
+var COLORHIGHLIGHT = 0xfffa90; //
+var COLORSTROKE = 0xE82C0C;
 
+// set up three js rendering environment
 var renderer = new THREE.WebGLRenderer({
      antialias: true
 });
@@ -53,7 +31,6 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 var scene = new THREE.Scene();
-
 var camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 10000);
 var gPosCam = new THREE.Vector3(-16, 8, 10);
 camera.position.copy(gPosCam.clone().multiplyScalar(50));
@@ -120,35 +97,32 @@ lights[0].castShadow = true;
 scene.add(lights[0]);
 
 
-/*-----------------------------------------------------------------------------------------------
-     
-     app specific
-
------------------------------------------------------------------------------------------------*/
-
-var D = gup('d', window.location.href);
+//
+//   materials
+//
+// var D = gup('d', window.location.href);
 
 var MATERIALNORMAL = new THREE.MeshPhongMaterial({
-     color: colorNormal,
+     color: COLORNORMAL,
      transparent: true,
      opacity: 0.75
 });
 
 var MATERIALCONTRAST = new THREE.MeshPhongMaterial({
-     color: colorContrast,
+     color: COLORCONTRAST,
      transparent: true,
      // wireframe: true,
      opacity: 0.25
 });
 
 var MATERIALOVERLAY = new THREE.MeshPhongMaterial({
-     color: colorOverlay,
+     color: COLOROVERLAY,
      transparent: true,
      opacity: 0.75
 });
 
 var MATERIALHIGHLIGHT = new THREE.MeshPhongMaterial({
-     color: colorHighlight,
+     color: COLORHIGHLIGHT,
      transparent: true,
      opacity: 0.75
 });
@@ -167,11 +141,12 @@ var MATERIALINVISIBLE= new THREE.MeshBasicMaterial({
 });
 
 var MATERIALFOCUS = new THREE.MeshPhongMaterial({
-     color: 0xE82C0C,
+     color: COLORSTROKE,
      transparent: true,
      opacity: 1.0
 });
 
+// hand/finger size
 var FINGERSIZE = 15;
 var HANDSIZE = 150;
 
@@ -209,8 +184,6 @@ var gCurrPartsAction = undefined;
 var gAdaptations = [];
 var gCurrAdapt = undefined; // the adaptation that is currently being worked on
 var gAdaptationComponents = new Array();
-
-// var gOptParams = new Array();
 
 // attachment
 var gCurrAttach = undefined;

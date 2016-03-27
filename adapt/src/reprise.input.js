@@ -5,7 +5,7 @@
  * @author Xiang 'Anthony' Chen http://xiangchen.me
  */
 
- 
+// mouse controls
 gMouseCtrls.rotateSpeed = 5.0;
 gMouseCtrls.zoomSpeed = 0.5;
 gMouseCtrls.panSpeed = 2;
@@ -19,12 +19,14 @@ gMouseCtrls.dynamicDampingFactor = 0.3;
 var gPartSel = new PartSelector();
 
 // TODO: make them jquery fashion
-document.addEventListener('mousedown', onMouseDownStep, false);
-document.addEventListener('mousemove', onMouseMoveStep, false);
-document.addEventListener('mouseup', onMouseUpStep, false);
+document.addEventListener('mouseDown', onMouseDownStep, false);
+document.addEventListener('mouseMove', onMouseMoveStep, false);
+document.addEventListener('mouseUp', onMouseUpStep, false);
 
+// global variable of mouse down coordinates
 var ptDown = [];
 
+// whether should respond to mouse move in a sticky fashion (rather than requiring dragging)
 var gSticky = false;
 
 function onMouseDownStep(e) {
@@ -40,7 +42,7 @@ function onMouseDownStep(e) {
 	switch (gStep) {
 		case 1:
 			for (var i = gAccessSel.length - 1; i >= 0; i--) {
-				gAccessSel[i].mousedown(e);
+				gAccessSel[i].mouseDown(e);
 			}
 			break;
 		case 2:
@@ -62,9 +64,9 @@ function onMouseDownStep(e) {
 		case 5:
 			if (gCurrAttach != undefined) {
 				if (objInt != undefined) {
-					gCurrAttach.mousedown(e, objInt.object, objInt.point.clone(), objInt.face.normal);
+					gCurrAttach.mouseDown(e, objInt.object, objInt.point.clone(), objInt.face.normal);
 				} else {
-					gCurrAttach.mousedown(e);
+					gCurrAttach.mouseDown(e);
 				}
 			}
 			break;
@@ -92,7 +94,7 @@ function onMouseMoveStep(e) {
 	switch (gStep) {
 		case 1:
 			for (var i = gAccessSel.length - 1; i >= 0; i--) {
-				gAccessSel[i].mousemove(e);
+				gAccessSel[i].mouseMove(e);
 			}
 			break;
 		case 2:
@@ -112,9 +114,9 @@ function onMouseMoveStep(e) {
 		case 5:
 			if (gCurrAttach != undefined) {
 				if (objInt != undefined) {
-					gCurrAttach.mousemove(e, objInt.object, objInt.point.clone(), objInt.face.normal);
+					gCurrAttach.mouseMove(e, objInt.object, objInt.point.clone(), objInt.face.normal);
 				} else {
-					gCurrAttach.mousemove(e);
+					gCurrAttach.mouseMove(e);
 				}
 			}
 			break;
@@ -133,11 +135,11 @@ function onMouseUpStep(e) {
 	switch (gStep) {
 		case 1:
 			for (var i = gAccessSel.length - 1; i >= 0; i--) {
-				gAccessSel[i].mouseup(e);
+				gAccessSel[i].mouseUp(e);
 			}
 			break;
 		case 2:
-			if (e.which == LEFTMOUSE) {
+			if (e.which == LEFTMOUSE && activeCtrl.mouseUp != undefined) {
 				if (activeCtrl != undefined) {
 					activeCtrl.mouseUp(e);
 				}
@@ -149,10 +151,8 @@ function onMouseUpStep(e) {
 			}
 			break;
 		case 5:
-			if (gCurrAttach != undefined) {
-				// if (objInt != undefined) {
-				gCurrAttach.mouseup(e); //, objInt.object, objInt.point.clone(), objInt.face.normal);
-				// }
+			if (gCurrAttach != undefined && gCurrAttach.mouseUp != undefined) {
+				gCurrAttach.mouseUp(e);
 			}
 			break;
 	}

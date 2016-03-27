@@ -1,11 +1,14 @@
-"use strict";
-
 /**
  * a simple set of attachment methods
  *
  * @author Xiang 'Anthony' Chen http://xiangchen.me
  */
 
+"use strict";
+
+/*
+	the base class for attachables - operations or structures to make a given object (adaptation) more attachable
+*/
 class xacAttachment {
 	constructor(a) {
 		this._a = a; // the original adaptation 
@@ -30,13 +33,6 @@ class xacAttachment {
 		return this._awa;
 	}
 
-	// merge() {
-	// 	if(this._awa != undefined) {
-	// 		for (var i = this._attachables.length - 1; i >= 0; i--) {
-	// 			this._awa = xacThing.union(gettg(this._awa), gettg(this._attachables[i]), MATERIALHIGHLIGHT);
-	// 		}
-	// 	}
-	// }
 }
 
 /*
@@ -51,17 +47,17 @@ class xacStrap extends xacAttachment {
 		this._inflateRatio = 1.1;
 	}
 
-	mousedown(e, obj, pt, fnml) {
+	mouseDown(e, obj, pt, fnml) {
 		this._strokePoints = [];
 	}
 
-	mousemove(e, obj, pt, fnml) {
+	mouseMove(e, obj, pt, fnml) {
 		this._obj = obj;
 		this._strokePoints.push(pt);
-		addABall(pt, colorStroke);
+		addABall(pt, COLORSTROKE);
 	}
 
-	mouseup(e) {
+	mouseUp(e) {
 		if (this._strokePoints.length > 3) {
 			this._makeStrapFor(this._strokePoints, this._obj, this._a);
 		}
@@ -127,14 +123,14 @@ class xacSplit extends xacAttachment {
 
 	}
 
-	mousedown(e) {
+	mouseDown(e) {
 		this._strokePoints = [];
 		this._splitee = undefined;
 		this._pt1 = undefined;
 		this._pt2 = undefined;
 	}
 
-	mousemove(e) {
+	mouseMove(e) {
 		var intersects = rayCast(e.clientX, e.clientY, this._as);
 		if (intersects[0] != undefined) {
 			if (this._splitee == undefined) {
@@ -151,11 +147,11 @@ class xacSplit extends xacAttachment {
 			this._pt2.normal = intersects[0].face.normal;
 
 			this._strokePoints.push(pt);
-			addABall(pt, colorStroke);
+			addABall(pt, COLORSTROKE);
 		}
 	}
 
-	mouseup(e) {
+	mouseUp(e) {
 		removeBalls();
 		//	1. find the split plane
 		var midPt = new THREE.Vector3().addVectors(this._pt1, this._pt2).multiplyScalar(0.5);;
@@ -192,7 +188,7 @@ class xacClamp extends xacAttachment {
 
 	}
 
-	mousedown(e) {
+	mouseDown(e) {
 		if (this._step == this._TOSELECTPIPE) {
 			scene.remove(this._awa);
 			scene.remove(this._pipe);
@@ -225,7 +221,7 @@ class xacClamp extends xacAttachment {
 		}
 	}
 
-	mousemove(e) {
+	mouseMove(e) {
 		if (this._step == this._TOMAKEPIPE) {
 			this._partSel.rotateHand(e.ptMove, e.ptDown);
 		} else if (this._step == this._TOMAKEBOLTHOLE) {
@@ -257,12 +253,12 @@ class xacClamp extends xacAttachment {
 				this._pt2.normal = intersects[0].face.normal;
 
 				this._strokePoints.push(pt);
-				addABall(pt, colorStroke);
+				addABall(pt, COLORSTROKE);
 			}
 		}
 	}
 
-	mouseup(e) {
+	mouseUp(e) {
 		removeBalls();
 
 		if (this._step == this._TOSELECTPIPE) {
@@ -351,6 +347,9 @@ class xacClamp extends xacAttachment {
 	}
 }
 
+/*
+	creating a cylindrical beam between two points
+*/
 class xacBeam extends xacAttachment {
 	constructor(a) {
 		super(a);
@@ -363,7 +362,7 @@ class xacBeam extends xacAttachment {
 		this._rBeam = 5;
 	}
 
-	mousedown(e) {
+	mouseDown(e) {
 		var intersects = rayCast(e.clientX, e.clientY, this._everything);
 
 		if (intersects[0] == undefined) {
@@ -409,8 +408,4 @@ class xacBeam extends xacAttachment {
 			this._step = this._TOMAKEENDONE;
 		}
 	}
-
-	mousemove(e) {}
-
-	mouseup(e) {}
 }

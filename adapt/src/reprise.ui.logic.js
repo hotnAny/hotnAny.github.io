@@ -1,6 +1,6 @@
 /**
- * user interface for Reprise
- * 	- only the logic part
+ * user interface logic
+ * 	
  * @author Xiang 'Anthony' Chen http://xiangchen.me
  */
 
@@ -669,7 +669,7 @@ function triggerUI2ObjAction(ui, action, key) {
 
 			// the obj part
 			if (gJustFocusedObjs[gStep] != undefined) {
-				gJustFocusedObjs[gStep].material.color.setHex(colorOverlay);
+				gJustFocusedObjs[gStep].material.color.setHex(COLOROVERLAY);
 				gJustFocusedObjs[gStep].material.needsUpdate = true;
 			}
 
@@ -678,7 +678,7 @@ function triggerUI2ObjAction(ui, action, key) {
 					var parts = gPartsActions[gCurrPartsAction.attr('pcId')].parts;
 					var part = parts[nameUI];
 					if (part != undefined && wasHighlighted == false) {
-						part.display.material.color.setHex(colorHighlight);
+						part.display.material.color.setHex(COLORHIGHLIGHT);
 						part.display.material.needsUpdate = true;
 						gJustFocusedObjs[gStep] = part.display;
 					}
@@ -686,7 +686,7 @@ function triggerUI2ObjAction(ui, action, key) {
 				case 3:
 					var adaptationComponent = gAdaptationComponents[nameUI];
 					if (adaptationComponent != undefined && wasHighlighted == false) {
-						adaptationComponent.material.color.setHex(colorHighlight);
+						adaptationComponent.material.color.setHex(COLORHIGHLIGHT);
 						adaptationComponent.material.needsUpdate = true;
 						gJustFocusedObjs[gStep] = adaptationComponent;
 						adaptationComponent.parentAdaptation.renderSliders();

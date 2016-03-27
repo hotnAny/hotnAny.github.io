@@ -177,6 +177,9 @@ class BboxSelector extends BboxUI {
 	}
 }
 
+/*
+	a sphere based selector for specifying a vector coming from the centroid
+*/
 class SphereSelector {
 	constructor(pt) {
 		this._pt0 = pt;
@@ -336,7 +339,6 @@ class PlaneSelector {
 /*
 	a visualization that shows where the user selects on an object as control point/area
 */
-
 class PartSelector {
 	constructor() {
 		this.FINGER = 10;

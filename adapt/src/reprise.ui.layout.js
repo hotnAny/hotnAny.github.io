@@ -1,6 +1,6 @@
 /**
- * user interface for Reprise
- * 	- only the UI part
+ * user interface layout
+ * 
  * @author Xiang 'Anthony' Chen http://xiangchen.me
  */
 
@@ -9,7 +9,7 @@ var gAdaptId = 0; // global id for adaptations
 var gConnId = 0; // global id for connectors
 
 //
-// Helper functions
+// helper functions
 //
 var _genSectionBar = function(text) {
 	var sectionBar = $('<span class="ui-corner-all" style="padding:4px 15px 4px 15px;margin-left:10px;background-color:#878787;color:#ffffff;display: block; float: left; clear: left; width: 340px;"></span>');
@@ -175,12 +175,12 @@ divAdjust.buttonset().find('label').css('width', '30%');
 
 // 4.2	other sliderable optimizations
 var tblSldrAdjust = $('<table cellspacing="5" cellpadding="5"></table>');
-var trFingers = $('<tr><td><label id="lbFingers" class="ui-widget">X finger </label></td><td width="200px"><div id="sldFingers"></div></td></tr>');
-var trGrip = $('<tr><td><label class="ui-widget">Grip </label></td><td width="200px"><div id="sldGrip"></div></td></tr>');
-var trStrength = $('<tr><td><label class="ui-widget">Strength </label></td><td width="200px"><div id="sldStrength"></div></td></tr>');
-var trCoord = $('<tr><td><label class="ui-widget">Coordination </label></td><td width="200px"><div id="sldCoord"></div></td></tr>');
-var trSize = $('<tr><td><label class="ui-widget">Size </label></td><td width="200px"><div id="sldSize"></div></td></tr>');
-// tblSldrAdjust.append(trFingers);
+// var trFingers = $('<tr><td><label id="lbFingers" class="ui-widget">X finger </label></td><td width="200px"><div id="sldFingers"></div></td></tr>');
+// var trGrip = $('<tr><td><label class="ui-widget">Grip </label></td><td width="200px"><div id="sldGrip"></div></td></tr>');
+// var trStrength = $('<tr><td><label class="ui-widget">Strength </label></td><td width="200px"><div id="sldStrength"></div></td></tr>');
+// var trCoord = $('<tr><td><label class="ui-widget">Coordination </label></td><td width="200px"><div id="sldCoord"></div></td></tr>');
+// var trSize = $('<tr><td><label class="ui-widget">Size </label></td><td width="200px"><div id="sldSize"></div></td></tr>');
+// // tblSldrAdjust.append(trFingers);
 // tblSldrAdjust.append(trGrip);
 // tblSldrAdjust.append(trStrength);
 // tblSldrAdjust.append(trCoord);
