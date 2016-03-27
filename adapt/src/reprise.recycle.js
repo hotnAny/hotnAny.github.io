@@ -72,7 +72,7 @@
 // 			// var factorEatIn = 1.5;
 // 			// var gObj = obj.clone();
 // 			// gObj.scale.set(factorEatIn, factorEatIn, factorEatIn);
-// 			// this._part = xacThing.intersect(getTransformedGeometry(gObj), getTransformedGeometry(this.wrapOut), MATERIALCONTRAST);
+// 			// this._part = xacThing.intersect(gettg(gObj), gettg(this.wrapOut), MATERIALCONTRAST);
 
 // // addABall(ctrWrap, 0xffffff, 2);
 // 			// addALine(ctrWrap, ctrWrap.clone().add(new THREE.Vector3(a, b, c).multiplyScalar(100)));
@@ -81,7 +81,7 @@
 // 			// scene.add(this.cylWrap.m);
 
 // 				// // get the geometric representation of the shadow
-// 			// this._part = xacThing.intersect(obj, getTransformedGeometry(cylPartSelectionOut), MATERIALHIGHLIGHT);
+// 			// this._part = xacThing.intersect(obj, gettg(cylPartSelectionOut), MATERIALHIGHLIGHT);
 // 			// // eat out a little for better display
 // 			// this._part.translateOnAxis(vEatIn.clone().normalize().multiplyScalar(-1), 2 * dEatIn);
 // 			// scene.add(this._part);
@@ -113,8 +113,8 @@
 // 			// scene.add(part.selCyl);
 
 // 			// var geoWall = new THREE.Geometry();
-// 			// var geoAoc = getTransformedGeometry(aoc);
-// 			// var geoLaoc = getTransformedGeometry(laoc);
+// 			// var geoAoc = gettg(aoc);
+// 			// var geoLaoc = gettg(laoc);
 // 			// // var geoLaoc = laoc.geometry;
 // 			// for (var i = geoAoc.faces.length - 1; i >= 0; i--) {
 // 			// 	var f = geoAoc.faces[i];
@@ -203,7 +203,7 @@
 // 	// 	//
 // 	// 	var spacing = 50 * (1 - gripFactor);
 // 	// 	var sphereSet = undefined;
-// 	// 	var ag = getTransformedGeometry(a);
+// 	// 	var ag = gettg(a);
 
 // 	// 	//
 // 	// 	ctrl.gravity = new THREE.Vector3(0, -1, 0);
@@ -243,7 +243,7 @@
 // 	// 				if (sphereSet == undefined) {
 // 	// 					sphereSet = sphere.m;
 // 	// 				} else {
-// 	// 					// sphereSet = xacThing.union(getTransformedGeometry(sphereSet), getTransformedGeometry(sphere.m));
+// 	// 					// sphereSet = xacThing.union(gettg(sphereSet), gettg(sphere.m));
 // 	// 				}
 
 // 	// 				// mark its neighbors within spacing as not activated
@@ -259,7 +259,7 @@
 // 	// 	}
 
 // 	// 	// wrap up
-// 	// 	a = xacThing.subtract(ag, getTransformedGeometry(sphereSet));
+// 	// 	a = xacThing.subtract(ag, gettg(sphereSet));
 
 // 	// }
 
@@ -279,7 +279,7 @@
 // 	// 	}
 // 	// }
 
-// // gtCylWrapDisplay = getTransformedGeometry(wrapDisplay.m);
+// // gtCylWrapDisplay = gettg(wrapDisplay.m);
 // 			// wrapInDisplay = xacThing.subtract(gtCylWrapDisplay, obj, MATERIALHIGHLIGHT);
 
 // 			// flash a cylinder to show selection volume
@@ -403,10 +403,10 @@
 // 	// 		//
 // 	// 		//	3. make wraps
 // 	// 		//
-// 	// 		var gtCylWrap = getTransformedGeometry(this.cylWrap.m);
+// 	// 		var gtCylWrap = gettg(this.cylWrap.m);
 // 	// 		this.wrapIn = xacThing.intersect(gtCylWrap, obj, this._part == undefined ? MATERIALCONTRAST : this._part.material);
 
-// 	// 		var gtCylWrapDisplay = getTransformedGeometry(wrapDisplay.m);
+// 	// 		var gtCylWrapDisplay = gettg(wrapDisplay.m);
 // 	// 		var wrapInDisplay = xacThing.intersect(gtCylWrapDisplay, obj, MATERIALHIGHLIGHT);
 // 	// 		scene.add(wrapInDisplay);
 
@@ -493,12 +493,12 @@
 // 			// var laoc = scaleAroundVector(aoc, sizeFactor, part.normal);
 // 			// scaleAlongVector(laoc, Math.pow(10, sizeFactor - 1), part.normal);
 
-// 			// laoc = xacThing.intersect(getTransformedGeometry(laoc), getTransformedGeometry(cylinderSel.m), part.material);
+// 			// laoc = xacThing.intersect(gettg(laoc), gettg(cylinderSel.m), part.material);
 
 // 			// var laoc = new THREE.Mesh(aoc.geometry.clone(), aoc.material.clone());
 			
 			
-// 			// laoc = xacThing.intersect(getTransformedGeometry(laoc), getTransformedGeometry(part.selCyl), part.material);
+// 			// laoc = xacThing.intersect(gettg(laoc), gettg(part.selCyl), part.material);
 
 
 
@@ -508,12 +508,12 @@
 
 // 			// select which bounding geometry to use
 // 			var spaceSel = cylinderSel.m;
-// 			var aoc = xacThing.intersect(getTransformedGeometry(part), getTransformedGeometry(spaceSel), part.material);
+// 			var aoc = xacThing.intersect(gettg(part), gettg(spaceSel), part.material);
 
 // 			var laoc = new THREE.Mesh(aoc.geometry.clone(), aoc.material.clone());
 // 			scaleAlongVector(laoc, Math.pow(10, sizeFactor - 1), part.normal);
 // 			scaleAroundVector(laoc, sizeFactor, part.normal);
-// 			laoc = xacThing.intersect(getTransformedGeometry(laoc), getTransformedGeometry(part.selCyl), part.material);
+// 			laoc = xacThing.intersect(gettg(laoc), gettg(part.selCyl), part.material);
 		
 
 		
@@ -628,10 +628,10 @@
 // 		clampNeckStub.applyMatrix(matRotate);
 // 		clampNeckStub.position.copy(ctrNeck);
 
-// 		clampNeck = xacThing.subtract(getTransformedGeometry(clampNeck), getTransformedGeometry(clampNeckStub));
-// 		var clamp = xacThing.union(getTransformedGeometry(clampBody), getTransformedGeometry(clampNeck));
-// 		clamp = xacThing.subtract(getTransformedGeometry(clamp), getTransformedGeometry(clampNeckStub));
-// 		clamp = xacThing.subtract(getTransformedGeometry(clamp), getTransformedGeometry(this._obj));
+// 		clampNeck = xacThing.subtract(gettg(clampNeck), gettg(clampNeckStub));
+// 		var clamp = xacThing.union(gettg(clampBody), gettg(clampNeck));
+// 		clamp = xacThing.subtract(gettg(clamp), gettg(clampNeckStub));
+// 		clamp = xacThing.subtract(gettg(clamp), gettg(this._obj));
 
 
 // 		//
@@ -646,7 +646,7 @@
 // 		screwStub.position.copy(this._pt.clone().add(this._nml.multiplyScalar(depthClampNeck * 0.5)));
 
 // 		scene.remove(this._clamp);
-// 		this._clamp = xacThing.subtract(getTransformedGeometry(clamp), getTransformedGeometry(screwStub), MATERIALHIGHLIGHT);
+// 		this._clamp = xacThing.subtract(gettg(clamp), gettg(screwStub), MATERIALHIGHLIGHT);
 
 // 		scene.remove(part.display);
 // 		scene.add(this._clamp);
@@ -655,13 +655,13 @@
 // 		//
 // 		//	3. finish up
 // 		//
-// 		this._awc = xacThing.union(getTransformedGeometry(this._clamp), getTransformedGeometry(this._a.adaptation), MATERIALHIGHLIGHT);
+// 		this._awa = xacThing.union(gettg(this._clamp), gettg(this._a.adaptation), MATERIALHIGHLIGHT);
 // 		if (this._a != undefined) {
-// 			scene.remove(this._awc);
+// 			scene.remove(this._awa);
 // 			scene.remove(this._a.adaptation);
-// 			// this._awc = xacThing.subtract(getTransformedGeometry(this._a.adaptation), getTransformedGeometry(strap), this._a.adaptation.material);
-// 			scene.add(this._awc);
-// 			this._a.awc = this._awc;
+// 			// this._awa = xacThing.subtract(gettg(this._a.adaptation), gettg(strap), this._a.adaptation.material);
+// 			scene.add(this._awa);
+// 			this._a.awa = this._awa;
 // 		}
 // 	}
 // }
@@ -697,28 +697,28 @@
 // 		scaleAroundVector(aDeflated, this._ratio, this._a.adaptation.part.normal);
 // 		scaleAlongVector(aDeflated, 1.01, this._a.adaptation.part.normal);
 
-// 		var fp = xacThing.subtract(getTransformedGeometry(aDeflated), getTransformedGeometry(this._a.adaptation.obj), MATERIALOVERLAY);
+// 		var fp = xacThing.subtract(gettg(aDeflated), gettg(this._a.adaptation.obj), MATERIALOVERLAY);
 // 		scene.add(fp);
 // 		this._flexiblePart = fp;
 
-// 		this._awc = xacThing.subtract(getTransformedGeometry(this._a.adaptation), getTransformedGeometry(fp), this._a.adaptation.material);
-// 		scene.add(this._awc);
+// 		this._awa = xacThing.subtract(gettg(this._a.adaptation), gettg(fp), this._a.adaptation.material);
+// 		scene.add(this._awa);
 
-// 		this._a.awc = this._awc;
+// 		this._a.awa = this._awa;
 // 		this._a.fp = this._flexiblePart;
 // 	}
 // }
 
 // var partSel = new PartSelector();
 			// partSel._doWrap(this._obj, midPt, drawnPlane);
-			// scene.remove(this._awc);
+			// scene.remove(this._awa);
 			// scene.remove(this._pipe);
 			// // this._pipe = partSel._doWrap(this._obj, midPt, drawnPlane); //new xacWrapper()._extrude(partSel.part, undefined, 1, 1.5);
 			// this._pipe = this._partSel.part.display;
 			// scaleAroundVector(this._pipe, 1.5, nmlPlane);
 			// scene.add(this._pipe);
 
-			// this._awc = this._pipe;
+			// this._awa = this._pipe;
 			// this._step = this._TOMAKEBOLTHOLE;
 
 			// BEFORE: based on extrusion
@@ -819,8 +819,8 @@ class xacMechanism extends xacAdaptation {
 		camBar.position.copy(ctrBar);
 		// scene.add(camBar);
 
-		var camStruct = xacThing.union(getTransformedGeometry(camAxis), getTransformedGeometry(camAnchor));
-		camStruct = xacThing.union(getTransformedGeometry(camStruct), getTransformedGeometry(camBar), MATERIALOVERLAY);
+		var camStruct = xacThing.union(gettg(camAxis), gettg(camAnchor));
+		camStruct = xacThing.union(gettg(camStruct), gettg(camBar), MATERIALOVERLAY);
 
 		//
 		// 4. generate bar 2 (holding bar 1)
@@ -898,10 +898,10 @@ class xacMechanism extends xacAdaptation {
 		clampNeckStub.applyMatrix(matRotate);
 		clampNeckStub.position.copy(ctrNeck);
 
-		clampNeck = xacThing.subtract(getTransformedGeometry(clampNeck), getTransformedGeometry(clampNeckStub));
-		var clamp = xacThing.union(getTransformedGeometry(part.display), getTransformedGeometry(clampNeck));
-		clamp = xacThing.subtract(getTransformedGeometry(clamp), getTransformedGeometry(clampNeckStub));
-		clamp = xacThing.subtract(getTransformedGeometry(clamp), getTransformedGeometry(this._pc.obj));
+		clampNeck = xacThing.subtract(gettg(clampNeck), gettg(clampNeckStub));
+		var clamp = xacThing.union(gettg(part.display), gettg(clampNeck));
+		clamp = xacThing.subtract(gettg(clamp), gettg(clampNeckStub));
+		clamp = xacThing.subtract(gettg(clamp), gettg(this._pc.obj));
 
 		// scene.remove(this._pc.obj);
 
@@ -914,9 +914,9 @@ class xacMechanism extends xacAdaptation {
 		rotateObjTo(screwStub, part.normal);
 		screwStub.applyMatrix(matRotate);
 		screwStub.position.copy(this._pt.clone()); //.add(this._nml.clone().multiplyScalar(depthClampNeck/10)));
-		clamp = xacThing.subtract(getTransformedGeometry(clamp), getTransformedGeometry(screwStub), MATERIALOVERLAY);
+		clamp = xacThing.subtract(gettg(clamp), gettg(screwStub), MATERIALOVERLAY);
 		screwStub.position.add(this._nml.clone().multiplyScalar(10));
-		clamp = xacThing.subtract(getTransformedGeometry(clamp), getTransformedGeometry(screwStub), MATERIALOVERLAY);
+		clamp = xacThing.subtract(gettg(clamp), gettg(screwStub), MATERIALOVERLAY);
 
 		//
 		//	4. connect it with the clutch
@@ -965,7 +965,7 @@ class xacMechanism extends xacAdaptation {
 		scene.add(yoke2cross);
 		this._yoke2cross = yoke2cross;
 
-		// uj = xacThing.union(getTransformedGeometry(base), getTransformedGeometry(yoke1), MATERIALOVERLAY);
+		// uj = xacThing.union(gettg(base), gettg(yoke1), MATERIALOVERLAY);
 		uj = yoke1;
 		return uj;
 	}
@@ -989,3 +989,125 @@ class xacMechanism extends xacAdaptation {
 		}
 	}
 }
+
+var _vector = new THREE.Vector3,
+// 	projector = new THREE.Projector(),
+// 	selected_block, mouse_position = new THREE.Vector3,
+// 	block_offset = new THREE.Vector3,
+// 	_i, _v3 = new THREE.Vector3,
+// 	intersect_plane;
+
+// function onMouseDownCtrl(event) {
+// 	// event.preventDefault();
+	
+// 	// TODO: fix this hardcoded width
+// 	if (event.clientX < WIDTHCONTAINER) return;
+
+// 	// usingPhysics = false;
+// 	// controlPanel.checkbox3.checked = usingPhysics;
+
+// 	intersects = rayCast(event.clientX, event.clientY, objects);
+
+// 	// console.log(intersects[0]);
+
+// 	isMouseDown = true;
+// 	prevGrndX = undefined;
+// 	prevGrndZ = undefined;
+// }
+
+// function onMouseMoveCtrl(event) {
+// 	// event.preventDefault();
+
+// 	if (!isMouseDown) {
+// 		return;
+// 	}
+
+// 	// var intersects = rayCast(event.clientX, event.clientY, [ground]);
+
+// 	// if(D_MOUSE) {
+// 	// 	if(intersects.length == 1) {
+// 	// 		ball.position.x = intersects[0].point.x;
+// 	// 		ball.position.z = intersects[0].point.z;
+// 	// 	}
+// 	// } else {
+// 	// move selected objects
+// 	// if(intersects.length == 1) {
+// 	for (var i = 0; i < selected.length; i++) {
+// 		var obj = selected[i];
+
+// 		/* left button */
+// 		if (event.button == 0) {
+// 			var intersects = rayCast(event.clientX, event.clientY, [ground]);
+// 			if (intersects.length <= 0) {
+// 				continue;
+// 			}
+
+// 			// console.log(intersects[0]);
+// 			var tx = intersects[0].point.x - obj.position.x;
+// 			var tz = intersects[0].point.z - obj.position.z;
+// 			// obj.geometry.applyMatrix( new THREE.Matrix4().makeTranslation(tx, 0, tz ) );
+// 			// console.log(tx + ", " + tz);
+
+// 			// rateXZ = Math.min(1.0, Math.max(Math.abs(obj.position.x - intersects[0].point.x), 
+// 			// 	Math.abs(obj.position.z - intersects[0].point.z)) / 100);
+// 			// rateXZ = 0.9;
+// 			// obj.position.x = obj.position.x * rateXZ + intersects[0].point.x * (1 - rateXZ);
+// 			// obj.position.z = obj.position.z * rateXZ + intersects[0].point.z * (1 - rateXZ);
+
+// 			if (prevGrndX != undefined && prevGrndZ != undefined) {
+// 				obj.position.x += (intersects[0].point.x - prevGrndX);
+// 				obj.position.z += (intersects[0].point.z - prevGrndZ);
+// 			}
+
+// 			prevGrndX = intersects[0].point.x;
+// 			prevGrndZ = intersects[0].point.z;
+
+// 		}
+// 		/* right button */
+// 		else if (event.button == 2) {
+
+// 			/* approach 1: use mouse coordinates */
+// 			// if(prevY != undefined) {
+// 			// 	var deltaScreenY = event.clientY - prevY;
+// 			// 	obj.position.y -= rateY * deltaScreenY;
+// 			// }
+
+// 			/* approach 2: use object's y */
+// 			var intersects = rayCast(event.clientX, event.clientY, [obj]);
+// 			if (intersects.length > 0) {
+// 				obj.position.y = obj.position.y * rateY + intersects[0].point.y * (1 - rateY);
+// 			} else {
+// 				var deltaScreenY = event.clientY - prevY;
+// 				obj.position.y -= rateY * deltaScreenY;
+// 			}
+
+
+// 		}
+// 		// else if (event.button == 1) {
+// 		// 	if(prevX != undefined && prevY != undefined) {
+// 		// 		obj.rotation.x += (event.clientY - prevY) * rateRot;
+// 		// 		obj.rotation.z += (event.clientX - prevX) * rateRot;
+// 		// 	}
+// 		// }
+// 	}
+
+// 	// }
+// 	// }
+
+// 	prevX = event.clientX;
+// 	prevY = event.clientY;
+
+// }
+
+// function onMouseUpCtrl(event) {
+// 	// event.preventDefault();
+
+// 	isMouseDown = false;
+// 	selected = [];
+
+// 	// for (var i = 0; i < selected.length; i++) {
+// 	// 	var obj = selected[i]; // }
+// 	// 	obj.__dirtyPosition = true;
+// 	// 	obj.__dirtyRotation = true;
+// 	// }
+// }

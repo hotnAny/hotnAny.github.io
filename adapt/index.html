@@ -13,9 +13,8 @@
 	<script src="js/three.js"></script>
 	<script src="js/Projector.js"></script>
 	<script src="js/stat.min.js"></script>
-	<script src="js/controls/TrackballControls.js"></script>
+	<script src="js/TrackballControls.js"></script>
 	<script src="js/STLLoader.js"></script>
-	<script src="js/threeoctree.old.js"></script>
 	<script src="js/THREE2STL.js"></script>
 	<script src="js/FileSaver.min.js"></script>
 	<script src="js/jquery-1.12.0.min.js"></script>
@@ -32,17 +31,16 @@
 
 	<!-- =========================================================== -->
 	<!-- my code -->
-	<script src="src/xacUtilities.js"></script>
-	<script src="src/xacInit.js"></script>
-	<script src="src/xacThing.js"></script>
-	<script src="src/xac3dui.js"></script>
-	<script src="src/xacAction.js"></script>
-	<script src="src/xacMouseControl.js"></script>
-	<script src="src/xacMouseStep.js"></script>
-	<script src="src/xacPanel.ui.js"></script>
-	<script src="src/xacPanel.logic.js"></script>
-	<script src="src/xacAdaptation.js"></script>
-	<script src="src/xacAttachment.js"></script>
+	<script src="src/xac.utilities.js"></script>
+	<script src="src/reprise.init.js"></script>
+	<script src="src/xac.thing.js"></script>
+	<script src="src/reprise.3dui.js"></script>
+	<script src="src/reprise.action.js"></script>
+	<script src="src/reprise.mouseControl.js"></script>
+	<script src="src/reprise.ui.layout.js"></script>
+	<script src="src/reprise.ui.logic.js"></script>
+	<script src="src/reprise.adaptation.js"></script>
+	<script src="src/reprise.attachment.js"></script>
 	<script src="src/xac.math.js"></script>
 	<script src="src/xac.gl.js"></script>
 
@@ -63,7 +61,7 @@
 
 			var render = function () {
 				requestAnimationFrame( render );
-				controls.update();
+				gMouseCtrls.update();
 				stats.update(); 
 				lights[0].position.copy(camera.position);
 				renderer.render(scene, camera);

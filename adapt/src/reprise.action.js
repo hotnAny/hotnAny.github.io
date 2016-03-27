@@ -21,6 +21,10 @@ class xacAction {
 		for (var i = this._ve.length - 1; i >= 0; i--) {
 			scene.remove(this._ve[i]);
 		}
+
+		if(this._selector != undefined && this._selector.clear != undefined) {
+			this._selector.clear();
+		}
 	}
 }
 
@@ -101,12 +105,12 @@ class xacPushPull extends xacAction {
 			this._step = this._TOSELECTDIR;
 		} else if (this._step == this._TOSELECTDIR) {
 			this._dirForce = this._sphereSel.selection.clone().sub(this._pt).normalize();
-			this._ve.push(addAVector(this._pt, this._dirForce));
+			this._ve.push(this._sphereSel.pointer);
 
 			gSticky = false;
-			setTimeout(function(ctrl) {
-				ctrl._sphereSel.clear();
-			}, 1000, this);
+			// setTimeout(function(ctrl) {
+			// 	ctrl._sphereSel.clear();
+			// }, 1000, this);
 		}
 	}
 
@@ -159,6 +163,7 @@ class xacRotate extends xacAction {
 					gPartSel.finishUp();
 					this._step = this._TOSELECTPLANE;
 					this._planeSel = new PlaneSelector(pt);
+					this._selector = this._planeSel;
 				}
 				break;
 			case this._TOSELECTPLANE:
@@ -175,9 +180,9 @@ class xacRotate extends xacAction {
 				this._step = this._TOSELECTOBJ;
 
 				gSticky = false;
-				setTimeout(function(ctrl) {
-					ctrl._planeSel.clear();
-				}, 1000, this);
+				// setTimeout(function(ctrl) {
+				// 	ctrl._planeSel.clear();
+				// }, 1000, this);
 				break;
 		}
 	}
@@ -202,6 +207,9 @@ class xacRotate extends xacAction {
 	}
 }
 
+/*
+	clutching
+*/
 class xacClutch extends xacAction {
 	constructor(objs) {
 		super(CLUTCHCTRL);
@@ -253,6 +261,7 @@ class xacClutch extends xacAction {
 					// addAVector(midPt, midNml);
 
 					this._planeSel = new PlaneSelector([this._pocFree, this._pocFixed], midNml, true);
+					this._selector = this._planeSel;
 					gSticky = true;
 					this._step = this._TOSELECTFULCRUM;
 				}
@@ -268,9 +277,9 @@ class xacClutch extends xacAction {
 				gSticky = false;
 				this._step = this._TOSELECTOBJ;
 
-				setTimeout(function(ctrl) {
-					ctrl._planeSel.clear();
-				}, 1000, this);
+				// setTimeout(function(ctrl) {
+				// 	ctrl._planeSel.clear();
+				// }, 1000, this);
 				break;
 		}
 	}
@@ -314,6 +323,9 @@ class xacClutch extends xacAction {
 	}
 }
 
+/*
+	objects or their components joinable and separable
+*/
 class xacJoinSeparate extends xacAction {
 	constructor(objs) {
 		super(JOINSEPCTRL);

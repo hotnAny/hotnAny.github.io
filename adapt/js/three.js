@@ -18727,7 +18727,7 @@ THREE.BufferGeometryLoader.prototype = {
 
 		}
 
-		var groups = json.data.groups || json.data.drawcalls || json.data.offsets;
+		var groups = json.data.groups || json.data.drawaalls || json.data.offsets;
 
 		if ( groups !== undefined ) {
 
@@ -32681,9 +32681,9 @@ Object.defineProperties( THREE.BufferAttribute.prototype, {
 } );
 
 Object.defineProperties( THREE.BufferGeometry.prototype, {
-	drawcalls: {
+	drawaalls: {
 		get: function () {
-			console.error( 'THREE.BufferGeometry: .drawcalls has been renamed to .groups.' );
+			console.error( 'THREE.BufferGeometry: .drawaalls has been renamed to .groups.' );
 			return this.groups;
 		}
 	},
@@ -40172,7 +40172,7 @@ THREE.VertexNormalsHelper.prototype.update = ( function () {
 
 			var idx = 0;
 
-			// for simplicity, ignore index and drawcalls, and render every normal
+			// for simplicity, ignore index and drawaalls, and render every normal
 
 			for ( var j = 0, jl = objPos.count; j < jl; j ++ ) {
 

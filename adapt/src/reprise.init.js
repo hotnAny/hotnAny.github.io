@@ -58,7 +58,7 @@ var camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHei
 var gPosCam = new THREE.Vector3(-16, 8, 10);
 camera.position.copy(gPosCam.clone().multiplyScalar(50));
 var gLookAt = new THREE.Vector3(-25, 0, -0).multiplyScalar(10);
-var controls = new THREE.TrackballControls(camera, undefined, gLookAt); // for mouse control
+var gMouseCtrls = new THREE.TrackballControls(camera, undefined, gLookAt); // for mouse control
 
 //
 // draw floor
@@ -203,7 +203,7 @@ var gItems = [];
 // actions
 var gPartSerial = 0;
 var gPartsActions = new Array();
-var gCurrPartsAction = undefined; // the parts-controls that is currently selected to be interacted with
+var gCurrPartsAction = undefined; 
 
 // adaptations
 var gAdaptations = [];

@@ -99,7 +99,12 @@ class xacAdaptation {
 			a.part = this._pc.parts[pid];
 
 			// keep adaptations in a list
+			var awa = this._as[pid] == undefined ? undefined : this._as[pid].awa;
+			var attachables = this._as[pid] == undefined ? undefined : this._as[pid].attachables;
 			this._as[pid] = a;
+			this._as[pid].awa = awa;
+			this._as[pid].attachables = attachables;
+
 			scene.add(this._as[pid]);
 
 			if (this._singular) {
@@ -162,12 +167,12 @@ class xacAdaptation {
 
 				// select which bounding geometry to use
 				var spaceSel = cylinderSel.m;
-				var aoc = xacThing.intersect(getTransformedGeometry(part), getTransformedGeometry(spaceSel), part.material);
+				var aoc = xacThing.intersect(gettg(part), gettg(spaceSel), part.material);
 
 				var laoc = new THREE.Mesh(aoc.geometry.clone(), aoc.material.clone());
 				scaleAlongVector(laoc, Math.pow(10, sizeFactor - 1), part.normal);
 				scaleAroundVector(laoc, sizeFactor, part.normal);
-				laoc = xacThing.intersect(getTransformedGeometry(laoc), getTransformedGeometry(part.selCyl), part.material);
+				laoc = xacThing.intersect(gettg(laoc), gettg(part.selCyl), part.material);
 			}
 		}
 		//
@@ -182,7 +187,7 @@ class xacAdaptation {
 
 			// select which bounding geometry to use
 			var spaceSel = cylinderSel.m;
-			var aoc = xacThing.intersect(getTransformedGeometry(part), getTransformedGeometry(spaceSel), part.material);
+			var aoc = xacThing.intersect(gettg(part), gettg(spaceSel), part.material);
 
 			// EXPERIMENTAL: use cylindrical structure
 			var aocBcyl = getBoundingCylinder(aoc, part.normal);
@@ -240,7 +245,7 @@ class xacAdaptation {
 		a.material.side = THREE.DoubleSide;
 
 		// EXPERIMENTAL
-		var ag = getTransformedGeometry(a);
+		var ag = gettg(a);
 
 		ag.computeFaceNormals();
 
@@ -331,13 +336,13 @@ class xacAdaptation {
 			}
 
 			if (sphereSet != undefined) {
-				var tmpObj = new THREE.Mesh(getTransformedGeometry(sphereSet), sphereSet.material);
+				var tmpObj = new THREE.Mesh(gettg(sphereSet), sphereSet.material);
 				scene.remove(a);
 
 				// approach #1: make dents
-				// aGrippable = xacThing.subtract(ag, getTransformedGeometry(sphereSet), MATERIALOVERLAY);
+				// aGrippable = xacThing.subtract(ag, gettg(sphereSet), MATERIALOVERLAY);
 				// approach #2: make bumps
-				aGrippable = xacThing.union(ag, getTransformedGeometry(sphereSet), MATERIALOVERLAY);
+				aGrippable = xacThing.union(ag, gettg(sphereSet), MATERIALOVERLAY);
 			}
 
 		} else if (vForceToExert != undefined) {
@@ -360,6 +365,7 @@ class xacAdaptation {
 		var aDims = getBoundingBoxDimensions(a);
 
 		var stubCutOff = getBoundingBoxMesh(a);
+		// scene.add(stubCutOff)
 
 		// [minx, maxx, miny, maxy, minz, maxz]
 		for (var i = 0; i < pc.obj.accessibleBoundaries.length; i++) {
@@ -374,7 +380,8 @@ class xacAdaptation {
 			var offsetStub = [stub.position.x, stub.position.y, stub.position.z];
 			offsetStub[idx] = pc.obj.accessibleBoundaries[i] + Math.pow(-1, i + 1) * aDims[idx] / 2;
 			stub.position.copy(new THREE.Vector3(offsetStub[0], offsetStub[1], offsetStub[2]));
-			aCutOff = xacThing.subtract(getTransformedGeometry(aCutOff), getTransformedGeometry(stub), MATERIALOVERLAY);
+			// scene.add(stub)
+			aCutOff = xacThing.subtract(gettg(aCutOff), gettg(stub), MATERIALOVERLAY);
 		}
 
 		return aCutOff;
@@ -417,10 +424,10 @@ class xacWrapper extends xacAdaptation {
 
 			// // to or not to cut in half for wraps
 			// if (this._cutPlane != undefined) {
-			// 	// a = xacThing.subtract(getTransformedGeometry(a), getTransformedGeometry(this._cutPlane.m), a.material);
+			// 	// a = xacThing.subtract(gettg(a), gettg(this._cutPlane.m), a.material);
 			// }
 
-			a = xacThing.subtract(getTransformedGeometry(a), getTransformedGeometry(this._pc.obj), a.material);
+			a = xacThing.subtract(gettg(a), gettg(this._pc.obj), a.material);
 			return a;
 		}
 
@@ -564,7 +571,7 @@ class xacHandle extends xacAdaptation {
 		//
 		// TODO: 4. combine or remove extra parts
 		//
-		var a = xacThing.union(getTransformedGeometry(this._handle), getTransformedGeometry(extrusion), MATERIALOVERLAY);
+		var a = xacThing.union(gettg(this._handle), gettg(extrusion), MATERIALOVERLAY);
 
 		return a;
 	}
@@ -659,7 +666,7 @@ class xacLever extends xacAdaptation {
 		this._update = function(pid) {
 			var ctrPart = getCenter(this._pc.parts[pid]);
 			var g = this._sldrGrip.tv();
-			var extrusion = this._extrude(this._pc.parts[pid], this._pc.ctrl, 1, g, undefined);
+			var extrusion = this._extrude(this._pc.parts[pid], this._pc.ctrl, 1, Math.max(0.5, g));
 			var lever = this._makeLever(extrusion, pid);
 			return lever;
 		}
@@ -667,7 +674,7 @@ class xacLever extends xacAdaptation {
 		this.update();
 	}
 
-	_makeLever(a, pid) {
+	_makeLever(extrusion, pid) {
 		var s = this._sldrStrength.tv();
 
 		var dirLever;
@@ -678,17 +685,17 @@ class xacLever extends xacAdaptation {
 		} else if (this._pc.ctrl.type == CLUTCHCTRL) {
 			dirLever = this._pc.ctrl.partArms[pid].clone();
 		} else {
-			return a;
+			return extrusion;
 		}
 
 		dirLever.normalize();
 
-		var bcylParams = getBoundingCylinder(a, dirLever);
-		var lever = new xacCylinder([bcylParams.radius], bcylParams.height * Math.pow(3, s), MATERIALOVERLAY).m;
+		var bcylParams = getBoundingCylinder(extrusion, dirLever);
+		var lever = new xacCylinder([bcylParams.radius], bcylParams.height * Math.pow(5, s), MATERIALOVERLAY).m;
 		rotateObjTo(lever, dirLever);
 		// var l = getDimAlong(lever, dirLever);
 		var offsetLever = getDimAlong(lever, dirLever) * 0.3; // * (this._pc.ctrl.type == CLUTCHCTRL ? 1 : -1);
-		lever.position.copy(getBoundingBoxCenter(a).add(dirLever.clone().multiplyScalar(offsetLever)));
+		lever.position.copy(getBoundingBoxCenter(extrusion).add(dirLever.clone().multiplyScalar(offsetLever)));
 
 		return lever;
 	}
@@ -832,7 +839,7 @@ class xacAnchor extends xacAdaptation {
 
 		scene.remove(bboxObj);
 
-		this._anchor = xacThing.union(getTransformedGeometry(anchorStand), getTransformedGeometry(anchorPlatform), MATERIALOVERLAY);
+		this._anchor = xacThing.union(gettg(anchorStand), gettg(anchorPlatform), MATERIALOVERLAY);
 
 		return this._anchor;
 	}
@@ -992,7 +999,7 @@ class xacGuide extends xacAdaptation {
 		//
 		// 2. make the tunnel's finishing part
 		//
-		var guideEnd = xacThing.subtract(getTransformedGeometry(guideBody.m), getTransformedGeometry(boundMobile), MATERIALOVERLAY);
+		var guideEnd = xacThing.subtract(gettg(guideBody.m), gettg(boundMobile), MATERIALOVERLAY);
 
 		//
 		// 3. make the tunnel's openning
@@ -1001,11 +1008,11 @@ class xacGuide extends xacAdaptation {
 		var rOpen = rGuide * o;
 		var guideOpen = new xacCylinder([rOpen, rGuide], lenOpen, MATERIALOVERLAY);
 		var stubOpen = new xacCylinder([boundMobile.r * s * rOpen / rGuide, boundMobile.r * s], lenOpen, MATERIALOVERLAY);
-		var guideOpenCut = xacThing.subtract(getTransformedGeometry(guideOpen.m), getTransformedGeometry(stubOpen.m), MATERIALOVERLAY);
+		var guideOpenCut = xacThing.subtract(gettg(guideOpen.m), gettg(stubOpen.m), MATERIALOVERLAY);
 		rotateObjTo(guideOpenCut, ctrl.dir);
 		guideOpenCut.position.copy(posGuide.clone().add(ctrl.dir.clone().normalize().multiplyScalar((lenGuide + lenOpen) * 0.5)));
 
-		var guide = xacThing.union(getTransformedGeometry(guideEnd), getTransformedGeometry(guideOpenCut), MATERIALOVERLAY);
+		var guide = xacThing.union(gettg(guideEnd), gettg(guideOpenCut), MATERIALOVERLAY);
 		// 	scene.add(guide)
 
 		//
@@ -1027,7 +1034,7 @@ class xacGuide extends xacAdaptation {
 		// addABall(getBoundingBoxCenter(guide), 0x0000ff, 5);
 		// scene.add(cutHalfStub);
 
-		guide = xacThing.subtract(getTransformedGeometry(guide), getTransformedGeometry(cutHalfStub), MATERIALOVERLAY);
+		guide = xacThing.subtract(gettg(guide), gettg(cutHalfStub), MATERIALOVERLAY);
 
 		return guide;
 	}

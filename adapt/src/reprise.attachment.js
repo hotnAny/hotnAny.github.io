@@ -12,7 +12,7 @@ class xacAttachment {
 		if (this._a.attachables == undefined) {
 			this._a.attachables = [];
 		}
-		this._awc = undefined; // the adaptation with connector
+		this._awa = undefined; // the adaptation with connector
 
 		this._as = []; // an array for each adaptation
 		for (var aid in this._a.adaptations) {
@@ -26,14 +26,14 @@ class xacAttachment {
 		// this._attachables = [];
 	}
 
-	get awc() {
-		return this._awc;
+	get awa() {
+		return this._awa;
 	}
 
 	// merge() {
-	// 	if(this._awc != undefined) {
+	// 	if(this._awa != undefined) {
 	// 		for (var i = this._attachables.length - 1; i >= 0; i--) {
-	// 			this._awc = xacThing.union(getTransformedGeometry(this._awc), getTransformedGeometry(this._attachables[i]), MATERIALHIGHLIGHT);
+	// 			this._awa = xacThing.union(gettg(this._awa), gettg(this._attachables[i]), MATERIALHIGHLIGHT);
 	// 		}
 	// 	}
 	// }
@@ -88,7 +88,7 @@ class xacStrap extends xacAttachment {
 		cutter.m.position.copy(ctrStroke);
 		// scene.add(cutter.m);
 
-		var cutPart = xacThing.intersect(getTransformedGeometry(cutter.m), getTransformedGeometry(obj));
+		var cutPart = xacThing.intersect(gettg(cutter.m), gettg(obj));
 		var ctrStrap = getBoundingBoxCenter(cutPart);
 		var rStrap = getBoundingSphereRadius(cutPart);
 		rStrap *= this._inflateRatio;
@@ -105,11 +105,11 @@ class xacStrap extends xacAttachment {
 		//	3. cut from the adaptation
 		if (this._a != undefined) {
 			scene.remove(this._a.adaptation);
-			this._awc = xacThing.subtract(getTransformedGeometry(this._a.adaptation), getTransformedGeometry(strap), this._a.adaptation.material);
-			scene.add(this._awc);
+			this._awa = xacThing.subtract(gettg(this._a.adaptation), gettg(strap), this._a.adaptation.material);
+			scene.add(this._awa);
 
 			var adaptation = gJustFocusedObjs[3];
-			adaptation.awc = this._awc;
+			adaptation.awa = this._awa;
 		}
 
 		setTimeout(function(strap) {
@@ -171,8 +171,8 @@ class xacSplit extends xacAttachment {
 
 		//	3. update models
 		scene.remove(this._splitee);
-		this._splitee.awc = xacThing.subtract(getTransformedGeometry(this._splitee), getTransformedGeometry(cutPlane), this._splitee.material);
-		scene.add(this._splitee.awc);
+		this._splitee.awa = xacThing.subtract(gettg(this._splitee), gettg(cutPlane), this._splitee.material);
+		scene.add(this._splitee.awa);
 	}
 }
 
@@ -194,7 +194,7 @@ class xacClamp extends xacAttachment {
 
 	mousedown(e) {
 		if (this._step == this._TOSELECTPIPE) {
-			scene.remove(this._awc);
+			scene.remove(this._awa);
 			scene.remove(this._pipe);
 
 			var intersects = rayCast(e.clientX, e.clientY, e.shiftKey == true ? this._as : objects);
@@ -207,9 +207,16 @@ class xacClamp extends xacAttachment {
 			}
 		} else if (this._step == this._TOMAKEPIPE) {
 			this._pipe = this._partSel.release();
+			this._pipe.material = MATERIALHIGHLIGHT.clone();
+			this._pipe.material.needsUpdate = true;
+
 			scaleAroundVector(this._pipe, 1.5, this._partSel.part.normal);
 			scene.add(this._pipe);
-			this._awc = this._pipe;
+			this._awa = this._pipe;
+
+			// scene.remove(adaptation);
+			// adaptation = xacThing.subtract(gettg(adaptation), gettg(this._pipe), adaptation.material);
+			// scene.add(adaptation);
 		} else if (this._step == this._TOMAKEBOLTHOLE) {
 			this._strokePoints = [];
 			this._obj = undefined;
@@ -271,24 +278,36 @@ class xacClamp extends xacAttachment {
 
 			scene.remove(this._pipe);
 
+			//
 			//	1. cut the pipe 
+			//
 			var depthCutPlane = 1000;
 			var thickCutPlane = 3;
 			var heightCutPlane = 1000;
+
+			var rPlank = 8;
+			var hPlank = 3;
+
+			// BEFORE
 			var cutPlane = new xacRectPrism(depthCutPlane, thickCutPlane, heightCutPlane, MATERIALCONTRAST).m;
+			// NOW
+			// var rCutPlane = rPlank * 2 + 
+			// var cutPlane = new xacCylinder(depthCutPlane, thickCutPlane, heightCutPlane, MATERIALCONTRAST).m;
 
 			rotateObjTo(cutPlane, nmlPlane);
 			var ctrCutPlane = midPt.clone().add(meanNml.clone().multiplyScalar(depthCutPlane * 0.5));
 			cutPlane.position.copy(ctrCutPlane);
 
-			this._pipe = xacThing.subtract(getTransformedGeometry(this._pipe), getTransformedGeometry(cutPlane), this._pipe.material);
+			this._pipe = xacThing.subtract(gettg(this._pipe), gettg(cutPlane), this._pipe.material);
+
+			// cut any other adaptation that is in the way
+			// for (var i = this._as.length - 1; i >= 0; i--) {
+			// 	this._as[i] = xacThing.subtract(gettg(this._as[i]), gettg(cutPlane), this._as[i].material);
+			// }
 
 			//
 			//	2. make structure for bolting
 			//
-			// stub values
-			var rPlank = 8;
-			var hPlank = 3;
 			var ctrPlank = midPt.clone().add(meanNml.clone().multiplyScalar(rPlank * 0.5));
 
 			var plank1 = new xacCylinder(rPlank, hPlank, MATERIALHIGHLIGHT).m;
@@ -299,7 +318,7 @@ class xacClamp extends xacAttachment {
 			rotateObjTo(plank2, nmlPlane);
 			plank2.position.copy(ctrPlank.clone().sub(nmlPlane.clone().multiplyScalar(hPlank)));
 
-			this._plank = xacThing.union(getTransformedGeometry(plank1), getTransformedGeometry(plank2));
+			this._plank = xacThing.union(gettg(plank1), gettg(plank2));
 
 
 			//
@@ -308,18 +327,24 @@ class xacClamp extends xacAttachment {
 			var screwStub = new xacCylinder(RADIUSM3, hPlank * 4).m;
 			rotateObjTo(screwStub, nmlPlane);
 			screwStub.position.copy(ctrPlank.clone().add(meanNml.clone().multiplyScalar(rPlank * 0.5)));
-			this._plank = xacThing.subtract(getTransformedGeometry(this._plank), getTransformedGeometry(screwStub), MATERIALHIGHLIGHT);
+			this._plank = xacThing.subtract(gettg(this._plank), gettg(screwStub), MATERIALHIGHLIGHT);
 
 			//
 			//	finish up
 			//
-			scene.remove(this._awc);
-			this._awc = xacThing.union(getTransformedGeometry(this._pipe), getTransformedGeometry(this._plank), MATERIALHIGHLIGHT);
-			scene.add(this._awc);
+			scene.remove(this._awa);
+			this._awa = xacThing.union(gettg(this._pipe), gettg(this._plank), MATERIALHIGHLIGHT);
+			scene.add(this._awa);
 
 			// TODO: change it to active adaptation
+
 			var adaptation = gJustFocusedObjs[3];
-			adaptation.awc = xacThing.union(getTransformedGeometry(adaptation), getTransformedGeometry(this._awc), MATERIALHIGHLIGHT);
+			
+			// scene.remove(adaptation);
+			// adaptation = xacThing.subtract(gettg(adaptation), gettg(cutPlane), adaptation.material);
+			// scene.add(adaptation);
+
+			adaptation.awa = xacThing.union(gettg(adaptation), gettg(this._awa), MATERIALHIGHLIGHT);
 
 			this._step = this._TOSELECTPIPE;
 		}
@@ -377,7 +402,7 @@ class xacBeam extends xacAttachment {
 			scaleAlongVector(pad, 2, gPartSel.part.nmlPt);
 			scaleAroundVector(pad, 1.5, gPartSel.part.nmlPt);
 
-			beam = xacThing.union(getTransformedGeometry(beam), getTransformedGeometry(pad), MATERIALHIGHLIGHT);
+			beam = xacThing.union(gettg(beam), gettg(pad), MATERIALHIGHLIGHT);
 			scene.add(beam);
 			this._a.attachables.push(beam);
 

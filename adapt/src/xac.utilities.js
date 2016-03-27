@@ -54,6 +54,21 @@ function contains(array, elm) {
 	return false;
 }
 
+/*
+ *	function for performing raycasting
+ */
+function rayCast(x, y, objs) {
+	var rayCaster = new THREE.Raycaster();
+	var vector = new THREE.Vector3();
+	vector.set((x / window.innerWidth) * 2 - 1, -(y / window.innerHeight) * 2 + 1, 0.5);
+	var projector = new THREE.Projector();
+	vector.unproject(camera);
+	// controlPanel.log(vector);
+	// vector.unproject( camera );
+	rayCaster.ray.set(camera.position, vector.sub(camera.position).normalize());
+	return rayCaster.intersectObjects(objs);
+}
+
 
 /*
 	load models from stl binary/ascii data
@@ -79,7 +94,7 @@ function loadStl(data) {
 	camera.position.copy(gPosCam.clone().normalize().multiplyScalar(r * 2));
 
 	// re-lookAt for the camera
-	controls.target = new THREE.Vector3(0, 0, 0);
+	gMouseCtrls.target = new THREE.Vector3(0, 0, 0);
 	// camera.position.y = 0;
 
 	// specifying accessible area
@@ -138,7 +153,7 @@ function addALine(v1, v2, clr) {
 	return line;
 }
 
-function addAVector(v1, dir, clr, len) {
+function addAVector(v1, dir, len) {
 	// BEFORE: simplistic version
 	// var v2 = v1.clone().add(dir.clone().normalize().multiplyScalar(1000));
 	// return addALine(v1, v2, clr);

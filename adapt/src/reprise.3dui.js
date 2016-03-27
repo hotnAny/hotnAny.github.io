@@ -180,19 +180,19 @@ class BboxSelector extends BboxUI {
 class SphereSelector {
 	constructor(pt) {
 		this._pt0 = pt;
-		this._sphere = new xacSphere(FINGERSIZE, MATERIALCONTRAST, true).m;
+		this._sphere = new xacSphere(FINGERSIZE, MATERIALINVISIBLE, true).m;
 		this._sphere.position.copy(pt);
 		scene.add(this._sphere);
 	}
 
 	hitTest(e) {
-		scene.remove(this._dot);
-		scene.remove(this._line);
 		var intSphere = rayCast(e.clientX, e.clientY, [this._sphere]);
 		if (intSphere[0] != undefined) {
+			// scene.remove(this._dot);
 			this._pt = intSphere[0].point;
-			this._dot = addABall(this._pt);
-			this._line = addAVector(this._pt0, this._pt.clone().sub(this._pt0));
+			// this._dot = addABall(this._pt);
+			scene.remove(this._line);
+			this._line = addAVector(this._pt0, this._pt.clone().sub(this._pt0), FINGERSIZE * 1.5);
 		}
 	}
 
@@ -204,6 +204,10 @@ class SphereSelector {
 
 	get selection() {
 		return this._pt;
+	}
+
+	get pointer() {
+		return this._line;
 	}
 }
 
@@ -426,7 +430,7 @@ class PartSelector {
 		var dEatIn = 5;
 		var cylEatIn = cylPartSelection.m.clone();
 		cylEatIn.position.copy(cylEatIn.position.clone().add(vEatIn.multiplyScalar(dEatIn)));
-		var cylPartSelectionIn = xacThing.intersect(getTransformedGeometry(cylEatIn), obj, MATERIALOVERLAY);
+		var cylPartSelectionIn = xacThing.intersect(gettg(cylEatIn), obj, MATERIALOVERLAY);
 
 		var cylPartSelectionOut = xacThing.subtract(cylPartSelection.gt, cylPartSelectionIn.geometry, MATERIALOVERLAY);
 		// scene.add(cylPartSelectionOut);
@@ -481,7 +485,7 @@ class PartSelector {
 		var maxDistBelow = 0;
 
 		var obj = this._obj != undefined ? this._obj : obj;
-		var gtObj = getTransformedGeometry(obj);
+		var gtObj = gettg(obj);
 		for (var i = 0; i < gtObj.faces.length; i++) {
 			var f = gtObj.faces[i];
 
@@ -536,10 +540,10 @@ class PartSelector {
 		//
 		//	3. make wraps
 		//
-		var gtCylWrap = getTransformedGeometry(this.cylWrap.m);
+		var gtCylWrap = gettg(this.cylWrap.m);
 		this.wrapIn = xacThing.intersect(gtCylWrap, obj, this._part == undefined ? MATERIALCONTRAST : this._part.material);
 
-		var gtCylWrapDisplay = getTransformedGeometry(wrapDisplay.m);
+		var gtCylWrapDisplay = gettg(wrapDisplay.m);
 		var wrapInDisplay = xacThing.intersect(gtCylWrapDisplay, obj, MATERIALOVERLAY);
 		scene.add(wrapInDisplay);
 
@@ -614,7 +618,7 @@ class PartSelector {
 		var p0 = gHand.position;
 		var p1 = p0.clone().add(gHand.fnml.clone().multiplyScalar(100));
 
-		var gtFingers = getTransformedGeometry(gHand.arrowThumb); //new THREE.Vector3(1, 0, 0);
+		var gtFingers = gettg(gHand.arrowThumb); //new THREE.Vector3(1, 0, 0);
 		var dirThumb = gtFingers.vertices[1].clone().sub(gtFingers.vertices[0]);
 		// dirThumb = getTransformedVector(dirThumb, gHand.arrowThumb);
 		var p2 = p0.clone().add(dirThumb.clone().multiplyScalar(100));

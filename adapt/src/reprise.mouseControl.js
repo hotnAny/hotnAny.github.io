@@ -1,8 +1,20 @@
+
 /**
  * mouse event handlers for the operation in the various steps
  *
  * @author Xiang 'Anthony' Chen http://xiangchen.me
  */
+
+ 
+gMouseCtrls.rotateSpeed = 5.0;
+gMouseCtrls.zoomSpeed = 0.5;
+gMouseCtrls.panSpeed = 2;
+
+gMouseCtrls.noZoom = false;
+// gMouseCtrls.noPan = true;
+
+gMouseCtrls.staticMoving = true;
+gMouseCtrls.dynamicDampingFactor = 0.3;
 
 var gPartSel = new PartSelector();
 

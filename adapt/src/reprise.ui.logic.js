@@ -614,18 +614,15 @@ var initPanel = function() {
 			var cnt = 0;
 			for (var pid in adaptation.adaptations) {
 				if (cnt == idx) {
-					modelToSave = adaptation.adaptations[pid].awc;
+					modelToSave = adaptation.adaptations[pid].awa;
 					// no attachables added
 					if (modelToSave == undefined) {
 						modelToSave = adaptation.adaptations[pid];
-						// 						break;
 					}
 					// need to merge attachables
-					// else {
 					for (var i = adaptation.attachables.length - 1; i >= 0; i--) {
-						modelToSave = xacThing.union(getTransformedGeometry(modelToSave), getTransformedGeometry(adaptation.attachables[i]), MATERIALHIGHLIGHT);
+						modelToSave = xacThing.union(gettg(modelToSave), gettg(adaptation.attachables[i]), MATERIALHIGHLIGHT);
 					}
-					// }
 					break;
 				}
 				cnt++;
@@ -637,7 +634,7 @@ var initPanel = function() {
 		}
 
 		for (var i = objects.length - 1; i >= 0; i--) {
-			modelToSave = xacThing.subtract(getTransformedGeometry(modelToSave), getTransformedGeometry(objects[i]), MATERIALHIGHLIGHT);
+			modelToSave = xacThing.subtract(gettg(modelToSave), gettg(objects[i]), MATERIALHIGHLIGHT);
 		}
 
 		var stlStr = stlFromGeometry(modelToSave.geometry);
