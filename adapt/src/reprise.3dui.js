@@ -579,7 +579,7 @@ class PartSelector {
 
 			// fingers pointer
 			var dirFingers = new THREE.Vector3(0, 0, 1);
-			var arrowFingers = xacThing.line(ctr, dirFingers);
+			var arrowFingers = addAVector(ctr.clone().sub(dirFingers.clone().normalize().multiplyScalar(50)), dirFingers, 100);
 			gHand.add(arrowFingers);
 
 			rotateObjTo(gHand, fnml);

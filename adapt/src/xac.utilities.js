@@ -1,3 +1,9 @@
+/**
+ * utility routines
+ * 	
+ * @author Xiang 'Anthony' Chen http://xiangchen.me
+ */
+
 var gBalls = [];
 var gObjectDelay; // loaded from file
 
@@ -158,9 +164,13 @@ function addAVector(v1, dir, len) {
 	// var v2 = v1.clone().add(dir.clone().normalize().multiplyScalar(1000));
 	// return addALine(v1, v2, clr);
 
+	var flipped = len < 0;
+
+	// len = Math.abs(len);
+
 	// NOW: make an arrow
 	var rArrow = 1;
-	var lArrow = len == undefined ? 100 : len;
+	var lArrow = len == undefined ? 100 : Math.abs(len);
 	var bodyArrow = new xacCylinder(rArrow, lArrow, MATERIALFOCUS).m;
 
 	var rArrowHead = rArrow * 5;
@@ -171,8 +181,8 @@ function addAVector(v1, dir, len) {
 	arrow.add(bodyArrow);
 	arrow.add(headArrow);
 
-	rotateObjTo(arrow, dir.clone().normalize());
-	arrow.position.copy(v1.clone().add(dir.clone().normalize().multiplyScalar(lArrow * 0.5)));
+	rotateObjTo(arrow, dir.clone().normalize().multiplyScalar(flipped == true ? -1 : 1));
+	arrow.position.copy(v1.clone().add(dir.clone().normalize().multiplyScalar(lArrow * 0.5 + (flipped == true ? rArrowHead * 2 : 0))));
 
 	scene.add(arrow);
 	return arrow;

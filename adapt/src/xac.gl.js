@@ -64,6 +64,9 @@ function scaleWithVector(obj, factors, dir) {
 	obj.geometry.translate(offset.x, offset.y, offset.z);
 }
 
+/*
+	rotate an object towards a given direction
+*/
 function rotateObjTo(obj, dir, isReversed) {
 	var yUp = new THREE.Vector3(0, 1, 0);
 	var angleToRotate = yUp.angleTo(dir);
@@ -71,6 +74,10 @@ function rotateObjTo(obj, dir, isReversed) {
 	obj.rotateOnAxis(axisToRotate, isReversed == true ? angleToRotate * -1 : angleToRotate);
 }
 
+
+/*
+	rotate the geometry towards a given direction
+*/
 function rotateGeoTo(geo, dir, isReversed) {
 	var mr = new THREE.Matrix4();
 	var yUp = new THREE.Vector3(0, 1, 0);
@@ -80,6 +87,10 @@ function rotateGeoTo(geo, dir, isReversed) {
 	geo.applyMatrix(mr);
 }
 
+
+/*
+	rotate a vector towards a given direction
+*/
 function rotateVectorTo(v, dir) {
 	var yUp = new THREE.Vector3(0, 1, 0);
 	var angleToRotate = yUp.angleTo(dir);
@@ -87,24 +98,24 @@ function rotateVectorTo(v, dir) {
 	v.applyAxisAngle(axisToRotate, angleToRotate);
 }
 
-function computeFaceArea(obj) {
-	var g = gettg(obj);
-	for (var i = g.faces.length - 1; i >= 0; i--) {
-		var f = g.faces[i];
-		// log(f.vertexNormals);
-		var va = g.vertices[f.a];
-		var vb = g.vertices[f.b];
-		var vc = g.vertices[f.c];
-		f.area = triangleArea(va, vb, vc);
+// function computeFaceArea(obj) {
+// 	var g = gettg(obj);
+// 	for (var i = g.faces.length - 1; i >= 0; i--) {
+// 		var f = g.faces[i];
+// 		// log(f.vertexNormals);
+// 		var va = g.vertices[f.a];
+// 		var vb = g.vertices[f.b];
+// 		var vc = g.vertices[f.c];
+// 		f.area = triangleArea(va, vb, vc);
 
-		va.normal = f.vertexNormals[0];
-		// addALine(va, va.clone().add(va.normal.clone().multiplyScalar(20)));
-		vb.normal = f.vertexNormals[1];
-		// addALine(vb, vb.clone().add(vb.normal.clone().multiplyScalar(20)));
-		vc.normal = f.vertexNormals[2];
-		// addALine(vc, vc.clone().add(vc.normal.clone().multiplyScalar(20)));
-	}
-}
+// 		va.normal = f.vertexNormals[0];
+// 		// addALine(va, va.clone().add(va.normal.clone().multiplyScalar(20)));
+// 		vb.normal = f.vertexNormals[1];
+// 		// addALine(vb, vb.clone().add(vb.normal.clone().multiplyScalar(20)));
+// 		vc.normal = f.vertexNormals[2];
+// 		// addALine(vc, vc.clone().add(vc.normal.clone().multiplyScalar(20)));
+// 	}
+// }
 
 function markVertexNeighbors(obj) {
 	removeBalls();

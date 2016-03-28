@@ -970,7 +970,7 @@ class xacMechanism extends xacAdaptation {
 		return uj;
 	}
 
-	mouseDown(e) {
+	mousedown(e) {
 		var arrParts = [];
 		for (var idx in this._pc.parts) {
 			arrParts.push(this._pc.parts[idx].display);

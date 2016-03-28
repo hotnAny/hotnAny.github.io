@@ -92,9 +92,7 @@ tblShapeOptions.append('<td><button id="btnPrism" height="50px"><img height="50p
 tblShapeOptions.append('<td><button id="btnPlane" height="50px"><img height="50px" src="./misc/plane.png"/></button></td>');
 trSelectArea.append(tblShapeOptions);
 
-// 1.2.3	library
-// TODO: implement this
-
+// use drag & drop as default
 // panels.append(geomMeas);
 // panels.append('<br/><br/>');
 
@@ -145,10 +143,6 @@ smAdapts.append('<option value=1>Handle</option>');
 smAdapts.append('<option value=2>Lever</option>');
 smAdapts.append('<option value=3>Anchor</option>');
 smAdapts.append('<option value=4>Guide</option>');
-// smAdapts.append('<option value=5>Mechanism</option>');
-// smAdapts.append('<option value=51>&nbsp;&nbsp;&#149; Clamp</option>');
-// smAdapts.append('<option value=52>&nbsp;&nbsp;&#149; Universal joint</option>');
-// smAdapts.append('<option value=53>&nbsp;&nbsp;&#149; Cam</option>');
 trAddAdaptations.append(smAdapts);
 adaptations.append(trAddAdaptations);
 
@@ -175,17 +169,6 @@ divAdjust.buttonset().find('label').css('width', '30%');
 
 // 4.2	other sliderable optimizations
 var tblSldrAdjust = $('<table cellspacing="5" cellpadding="5"></table>');
-// var trFingers = $('<tr><td><label id="lbFingers" class="ui-widget">X finger </label></td><td width="200px"><div id="sldFingers"></div></td></tr>');
-// var trGrip = $('<tr><td><label class="ui-widget">Grip </label></td><td width="200px"><div id="sldGrip"></div></td></tr>');
-// var trStrength = $('<tr><td><label class="ui-widget">Strength </label></td><td width="200px"><div id="sldStrength"></div></td></tr>');
-// var trCoord = $('<tr><td><label class="ui-widget">Coordination </label></td><td width="200px"><div id="sldCoord"></div></td></tr>');
-// var trSize = $('<tr><td><label class="ui-widget">Size </label></td><td width="200px"><div id="sldSize"></div></td></tr>');
-// // tblSldrAdjust.append(trFingers);
-// tblSldrAdjust.append(trGrip);
-// tblSldrAdjust.append(trStrength);
-// tblSldrAdjust.append(trCoord);
-// tblSldrAdjust.append(trSize);
-// tblSldrAdjust.append(trAttach);
 trAdjust.append(tblSldrAdjust);
 customization.append(trAdjust);
 

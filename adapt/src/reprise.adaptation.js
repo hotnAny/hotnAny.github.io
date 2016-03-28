@@ -438,11 +438,6 @@ class xacWrapper extends xacAdaptation {
 			var a = this._extrude(this._pc.parts[pid], this._pc.ctrl, g, l);
 			a = this._optimizeGrip(a, this._pc.ctrl, f, new THREE.Vector3(0, -1, 0), undefined);
 
-			// // to or not to cut in half for wraps
-			// if (this._cutPlane != undefined) {
-			// 	// a = xacThing.subtract(gettg(a), gettg(this._cutPlane.m), a.material);
-			// }
-
 			a = xacThing.subtract(gettg(a), gettg(this._pc.obj), a.material);
 			return a;
 		}
@@ -458,7 +453,7 @@ class xacWrapper extends xacAdaptation {
 		}
 
 		if (this._sldrLength == undefined) {
-			this._sldrLength = this._genSlider('sldrLength', 'Length', 5, 70, 40, panel);
+			this._sldrLength = this._genSlider('sldrLength', 'Size', 5, 70, 40, panel);
 			this._sldrLength.tv = function() {
 				var value = this.slider('value');
 				return value * value / 1000;
@@ -468,7 +463,7 @@ class xacWrapper extends xacAdaptation {
 		}
 
 		if (this._sldrGrip == undefined) {
-			this._sldrGrip = this._genSlider('sldrGrip', 'Grip', 0, 100, 25, panel);
+			this._sldrGrip = this._genSlider('sldrGrip', 'Thickness', 0, 100, 25, panel);
 			this._sldrGrip.tv = function() {
 				var value = this.slider('value');
 				var minValue = this.slider("option", "min");
@@ -543,7 +538,7 @@ class xacHandle extends xacAdaptation {
 		//	1. extrude as the connector btwn handle & obj
 		//
 		// assume a cylindrical wrap is okay
-		var extrusion = this._extrude(part, undefined, 1.0, 1);
+		var extrusion = this._extrude(part, undefined, 1.0, 5 * s);
 
 		// see if only need basicly small wrapper
 		if (extrusion.radius > FINGERDIM * 2) {
