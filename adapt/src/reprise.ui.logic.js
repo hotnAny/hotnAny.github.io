@@ -4,7 +4,6 @@
  * @author Xiang 'Anthony' Chen http://xiangchen.me
  */
 
-
 $(document.body).append(container);
 
 $(document.body).keydown(function(e) {
@@ -326,30 +325,6 @@ var initPanel = function() {
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	// preload some models
-	// loadStlFromFile(CAMMODELPATH, MATERIALHIGHLIGHT);
-	// setTimeout(function() {
-	// 	gCam = gObjectDelay;
-	// 	loadStlFromFile(CLAMPMODELPATH, MATERIALHIGHLIGHT);
-	// }, 250);
-
-	// setTimeout(function() {
-	// 	gClamp = gObjectDelay;
-	// 	loadStlFromFile(YOKEPATH, MATERIALHIGHLIGHT);
-	// }, 500);
-
-	// setTimeout(function() {
-	// 	gYoke = gObjectDelay;
-	// 	loadStlFromFile(YOKECROSSPATH, MATERIALHIGHLIGHT);
-	// 	// scene.add(gYoke);
-	// }, 750);
-
-	// setTimeout(function() {
-	// 	gYokeCross = gObjectDelay;
-	// 	// loadStlFromFile(YOKECROSSPATH, MATERIALHIGHLIGHT);
-	// 	// scene.add(gYokeCross)
-	// }, 1000);
-
 	lsAdapts.tagit({
 		onTagClicked: function(event, ui) {
 			triggerUI2ObjAction(ui.tag, FOCUSACTION);
@@ -428,98 +403,6 @@ var initPanel = function() {
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	// # of fingers
-	// $('#sldFingers').slider({
-	// 	max: 70,
-	// 	min: 5,
-	// 	range: 'max',
-	// 	change: function(e) {
-	// 		var value = $('#sldFingers').slider('value');
-	// 		value = value * value / 100 / 10;
-	// 		var valueInt = Math.max(1, float2int(value + 0.5));
-	// 		$('#lbFingers').html(valueInt + ' Finger' + (valueInt > 1 ? 's' : ''));
-
-	// 		gOptParams.fingerFactor = value;
-	// 	},
-	// 	slide: function(e) {
-	// 		var value = $('#sldFingers').slider('value');
-	// 		value = value * value / 100 / 10;
-	// 		var valueInt = Math.max(1, float2int(value + 0.5));
-	// 		$('#lbFingers').html(valueInt + ' Finger' + (valueInt > 1 ? 's' : ' '));
-	// 	}
-	// });
-	// $('#sldFingers').slider('value', Math.sqrt(FINGERINIT * 1000));
-	// $('#sldFingers').css('background-color', '#b7b7b4');
-
-	// // grip
-	// $('#sldGrip').slider({
-	// 	max: 100,
-	// 	min: 0,
-	// 	range: 'max',
-	// 	change: function(e) {
-	// 		var minValue = $("#sldGrip").slider("option", "min");
-	// 		var maxValue = $("#sldGrip").slider("option", "max");
-	// 		var value = $('#sldGrip').slider('value');
-	// 		gOptParams.gripFactor = (value - minValue) * 1.0 / (maxValue - minValue);
-	// 	}
-	// });
-	// $('#sldGrip').css('background-color', '#b7b7b4');
-	// var minSldGripValue = $("#sldGrip").slider("option", "min");
-	// var maxSldGripValue = $("#sldGrip").slider("option", "max");
-	// $('#sldGrip').slider('value', GRIPINIT * (maxSldGripValue - minSldGripValue));
-
-	// // strength
-	// $('#sldStrength').slider({
-	// 	max: 100,
-	// 	range: 'max',
-	// 	change: function(e) {
-	// 		var minValue = $("#sldStrength").slider("option", "min");
-	// 		var maxValue = $("#sldStrength").slider("option", "max");
-	// 		var value = $('#sldStrength').slider('value');
-	// 		gOptParams.strengthFactor = 1 + (value - minValue) * 1.0 / (maxValue - minValue);
-	// 	}
-	// });
-	// $('#sldStrength').css('background-color', '#b7b7b4');
-	// var minsldStrengthValue = $("#sldStrength").slider("option", "min");
-	// var maxsldStrengthValue = $("#sldStrength").slider("option", "max");
-	// var valuesldStrength = minsldStrengthValue + (STRENGTHINT - 1) * (maxsldStrengthValue - minsldStrengthValue);
-	// $('#sldStrength').slider('value', valuesldStrength);
-
-	// // TODO: make it 'target'?
-	// // coord
-	// $('#sldCoord').slider({
-	// 	max: 100,
-	// 	range: 'max',
-	// 	change: function(e) {
-	// 		var minValue = $("#sldCoord").slider("option", "min");
-	// 		var maxValue = $("#sldCoord").slider("option", "max");
-	// 		var value = $('#sldCoord').slider('value');
-	// 		gOptParams.targetFactor = (value - minValue) * 1.0 / (maxValue - minValue);
-	// 	}
-	// })
-	// $('#sldCoord').css('background-color', '#b7b7b4');
-	// var minsldCoordValue = $("#sldCoord").slider("option", "min");
-	// var maxsldCoordValue = $("#sldCoord").slider("option", "max");
-	// var valuesldCoord = minsldCoordValue + TARGETINIT * (maxsldCoordValue - minsldCoordValue);
-	// $('#sldCoord').slider('value', valuesldCoord);
-
-	// // size
-	// $('#sldSize').slider({
-	// 	max: 100,
-	// 	range: 'max',
-	// 	change: function(e) {
-	// 		var minValue = $("#sldSize").slider("option", "min");
-	// 		var maxValue = $("#sldSize").slider("option", "max");
-	// 		var value = $('#sldSize').slider('value');
-	// 		gOptParams.sizeFactor = 1 + (value - minValue) * 1.0 / (maxValue - minValue);
-	// 	}
-	// });
-	// $('#sldSize').css('background-color', '#b7b7b4');
-	// var minsldSizeValue = $("#sldSize").slider("option", "min");
-	// var maxsldSizeValue = $("#sldSize").slider("option", "max");
-	// var valuesldSize = minsldSizeValue + (SIZEINIT - 1) * (maxsldSizeValue - minsldSizeValue);
-	// $('#sldSize').slider('value', valuesldSize);
-
 	btnUpdate.click(function(e) {
 		gStep = 3;
 		gJustFocusedObjs[gStep].parentAdaptation.update();
@@ -593,11 +476,6 @@ var initPanel = function() {
 	});
 
 	btnExport.click(function(e) {
-		// do not remove the objects
-		// for (var i = objects.length - 1; i >= 0; i--) {
-		// 	scene.remove(objects[i]);
-		// }
-
 		var adaptation = gAdaptations.slice(-1)[0];
 		var modelToSave = undefined;
 		var objOriginal = adaptation.obj;
@@ -620,8 +498,10 @@ var initPanel = function() {
 						modelToSave = adaptation.adaptations[pid];
 					}
 					// need to merge attachables
-					for (var i = adaptation.attachables.length - 1; i >= 0; i--) {
-						modelToSave = xacThing.union(gettg(modelToSave), gettg(adaptation.attachables[i]), MATERIALHIGHLIGHT);
+					if (adaptation.attachables != undefined) {
+						for (var i = adaptation.attachables.length - 1; i >= 0; i--) {
+							modelToSave = xacThing.union(gettg(modelToSave), gettg(adaptation.attachables[i]), MATERIALHIGHLIGHT);
+						}
 					}
 					break;
 				}
@@ -653,6 +533,10 @@ $(document).ready(function() {
 
 
 function triggerUI2ObjAction(ui, action, key) {
+	if(ui == undefined) {
+		return;
+	}
+	
 	var nameUI = $(ui[0]).text().slice(0, -1);
 
 	switch (action) {
@@ -737,7 +621,7 @@ function numValidPartsCtrl() {
 	return n;
 }
 
-function getActiveCtrl() {
+function getActiveAction() {
 	if (gCurrPartsAction != undefined) {
 		return gPartsActions[gCurrPartsAction.attr('pcId')].ctrl;
 	}

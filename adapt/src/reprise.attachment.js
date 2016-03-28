@@ -47,17 +47,17 @@ class xacStrap extends xacAttachment {
 		this._inflateRatio = 1.1;
 	}
 
-	mouseDown(e, obj, pt, fnml) {
+	mousedown(e, obj, pt, fnml) {
 		this._strokePoints = [];
 	}
 
-	mouseMove(e, obj, pt, fnml) {
+	mousemove(e, obj, pt, fnml) {
 		this._obj = obj;
 		this._strokePoints.push(pt);
 		addABall(pt, COLORSTROKE);
 	}
 
-	mouseUp(e) {
+	mouseup(e) {
 		if (this._strokePoints.length > 3) {
 			this._makeStrapFor(this._strokePoints, this._obj, this._a);
 		}
@@ -123,14 +123,14 @@ class xacSplit extends xacAttachment {
 
 	}
 
-	mouseDown(e) {
+	mousedown(e) {
 		this._strokePoints = [];
 		this._splitee = undefined;
 		this._pt1 = undefined;
 		this._pt2 = undefined;
 	}
 
-	mouseMove(e) {
+	mousemove(e) {
 		var intersects = rayCast(e.clientX, e.clientY, this._as);
 		if (intersects[0] != undefined) {
 			if (this._splitee == undefined) {
@@ -151,7 +151,7 @@ class xacSplit extends xacAttachment {
 		}
 	}
 
-	mouseUp(e) {
+	mouseup(e) {
 		removeBalls();
 		//	1. find the split plane
 		var midPt = new THREE.Vector3().addVectors(this._pt1, this._pt2).multiplyScalar(0.5);;
@@ -188,7 +188,7 @@ class xacClamp extends xacAttachment {
 
 	}
 
-	mouseDown(e) {
+	mousedown(e) {
 		if (this._step == this._TOSELECTPIPE) {
 			scene.remove(this._awa);
 			scene.remove(this._pipe);
@@ -221,7 +221,7 @@ class xacClamp extends xacAttachment {
 		}
 	}
 
-	mouseMove(e) {
+	mousemove(e) {
 		if (this._step == this._TOMAKEPIPE) {
 			this._partSel.rotateHand(e.ptMove, e.ptDown);
 		} else if (this._step == this._TOMAKEBOLTHOLE) {
@@ -258,7 +258,7 @@ class xacClamp extends xacAttachment {
 		}
 	}
 
-	mouseUp(e) {
+	mouseup(e) {
 		removeBalls();
 
 		if (this._step == this._TOSELECTPIPE) {
@@ -362,7 +362,7 @@ class xacBeam extends xacAttachment {
 		this._rBeam = 5;
 	}
 
-	mouseDown(e) {
+	mousedown(e) {
 		var intersects = rayCast(e.clientX, e.clientY, this._everything);
 
 		if (intersects[0] == undefined) {
@@ -375,12 +375,6 @@ class xacBeam extends xacAttachment {
 				scene.remove(gPartSel.part.display);
 			}
 		}
-
-		// for (var i = this._as.length - 1; i >= 0; i--) {
-		// 	if (this._as[i] == intersects[0].object) {
-		// 		this._adaptation = objects[i];
-		// 	}
-		// }
 
 		if (this._step == this._TOMAKEENDONE) {
 			this._end1 = intersects[0].point;

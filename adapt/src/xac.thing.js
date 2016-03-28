@@ -1,9 +1,18 @@
+/**
+ * routines to generate 3d things
+ * 	
+ * @author Xiang 'Anthony' Chen http://xiangchen.me
+ */
+
 "use strict";
 
 var SUBTRACT = 0;
 var UNION = 1;
 var INTERSECT = 2;
 
+/*
+	base class for a range of geometric things
+*/
 class xacThing {
 	constructor(m) {
 		this._g = undefined; // the original geometry, always!
@@ -34,8 +43,6 @@ class xacThing {
 		var csgBoolean = undefined;
 		switch (type) {
 			case SUBTRACT:
-				// scene.add(new THREE.Mesh(obj1, MATERIALNORMAL));
-				// scene.add(new THREE.Mesh(obj2, MATERIALNORMAL));
 				csgBoolean = objCsg1.subtract(objCsg2);
 				break;
 			case UNION:

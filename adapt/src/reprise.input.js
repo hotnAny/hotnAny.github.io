@@ -19,9 +19,9 @@ gMouseCtrls.dynamicDampingFactor = 0.3;
 var gPartSel = new PartSelector();
 
 // TODO: make them jquery fashion
-document.addEventListener('mouseDown', onMouseDownStep, false);
-document.addEventListener('mouseMove', onMouseMoveStep, false);
-document.addEventListener('mouseUp', onMouseUpStep, false);
+document.addEventListener('mousedown', onMouseDownStep, false);
+document.addEventListener('mousemove', onMouseMoveStep, false);
+document.addEventListener('mouseup', onMouseUpStep, false);
 
 // global variable of mouse down coordinates
 var ptDown = [];
@@ -37,36 +37,36 @@ function onMouseDownStep(e) {
 	if (e.clientX < WIDTHCONTAINER) return;
 	intersects = rayCast(e.clientX, e.clientY, objects);
 	ptDown = [e.clientX, e.clientY];
-	var activeCtrl = getActiveCtrl();
+	var activeAction = getActiveAction();
 
 	switch (gStep) {
 		case 1:
 			for (var i = gAccessSel.length - 1; i >= 0; i--) {
-				gAccessSel[i].mouseDown(e);
+				gAccessSel[i].mousedown(e);
 			}
 			break;
 		case 2:
-			if (activeCtrl != undefined) {
+			if (activeAction != undefined) {
 				var objInt = intersects[0];
 				if (objInt != undefined) {
-					activeCtrl.mouseDown(e, objInt.object, objInt.point.clone(), objInt.face.normal);
+					activeAction.mousedown(e, objInt.object, objInt.point.clone(), objInt.face.normal);
 				} else {
-					activeCtrl.mouseDown(e);
+					activeAction.mousedown(e);
 				}
 			}
 
 			break;
 		case 3:
-			if (gCurrAdapt != undefined && gCurrAdapt.mouseDown != undefined) {
-				gCurrAdapt.mouseDown(e);
+			if (gCurrAdapt != undefined && gCurrAdapt.mousedown != undefined) {
+				gCurrAdapt.mousedown(e);
 			}
 			break;
 		case 5:
 			if (gCurrAttach != undefined) {
 				if (objInt != undefined) {
-					gCurrAttach.mouseDown(e, objInt.object, objInt.point.clone(), objInt.face.normal);
+					gCurrAttach.mousedown(e, objInt.object, objInt.point.clone(), objInt.face.normal);
 				} else {
-					gCurrAttach.mouseDown(e);
+					gCurrAttach.mousedown(e);
 				}
 			}
 			break;
@@ -89,34 +89,34 @@ function onMouseMoveStep(e) {
 	e.ptDown = ptDown;
 	e.ptMove = ptMove;
 
-	var activeCtrl = getActiveCtrl();
+	var activeAction = getActiveAction();
 
 	switch (gStep) {
 		case 1:
 			for (var i = gAccessSel.length - 1; i >= 0; i--) {
-				gAccessSel[i].mouseMove(e);
+				gAccessSel[i].mousemove(e);
 			}
 			break;
 		case 2:
-			if (activeCtrl != undefined) {
+			if (activeAction != undefined) {
 				if (objInt != undefined) {
-					activeCtrl.mouseMove(e, objInt.object, objInt.point.clone(), objInt.face.normal);
+					activeAction.mousemove(e, objInt.object, objInt.point.clone(), objInt.face.normal);
 				} else {
-					activeCtrl.mouseMove(e);
+					activeAction.mousemove(e);
 				}
 			}
 			break;
 		case 3:
-			if (gCurrAdapt != undefined && gCurrAdapt.mouseMove != undefined) {
-				gCurrAdapt.mouseMove(e); //, objInt.object, objInt.point.clone(), objInt.face.normal);
+			if (gCurrAdapt != undefined && gCurrAdapt.mousemove != undefined) {
+				gCurrAdapt.mousemove(e); //, objInt.object, objInt.point.clone(), objInt.face.normal);
 			}
 			break;
 		case 5:
 			if (gCurrAttach != undefined) {
 				if (objInt != undefined) {
-					gCurrAttach.mouseMove(e, objInt.object, objInt.point.clone(), objInt.face.normal);
+					gCurrAttach.mousemove(e, objInt.object, objInt.point.clone(), objInt.face.normal);
 				} else {
-					gCurrAttach.mouseMove(e);
+					gCurrAttach.mousemove(e);
 				}
 			}
 			break;
@@ -130,29 +130,29 @@ function onMouseUpStep(e) {
 
 	if (e.clientX < WIDTHCONTAINER) return;
 	intersects = rayCast(e.clientX, e.clientY, objects);
-	var activeCtrl = getActiveCtrl();
+	var activeAction = getActiveAction();
 
 	switch (gStep) {
 		case 1:
 			for (var i = gAccessSel.length - 1; i >= 0; i--) {
-				gAccessSel[i].mouseUp(e);
+				gAccessSel[i].mouseup(e);
 			}
 			break;
 		case 2:
-			if (e.which == LEFTMOUSE && activeCtrl.mouseUp != undefined) {
-				if (activeCtrl != undefined) {
-					activeCtrl.mouseUp(e);
+			if (e.which == LEFTMOUSE && activeAction.mouseup != undefined) {
+				if (activeAction != undefined) {
+					activeAction.mouseup(e);
 				}
 			}
 			break;
 		case 3:
-			if (gCurrAdapt != undefined && gCurrAdapt.mouseUp != undefined) {
-				gCurrAdapt.mouseUp(e); //, objInt.object, objInt.point.clone(), objInt.face.normal);
+			if (gCurrAdapt != undefined && gCurrAdapt.mouseup != undefined) {
+				gCurrAdapt.mouseup(e); //, objInt.object, objInt.point.clone(), objInt.face.normal);
 			}
 			break;
 		case 5:
-			if (gCurrAttach != undefined && gCurrAttach.mouseUp != undefined) {
-				gCurrAttach.mouseUp(e);
+			if (gCurrAttach != undefined && gCurrAttach.mouseup != undefined) {
+				gCurrAttach.mouseup(e);
 			}
 			break;
 	}

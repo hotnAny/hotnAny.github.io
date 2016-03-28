@@ -12,11 +12,12 @@
 class BboxUI {
 	constructor(obj) {
 		this._obj = obj;
-		this._ctrObj = getBoundingBoxCenter(this._obj);
+		// this._ctrObj = getBoundingBoxCenter(this._obj);
 		this._bboxParmas = getBoundingBoxEverything(obj);
 		this._update(this._bboxParmas)
 	}
 
+	// add a plane (face) to make up the box
 	_addPlane(lx, ly, lz, nml, cx, cy, cz) {
 		var pl = new xacRectPrism(lx, ly, lz, MATERIALCONTRAST);
 		rotateObjTo(pl.m, nml);
@@ -27,6 +28,7 @@ class BboxUI {
 		return pl.m;
 	}
 
+	// return the mesh of the box
 	get box() {
 		return this._box;
 	}
@@ -56,6 +58,7 @@ class BboxUI {
 		}
 	}
 
+	// remove the box from the scene
 	clear() {
 		for (var i = this._box.length - 1; i >= 0; i--) {
 			scene.remove(this._box[i]);
@@ -106,8 +109,6 @@ class BboxResizer extends BboxUI {
 			var sign = dirDrag.angleTo(this._normal) < Math.PI / 2 ? 1 : -1;
 			var posNew = this._pl.position.clone().add(vecOff);
 
-			// a plane cannot go across the centroid to the other side
-			// if (posNew.clone().sub(this._ctrObj).angleTo(this._normal) < Math.PI / 2) {
 			this._pl.position.copy(posNew);
 
 			this._bboxParmas.ctrx += vecOff.x / 2;
@@ -127,9 +128,7 @@ class BboxResizer extends BboxUI {
 
 			this._point.add(vecOff);
 
-			// update the other planes
 			this._update(this._bboxParmas);
-			// }
 		}
 	}
 
@@ -153,12 +152,8 @@ class BboxResizer extends BboxUI {
 		this._obj.accessibleBoundaries[4] = (bbNow.cmin.z > bbOriginal.cmin.z + eps) ? bbNow.cmin.z : undefined;
 		this._obj.accessibleBoundaries[5] = (bbNow.cmax.z < bbOriginal.cmax.z - eps) ? bbNow.cmax.z : undefined;
 
-		// log(this._accessibleBoundaries);
 		log(this._obj)
 	}
-
-
-
 }
 
 /*
@@ -167,13 +162,6 @@ class BboxResizer extends BboxUI {
 class BboxSelector extends BboxUI {
 	constructor(obj) {
 		super(obj);
-	}
-
-	select(pl) {
-		// for (var i = this._box.length - 1; i >= 0; i--) {
-		// 	this._box[i].material.opacity = 0.25;
-		// }
-		// pl.material.opacity = 0.5;
 	}
 }
 
@@ -191,9 +179,7 @@ class SphereSelector {
 	hitTest(e) {
 		var intSphere = rayCast(e.clientX, e.clientY, [this._sphere]);
 		if (intSphere[0] != undefined) {
-			// scene.remove(this._dot);
 			this._pt = intSphere[0].point;
-			// this._dot = addABall(this._pt);
 			scene.remove(this._line);
 			this._line = addAVector(this._pt0, this._pt.clone().sub(this._pt0), FINGERSIZE * 1.5);
 		}
@@ -220,8 +206,6 @@ class SphereSelector {
 */
 class PlaneSelector {
 	constructor(pt, nml) {
-		// addABall(pt);
-
 		this._dim = 1000;
 		this._planes = new THREE.Object3D();
 

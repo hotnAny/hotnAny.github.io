@@ -158,9 +158,9 @@ class xacAdaptation {
 
 			if (ctrl != undefined && ctrl.type == PUSHPULLCTRL) {
 				var rLarge = r;
-				var rSmall = r / 2 * (sizeFactor - 1);
+				var rSmall = r / 2;
 
-				laoc = new xacCylinder([rLarge, rSmall], part.cylHeight * sizeFactor, MATERIALOVERLAY).m;
+				laoc = new xacCylinder([rLarge, rSmall], part.cylHeight * (sizeFactor - 0.5), MATERIALOVERLAY).m;
 				rotateObjTo(laoc, ctrl.type == PUSHPULLCTRL ? ctrl.dirForce : part.normal);
 				laoc.position.copy(ctrl.type == PUSHPULLCTRL ? ctrl.pt : part.cylCenter);
 
@@ -547,7 +547,9 @@ class xacHandle extends xacAdaptation {
 
 		// see if only need basicly small wrapper
 		if (extrusion.radius > FINGERDIM * 2) {
-			extrusion = part.display;
+			extrusion = new THREE.Mesh(part.display.geometry.clone(), part.display.material.clone());
+			scaleAlongVector(extrusion, 1.5, part.nmlPt);
+			scaleAroundVector(extrusion, 1.1, part.nmlPt);
 		}
 		// scene.remove(this._base);
 		// scene.add(extrusion);
@@ -561,9 +563,9 @@ class xacHandle extends xacAdaptation {
 		//	3. install the handle and merge with extrusion
 		//
 		// var ri = FINGERDIM * 0.05 * (1 + this._fingerFactor);
-		var ri = FINGERDIM * 0.5 * g * l;
+		var ri = FINGERDIM * 0.5 * g * s;
 		// var ro = FINGERDIM * 0.5 * this._fingerFactor + ri * 2;
-		var ro = FINGERDIM * 0.5 * l + ri * 2;
+		var ro = FINGERDIM * 0.5 * s + ri * 2;
 		this._handle = new xacTorus(ro, ri, 2 * Math.PI, MATERIALOVERLAY).m;
 
 		// resizing the handle
@@ -601,7 +603,7 @@ class xacHandle extends xacAdaptation {
 		return a;
 	}
 
-	mouseDown(e) {
+	mousedown(e) {
 		if (this._handle != undefined) {
 			var intersects = rayCast(e.clientX, e.clientY, [this._handle]);
 			if (intersects[0] != undefined && intersects[0].object == this._handle) {
@@ -869,7 +871,7 @@ class xacAnchor extends xacAdaptation {
 		return this._anchor;
 	}
 
-	mouseDown(e, obj, pt, fnml) {
+	mousedown(e, obj, pt, fnml) {
 		//
 		// only consider object
 		//

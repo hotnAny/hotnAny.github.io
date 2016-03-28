@@ -46,7 +46,7 @@ class xacGrasp extends xacAction {
 		this._g = new THREE.Vector3(0, -1, 0);
 	}
 
-	mouseDown(e, obj, pt, fnml) {
+	mousedown(e, obj, pt, fnml) {
 		if (gSticky == false) {
 			if (obj != undefined && pt != undefined && fnml != undefined) {
 				gPartSel.grab(obj, pt, fnml);
@@ -57,13 +57,13 @@ class xacGrasp extends xacAction {
 		}
 	}
 
-	mouseMove(e, obj, pt, fml) {
+	mousemove(e, obj, pt, fml) {
 		if (gSticky) {
 			gPartSel.rotateHand(e.ptMove, e.ptDown);
 		}
 	}
 
-	mouseUp(e, obj, pt, fml) {}
+	mouseup(e, obj, pt, fml) {}
 
 	cancel() {
 		this.clear();
@@ -87,7 +87,7 @@ class xacPushPull extends xacAction {
 		this._dirForce = undefined;
 	}
 
-	mouseDown(e, obj, pt, fnml) {
+	mousedown(e, obj, pt, fnml) {
 		if (this._step == this._TOSHOWSPHERE) {
 			// this._dirForce = fnml.clone();
 			this._pt = pt;
@@ -101,7 +101,7 @@ class xacPushPull extends xacAction {
 		}
 	}
 
-	mouseMove(e, obj, pt, fnml) {
+	mousemove(e, obj, pt, fnml) {
 		if (this._step == this._TOSHOWSPHERE) {
 
 		} else if (this._step == this._TOSELECTDIR) {
@@ -109,7 +109,7 @@ class xacPushPull extends xacAction {
 		}
 	}
 
-	mouseUp(e, obj, pt, fnml) {
+	mouseup(e, obj, pt, fnml) {
 		if (this._step == this._TOSHOWSPHERE) {
 			this._step = this._TOSELECTDIR;
 		} else if (this._step == this._TOSELECTDIR) {
@@ -162,7 +162,7 @@ class xacRotate extends xacAction {
 		return this._dirLever;
 	}
 
-	mouseDown(e, obj, pt, fnml) {
+	mousedown(e, obj, pt, fnml) {
 		switch (this._step) {
 			case this._TOSELECTOBJ:
 				// do 3dui press
@@ -196,7 +196,7 @@ class xacRotate extends xacAction {
 		}
 	}
 
-	mouseMove(e, obj, pt, fml) {
+	mousemove(e, obj, pt, fml) {
 		switch (this._step) {
 			case this._TOSELECTPLANE:
 				break;
@@ -206,7 +206,7 @@ class xacRotate extends xacAction {
 		}
 	}
 
-	mouseUp(e, obj, pt, fml) {}
+	mouseup(e, obj, pt, fml) {}
 
 	cancel() {
 		this._step = this._TOSELECTOBJ;
@@ -235,7 +235,7 @@ class xacClutch extends xacAction {
 		this._partFixed = undefined;
 	}
 
-	mouseDown(e, obj, pt, fnml) {
+	mousedown(e, obj, pt, fnml) {
 		switch (this._step) {
 			case this._TOSELECTFREEEND:
 				if (obj != undefined && pt != undefined && fnml != undefined) {
@@ -293,7 +293,7 @@ class xacClutch extends xacAction {
 		}
 	}
 
-	mouseMove(e, obj, pt, fnml) {
+	mousemove(e, obj, pt, fnml) {
 		switch (this._step) {
 			case this._TOSELECTFULCRUM:
 				this._planeSel.hitTest(e);
@@ -301,7 +301,7 @@ class xacClutch extends xacAction {
 		}
 	}
 
-	mouseUp(e, obj, pt, fnml) {}
+	mouseup(e, obj, pt, fnml) {}
 
 	get fulcrum() {
 		return this._fulcrum;
@@ -346,10 +346,8 @@ class xacJoinSeparate extends xacAction {
 		// show bounding box
 		this._bboxes = [];
 		for (var i = objs.length - 1; i >= 0; i--) {
-			// var bbox = new THREE.BoundingBoxHelper(objs[i], COLORHIGHLIGHT);
 			var bboxSel = new BboxSelector(objs[i]);
 			// scene.add(bboxSel.box);
-			// bboxSel.box.selector = bboxSel;
 			bboxSel.obj = objs[i];
 			this._bboxes = this._bboxes.concat(bboxSel.box);
 		}
@@ -373,7 +371,7 @@ class xacJoinSeparate extends xacAction {
 		return this._dirMobile
 	}
 
-	mouseDown(e, obj, pt, fnml) {
+	mousedown(e, obj, pt, fnml) {
 		if (this._bboxes.length < 2) {
 			return;
 		}
@@ -386,7 +384,7 @@ class xacJoinSeparate extends xacAction {
 		}
 
 		var bboxSel = intersects[0].object.selector;
-		bboxSel.select(intersects[0].object);
+		// bboxSel.select(intersects[0].object);
 		var obj = bboxSel.obj;
 
 		// var obj = bboxSel.objContained;
@@ -394,19 +392,20 @@ class xacJoinSeparate extends xacAction {
 		if (this._mobile == undefined) {
 			// first is the mobile one
 			this._mobile = obj;
-			this._ve.push(addABall(intersects[0].point));
+			// this._ve.push(addABall(intersects[0].point));
 			this._dirMobile = intersects[0].object.normal;
+			this._ve.push(addAVector(intersects[0].point, this._dirMobile, 20));
 		} else if (this._static == undefined) {
 			// second is the static one
 			if (obj != this._mobile) {
 				this._static = obj;
 				this._dir = intersects[0].object.normal;
-				this._ve.push(addAVector(intersects[0].point, this._dir));
+				this._ve.push(addAVector(intersects[0].point, this._dir, -20));
 			}
 		}
 	}
 
-	mouseMove(e, obj, pt, fnml) {}
+	mousemove(e, obj, pt, fnml) {}
 
-	mouseUp(e, obj, pt, fnml) {}
+	mouseup(e, obj, pt, fnml) {}
 }
