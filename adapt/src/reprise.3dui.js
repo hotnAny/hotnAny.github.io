@@ -487,15 +487,14 @@ class PartSelector {
 				// NOW	
 				if (Math.abs(dist) < dimObj / 4) {
 					ptsWrap.push(v);
-					// addABall(v, 0xffffff)
 					maxDistAbove = Math.max(maxDistAbove, dist);
 					maxDistBelow = Math.min(maxDistBelow, dist);
 				}
 			}
 		}
 
-		// TODO: change the hard coded value
-		ptsWrap = removeDisconnectedComponents(pt, ptsWrap, 20);
+		// 	TODO: change the hard coded value
+		// ptsWrap = removeDisconnectedComponents(pt, ptsWrap, 20);
 
 		//
 		//	2. find a wrapping cylinder

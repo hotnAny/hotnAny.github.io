@@ -522,6 +522,7 @@ class xacHandle extends xacAdaptation {
 		var s = this._sldrSize.tv();
 		var g = this._sldrGrip.tv();
 		var c = this._sldrCurvature.tv();
+		var o = this._sldrOpening.tv();
 
 		//
 		//	0. compute upright direction
@@ -538,7 +539,7 @@ class xacHandle extends xacAdaptation {
 		//	1. extrude as the connector btwn handle & obj
 		//
 		// assume a cylindrical wrap is okay
-		var extrusion = this._extrude(part, undefined, 1.0, 5 * s);
+		var extrusion = this._extrude(part, undefined, 1.0, s);
 
 		// see if only need basicly small wrapper
 		if (extrusion.radius > FINGERDIM * 2) {
@@ -562,13 +563,22 @@ class xacHandle extends xacAdaptation {
 		// var ro = FINGERDIM * 0.5 * this._fingerFactor + ri * 2;
 		var ro = FINGERDIM * 0.5 * s + ri * 2;
 		this._handle = new xacTorus(ro, ri, 2 * Math.PI, MATERIALOVERLAY).m;
+		this._handle.geometry.rotateX(Math.PI / 2);
+
+		// cutting the handle to allow hand to get in
+		// scene.remove(this._openCutter)
+		this._openCutter = new xacRectPrism(ro + ri, ri * 2, (ro + ri) * 2).m;
+		var offsetCutter = new THREE.Vector3((Math.sign(o) * 0.5 + o) * (ro + ri), 0, 0);
+		this._openCutter.position.add(offsetCutter);
+		// scene.add(this._openCutter);
+
+		this._handle = xacThing.subtract(gettg(this._handle), gettg(this._openCutter));
 
 		// resizing the handle
 		// var ratioScale = 1 + 2 * (this._sizeFactor - SIZEINIT);
 		var ratioScale = c * 0.75 + 0.25; // 1 + 2 * (c - SIZEINIT);
 
 		//addAVector(this._pt, this._nml);
-		this._handle.geometry.rotateX(Math.PI / 2);
 		scaleAlongVector(this._handle, ratioScale, this._nml);
 
 		// position
@@ -667,6 +677,19 @@ class xacHandle extends xacAdaptation {
 			};
 		} else {
 			panel.append(this._sldrCurvature.row);
+		}
+
+		if (this._sldrOpening == undefined) {
+			this._sldrOpening = this._genSlider('sldrOpening', 'Opening', 0, 100, 0, panel);
+			this._sldrOpening.tv = function() {
+				var value = this.slider('value');
+				var minValue = this.slider("option", "min");
+				var maxValue = this.slider("option", "max");
+				value = (value - minValue) * 1.0 / (maxValue - minValue);
+				return 2 * value - 1;
+			};
+		} else {
+			panel.append(this._sldrOpening.row);
 		}
 	}
 }

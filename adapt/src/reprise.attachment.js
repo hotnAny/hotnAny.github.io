@@ -185,7 +185,6 @@ class xacClamp extends xacAttachment {
 		this._step = this._TOSELECTPIPE;
 
 		this._ve = [];
-
 	}
 
 	mousedown(e) {
