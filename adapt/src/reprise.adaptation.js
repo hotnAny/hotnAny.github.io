@@ -453,7 +453,7 @@ class xacWrapper extends xacAdaptation {
 		}
 
 		if (this._sldrLength == undefined) {
-			this._sldrLength = this._genSlider('sldrLength', 'Size', 5, 70, 40, panel);
+			this._sldrLength = this._genSlider('sldrLength', 'Length', 5, 70, 40, panel);
 			this._sldrLength.tv = function() {
 				var value = this.slider('value');
 				return value * value / 1000;
@@ -711,7 +711,7 @@ class xacLever extends xacAdaptation {
 		this._update = function(pid) {
 			var ctrPart = getCenter(this._pc.parts[pid]);
 			var g = this._sldrGrip.tv();
-			var extrusion = this._extrude(this._pc.parts[pid], this._pc.ctrl, 1, Math.max(0.5, g));
+			var extrusion = this._extrude(this._pc.parts[pid], this._pc.ctrl, Math.max(1, g), 1);
 			var lever = this._makeLever(extrusion, pid);
 			return lever;
 		}
@@ -736,7 +736,7 @@ class xacLever extends xacAdaptation {
 		dirLever.normalize();
 
 		var bcylParams = getBoundingCylinder(extrusion, dirLever);
-		var lever = new xacCylinder([bcylParams.radius], bcylParams.height * Math.pow(5, s), MATERIALOVERLAY).m;
+		var lever = new xacCylinder([bcylParams.radius], bcylParams.height * Math.pow(3, s), MATERIALOVERLAY).m;
 		rotateObjTo(lever, dirLever);
 		// var l = getDimAlong(lever, dirLever);
 		var offsetLever = getDimAlong(lever, dirLever) * 0.3; // * (this._pc.ctrl.type == CLUTCHCTRL ? 1 : -1);
@@ -753,7 +753,7 @@ class xacLever extends xacAdaptation {
 		}
 
 		if (this._sldrStrength == undefined) {
-			this._sldrStrength = this._genSlider('sldrStrength', 'Strength', 0, 100, 50, panel);
+			this._sldrStrength = this._genSlider('sldrStrength', 'Torque', 0, 100, 50, panel);
 			this._sldrStrength.tv = function() {
 				var value = this.slider('value');
 				var minValue = this.slider("option", "min");

@@ -19,7 +19,7 @@ class BboxUI {
 
 	// add a plane (face) to make up the box
 	_addPlane(lx, ly, lz, nml, cx, cy, cz) {
-		var pl = new xacRectPrism(lx, ly, lz, MATERIALCONTRAST);
+		var pl = new xacRectPrism(lx, ly, lz, this._visible == true ? MATERIALCONTRAST : MATERIALINVISIBLE);
 		rotateObjTo(pl.m, nml);
 		pl.m.normal = nml;
 		pl.m.position.copy(new THREE.Vector3(cx, cy, cz));
@@ -78,6 +78,8 @@ class BboxResizer extends BboxUI {
 		// select a plane, if there is any
 		var ints = rayCast(e.clientX, e.clientY, this._box);
 		if (ints.length > 0) {
+			this._visible = true;
+
 			this._pl = ints[0].object; // the plane being moved
 			this._point = ints[0].point; // last intersecting point
 			this._normal = this._pl.normal; // the normal of this plane
@@ -365,18 +367,14 @@ class PartSelector {
 
 		var rPartSelection = isSmall == true ? FINGERSIZE / 2 : HANDSIZE;
 
-		// before: hardcoded, usually too mcuh
-		// var distAbove = HANDSIZE * 2; // hyperthetical dist between finger(s) and the ctrl point
-		// now: use the bbox to estimate
 		var distAbove = Math.max(FINGERSIZE, getDimAlong(obj, nml) / 2);
-
 
 		var yUp = new THREE.Vector3(0, 1, 0);
 		var angleToRotate = yUp.angleTo(nml);
 		var axisToRotate = new THREE.Vector3().crossVectors(yUp, nml).normalize();
 
 		// find the max distance to press
-		var ctrlPts = [];
+		// var ctrlPts = [];
 		var tess = 32;
 		var rayCaster = new THREE.Raycaster();
 		var maxDist2PartSelection = distAbove;
@@ -391,7 +389,14 @@ class PartSelector {
 			var ints = rayCaster.intersectObjects([obj]);
 
 			if (ints[0] != undefined) {
-				maxDist2PartSelection = Math.max(ints[0].distance, maxDist2PartSelection);
+				// BEFORE
+				// maxDist2PartSelection = Math.max(ints[0].distance, maxDist2PartSelection);
+
+				// TEMP
+				var d = ints[0].distance;
+				if(d > maxDist2PartSelection && d < 2 * maxDist2PartSelection) {
+					maxDist2PartSelection = d;
+				}
 			}
 		}
 
@@ -415,7 +420,9 @@ class PartSelector {
 		var vEatIn = pt.clone().sub(midPt).normalize();
 		var dEatIn = 5;
 		var cylEatIn = cylPartSelection.m.clone();
-		cylEatIn.position.copy(cylEatIn.position.clone().add(vEatIn.multiplyScalar(dEatIn)));
+		// TEMP
+		// cylEatIn.position.copy(cylEatIn.position.clone().add(vEatIn.multiplyScalar(dEatIn)));
+		//
 		var cylPartSelectionIn = xacThing.intersect(gettg(cylEatIn), obj, MATERIALOVERLAY);
 
 		var cylPartSelectionOut = xacThing.subtract(cylPartSelection.gt, cylPartSelectionIn.geometry, MATERIALOVERLAY);
@@ -493,8 +500,8 @@ class PartSelector {
 			}
 		}
 
-		// 	TODO: change the hard coded value
-		// ptsWrap = removeDisconnectedComponents(pt, ptsWrap, 20);
+		// 	remove disconnected components
+		ptsWrap = removeDisconnectedComponents(pt, ptsWrap, 20);
 
 		//
 		//	2. find a wrapping cylinder
@@ -625,6 +632,11 @@ class PartSelector {
 		}
 
 		var vMove = new THREE.Vector3(ptMove[0] - ptDown[0], 0, ptMove[1] - ptDown[1]);
+
+		if(vMove.length < 50) {
+			return;
+		}
+
 		var axisFixed = new THREE.Vector3(0, 0, -1);
 		var angle = vMove.angleTo(axisFixed) * Math.sign(vMove.x);
 		// log(angle)
