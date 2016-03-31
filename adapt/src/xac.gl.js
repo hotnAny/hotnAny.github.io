@@ -204,10 +204,10 @@ function getBoundingCylinder(obj, dir) {
 	};
 }
 
-function getBoundingBoxMesh(obj) {
+function getBoundingBoxMesh(obj, material) {
 	var params = getBoundingBoxEverything(obj);
 	var g = new THREE.BoxGeometry(params.lenx, params.leny, params.lenz);
-	var m = MATERIALCONTRAST;
+	var m = material == undefined ? MATERIALCONTRAST : material;
 	var bbox = new THREE.Mesh(g, m);
 	bbox.position.set(params.ctrx, params.ctry, params.ctrz);
 	return bbox;

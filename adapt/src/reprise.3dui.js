@@ -19,7 +19,8 @@ class BboxUI {
 
 	// add a plane (face) to make up the box
 	_addPlane(lx, ly, lz, nml, cx, cy, cz) {
-		var pl = new xacRectPrism(lx, ly, lz, this._visible == true ? MATERIALCONTRAST : MATERIALINVISIBLE);
+		var pl = new xacRectPrism(lx, ly, lz, this._visible == true ? MATERIALGREEN : MATERIALINVISIBLE);
+		// scaleAroundCenter(pl.m, 1.1);
 		rotateObjTo(pl.m, nml);
 		pl.m.normal = nml;
 		pl.m.position.copy(new THREE.Vector3(cx, cy, cz));
@@ -72,12 +73,20 @@ class BboxUI {
 class BboxResizer extends BboxUI {
 	constructor(obj) {
 		super(obj);
+
+		this._obj = obj;
 	}
 
 	mousedown(e) {
 		// select a plane, if there is any
 		var ints = rayCast(e.clientX, e.clientY, this._box);
 		if (ints.length > 0) {
+			if(this._visible != true) {
+				this._obj.material.opacity = 0.25;
+				var material = MATERIALCONTRAST.clone();
+				this._bgBox = getBoundingBoxMesh(this._obj, material);
+				scene.add(this._bgBox);
+			}
 			this._visible = true;
 
 			this._pl = ints[0].object; // the plane being moved
@@ -93,6 +102,11 @@ class BboxResizer extends BboxUI {
 
 			this._dragPlane = dragPlane.m;
 			dragPlane.m.material.side = THREE.DoubleSide;
+		} else {
+			scene.remove(this._bgBox);
+			this._obj.material.opacity = 0.75;
+			this.clear();
+			this._visible = false;
 		}
 	}
 
@@ -501,7 +515,7 @@ class PartSelector {
 		}
 
 		// 	remove disconnected components
-		ptsWrap = removeDisconnectedComponents(pt, ptsWrap, 20);
+		// ptsWrap = removeDisconnectedComponents(pt, ptsWrap, 20);
 
 		//
 		//	2. find a wrapping cylinder

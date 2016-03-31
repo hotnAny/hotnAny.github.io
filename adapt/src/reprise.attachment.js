@@ -265,6 +265,11 @@ class xacClamp extends xacAttachment {
 		} else if (this._step == this._TOMAKEPIPE) {
 			this._step = this._TOMAKEBOLTHOLE;
 		} else if (this._step == this._TOMAKEBOLTHOLE) {
+			if(this._pt1 == undefined || this._pt2 == undefined) {
+				this._step = this._TOSELECTPIPE;
+				return;
+			}
+
 			var midPt = new THREE.Vector3().addVectors(this._pt1, this._pt2).multiplyScalar(0.5);
 			var meanNml = new THREE.Vector3().addVectors(this._pt1.normal, this._pt2.normal).normalize();
 			var drawnLine = this._pt2.clone().sub(this._pt1);
