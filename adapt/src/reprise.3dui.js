@@ -81,8 +81,9 @@ class BboxResizer extends BboxUI {
 		// select a plane, if there is any
 		var ints = rayCast(e.clientX, e.clientY, this._box);
 		if (ints.length > 0) {
-			if(this._visible != true) {
-				this._obj.material.opacity = 0.25;
+			if (this._visible != true) {
+				this._obj.material = MATERIALFOCUS;
+				this._obj.material.needsUpdate = true;
 				var material = MATERIALCONTRAST.clone();
 				this._bgBox = getBoundingBoxMesh(this._obj, material);
 				scene.add(this._bgBox);
@@ -107,6 +108,9 @@ class BboxResizer extends BboxUI {
 			this._obj.material.opacity = 0.75;
 			this.clear();
 			this._visible = false;
+
+			this._obj.material = MATERIALNORMAL;
+			this._obj.material.needsUpdate = true;
 		}
 	}
 
@@ -168,7 +172,6 @@ class BboxResizer extends BboxUI {
 		this._obj.accessibleBoundaries[4] = (bbNow.cmin.z > bbOriginal.cmin.z + eps) ? bbNow.cmin.z : undefined;
 		this._obj.accessibleBoundaries[5] = (bbNow.cmax.z < bbOriginal.cmax.z - eps) ? bbNow.cmax.z : undefined;
 
-		log(this._obj)
 	}
 }
 
@@ -253,6 +256,10 @@ class PlaneSelector {
 			this._planes.add(this._pyz.m);
 			this._planes.add(this._pzx.m);
 
+			// this._planes.add(addAVector(new THREE.Vector3(), new THREE.Vector3(-1, 0, 0)));
+			// this._planes.add(addAVector(new THREE.Vector3(), new THREE.Vector3(0, 1, 0)));
+			// this._planes.add(addAVector(new THREE.Vector3(), new THREE.Vector3(0, 0, 1)));
+
 			this._planes.position.copy(pt);
 		}
 
@@ -272,7 +279,8 @@ class PlaneSelector {
 					this._planes.remove(this._pyz.m);
 					this._planes.remove(this._pzx.m);
 					this._planes.add(intPlane[0].object);
-					scene.remove(this._planes);
+					// scene.remove(this._planes);
+					// scene.add(intPlane[0].object);
 				}
 
 				this._point = new THREE.Object3D();
@@ -408,7 +416,7 @@ class PartSelector {
 
 				// TEMP
 				var d = ints[0].distance;
-				if(d > maxDist2PartSelection && d < 2 * maxDist2PartSelection) {
+				if (d > maxDist2PartSelection && d < 2 * maxDist2PartSelection) {
 					maxDist2PartSelection = d;
 				}
 			}
@@ -647,7 +655,7 @@ class PartSelector {
 
 		var vMove = new THREE.Vector3(ptMove[0] - ptDown[0], 0, ptMove[1] - ptDown[1]);
 
-		if(vMove.length < 50) {
+		if (vMove.length < 50) {
 			return;
 		}
 

@@ -460,7 +460,7 @@ THREE.TrackballControls = function(object, domElement, lookAt) {
 		}
 		event.stopPropagation();
 
-		if (_state === STATE.ROTATE && !_this.noRotate && selected.length <= 0) {
+		if (_state === STATE.ROTATE && !_this.noRotate) {//} && selected.length <= 0) {
 
 			_rotateEnd.copy(getMouseProjectionOnBall(event.pageX, event.pageY));
 

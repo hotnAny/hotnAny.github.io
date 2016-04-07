@@ -149,7 +149,7 @@ var MATERIALFOCUS = new THREE.MeshPhongMaterial({
 var MATERIALGREEN = new THREE.MeshPhongMaterial({
      color: 0x65E604,
      transparent: true,
-     opacity: 0.5
+     opacity: 1.0
 });
 
 // hand/finger size
