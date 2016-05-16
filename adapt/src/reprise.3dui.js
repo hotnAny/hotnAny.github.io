@@ -19,7 +19,7 @@ class BboxUI {
 
 	// add a plane (face) to make up the box
 	_addPlane(lx, ly, lz, nml, cx, cy, cz) {
-		var pl = new xacRectPrism(lx, ly, lz, this._visible == true ? MATERIALGREEN : MATERIALINVISIBLE);
+		var pl = new xacRectPrism(lx, ly, lz, this._visible == true ? MATERIALGREEN : MATERIALCONTRAST);
 		// scaleAroundCenter(pl.m, 1.1);
 		rotateObjTo(pl.m, nml);
 		pl.m.normal = nml;
@@ -190,7 +190,7 @@ class BboxSelector extends BboxUI {
 class SphereSelector {
 	constructor(pt) {
 		this._pt0 = pt;
-		this._sphere = new xacSphere(FINGERSIZE, MATERIALINVISIBLE, true).m;
+		this._sphere = new xacSphere(FINGERSIZE, MATERIALCONTRAST, true).m;
 		this._sphere.position.copy(pt);
 		scene.add(this._sphere);
 	}
@@ -234,7 +234,7 @@ class PlaneSelector {
 		if (Array.isArray(pt)) {
 			this._pt = pt;
 
-			this._pl = new xacRectPrism(this._dim, 0.1, this._dim, MATERIALINVISIBLE);
+			this._pl = new xacRectPrism(this._dim, 0.1, this._dim, MATERIALCONTRAST);
 			rotateObjTo(this._pl.m, nml);
 			this._pl.m.normal = nml;
 
@@ -523,7 +523,7 @@ class PartSelector {
 		}
 
 		// 	remove disconnected components
-		// ptsWrap = removeDisconnectedComponents(pt, ptsWrap, 20);
+		ptsWrap = removeDisconnectedComponents(pt, ptsWrap, 20);
 
 		//
 		//	2. find a wrapping cylinder

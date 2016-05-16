@@ -397,7 +397,7 @@ class xacBeam extends xacAttachment {
 			// add a pad to conform to the object
 			var pad = gPartSel.part.display;
 			scaleAlongVector(pad, 2, gPartSel.part.nmlPt);
-			scaleAroundVector(pad, 1.5, gPartSel.part.nmlPt);
+			scaleAroundVector(pad, 1, gPartSel.part.nmlPt);
 
 			beam = xacThing.union(gettg(beam), gettg(pad), MATERIALHIGHLIGHT);
 			scene.add(beam);

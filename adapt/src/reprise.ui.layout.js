@@ -37,6 +37,19 @@ title.css('margin-left', '10px');
 title.css('margin-right', '10px');
 container.append(title);
 
+var dlgUserProfile = $('<div></div>');
+var tblInputProfile = $('<table cellpadding="5"></table>');
+tblInputProfile.append($('<tr><td><p class="ui-widget">User ID: </p></td><td><input type="text"></td></tr>'));
+tblInputProfile.append($('<tr><td><p class="ui-widget">Finger size: </p></td><td><input type="text"></td></tr>'));
+tblInputProfile.append($('<tr><td><p class="ui-widget">Hand size: </p></td><td><input type="text"></td></tr>'));
+// dlgUserProfile.append($('<p class="ui-widget">Finger size:&nbsp;&nbsp; <input type="text"></p>'));
+// dlgUserProfile.append($('<p class="ui-widget">Hand size:&nbsp;&nbsp;&nbsp;&nbsp; <input type="text"></p>'));
+dlgUserProfile.append(tblInputProfile);
+dlgUserProfile.append($('<br>'));
+var btnProfile = $('<div>Save</div>');
+dlgUserProfile.append(btnProfile);
+btnProfile.button();
+
 var panels = $('<div></div>');
 // panels.append('<br/>');
 
@@ -112,7 +125,7 @@ partsCtrls.append(trPartsCtrlsList);
 
 // 2.2	a button for adding a new parts-controls
 var trAddPartsCtrls = $('<tr></tr>');
-var btnAddPartsCtrls = $("<button>Add parts & controls</button>")
+var btnAddPartsCtrls = $("<button>Add parts & controls</button>");
 trAddPartsCtrls.append(btnAddPartsCtrls);
 partsCtrls.append(trAddPartsCtrls);
 
@@ -138,13 +151,24 @@ var trAddAdaptations = $('<tr></tr>');
 var smAdapts = $('<select></select>');
 smAdapts.width('128px');
 smAdapts.append('<option id="noAdaptSel"> Add adaptations </option>');
-smAdapts.append('<option value=0>Wrapper</option>');
+smAdapts.append('<option value=0>Wrapper/Extension</option>');
 smAdapts.append('<option value=1>Handle</option>');
 smAdapts.append('<option value=2>Lever</option>');
-smAdapts.append('<option value=3>Anchor</option>');
+smAdapts.append('<option value=3>Anchor/Stand</option>');
 smAdapts.append('<option value=4>Guide</option>');
 trAddAdaptations.append(smAdapts);
 adaptations.append(trAddAdaptations);
+
+var trGenAll = $('<tr></tr>');
+
+var dlgAllDesigns = $('<div></div>');
+dlgAllDesigns.title = "All the Adaptations";
+dlgAllDesigns.append('')
+$(document.body).append(dlgAllDesigns);
+
+var btnGenAll = $("<button>Show All</button>")
+trGenAll.append(btnGenAll);
+adaptations.append(trGenAll);
 
 panels.append(adaptations);
 adaptations.hide();

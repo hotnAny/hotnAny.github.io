@@ -31,6 +31,30 @@ $(document.body).keydown(function(e) {
 
 var initPanel = function() {
 
+	// use the title to do user profile
+	title.click(function(e) {
+
+		dlgUserProfile.dialog({
+			autoOpen: false,
+			// maxWidth: widthDialog,
+			// maxHeight: 768,
+			// width: widthDialog,
+			// height: 768,
+			show: {
+				effect: "fade",
+				duration: 500
+			},
+			hide: {
+				effect: "fade",
+				duration: 500
+			}
+		});
+
+		dlgUserProfile.dialog("open");
+
+	});
+
+
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -239,7 +263,7 @@ var initPanel = function() {
 		smCtrls.append('<option value=0>Grasp/Hold</option>');
 		smCtrls.append('<option value=1>Push/Pull</option>');
 		smCtrls.append('<option value=2>Rotate</option>');
-		smCtrls.append('<option value=3>Clutch/Squeeze</option>');
+		smCtrls.append('<option value=3>Clutch</option>');
 		smCtrls.append('<option value=4>Join/Separate</option>');
 		trPartsCtrls.tdCtrls.append(smCtrls);
 		smCtrls.selectmenu({
@@ -393,6 +417,143 @@ var initPanel = function() {
 		}
 	});
 
+	//
+	//	to show all the designs
+	//
+
+
+	btnGenAll.button().click(function(e) {
+		wheelDisabled = true;
+
+		// dlgAllDesigns.empty();
+
+		// if(dlgAllDesigns.isEmpty == false) {
+		// 	dlgAllDesigns.dialog('open');
+		// 	return;
+		// }
+
+		if (allDesignsGenerated == true) {
+			dlgAllDesigns.dialog('open');
+			return;
+		}
+
+		var widthDialog = 1024;
+		dlgAllDesigns.dialog({
+			autoOpen: false,
+			maxWidth: widthDialog,
+			maxHeight: 768,
+			width: widthDialog,
+			height: 768,
+			show: {
+				effect: "fade",
+				duration: 500
+			},
+			hide: {
+				effect: "fade",
+				duration: 500
+			}
+		});
+		// dlgAllDesigns.css('background-color', 'rgba(255, 255, 255, 0.5)');
+		dlgAllDesigns.dialog('open');
+
+
+		var tblDesigns = $('<table cellspacing="10" cellpadding="10"></table>');
+		dlgAllDesigns.append(tblDesigns);
+		var trDesigns;
+		var ncol = 4;
+		var widthCell = widthDialog * 0.9 / ncol - 20;
+
+		var pc = gPartsActions[gCurrPartsAction.attr('pcId')];
+		var designs = genAllDesigns(pc.ctrl.type);
+
+		var rdrDesign = new THREE.WebGLRenderer({
+			antialias: true
+		});
+		rdrDesign.setClearColor(BACKGROUNDCOLOR);
+		rdrDesign.setSize(widthCell, widthCell * 5 / 8);
+
+		for (var i = 0; i < designs.length; i++) {
+			if (i % ncol == 0) {
+				trDesigns = $('<tr></tr>');
+				tblDesigns.append(trDesigns);
+			}
+
+			var mainScene = scene;
+
+			var sceneDesign = scene.clone();
+
+			scene = sceneDesign;
+
+			var adaptation;
+			switch (designs[i].type) {
+				case WRAPPER:
+					adaptation = new xacWrapper(pc, designs[i].params);
+					break;
+				case HANDLE:
+					adaptation = new xacHandle(pc, designs[i].params);
+					break;
+				case LEVER:
+					adaptation = new xacLever(pc);
+					break;
+				case GUIDE:
+					adaptation = new xacGuide(pc);
+					break;
+				case ANCHOR:
+					adaptation = new xacAnchor(pc);
+					break;
+			}
+
+			rdrDesign.render(sceneDesign, camera.clone());
+
+			var cvsDesign = cloneCanvas(rdrDesign.domElement);
+			tdDesign = $('<td></td>');
+			tdDesign.append(cvsDesign);
+			trDesigns.append(tdDesign);
+			$(cvsDesign).click(function(e) {
+				dlgAllDesigns.dialog('close');
+
+				gCurrAdapt = this.adaptation;
+				scene = this.scene;
+				gAdaptations.push(gCurrAdapt);
+
+				// reset the selection from the list
+				var optionSelected = $("option:selected", this);
+				optionSelected.removeAttr("selected");
+				$('#noAdaptSel').attr('selected', 'selected');
+				smAdapts.selectmenu("refresh");
+
+				showElm(customization);
+				showElm(connectors);
+
+				wheelDisabled = false;
+			});
+			cvsDesign.adaptation = adaptation;
+			cvsDesign.scene = scene;
+
+			scene = mainScene;
+		}
+
+		// dlgAllDesigns.isEmpty == false;
+		allDesignsGenerated = true;
+	});
+
+	function cloneCanvas(oldCanvas) {
+
+		//create a new canvas
+		var newCanvas = document.createElement('canvas');
+		var context = newCanvas.getContext('2d');
+
+		//set dimensions
+		newCanvas.width = oldCanvas.width;
+		newCanvas.height = oldCanvas.height;
+
+		//apply the old canvas to the new one
+		context.drawImage(oldCanvas, 0, 0);
+
+		//return the new canvas
+		return newCanvas;
+	}
+
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -405,7 +566,11 @@ var initPanel = function() {
 
 	btnUpdate.click(function(e) {
 		gStep = 3;
-		gJustFocusedObjs[gStep].parentAdaptation.update();
+		if (gJustFocusedObjs[gStep] == undefined) {
+			gCurrAdapt.update();
+		} else {
+			gJustFocusedObjs[gStep].parentAdaptation.update();
+		}
 		// gJustFocusedObjs[gStep] = undefined;
 
 		// for (var i = gAdaptations.length - 1; i >= 0; i--) {
@@ -533,10 +698,10 @@ $(document).ready(function() {
 
 
 function triggerUI2ObjAction(ui, action, key) {
-	if(ui == undefined) {
+	if (ui == undefined) {
 		return;
 	}
-	
+
 	var nameUI = $(ui[0]).text().slice(0, -1);
 
 	switch (action) {
@@ -640,4 +805,22 @@ function showPartsInSelectedRow(flag) {
 			}
 		}
 	}
+}
+
+function genAllDesigns(actionType) {
+	var insAdaptations = [];
+	var types = actionAdaptations[actionType];
+	for (var i = 0; i < types.length; i++) {
+		var paramsSet = adaptationParamsSets[types[i]];
+		for (var j = paramsSet.length - 1; j >= 0; j--) {
+			var ins = new Object();
+			ins.type = types[i];
+			ins.params = paramsSet[j];
+			insAdaptations.push(ins);
+		}
+	}
+
+	log(insAdaptations);
+
+	return insAdaptations;
 }

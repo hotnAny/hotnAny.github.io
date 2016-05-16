@@ -149,7 +149,7 @@ var MATERIALFOCUS = new THREE.MeshPhongMaterial({
 var MATERIALGREEN = new THREE.MeshPhongMaterial({
      color: 0x65E604,
      transparent: true,
-     opacity: 1.0
+     opacity: 0.75
 });
 
 // hand/finger size
@@ -205,3 +205,18 @@ var gJustFocusedObjs = new Array();
 var FOCUSACTION = 0;
 var DELETEACTION = 1;
 var ADDACTION = 2;
+
+// var GRASPCTRL = 0;
+// var PUSHPULLCTRL = 1;
+// var ROTATECTRL = 2;
+// var CLUTCHCTRL = 3;
+// var JOINSEPCTRL = 4;
+
+// var WRAPPER = 0;
+// var HANDLE = 1;
+// var LEVER = 2;
+// var ANCHOR = 3;
+// var GUIDE = 4;
+
+var wheelDisabled = false;
+var allDesignsGenerated = false;

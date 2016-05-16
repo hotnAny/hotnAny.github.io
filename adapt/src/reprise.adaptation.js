@@ -26,11 +26,45 @@ var STRENGTHINT = 1.5;
 var SIZEINIT = 1.25;
 var TARGETINIT = 0.25;
 
+var actionAdaptations = [];
+actionAdaptations[GRASPCTRL] = [WRAPPER, HANDLE];
+
+var psWrapper = [
+	[1, 1, 0],
+	[1, 2, 0],
+	[1, 1, 0.25],
+	[1, 2, 0.25],
+	[4, 1, 0],
+	[4, 2, 0],
+	[4, 1, 0.25],
+	[4, 2, 0.25]
+];
+
+var psHandle = [
+	[2, 0.15, 0.25, -0.5],
+	[2, 0.15, 0.25, 0],
+	[2, 0.15, 0.25, 0.5],
+	[2, 0.15, 1, -0.5],
+	[2, 0.15, 1, 0],
+	[2, 0.15, 1, 0.5],
+	[4, 0.15, 0.25, -0.5],
+	[4, 0.15, 0.25, 0],
+	[4, 0.15, 0.25, 0.5],
+	[4, 0.15, 1, -0.5],
+	[4, 0.15, 1, 0],
+	[4, 0.15, 1, 0.5]
+]
+
+
+var adaptationParamsSets = [];
+adaptationParamsSets[WRAPPER] = psWrapper;
+adaptationParamsSets[HANDLE] = psHandle;
+
 /*
 	base class for a series of adaptation strategies
 */
 class xacAdaptation {
-	constructor(pc) {
+	constructor(pc, params) {
 		this._pc = pc; // parts-control pair
 		this._as = new Array(); // adaptation mesh
 		this._tags = new Array(); // the tags representing the adaptations
@@ -42,9 +76,13 @@ class xacAdaptation {
 		this._gripFactor = GRIPINIT;
 		this._targetFactor = TARGETINIT;
 
+		this._params = params;
+
+		// if (this._params == undefined) {
 		if (this.renderSliders != undefined) {
 			this.renderSliders();
 		}
+		// }
 	}
 
 	get adaptation() {
@@ -61,6 +99,18 @@ class xacAdaptation {
 	get obj() {
 		return this._pc.obj;
 	}
+
+	get type() {
+		return this._type;
+	}
+
+	get params() {
+		return this._params;
+	}
+
+	// get paramsSamples() {
+	// 	return this._paramsSamples;
+	// }
 
 	update(params) {
 		if (this._pc == undefined) {
@@ -160,7 +210,7 @@ class xacAdaptation {
 				var rLarge = r;
 				var rSmall = r / 2;
 
-				laoc = new xacCylinder([rLarge, rSmall], part.cylHeight * (sizeFactor - 0.5), MATERIALOVERLAY).m;
+				laoc = new xacCylinder([rLarge, rSmall], part.cylHeight * (sizeFactor - 0.5), MATERIALHIGHLIGHT).m;
 				rotateObjTo(laoc, ctrl.type == PUSHPULLCTRL ? ctrl.dirForce : part.normal);
 				laoc.position.copy(ctrl.type == PUSHPULLCTRL ? ctrl.pt : part.cylCenter);
 
@@ -199,7 +249,7 @@ class xacAdaptation {
 			var aocBcyl = getBoundingCylinder(aoc, part.normal);
 			var laoc;
 			// if (aocBcyl.radius < FINGERDIM * 2) {
-			aoc = new xacCylinder(aocBcyl.radius, aocBcyl.height, MATERIALOVERLAY).m;
+			aoc = new xacCylinder(aocBcyl.radius, aocBcyl.height, MATERIALHIGHLIGHT).m;
 			// }
 
 			rotateObjTo(aoc, part.normal);
@@ -346,9 +396,9 @@ class xacAdaptation {
 				scene.remove(a);
 
 				// approach #1: make dents
-				// aGrippable = xacThing.subtract(ag, gettg(sphereSet), MATERIALOVERLAY);
+				// aGrippable = xacThing.subtract(ag, gettg(sphereSet), MATERIALHIGHLIGHT);
 				// approach #2: make bumps
-				aGrippable = xacThing.union(ag, gettg(sphereSet), MATERIALOVERLAY);
+				aGrippable = xacThing.union(ag, gettg(sphereSet), MATERIALHIGHLIGHT);
 			}
 
 		} else if (vForceToExert != undefined) {
@@ -387,7 +437,7 @@ class xacAdaptation {
 			offsetStub[idx] = pc.obj.accessibleBoundaries[i] + Math.pow(-1, i + 1) * aDims[idx] / 2;
 			stub.position.copy(new THREE.Vector3(offsetStub[0], offsetStub[1], offsetStub[2]));
 			// scene.add(stub)
-			aCutOff = xacThing.subtract(gettg(aCutOff), gettg(stub), MATERIALOVERLAY);
+			aCutOff = xacThing.subtract(gettg(aCutOff), gettg(stub), MATERIALHIGHLIGHT);
 		}
 
 		return aCutOff;
@@ -426,14 +476,15 @@ class xacAdaptation {
 
 class xacWrapper extends xacAdaptation {
 	constructor(pc, params) {
-		super(pc);
+		super(pc, params);
+		this._type = WRAPPER;
 		this._label = 'Wrapper';
 
 		this._update = function(pid) {
 
-			var l = this._sldrLength.tv();
-			var g = this._sldrGrip.tv();
-			var f = this._sldrFriction.tv();
+			var l = this._params == undefined ? this._sldrLength.tv() : this._params[0];
+			var g = this._params == undefined ? this._sldrGrip.tv() : this._params[1];
+			var f = this._params == undefined ? this._sldrFriction.tv() : this._params[2];
 
 			var a = this._extrude(this._pc.parts[pid], this._pc.ctrl, g, l);
 			a = this._optimizeGrip(a, this._pc.ctrl, f, new THREE.Vector3(0, -1, 0), undefined);
@@ -453,7 +504,7 @@ class xacWrapper extends xacAdaptation {
 		}
 
 		if (this._sldrLength == undefined) {
-			this._sldrLength = this._genSlider('sldrLength', 'Length', 5, 70, 40, panel);
+			this._sldrLength = this._genSlider('sldrLength', 'Length', 5, 70, this._params == undefined ? 40 : this._params[0] * this._params[0] / 1000, panel);
 			this._sldrLength.tv = function() {
 				var value = this.slider('value');
 				return value * value / 1000;
@@ -463,7 +514,7 @@ class xacWrapper extends xacAdaptation {
 		}
 
 		if (this._sldrGrip == undefined) {
-			this._sldrGrip = this._genSlider('sldrGrip', 'Thickness', 0, 100, 25, panel);
+			this._sldrGrip = this._genSlider('sldrGrip', 'Thickness', 0, 100, this._params == undefined ? 25 : (this._params[1] - 1) * 100, panel);
 			this._sldrGrip.tv = function() {
 				var value = this.slider('value');
 				var minValue = this.slider("option", "min");
@@ -499,8 +550,9 @@ class xacWrapper extends xacAdaptation {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class xacHandle extends xacAdaptation {
 	constructor(pc, params) {
-		super(pc);
+		super(pc, params);
 		this._label = 'Handle';
+		this._type = HANDLE;
 
 		this._update = function(pid) {
 			var a = this._makeHandle(this._pc.parts[pid]);
@@ -519,10 +571,10 @@ class xacHandle extends xacAdaptation {
 			this._nml = part.nmlPt;
 		}
 
-		var s = this._sldrSize.tv();
-		var g = this._sldrGrip.tv();
-		var c = this._sldrCurvature.tv();
-		var o = this._sldrOpening.tv();
+		var s = this._params == undefined ? this._sldrSize.tv() : this._params[0];
+		var g = this._params == undefined ? this._sldrGrip.tv() : this._params[1];
+		var c = this._params == undefined ? this._sldrCurvature.tv() : this._params[2];
+		var o = this._params == undefined ? this._sldrOpening.tv() : this._params[3];
 
 		//
 		//	0. compute upright direction
@@ -562,7 +614,7 @@ class xacHandle extends xacAdaptation {
 		var ri = FINGERDIM * 0.5 * g * s;
 		// var ro = FINGERDIM * 0.5 * this._fingerFactor + ri * 2;
 		var ro = FINGERDIM * 0.5 * s + ri * 2;
-		this._handle = new xacTorus(ro, ri, 2 * Math.PI, MATERIALOVERLAY).m;
+		this._handle = new xacTorus(ro, ri, 2 * Math.PI, MATERIALHIGHLIGHT).m;
 		this._handle.geometry.rotateX(Math.PI / 2);
 
 		// cutting the handle to allow hand to get in
@@ -603,7 +655,7 @@ class xacHandle extends xacAdaptation {
 		//
 		// TODO: 4. combine or remove extra parts
 		//
-		var a = xacThing.union(gettg(this._handle), gettg(extrusion), MATERIALOVERLAY);
+		var a = xacThing.union(gettg(this._handle), gettg(extrusion), MATERIALHIGHLIGHT);
 
 		return a;
 	}
@@ -646,7 +698,7 @@ class xacHandle extends xacAdaptation {
 		}
 
 		if (this._sldrSize == undefined) {
-			this._sldrSize = this._genSlider('sldrSize', 'Size', 5, 70, 40, panel);
+			this._sldrSize = this._genSlider('sldrSize', 'Size', 5, 70, this._params == undefined ? 40 : this._params[0] * this._params[0] / 1000, panel);
 			this._sldrSize.tv = function() {
 				var value = this.slider('value');
 				return value * value / 1000;
@@ -656,7 +708,7 @@ class xacHandle extends xacAdaptation {
 		}
 
 		if (this._sldrGrip == undefined) {
-			this._sldrGrip = this._genSlider('sldrGrip', 'Grip', 0, 100, 25, panel);
+			this._sldrGrip = this._genSlider('sldrGrip', 'Thickness', 0, 100, this._params == undefined ? 25 : (this._params[1] - 1) * 100, panel);
 			this._sldrGrip.tv = function() {
 				var value = this.slider('value');
 				var minValue = this.slider("option", "min");
@@ -668,7 +720,7 @@ class xacHandle extends xacAdaptation {
 		}
 
 		if (this._sldrCurvature == undefined) {
-			this._sldrCurvature = this._genSlider('sldrCurvature', 'Curvature', 0, 100, 100, panel);
+			this._sldrCurvature = this._genSlider('sldrCurvature', 'Curvature', 0, 100, this._params == undefined ? 25 : this._params[2] * 100, panel);
 			this._sldrCurvature.tv = function() {
 				var value = this.slider('value');
 				var minValue = this.slider("option", "min");
@@ -680,7 +732,7 @@ class xacHandle extends xacAdaptation {
 		}
 
 		if (this._sldrOpening == undefined) {
-			this._sldrOpening = this._genSlider('sldrOpening', 'Opening', 0, 100, 0, panel);
+			this._sldrOpening = this._genSlider('sldrOpening', 'Opening', 0, 100, this._params == undefined ? 0 : (this._params[3] + 1) / 2 * 100, panel);
 			this._sldrOpening.tv = function() {
 				var value = this.slider('value');
 				var minValue = this.slider("option", "min");
@@ -707,6 +759,7 @@ class xacLever extends xacAdaptation {
 	constructor(pc, params) {
 		super(pc);
 		this._label = 'Lever';
+		this._type = LEVER;
 
 		this._update = function(pid) {
 			var ctrPart = getCenter(this._pc.parts[pid]);
@@ -736,7 +789,7 @@ class xacLever extends xacAdaptation {
 		dirLever.normalize();
 
 		var bcylParams = getBoundingCylinder(extrusion, dirLever);
-		var lever = new xacCylinder([bcylParams.radius], bcylParams.height * Math.pow(3, s), MATERIALOVERLAY).m;
+		var lever = new xacCylinder([bcylParams.radius], bcylParams.height * Math.pow(3, s), MATERIALHIGHLIGHT).m;
 		rotateObjTo(lever, dirLever);
 		// var l = getDimAlong(lever, dirLever);
 		var offsetLever = getDimAlong(lever, dirLever) * 0.3; // * (this._pc.ctrl.type == CLUTCHCTRL ? 1 : -1);
@@ -791,6 +844,7 @@ class xacAnchor extends xacAdaptation {
 	constructor(pc, params) {
 		super(pc);
 		this._label = 'Anchor';
+		this._type = ANCHOR;
 
 		this._update = function() {
 			if (this._partAnchor == undefined) {
@@ -863,7 +917,7 @@ class xacAnchor extends xacAdaptation {
 		var rTopStand = bcylParams.radius * 1.25 * s / 2;
 		var rBtmStand = bcylObj.radius * (s - 1) + rTopStand;
 
-		var anchorStand = new xacCylinder([rBtmStand, rTopStand], heightAnchor, MATERIALOVERLAY).m;
+		var anchorStand = new xacCylinder([rBtmStand, rTopStand], heightAnchor, MATERIALHIGHLIGHT).m;
 		rotateObjTo(anchorStand, this._partAnchor.normal);
 		anchorStand.position.copy(ctrAnchorStand);
 		// scene.add(anchorStand);
@@ -877,14 +931,14 @@ class xacAnchor extends xacAdaptation {
 			h: Math.max(5, rBtmStand * 0.1)
 		};
 		var ctrAnchorPlatform = ctrAnchorStand.clone().add(this._partAnchor.normal.clone().multiplyScalar((heightAnchor + paramsPlatform.h) / 2));
-		var anchorPlatform = new xacRectPrism(paramsPlatform.l, paramsPlatform.h, paramsPlatform.w, MATERIALOVERLAY).m;
+		var anchorPlatform = new xacRectPrism(paramsPlatform.l, paramsPlatform.h, paramsPlatform.w, MATERIALHIGHLIGHT).m;
 		rotateObjTo(anchorPlatform, this._partAnchor.normal);
 		anchorPlatform.position.copy(ctrAnchorPlatform);
 		// scene.add(anchorPlatform);
 
 		scene.remove(bboxObj);
 
-		this._anchor = xacThing.union(gettg(anchorStand), gettg(anchorPlatform), MATERIALOVERLAY);
+		this._anchor = xacThing.union(gettg(anchorStand), gettg(anchorPlatform), MATERIALHIGHLIGHT);
 
 		return this._anchor;
 	}
@@ -963,6 +1017,7 @@ class xacGuide extends xacAdaptation {
 	constructor(pc, params) {
 		super(pc);
 		this._label = 'Guide';
+		this._type = GUIDE;
 
 		this._update = function(pid) {
 			var a = this._makeGuide(this._pc);
@@ -1005,7 +1060,7 @@ class xacGuide extends xacAdaptation {
 			boundMobile.r = bcylMobile.radius * (1 + margin);
 		} else {
 			var rMobile = bcylMobile.radius * (1 + margin);
-			boundMobile = new xacCylinder(rMobile * s, lenMobile, MATERIALOVERLAY).m;
+			boundMobile = new xacCylinder(rMobile * s, lenMobile, MATERIALHIGHLIGHT).m;
 			boundMobile.r = rMobile;
 		}
 
@@ -1020,7 +1075,7 @@ class xacGuide extends xacAdaptation {
 		var rGuide = boundMobile.r * (s + margin);
 		var lenGuide = lenMobile * 0.25 * l; // + lenStatic * 0.5;
 		var posGuide = ctrStatic.clone().add(ctrl.dir.clone().normalize().multiplyScalar(lenGuide * 0.45));
-		var guideBody = new xacCylinder(rGuide, lenGuide, MATERIALOVERLAY);
+		var guideBody = new xacCylinder(rGuide, lenGuide, MATERIALHIGHLIGHT);
 		rotateObjTo(guideBody.m, ctrl.dir);
 		guideBody.m.position.copy(posGuide);
 		// guideBody.m.position.copy(boundMobile.position);
@@ -1029,20 +1084,20 @@ class xacGuide extends xacAdaptation {
 		//
 		// 2. make the tunnel's finishing part
 		//
-		var guideEnd = xacThing.subtract(gettg(guideBody.m), gettg(boundMobile), MATERIALOVERLAY);
+		var guideEnd = xacThing.subtract(gettg(guideBody.m), gettg(boundMobile), MATERIALHIGHLIGHT);
 
 		//
 		// 3. make the tunnel's openning
 		//
 		var lenOpen = lenGuide * (s - 0.5);
 		var rOpen = rGuide * o;
-		var guideOpen = new xacCylinder([rOpen, rGuide], lenOpen, MATERIALOVERLAY);
-		var stubOpen = new xacCylinder([boundMobile.r * s * rOpen / rGuide, boundMobile.r * s], lenOpen, MATERIALOVERLAY);
-		var guideOpenCut = xacThing.subtract(gettg(guideOpen.m), gettg(stubOpen.m), MATERIALOVERLAY);
+		var guideOpen = new xacCylinder([rOpen, rGuide], lenOpen, MATERIALHIGHLIGHT);
+		var stubOpen = new xacCylinder([boundMobile.r * s * rOpen / rGuide, boundMobile.r * s], lenOpen, MATERIALHIGHLIGHT);
+		var guideOpenCut = xacThing.subtract(gettg(guideOpen.m), gettg(stubOpen.m), MATERIALHIGHLIGHT);
 		rotateObjTo(guideOpenCut, ctrl.dir);
 		guideOpenCut.position.copy(posGuide.clone().add(ctrl.dir.clone().normalize().multiplyScalar((lenGuide + lenOpen) * 0.5)));
 
-		var guide = xacThing.union(gettg(guideEnd), gettg(guideOpenCut), MATERIALOVERLAY);
+		var guide = xacThing.union(gettg(guideEnd), gettg(guideOpenCut), MATERIALHIGHLIGHT);
 		// 	scene.add(guide)
 
 		//
@@ -1064,7 +1119,7 @@ class xacGuide extends xacAdaptation {
 		// addABall(getBoundingBoxCenter(guide), 0x0000ff, 5);
 		// scene.add(cutHalfStub);
 
-		guide = xacThing.subtract(gettg(guide), gettg(cutHalfStub), MATERIALOVERLAY);
+		guide = xacThing.subtract(gettg(guide), gettg(cutHalfStub), MATERIALHIGHLIGHT);
 
 		return guide;
 	}

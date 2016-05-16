@@ -169,7 +169,7 @@ function addAVector(v1, dir, len) {
 	// len = Math.abs(len);
 
 	// NOW: make an arrow
-	var rArrow = 1;
+	var rArrow = 1.5;
 	var lArrow = len == undefined ? 100 : Math.abs(len);
 	var bodyArrow = new xacCylinder(rArrow, lArrow, MATERIALFOCUS).m;
 

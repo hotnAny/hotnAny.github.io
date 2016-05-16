@@ -460,11 +460,11 @@ THREE.TrackballControls = function(object, domElement, lookAt) {
 		}
 		event.stopPropagation();
 
-		if (_state === STATE.ROTATE && !_this.noRotate) {//} && selected.length <= 0) {
+		if (_state === STATE.ROTATE && !_this.noRotate) { //} && selected.length <= 0) {
 
 			_rotateEnd.copy(getMouseProjectionOnBall(event.pageX, event.pageY));
 
-		} 
+		}
 		// else if (_state === STATE.ZOOM && !_this.noZoom) {
 
 		// 	_zoomEnd.copy(getMouseOnScreen(event.pageX, event.pageY));
@@ -494,6 +494,8 @@ THREE.TrackballControls = function(object, domElement, lookAt) {
 	}
 
 	function mousewheel(event) {
+
+		if (wheelDisabled == true) return;
 
 		if (_this.enabled === false) return;
 
