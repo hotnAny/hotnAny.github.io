@@ -1,3 +1,11 @@
+/*------------------------------------------------------------------------------------*
+ *
+ * graphics-related library, based on three.js
+ * 
+ * by xiang 'anthony' chen, xiangchen@acm.org
+ *
+ *------------------------------------------------------------------------------------*/
+
 /*
 	scale an object around its center by factor
 */
@@ -236,7 +244,7 @@ function getBoundingBoxHelperCenter(obj) {
 }
 
 function getBoundingBoxDimensions(obj) {
-	var g = gettg(obj);// obj.geometry;
+	var g = gettg(obj); // obj.geometry;
 	g.computeBoundingBox();
 
 	var lx = (g.boundingBox.max.x - g.boundingBox.min.x);

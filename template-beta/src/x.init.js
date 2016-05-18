@@ -1,34 +1,50 @@
+/*------------------------------------------------------------------------------------*
+ *
+ * variable declaration and program initialization
+ * 
+ * by xiang 'anthony' chen, xiangchen@acm.org
+ *
+ *------------------------------------------------------------------------------------*/
+
+//
+// visual properties
+//
 var BACKGROUNDCOLOR = 0xF2F0F0;
-var GROUNDCOLOR     = 0xF2F0F0;
-var GRIDCOLOR       = 0x888888;
+var GROUNDCOLOR = 0xF2F0F0;
+var GRIDCOLOR = 0x888888;
 
 var COLORNORMAL = 0xDB5B8A; // the normal color
 var COLORCONTRAST = 0xD1D6E7; // is the contrast of the COLORNORMAL
 
 var WIDTHPANEL = 388;
 
-var renderer = new THREE.WebGLRenderer( { antialias: true } );
-renderer.setSize( window.innerWidth, window.innerHeight );
-// // renderer.setPixelRatio( window.devicePixelRatio );
-document.body.appendChild( renderer.domElement );
-
-var scene = new THREE.Scene();
-var objects = new Array();
-
-var camera = new THREE.PerspectiveCamera( 60, window.innerWidth/window.innerHeight, 1, 10000 );
-var gPosCam = new THREE.Vector3(-16, 8, 10);
-var gPosCam = new THREE.Vector3(-16, 8, 10);
-camera.position.copy(gPosCam.clone().multiplyScalar(50));
-
-var gLookAt = new THREE.Vector3(-25, 0, -0).multiplyScalar(10);
-var gMouseCtrls = new THREE.TrackballControls(camera, undefined, gLookAt); 
-var gWheelDisabled = false;
-
 var MATERIALNORMAL = new THREE.MeshPhongMaterial({
      color: COLORNORMAL,
      transparent: true,
      opacity: 0.75
 });
+
+
+//
+// rendering and viewport
+//
+var renderer = new THREE.WebGLRenderer({
+     antialias: true
+});
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
+
+var scene = new THREE.Scene();
+var objects = new Array();
+
+var camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 10000);
+var gPosCam = new THREE.Vector3(-16, 8, 10);
+camera.position.copy(gPosCam.clone().multiplyScalar(50));
+
+var gLookAt = new THREE.Vector3(-25, 0, -0).multiplyScalar(10);
+var gMouseCtrls = new THREE.TrackballControls(camera, undefined, gLookAt);
+var gWheelDisabled = false;
+
 
 //
 // draw floor

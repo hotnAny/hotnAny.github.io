@@ -1,3 +1,11 @@
+/*------------------------------------------------------------------------------------*
+ *
+ * ui layout (widgets and controls), based on jquery
+ * 
+ * by xiang 'anthony' chen, xiangchen@acm.org
+ *
+ *------------------------------------------------------------------------------------*/
+
 var panel = $('<div></div>');
 panel.css('width', WIDTHPANEL + 'px');
 panel.css('height', '100%');

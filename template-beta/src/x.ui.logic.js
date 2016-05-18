@@ -1,3 +1,11 @@
+/*------------------------------------------------------------------------------------*
+ *
+ * ui logic (event handlers, etc.), based on jquery
+ * 
+ * by xiang 'anthony' chen, xiangchen@acm.org
+ *
+ *------------------------------------------------------------------------------------*/
+
 $(document.body).append(panel);
 
 var initPanel = function() {
