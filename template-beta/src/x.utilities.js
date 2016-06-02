@@ -35,7 +35,6 @@ function loadStl(data) {
 
 	// re-lookAt for the camera
 	gMouseCtrls.target = new THREE.Vector3(0, 0, 0);
-	// camera.position.y = 0;
 
 	// store the object
 	objects.push(object);
