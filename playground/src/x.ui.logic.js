@@ -25,7 +25,11 @@ var initPanel = function() {
 		for (var i = files.length - 1; i >= 0; i--) {
 			var reader = new FileReader();
 			reader.onload = (function(e) {
-				loadStl(e.target.result);
+				// loadStl(e.target.result);
+
+				// EXP: only deal with voxel grid file (vxg)
+				gVoxelGrid = loadVoxels(e.target.result);
+				renderVoxels(gVoxelGrid, 10, true);
 			});
 			reader.readAsBinaryString(files[i]);
 		}

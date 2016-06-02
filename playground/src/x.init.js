@@ -14,7 +14,7 @@ var GROUNDCOLOR = 0xF2F0F0;
 var GRIDCOLOR = 0x888888;
 
 var COLORNORMAL = 0xDB5B8A; // the normal color
-var COLORCONTRAST = 0xD1D6E7; // is the contrast of the COLORNORMAL
+var COLORCONTRAST = 0x00ff00; //0xD1D6E7; // is the contrast of the COLORNORMAL
 
 var WIDTHPANEL = 388;
 
@@ -24,6 +24,12 @@ var MATERIALNORMAL = new THREE.MeshPhongMaterial({
      opacity: 0.75
 });
 
+
+var MATERIALCONTRAST = new THREE.MeshPhongMaterial({
+     color: COLORCONTRAST,
+     transparent: true,
+     opacity: 0.25
+});
 
 //
 // rendering and viewport
