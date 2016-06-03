@@ -383,3 +383,34 @@ function computeFaceNormal(u, v, w) {
 	var nml = new THREE.Vector3().crossVectors(uv, vw);
 	return nml;
 }
+
+//
+// in R^3, distance from a point (x, y, z) to a line defined by (x1, y1, z1) and (x2, y2, z2)
+//
+// ref: http://mathworld.wolfram.com/Point-LineDistance3-Dimensional.html
+//
+function p2l(x, y, z, x1, y1, z1, x2, y2, z2) {
+	x *= 1.0
+	y *= 1.0
+	z *= 1.0
+	
+	x1 *= 1.0
+	y1 *= 1.0
+	z1 *= 1.0
+
+	x2 *= 1.0
+	y2 *= 1.0
+	z2 *= 1.0
+
+	var dx1 = x1 - x
+	var dy1 = y1 - y
+	var dz1 = z1 - z
+	var dx2 = x2 - x
+	var dy2 = y2 - y
+	var dz2 = z2 - z
+	var tu = (dx2 - dx1) * dx1 + (dy2 - dy1) * dy1 + (dz2 - dz1) * dz1
+	var tb = (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1) + (z2 - z1) * (z2 - z1)
+	var t = -tu / tb
+
+	return Math.sqrt(dx1 * dx1 + dy1 * dy1 + dz1 * dz1 - tu * tu / tb)
+}

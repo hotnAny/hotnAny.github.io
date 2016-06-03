@@ -14,8 +14,8 @@ var GROUNDCOLOR = 0xF2F0F0;
 var GRIDCOLOR = 0x888888;
 
 var COLORNORMAL = 0xDB5B8A; // the normal color
-var COLORCONTRAST = 0x00ff00; //0xD1D6E7; // is the contrast of the COLORNORMAL
-
+var COLORCONTRAST = 0xD1D6E7; // is the contrast of the COLORNORMAL
+var COLORHIGHLIGHT = 0xfffa90;
 var WIDTHPANEL = 388;
 
 var MATERIALNORMAL = new THREE.MeshPhongMaterial({
@@ -28,7 +28,13 @@ var MATERIALNORMAL = new THREE.MeshPhongMaterial({
 var MATERIALCONTRAST = new THREE.MeshPhongMaterial({
      color: COLORCONTRAST,
      transparent: true,
-     opacity: 0.25
+     opacity: 0.5
+});
+
+var MATERIALHIGHLIGHT = new THREE.MeshPhongMaterial({
+     color: COLORHIGHLIGHT,
+     transparent: true,
+     opacity: 0.75
 });
 
 //
@@ -43,17 +49,10 @@ document.body.appendChild(renderer.domElement);
 var scene = new THREE.Scene();
 var objects = new Array();
 
-// var camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 10000);
-// var gPosCam = new THREE.Vector3(-16, 8, 10);
-// camera.position.copy(gPosCam.clone().multiplyScalar(50));
-
-// var gLookAt = new THREE.Vector3(-25, 0, -0).multiplyScalar(10);
-// var gMouseCtrls = new THREE.TrackballControls(camera, undefined, gLookAt);
-// var gWheelDisabled = false;
 
 var camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 10000);
-var gPosCam = new THREE.Vector3(0, 4, 4);
-camera.position.copy(gPosCam.clone().multiplyScalar(65));
+var gPosCam = new THREE.Vector3(0, 2.5, 4);
+camera.position.copy(gPosCam.clone().multiplyScalar(80));
 
 var gLookAt = new THREE.Vector3(10, 0, 10).multiplyScalar(10);
 var gMouseCtrls = new THREE.TrackballControls(camera, undefined, gLookAt);

@@ -38,18 +38,26 @@ function renderVoxels(vxg, dim, hideInside) {
 	}
 
 	for (var i = 0; i < nz; i++) {
+		var slice = [];
 		// EXP: only showing one layer
 		for (var j = 0; j < 1; j++) {
+			var row = [];
 			for (var k = 0; k < nx; k++) {
+				row[k] = undefined;
 				if (vxg[i][j][k] == 1) {
 					if (hideInside != true || onSurface(i, j, k)) {
 						var voxel = makeVoxel(dim, k, j, i, MATERIALNORMAL, true);
+						voxel.index = [k, j, i];
 						scene.add(voxel);
+						row[k] = voxel;
+						// vxg[i][j][k].idxMesh = gVoxels.length; // store the voxel's index in gVoxels
 						gVoxels.push(voxel);
 					}
 				}
 			} // x
+			slice.push(row);
 		} // y
+		gVoxelTable.push(slice);
 	} // z
 
 	log(gVoxels.length + " voxels added.");
