@@ -3,6 +3,10 @@
  * @author Mark Lundin 	/ http://mark-lundin.com
  */
 
+ var LEFTMOUSE = 1;
+ var RIGHTMOUSE = 2;
+ var WHEEL = 4;
+
 THREE.TrackballControls = function(object, domElement, lookAt) {
 
 	var _this = this;
