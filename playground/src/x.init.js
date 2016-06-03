@@ -43,14 +43,21 @@ document.body.appendChild(renderer.domElement);
 var scene = new THREE.Scene();
 var objects = new Array();
 
-var camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 10000);
-var gPosCam = new THREE.Vector3(-16, 8, 10);
-camera.position.copy(gPosCam.clone().multiplyScalar(50));
+// var camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 10000);
+// var gPosCam = new THREE.Vector3(-16, 8, 10);
+// camera.position.copy(gPosCam.clone().multiplyScalar(50));
 
-var gLookAt = new THREE.Vector3(-25, 0, -0).multiplyScalar(10);
+// var gLookAt = new THREE.Vector3(-25, 0, -0).multiplyScalar(10);
+// var gMouseCtrls = new THREE.TrackballControls(camera, undefined, gLookAt);
+// var gWheelDisabled = false;
+
+var camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 10000);
+var gPosCam = new THREE.Vector3(0, 4, 4);
+camera.position.copy(gPosCam.clone().multiplyScalar(65));
+
+var gLookAt = new THREE.Vector3(10, 0, 10).multiplyScalar(10);
 var gMouseCtrls = new THREE.TrackballControls(camera, undefined, gLookAt);
 var gWheelDisabled = false;
-
 
 //
 // draw floor
