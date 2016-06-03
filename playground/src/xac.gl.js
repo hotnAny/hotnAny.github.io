@@ -7,6 +7,19 @@
  *------------------------------------------------------------------------------------*/
 
 /*
+ *	function for performing raycasting
+ */
+function rayCast(x, y, objs) {
+	var rayCaster = new THREE.Raycaster();
+	var vector = new THREE.Vector3();
+	vector.set((x / window.innerWidth) * 2 - 1, -(y / window.innerHeight) * 2 + 1, 0.5);
+	var projector = new THREE.Projector();
+	vector.unproject(camera);
+	rayCaster.ray.set(camera.position, vector.sub(camera.position).normalize());
+	return rayCaster.intersectObjects(objs);
+}
+
+/*
 	scale an object around its center by factor
 */
 function scaleAroundCenter(obj, factor) {
