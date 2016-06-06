@@ -24,35 +24,51 @@ function onMouseDown(e) {
 	if (e.which != LEFTMOUSE) {
 		return;
 	}
-	var node = getVoxel(e, gVoxels);
+	gMouseDown = true;
+	gMousePrev = hitPoint(e, [gGround]);
 
-	if (node != undefined) {
-		gma.addNodes(node, gGlue);
+	gVoxelSelected = hitObject(e, gVoxels);
+
+	// TODO: avoid adding redundant nodes
+	if (gVoxelSelected != undefined) {
+		
+		// TEMP
+		if(tSnapMode) {
+			snapVoxelToMediaAxis(gVoxelSelected.index[0], gVoxelSelected.index[1], gVoxelSelected.index[2], gma, 10);
+			return;
+		}
+
+		gma.addNode(gVoxelSelected, gGlue);
 		gGlue = true;
 	}
 
 }
 
 function onMouseMove(e) {
-
+	if(gMouseDown) {
+		// var node = hitObject(e, gma.nodes);
+		if(gVoxelSelected != undefined) {
+			var mouseCurr = hitPoint(e, [gGround]);
+			// addABall(mouseCurr);
+			// var dPos = new THREE.Vector3().subVectors(mouseCurr, gMousePrev);
+			gVoxelSelected = gma.updateNode(gVoxelSelected, mouseCurr);
+			// gMousePrev = mouseCurr;
+		}
+	}
 }
 
 function onMouseUp(e) {
-	// 
+	gMouseDown = false;
 }
 
 function onKeyDown(e) {
 	switch(e.keyCode) {
+		case 13: // ENTER
+			// snapToMedialAxis(gVoxelGrid, gma, 10);
+			tSnapMode = true;
 		case 27: // ESC
 			gGlue = false;
 			break;
 	}
 }
 
-function getVoxel(e, voxels) {
-	var objs = rayCast(e.clientX, e.clientY, voxels);
-	if (objs.length > 0) {
-		return objs[0].object;
-	}
-	return undefined;
-}

@@ -19,11 +19,12 @@ function loadVoxels(vxgRaw) {
 		voxelGrid.push(slice);
 	}
 
-	// log(voxelGrid);
-
 	return voxelGrid;
 }
 
+//
+// TODO: fix gVoxels, gVoxelGrid, gVoxelTable
+//
 function renderVoxels(vxg, dim, hideInside) {
 	// by passed a lot of corner case check
 	var nz = vxg.length;
@@ -63,6 +64,10 @@ function renderVoxels(vxg, dim, hideInside) {
 	log(gVoxels.length + " voxels added.");
 }
 
+function renderMedialAxis(axis, vxg) {
+
+}
+
 function makeVoxel(dim, i, j, k, mat, noMargin) {
 	var geometry = new THREE.BoxGeometry(dim, dim, dim);
 	var voxel = new THREE.Mesh(geometry, mat.clone());
@@ -77,7 +82,127 @@ function makeVoxel(dim, i, j, k, mat, noMargin) {
 	return voxel;
 }
 
-function snapToMedialAxis(vxg, axis) {
-	// for each voxel, find the anchoring edge, point and vector
+function snapToMedialAxis(vxg, axis, dim) {
+
+	if (!axis.isVoxelized) {
+		//
+		// for each voxel, find the anchoring edge
+		//
+		var nz = vxg.length;
+		var ny = vxg[0].length;
+		var nx = vxg[0][0].length;
+
+		var nearestMedialAxis = [];
+
+		for (var i = 0; i < nz; i++) {
+			var slice = [];
+			for (var j = 0; j < 1; j++) {
+				var row = [];
+				for (var k = 0; k < nx; k++) {
+					if (vxg[i][j][k] == 1) {
+						snapVoxelToMediaAxis(k, j, i, axis, dim);
+
+					} // voxel
+				} // x
+			} // y
+		} // z
+	}
+
+	//
+	// revoxelize based on media axis
+	//
+	updateVoxels(vxg, dim, axis);
+}
+
+//
+//
+//
+function snapVoxelToMediaAxis(kx, jy, iz, axis, dim) {
+	var k = kx,
+		j = jy,
+		i = iz;
+	var edgeMin = -1;
+	var distMin = Number.MAX_VALUE;
+
+	// var isProjectionInBetween = function(x, y, z, x1, y1, z1, x2, y2, z2) {
+
+	// }
+
+
+	for (var h = axis.edgesInfo.length - 1; h >= 0; h--) {
+
+		var v1 = axis.edgesInfo[h].v1;
+		var v2 = axis.edgesInfo[h].v2;
+
+		// if (isProjectionInBetween(k, j, i, v1[0], v1[1], v1[2], v2[0], v2[1], v2[2]) {
+		var dist = p2ls(k, j, i, v1[0], v1[1], v1[2], v2[0], v2[1], v2[2]);
+		if (dist < distMin) {
+			edgeMin = h;
+			distMin = dist;
+		}
+	}
+	// }
+
+	var v1 = axis.edgesInfo[edgeMin].v1;
+	var v2 = axis.edgesInfo[edgeMin].v2;
+	var vmid = new THREE.Vector3(v1[0] + v2[0], v1[1] + v2[1], v1[2] + v2[2]).multiplyScalar(0.5 * dim);
+	addALine(new THREE.Vector3(k, j, i).multiplyScalar(dim), vmid);
+}
+
+//
+//
+//
+function updateVoxels(vxg, dim, axis, node) {
+	//
+	// update the entire voxel grid based on the axis
+	//
+	if (node == undefined) {
+		// clear existing voxels
+		var nz = vxg.length;
+		var ny = vxg[0].length;
+		var nx = vxg[0][0].length;
+
+		for (var i = 0; i < nz; i++) {
+			// EXP: only deal with 2D for now
+			for (var j = 0; j < 1; j++) {
+				for (var k = 0; k < nx; k++) {
+					vxg[i][j][k] = 0;
+				}
+			}
+		}
+
+		// for each node, add voxels around it
+		for (var i = axis.nodesInfo.length - 1; i >= 0; i--) {
+			var index = axis.nodesInfo[i].index;
+			var radius = axis.nodesInfo[i].radius;
+			vxg[index[2]][index[1]][index[0]] = NODE;
+			if (radius != undefined) {
+				// TODO
+				addSphericalVoxels(index, radius);
+			}
+		}
+
+		// for each edge, add voxels along it
+		for (var i = axis.edgesInfo.length - 1; i >= 0; i--) {
+			var v1 = axis.edgesInfo[i].v1;
+			var v2 = axis.edgesInfo[i].v2;
+			var pts = axis.edges[i];
+			var thickness = axis.edgesInfo[i].thickness; // assume the thickness array has been re-interpolated
+
+			for (var j = pts.length - 1; j >= 0; j--) {
+				// TODO
+				addCylindricalVoxels(pts[j].index, thickness[j])
+			}
+		}
+
+		// re-render the voxel grid
+		renderVoxels(vxg, dim, true);
+	}
+	//
+	// only update one node and its associated edges
+	//
+	else {
+		// TODO
+	}
 
 }

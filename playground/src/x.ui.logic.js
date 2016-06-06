@@ -29,7 +29,8 @@ var initPanel = function() {
 
 				// EXP: only deal with voxel grid file (vxg)
 				gVoxelGrid = loadVoxels(e.target.result);
-				renderVoxels(gVoxelGrid, 10, false);
+				renderVoxels(gVoxelGrid, DIMVOXEL, false);
+				gma = new MedialAxis(gVoxels, gVoxelGrid, gVoxelTable, DIMVOXEL)
 			});
 			reader.readAsBinaryString(files[i]);
 		}
