@@ -59,14 +59,33 @@ class MedialAxis {
 	}
 
 	addNode(node, toConnect) {
-		this._nodes.push(node);
-		this._nodesInfo.push({
-			mesh: node,
-			index: node.index,
-			radius: undefined
-		});
-		node.material = this._matNode;
-		node.material.needsUpdate = true;
+		// check if the node is already in
+		var alreadyIn = false;
+		for (var i = this._nodes.length - 1; i >= 0; i--) {
+			// if so, push it to the top of the stack
+			if (node == this._nodes[i]) {
+				// var tmpNode = node;
+				// node = this._nodes[this._nodes.length - 1];
+				// this._nodes[this._nodes.length - 1] = tmpNode;
+				alreadyIn = true;
+
+				this._nodes.push(this._nodes.splice(i, 1)[0]);
+
+				break;
+			}
+		}
+		// log(this._nodes)
+
+		if (!alreadyIn) {
+			this._nodes.push(node);
+			this._nodesInfo.push({
+				mesh: node,
+				index: node.index,
+				radius: undefined
+			});
+			node.material = this._matNode;
+			node.material.needsUpdate = true;
+		}
 
 		if (toConnect && this._nodes.length > 1) {
 			var nodeLast = this._nodes[this._nodes.length - 2];
@@ -85,6 +104,7 @@ class MedialAxis {
 		}
 
 		log('node added at ' + node.index);
+		// log(this._nodes)
 	}
 
 	//
@@ -104,7 +124,7 @@ class MedialAxis {
 		var y = float2int(node.index[1] + 0.5 + dPos.y / this._voxelDim);
 		var z = float2int(node.index[2] + 0.5 + dPos.z / this._voxelDim);
 
-		if(x == node.index[0] && y == node.index[1] && z == node.index[2]) {
+		if (x == node.index[0] && y == node.index[1] && z == node.index[2]) {
 			return node;
 		}
 
