@@ -40,3 +40,56 @@ function loadStl(data) {
 	objects.push(object);
 
 }
+
+function addALine(v1, v2, clr) {
+	clr = clr == undefined ? 0xff0000 : clr;
+
+	var geometry = new THREE.Geometry();
+	geometry.vertices.push(v1);
+	geometry.vertices.push(v2);
+	var material = new THREE.LineBasicMaterial({
+		color: clr
+	});
+	var line = new THREE.Line(geometry, material);
+
+	scene.add(line);
+	// addABall(v1);
+	return line;
+}
+
+var gBalls = [];
+function addABall(pt, clr, radius) {
+	clr = clr == undefined ? 0xff0000 : clr;
+	radius = radius == undefined ? 1 : radius;
+
+	var geometry = new THREE.SphereGeometry(radius, 10, 10);
+	var material = new THREE.MeshBasicMaterial({
+		color: clr
+	});
+	var ball = new THREE.Mesh(geometry, material);
+	ball.position.set(pt.x, pt.y, pt.z);
+
+	gBalls.push(ball);
+	scene.add(ball);
+
+	return ball;
+}
+
+function hitObject(e, objs) {
+	var hits = rayCast(e.clientX, e.clientY, objs);
+	if (hits.length > 0) {
+		return hits[0].object;
+	}
+	return undefined;
+}
+
+function hitPoint(e, objs) {
+	var hits = rayCast(e.clientX, e.clientY, objs);
+	if(hits.length > 0) {
+		return hits[0].point;
+	}
+}
+
+function float2int(value) {
+	return value | 0;
+}
