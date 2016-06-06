@@ -38,4 +38,7 @@ var initPanel = function() {
 	});
 }
 
-initPanel();
+$(document).ready(function() {
+	initPanel();
+	unitTest();
+})

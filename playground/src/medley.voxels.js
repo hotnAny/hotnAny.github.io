@@ -101,7 +101,6 @@ function snapToMedialAxis(vxg, axis, dim) {
 				for (var k = 0; k < nx; k++) {
 					if (vxg[i][j][k] == 1) {
 						snapVoxelToMediaAxis(k, j, i, axis, dim);
-
 					} // voxel
 				} // x
 			} // y
@@ -124,29 +123,43 @@ function snapVoxelToMediaAxis(kx, jy, iz, axis, dim) {
 	var edgeMin = -1;
 	var distMin = Number.MAX_VALUE;
 
-	// var isProjectionInBetween = function(x, y, z, x1, y1, z1, x2, y2, z2) {
-
-	// }
-
-
+	//
+	// snap to edge
+	//
 	for (var h = axis.edgesInfo.length - 1; h >= 0; h--) {
-
-		var v1 = axis.edgesInfo[h].v1;
-		var v2 = axis.edgesInfo[h].v2;
+		var v1 = axis.edgesInfo[h].v1.index;
+		var v2 = axis.edgesInfo[h].v2.index;
 
 		// if (isProjectionInBetween(k, j, i, v1[0], v1[1], v1[2], v2[0], v2[1], v2[2]) {
 		var dist = p2ls(k, j, i, v1[0], v1[1], v1[2], v2[0], v2[1], v2[2]);
-		if (dist < distMin) {
+		if (!isNaN(dist) && dist < distMin) {
 			edgeMin = h;
 			distMin = dist;
 		}
 	}
-	// }
 
-	var v1 = axis.edgesInfo[edgeMin].v1;
-	var v2 = axis.edgesInfo[edgeMin].v2;
-	var vmid = new THREE.Vector3(v1[0] + v2[0], v1[1] + v2[1], v1[2] + v2[2]).multiplyScalar(0.5 * dim);
-	addALine(new THREE.Vector3(k, j, i).multiplyScalar(dim), vmid);
+	//
+	// snap to node
+	//
+	var nodeMin = -1;
+	if (distMin == Number.MAX_VALUE) {
+		for (var h = axis.nodesInfo.length - 1; h >= 0; h--) {
+			var dist = getDist([k, j, i], axis.nodesInfo[h].index);
+			if (dist < distMin) {
+				nodeMin = h;
+				distMin = dist;
+			}
+		}
+	} else {
+		var v1 = axis.edgesInfo[edgeMin].v1.index;
+		var v2 = axis.edgesInfo[edgeMin].v2.index;
+		var vmid = new THREE.Vector3(v1[0] + v2[0], v1[1] + v2[1], v1[2] + v2[2]).multiplyScalar(0.5 * dim);
+		addALine(new THREE.Vector3(k, j, i).multiplyScalar(dim), vmid);
+		return;
+	}
+
+	var v = axis.nodesInfo[nodeMin].index;
+	addALine(new THREE.Vector3(k, j, i).multiplyScalar(dim), new THREE.Vector3(v[0], v[1], v[2]).multiplyScalar(dim));
 }
 
 //

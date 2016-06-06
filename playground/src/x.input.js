@@ -39,6 +39,7 @@ function onMouseDown(e) {
 		}
 
 		gma.addNode(gVoxelSelected, gGlue);
+		// snapVoxelToMediaAxis(gVoxelSelected.index[0], gVoxelSelected.index[1], gVoxelSelected.index[2], gma, 10);
 		gGlue = true;
 	}
 

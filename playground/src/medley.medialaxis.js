@@ -171,6 +171,10 @@ class MedialAxis {
 			}
 		}
 
+		//
+		// update the voxel grid
+		//
+
 		return nodeNew;
 	}
 

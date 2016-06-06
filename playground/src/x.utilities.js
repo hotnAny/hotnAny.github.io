@@ -93,3 +93,16 @@ function hitPoint(e, objs) {
 function float2int(value) {
 	return value | 0;
 }
+
+/*
+	get the euclidean distance between two R^d points
+*/
+function getDist(p1, p2) {
+	var len = Math.min(p1.length, p2.length);
+	var d = 0;
+	for (var i = len - 1; i >= 0; i--) {
+		d += Math.pow(p1[i] - p2[i], 2);
+	}
+
+	return Math.sqrt(d);
+}

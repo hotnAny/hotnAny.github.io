@@ -9,7 +9,7 @@
 	ref: http://stackoverflow.com/questions/10900141/fast-plane-fitting-to-many-points
 	svd related: http://www.mathworks.com/help/matlab/ref/svd.html
 */
-function findPlaneToFitPoints(points) {
+function pts2pl(points) {
 	var G = [];
 
 	for (var i = 0; i < points.length; i++) {
@@ -34,7 +34,7 @@ function findPlaneToFitPoints(points) {
 /*
 	project a set of points onto an axis and get the range
 */
-function getProjectedRange(points, axis) {
+function pjr(points, axis) {
 	var min = 1000;
 	var max = -1000;
 
@@ -50,7 +50,7 @@ function getProjectedRange(points, axis) {
 /*
 	get a plance from a point and two vectors
 */
-function getPlaneFromPointVectors(pt, v1, v2) {
+function pvv2pl(pt, v1, v2) {
 	var cp = new THREE.Vector3().crossVectors(v1, v2);
 
 	var a = cp.x;
@@ -70,7 +70,7 @@ function getPlaneFromPointVectors(pt, v1, v2) {
 /*
 	get the projection coordinates of a point on a given plane parameterized by ax+by+cz+d=0
 */
-function getProjection(v, a, b, c, d) {
+function ptonpl(v, a, b, c, d) {
 	var t = -(a * v.x + b * v.y + c * v.z + d) / (a * a + b * b + c * c);
 	return new THREE.Vector3(v.x + a * t, v.y + b * t, v.z + c * t);
 }
@@ -85,7 +85,10 @@ function getVerticalOnPlane(v, a, b, c, d) {
 	return new THREE.Vector3(ux, uy, uz).normalize();
 }
 
-function triangleArea(va, vb, vc) {
+//
+//	triangle area
+//
+function ta(va, vb, vc) {
 	var ab = vb.clone().sub(va);
 	var ac = vc.clone().sub(va);
 
@@ -106,11 +109,24 @@ function triangleArea(va, vb, vc) {
 //
 //	distance from a point to a line segment defined by two vertices
 //
+//	(for now) return undefined if not projecting on the segment
+//
 function p2ls(x, y, z, x1, y1, z1, x2, y2, z2) {
-	// compute if point falls on the line segment
-	
-	
-	// compute the (shortest) distance
+	var v10 = new THREE.Vector3(x - x1, y - y1, z - z1);
+	var v12 = new THREE.Vector3(x2 - x1, y2 - y1, z2 - z1);
+	var dp1 = v10.dot(v12.clone().normalize());
+
+	var v20 = new THREE.Vector3(x - x2, y - y2, z - z2);
+	var v21 = v12.clone().multiplyScalar(-1);
+	var dp2 = v20.dot(v21.clone().normalize());
+
+	var l12 = v12.length();
+
+	if (dp1 <= l12 && dp2 <= l12) {
+		return p2l(x, y, z, x1, y1, z1, x2, y2, z2);
+	} else {
+		return undefined;
+	}
 }
 
 //
@@ -122,7 +138,7 @@ function p2l(x, y, z, x1, y1, z1, x2, y2, z2) {
 	x *= 1.0
 	y *= 1.0
 	z *= 1.0
-	
+
 	x1 *= 1.0
 	y1 *= 1.0
 	z1 *= 1.0
