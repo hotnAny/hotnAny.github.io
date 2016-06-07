@@ -116,7 +116,7 @@ function snapVoxelGridToMedialAxis(vxg, axis, dim) {
 	for (var h = axis.nodesInfo.length - 1; h >= 0; h--) {
 		axis.nodesInfo[h].radius = getMax(axis.nodesInfo[h].radiusData);
 
-		if (true) {
+		if (visualize) {
 			// DEBUG
 			// log({
 			// 	center: ctr,
@@ -165,7 +165,7 @@ function snapVoxelGridToMedialAxis(vxg, axis, dim) {
 	//
 	// revoxelize based on media axis
 	//
-	// updateVoxels(vxg, dim, axis);
+	updateVoxels(vxg, dim, axis);
 }
 
 //
@@ -260,13 +260,13 @@ function updateVoxels(vxg, dim, axis, node) {
 			for (var y = ymin; y < ymax; y++) {
 				vxg[z][y] = vxg[z][y] == undefined ? [] : vxg[z][y];
 				for (var x = xmin; x < xmax; x++) {
-					vxg[z][y][x] = getDist([x, y, z], index) <= radius ? 1 : 0;
+					if (getDist([x, y, z], index) <= radius) {
+						vxg[z][y][x] = 1;
+					}
 				}
 			}
 		}
 	};
-
-	
 
 	//
 	// update the entire voxel grid based on the axis
@@ -292,7 +292,6 @@ function updateVoxels(vxg, dim, axis, node) {
 			var radius = axis.nodesInfo[i].radius;
 			vxg[index[2]][index[1]][index[0]] = gma.NODE;
 			if (radius != undefined) {
-				// TODO
 				addSphericalVoxels(vxg, index, radius);
 			}
 		}
@@ -305,8 +304,8 @@ function updateVoxels(vxg, dim, axis, node) {
 			var thickness = axis.edgesInfo[i].thickness; // assume the thickness array has been re-interpolated
 
 			for (var j = pts.length - 1; j >= 0; j--) {
-				// TODO
-				// addCylindricalVoxels(pts[j].index, thickness[j])
+				var k = float2int(j * thickness.length / pts.length);
+				addSphericalVoxels(vxg, pts[j].index, thickness[k]);
 			}
 		}
 
@@ -315,6 +314,7 @@ function updateVoxels(vxg, dim, axis, node) {
 			scene.remove(gVoxels[i]);
 		}
 		renderVoxels(vxg, dim, true);
+		renderAxis();
 	}
 	//
 	// only update one node and its associated edges

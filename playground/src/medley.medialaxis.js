@@ -48,10 +48,10 @@ class MedialAxis {
 				for (var j = idx1[1]; j != idx2[1] + ds[1]; j += ds[1]) {
 					for (var k = idx1[2]; k != idx2[2] + ds[2]; k += ds[2]) {
 						if (vxg[k][j][i] == 1) {
-
 							var dist = p2l(i, j, k, idx1[0], idx1[1], idx1[2], idx2[0], idx2[1], idx2[2]).dist;
 							if (dist < 0.5) {
 								pts.push(this._voxelTable[k][j][i]);
+								// vxg[k][j][i] = this.EDGE
 							}
 						}
 					} // z
@@ -74,7 +74,6 @@ class MedialAxis {
 				break;
 			}
 		}
-		// log(this._nodes)
 
 		if (!alreadyIn) {
 			this._nodes.push(node);
@@ -86,6 +85,8 @@ class MedialAxis {
 			});
 			node.material = this._matNode;
 			node.material.needsUpdate = true;
+
+			// this._voxelGrid[node.index[2]][node.index[1]][node.index[0]] = this.NODE;
 
 			log('node added at ' + node.index);
 		}
