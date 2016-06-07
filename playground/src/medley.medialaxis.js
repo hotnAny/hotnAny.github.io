@@ -101,8 +101,6 @@ class MedialAxis {
 			})
 		}
 
-
-		// log(this._nodes)
 	}
 
 	//
@@ -111,7 +109,7 @@ class MedialAxis {
 	//
 	updateNode(node, pos) {
 		//
-		// update this node
+		// update info on this node
 		//
 		var dPos = pos.clone().sub(node.position);
 		if (dPos.length() < this._voxelDim / 2) {
@@ -130,9 +128,6 @@ class MedialAxis {
 		if (nodeNew == undefined) {
 			nodeNew = makeVoxel(this._voxelDim, x, y, z, this._matNode, true);
 			scene.add(nodeNew);
-		} else {
-			nodeNew.material = this._matNode;
-			nodeNew.material.needsUpdate = true;
 		}
 
 		nodeNew.index = [x, y, z];
@@ -149,7 +144,7 @@ class MedialAxis {
 		}
 
 		//
-		// update its edges
+		// update its edges and visuals
 		//
 		for (var i = this._edgesInfo.length - 1; i >= 0; i--) {
 			var edgePts = this._edges[i];
@@ -170,6 +165,12 @@ class MedialAxis {
 				this._edges[i] = edgePtsNew;
 			}
 		}
+
+		//
+		//	update visuals of this node again, as it might has been considered as a non-edge
+		//
+		nodeNew.material = this._matNode;
+		nodeNew.material.needsUpdate = true;
 
 		//
 		// update the voxel grid
