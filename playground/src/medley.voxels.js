@@ -83,7 +83,7 @@ function makeVoxel(dim, i, j, k, mat, noMargin) {
 }
 
 function snapVoxelGridToMedialAxis(vxg, axis, dim) {
-	var visualize = true;
+	var visualize = false;
 
 	// TODO: initialize the medial axis, in case it has been snapped with voxels before
 
@@ -111,17 +111,12 @@ function snapVoxelGridToMedialAxis(vxg, axis, dim) {
 	}
 
 	//
-	// revoxelize based on media axis
-	//
-	// updateVoxels(vxg, dim, axis);
-
-	//
 	// aggregation
 	//
 	for (var h = axis.nodesInfo.length - 1; h >= 0; h--) {
 		axis.nodesInfo[h].radius = getMax(axis.nodesInfo[h].radiusData);
 
-		if (visualize) {
+		if (true) {
 			// DEBUG
 			// log({
 			// 	center: ctr,
@@ -141,16 +136,17 @@ function snapVoxelGridToMedialAxis(vxg, axis, dim) {
 		var thickness = axis.edgesInfo[h].thickness;
 		var thicknessData = axis.edgesInfo[h].thicknessData;
 
-		log({
-			v1: axis.edgesInfo[h].v1.index,
-			v2: axis.edgesInfo[h].v2.index,
-			thickness
-		})
+		// DEBUG
+		// log({
+		// 	v1: axis.edgesInfo[h].v1.index,
+		// 	v2: axis.edgesInfo[h].v2.index,
+		// 	thickness
+		// })
 
 		for (var i = thickness.length - 2; i >= 1; i--) {
 			var t = getMax(thicknessData[i]);
 
-			if(isNaN(t) || t <= 1) {
+			if (isNaN(t) || t <= 1) {
 				t = 1;
 			}
 
@@ -165,6 +161,11 @@ function snapVoxelGridToMedialAxis(vxg, axis, dim) {
 			}
 		}
 	}
+
+	//
+	// revoxelize based on media axis
+	//
+	// updateVoxels(vxg, dim, axis);
 }
 
 //
@@ -174,7 +175,7 @@ function snapVoxelToMediaAxis(kx, jy, iz, axis, dim) {
 	var k = kx,
 		j = jy,
 		i = iz;
-	var visualize = true;
+	var visualize = false;
 	//
 	// snap to edge
 	//
@@ -246,6 +247,27 @@ function snapVoxelToMediaAxis(kx, jy, iz, axis, dim) {
 //
 //
 function updateVoxels(vxg, dim, axis, node) {
+
+	var addSphericalVoxels = function(vxg, index, radius) {
+		var zmin = float2int(index[2] - radius),
+			zmax = float2int(index[2] + radius),
+			ymin = float2int(index[1] - radius),
+			ymax = float2int(index[1] + radius),
+			xmin = float2int(index[0] - radius),
+			xmax = float2int(index[0] + radius);
+		for (var z = zmin; z < zmax; z++) {
+			vxg[z] = vxg[z] == undefined ? [] : vxg[z];
+			for (var y = ymin; y < ymax; y++) {
+				vxg[z][y] = vxg[z][y] == undefined ? [] : vxg[z][y];
+				for (var x = xmin; x < xmax; x++) {
+					vxg[z][y][x] = getDist([x, y, z], index) <= radius ? 1 : 0;
+				}
+			}
+		}
+	};
+
+	
+
 	//
 	// update the entire voxel grid based on the axis
 	//
@@ -268,10 +290,10 @@ function updateVoxels(vxg, dim, axis, node) {
 		for (var i = axis.nodesInfo.length - 1; i >= 0; i--) {
 			var index = axis.nodesInfo[i].index;
 			var radius = axis.nodesInfo[i].radius;
-			vxg[index[2]][index[1]][index[0]] = NODE;
+			vxg[index[2]][index[1]][index[0]] = gma.NODE;
 			if (radius != undefined) {
 				// TODO
-				addSphericalVoxels(index, radius);
+				addSphericalVoxels(vxg, index, radius);
 			}
 		}
 
@@ -284,11 +306,14 @@ function updateVoxels(vxg, dim, axis, node) {
 
 			for (var j = pts.length - 1; j >= 0; j--) {
 				// TODO
-				addCylindricalVoxels(pts[j].index, thickness[j])
+				// addCylindricalVoxels(pts[j].index, thickness[j])
 			}
 		}
 
 		// re-render the voxel grid
+		for (var i = gVoxels.length - 1; i >= 0; i--) {
+			scene.remove(gVoxels[i]);
+		}
 		renderVoxels(vxg, dim, true);
 	}
 	//

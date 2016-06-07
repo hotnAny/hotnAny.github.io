@@ -25,6 +25,10 @@ class MedialAxis {
 		this._matNode = MATERIALHIGHLIGHT;
 		this._matEdge = MATERIALCONTRAST;
 
+		this.NONE = 0;
+		this.NODE = 1;
+		this.EDGE = 2;
+
 		this._interpolate = function(p1, p2, vxg, voxels) {
 			var pts = [];
 			var idx1 = p1.index;
