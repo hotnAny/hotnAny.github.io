@@ -82,7 +82,9 @@ function makeVoxel(dim, i, j, k, mat, noMargin) {
 	return voxel;
 }
 
-function snapToMedialAxis(vxg, axis, dim) {
+function snapVoxelGridToMedialAxis(vxg, axis, dim) {
+
+	// TODO: initialize the medial axis, in case it has been snapped with voxels before
 
 	if (!axis.isVoxelized) {
 		//
@@ -110,7 +112,22 @@ function snapToMedialAxis(vxg, axis, dim) {
 	//
 	// revoxelize based on media axis
 	//
-	updateVoxels(vxg, dim, axis);
+	// updateVoxels(vxg, dim, axis);
+
+	// TEMP
+	for (var h = axis.nodesInfo.length - 1; h >= 0; h--) {
+		var ctr = axis.nodesInfo[h].mesh.position;
+		
+		// var r = axis.nodesInfo[h].radius;
+		axis.nodesInfo[h].radius = getAvg(axis.nodesInfo[h].radiusData);
+
+		// DEBUG
+		// log({
+		// 	center: ctr,
+		// 	radius: r
+		// });
+		// addABall(ctr, 0x870527, r * dim);
+	}
 }
 
 //
@@ -120,46 +137,54 @@ function snapVoxelToMediaAxis(kx, jy, iz, axis, dim) {
 	var k = kx,
 		j = jy,
 		i = iz;
-	var edgeMin = -1;
-	var distMin = Number.MAX_VALUE;
-
+	var visualize = false;
 	//
 	// snap to edge
 	//
+	var idxEdgeMin = -1;
+	var dist2EdgeMin = Number.MAX_VALUE;
 	for (var h = axis.edgesInfo.length - 1; h >= 0; h--) {
 		var v1 = axis.edgesInfo[h].v1.index;
 		var v2 = axis.edgesInfo[h].v2.index;
 
-		// if (isProjectionInBetween(k, j, i, v1[0], v1[1], v1[2], v2[0], v2[1], v2[2]) {
 		var dist = p2ls(k, j, i, v1[0], v1[1], v1[2], v2[0], v2[1], v2[2]);
-		if (!isNaN(dist) && dist < distMin) {
-			edgeMin = h;
-			distMin = dist;
+		if (!isNaN(dist) && dist < dist2EdgeMin) {
+			idxEdgeMin = h;
+			dist2EdgeMin = dist;
 		}
 	}
 
 	//
 	// snap to node
 	//
-	var nodeMin = -1;
-	if (distMin == Number.MAX_VALUE) {
-		for (var h = axis.nodesInfo.length - 1; h >= 0; h--) {
-			var dist = getDist([k, j, i], axis.nodesInfo[h].index);
-			if (dist < distMin) {
-				nodeMin = h;
-				distMin = dist;
-			}
+	var idxNodeMin = -1;
+	var dist2NodeMin = Number.MAX_VALUE;
+	for (var h = axis.nodesInfo.length - 1; h >= 0; h--) {
+		var dist = getDist([k, j, i], axis.nodesInfo[h].index);
+		if (dist < dist2NodeMin) {
+			idxNodeMin = h;
+			dist2NodeMin = dist;
 		}
-	} else {
-		var v1 = axis.edgesInfo[edgeMin].v1.index;
-		var v2 = axis.edgesInfo[edgeMin].v2.index;
-		var vmid = new THREE.Vector3(v1[0] + v2[0], v1[1] + v2[1], v1[2] + v2[2]).multiplyScalar(0.5 * dim);
-		addALine(new THREE.Vector3(k, j, i).multiplyScalar(dim), vmid);
-		return;
 	}
 
-	var v = axis.nodesInfo[nodeMin].index;
-	addALine(new THREE.Vector3(k, j, i).multiplyScalar(dim), new THREE.Vector3(v[0], v[1], v[2]).multiplyScalar(dim));
+	//
+	// compare the two
+	//
+	if (dist2EdgeMin < dist2NodeMin) {
+		if (visualize) {
+			var v1 = axis.edgesInfo[idxEdgeMin].v1.index;
+			var v2 = axis.edgesInfo[idxEdgeMin].v2.index;
+			var vmid = new THREE.Vector3(v1[0] + v2[0], v1[1] + v2[1], v1[2] + v2[2]).multiplyScalar(0.5 * dim);
+			addALine(new THREE.Vector3(k, j, i).multiplyScalar(dim), vmid);
+		}
+		// register the distance
+		axis.nodesInfo[idxNodeMin].radiusData.push(Math.max(axis.nodesInfo[idxNodeMin].radius, dist2NodeMin));
+	} else {
+		if (visualize) {
+			var v = axis.nodesInfo[idxNodeMin].index;
+			addALine(new THREE.Vector3(k, j, i).multiplyScalar(dim), new THREE.Vector3(v[0], v[1], v[2]).multiplyScalar(dim));
+		}
+	}
 }
 
 //

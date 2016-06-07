@@ -33,10 +33,10 @@ function onMouseDown(e) {
 	if (gVoxelSelected != undefined) {
 		
 		// TEMP
-		if(tSnapMode) {
-			snapVoxelToMediaAxis(gVoxelSelected.index[0], gVoxelSelected.index[1], gVoxelSelected.index[2], gma, 10);
-			return;
-		}
+		// if(tSnapMode) {
+		// 	snapVoxelToMediaAxis(gVoxelSelected.index[0], gVoxelSelected.index[1], gVoxelSelected.index[2], gma, 10);
+		// 	return;
+		// }
 
 		gma.addNode(gVoxelSelected, gGlue);
 		// snapVoxelToMediaAxis(gVoxelSelected.index[0], gVoxelSelected.index[1], gVoxelSelected.index[2], gma, 10);
@@ -66,9 +66,10 @@ function onKeyDown(e) {
 	switch(e.keyCode) {
 		case 13: // ENTER
 			// snapToMedialAxis(gVoxelGrid, gma, 10);
-			tSnapMode = true;
+			// tSnapMode = true;
 		case 27: // ESC
 			gGlue = false;
+			snapVoxelGridToMedialAxis(gVoxelGrid, gma, DIMVOXEL);
 			break;
 	}
 }

@@ -10,6 +10,10 @@ function log(msg) {
 	console.log(msg);
 }
 
+function err(msg) {
+	console.error(msg);
+}
+
 /*
 	load models from stl binary/ascii data
 */
@@ -58,6 +62,7 @@ function addALine(v1, v2, clr) {
 }
 
 var gBalls = [];
+
 function addABall(pt, clr, radius) {
 	clr = clr == undefined ? 0xff0000 : clr;
 	radius = radius == undefined ? 1 : radius;
@@ -85,7 +90,7 @@ function hitObject(e, objs) {
 
 function hitPoint(e, objs) {
 	var hits = rayCast(e.clientX, e.clientY, objs);
-	if(hits.length > 0) {
+	if (hits.length > 0) {
 		return hits[0].point;
 	}
 }
@@ -105,4 +110,28 @@ function getDist(p1, p2) {
 	}
 
 	return Math.sqrt(d);
+}
+
+
+function getAvg(values) {
+	if(values == undefined) {
+		err('[getAvg]: input variable not an array')
+		return;
+	}
+
+	if (values.length <= 0) {
+		err('[getAvg]: input arrays contain no values')
+		return;
+	}
+
+	var sum = 0;
+	for (var i = values.length - 1; i >= 0; i--) {
+		if (isNaN(values[i])) {
+			err('[getAvg]: input arrays contain not numbers')
+			return;
+		}
+		sum += values[i];
+	}
+
+	return sum / values.length;
 }

@@ -77,7 +77,8 @@ class MedialAxis {
 			this._nodesInfo.push({
 				mesh: node,
 				index: node.index,
-				radius: undefined
+				radius: 0,
+				radiusData: [] // store the raw data
 			});
 			node.material = this._matNode;
 			node.material.needsUpdate = true;
@@ -97,10 +98,9 @@ class MedialAxis {
 				v1: this._nodesInfo[this._nodes.length - 1],
 				v2: this._nodesInfo[this._nodes.length - 2],
 				thickness: [],
-				// snappedVoxels: []
-			})
+				thicknessData: [] // store the raw data
+			});
 		}
-
 	}
 
 	//
@@ -166,9 +166,7 @@ class MedialAxis {
 			}
 		}
 
-		//
 		//	update visuals of this node again, as it might has been considered as a non-edge
-		//
 		nodeNew.material = this._matNode;
 		nodeNew.material.needsUpdate = true;
 
