@@ -83,6 +83,7 @@ function makeVoxel(dim, i, j, k, mat, noMargin) {
 }
 
 function snapVoxelGridToMedialAxis(vxg, axis, dim) {
+	var visualize = true;
 
 	// TODO: initialize the medial axis, in case it has been snapped with voxels before
 
@@ -114,19 +115,55 @@ function snapVoxelGridToMedialAxis(vxg, axis, dim) {
 	//
 	// updateVoxels(vxg, dim, axis);
 
-	// TEMP
+	//
+	// aggregation
+	//
 	for (var h = axis.nodesInfo.length - 1; h >= 0; h--) {
-		var ctr = axis.nodesInfo[h].mesh.position;
-		
-		// var r = axis.nodesInfo[h].radius;
-		axis.nodesInfo[h].radius = getAvg(axis.nodesInfo[h].radiusData);
+		axis.nodesInfo[h].radius = getMax(axis.nodesInfo[h].radiusData);
 
-		// DEBUG
-		// log({
-		// 	center: ctr,
-		// 	radius: r
-		// });
-		// addABall(ctr, 0x870527, r * dim);
+		if (visualize) {
+			// DEBUG
+			// log({
+			// 	center: ctr,
+			// 	radius: r
+			// });
+			var ctr = axis.nodesInfo[h].mesh.position;
+			var r = axis.nodesInfo[h].radius;
+			if (r > 0) {
+				addABall(ctr, 0x870527, r * dim);
+			}
+		}
+	}
+
+	for (var h = axis.edgesInfo.length - 1; h >= 0; h--) {
+		var p1 = axis.edgesInfo[h].v1.mesh.position;
+		var p2 = axis.edgesInfo[h].v2.mesh.position;
+		var thickness = axis.edgesInfo[h].thickness;
+		var thicknessData = axis.edgesInfo[h].thicknessData;
+
+		log({
+			v1: axis.edgesInfo[h].v1.index,
+			v2: axis.edgesInfo[h].v2.index,
+			thickness
+		})
+
+		for (var i = thickness.length - 2; i >= 1; i--) {
+			var t = getMax(thicknessData[i]);
+
+			if(isNaN(t) || t <= 1) {
+				t = 1;
+			}
+
+			thickness[i] = t;
+
+			if (visualize) {
+				var ctr = p1.clone().multiplyScalar(1 - i * 1.0 / thickness.length).add(
+					p2.clone().multiplyScalar(i * 1.0 / thickness.length)
+				);
+				var r = thickness[i];
+				addABall(ctr, 0x052787, r * dim);
+			}
+		}
 	}
 }
 
@@ -137,20 +174,26 @@ function snapVoxelToMediaAxis(kx, jy, iz, axis, dim) {
 	var k = kx,
 		j = jy,
 		i = iz;
-	var visualize = false;
+	var visualize = true;
 	//
 	// snap to edge
 	//
 	var idxEdgeMin = -1;
 	var dist2EdgeMin = Number.MAX_VALUE;
+	var projEdgeMin;
 	for (var h = axis.edgesInfo.length - 1; h >= 0; h--) {
 		var v1 = axis.edgesInfo[h].v1.index;
 		var v2 = axis.edgesInfo[h].v2.index;
 
-		var dist = p2ls(k, j, i, v1[0], v1[1], v1[2], v2[0], v2[1], v2[2]);
-		if (!isNaN(dist) && dist < dist2EdgeMin) {
-			idxEdgeMin = h;
-			dist2EdgeMin = dist;
+		var p2lInfo = p2ls(k, j, i, v1[0], v1[1], v1[2], v2[0], v2[1], v2[2]);
+		if (p2lInfo != undefined) {
+			var dist = p2lInfo.dist;
+			var proj = p2lInfo.proj;
+			if (dist < dist2EdgeMin) {
+				idxEdgeMin = h;
+				dist2EdgeMin = dist;
+				projEdgeMin = proj;
+			}
 		}
 	}
 
@@ -172,18 +215,30 @@ function snapVoxelToMediaAxis(kx, jy, iz, axis, dim) {
 	//
 	if (dist2EdgeMin < dist2NodeMin) {
 		if (visualize) {
-			var v1 = axis.edgesInfo[idxEdgeMin].v1.index;
-			var v2 = axis.edgesInfo[idxEdgeMin].v2.index;
-			var vmid = new THREE.Vector3(v1[0] + v2[0], v1[1] + v2[1], v1[2] + v2[2]).multiplyScalar(0.5 * dim);
-			addALine(new THREE.Vector3(k, j, i).multiplyScalar(dim), vmid);
+			addALine(new THREE.Vector3(k, j, i).multiplyScalar(dim),
+				new THREE.Vector3(projEdgeMin[0], projEdgeMin[1], projEdgeMin[2]).multiplyScalar(dim));
 		}
-		// register the distance
-		axis.nodesInfo[idxNodeMin].radiusData.push(Math.max(axis.nodesInfo[idxNodeMin].radius, dist2NodeMin));
+
+		// register the distance to edge
+		var v1 = axis.edgesInfo[idxEdgeMin].v1.index;
+		var v2 = axis.edgesInfo[idxEdgeMin].v2.index;
+		var thicknessData = axis.edgesInfo[idxEdgeMin].thicknessData;
+		// var len = axis.edgesInfo[idxEdgeMin].len;
+		var idxPt = float2int(getDist(projEdgeMin, v1));
+		if (thicknessData[idxPt] == undefined) {
+			thicknessData[idxPt] = [];
+		}
+		thicknessData[idxPt].push(dist2EdgeMin);
+
 	} else {
 		if (visualize) {
 			var v = axis.nodesInfo[idxNodeMin].index;
 			addALine(new THREE.Vector3(k, j, i).multiplyScalar(dim), new THREE.Vector3(v[0], v[1], v[2]).multiplyScalar(dim));
 		}
+
+
+		// register the distance to node
+		axis.nodesInfo[idxNodeMin].radiusData.push(Math.max(axis.nodesInfo[idxNodeMin].radius, dist2NodeMin));
 	}
 }
 

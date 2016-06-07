@@ -45,7 +45,7 @@ class MedialAxis {
 					for (var k = idx1[2]; k != idx2[2] + ds[2]; k += ds[2]) {
 						if (vxg[k][j][i] == 1) {
 
-							var dist = p2l(i, j, k, idx1[0], idx1[1], idx1[2], idx2[0], idx2[1], idx2[2])
+							var dist = p2l(i, j, k, idx1[0], idx1[1], idx1[2], idx2[0], idx2[1], idx2[2]).dist;
 							if (dist < 0.5) {
 								pts.push(this._voxelTable[k][j][i]);
 							}
@@ -94,11 +94,17 @@ class MedialAxis {
 				ptsEdge[i].material.needsUpdate = true;
 			}
 			this._edges.push(ptsEdge);
+
+			var v1 = this._nodesInfo[this._nodes.length - 1];
+			var v2 = this._nodesInfo[this._nodes.length - 2];
+			var lenEdge = float2int(getDist(v1.index, v2.index));
+
 			this._edgesInfo.push({
-				v1: this._nodesInfo[this._nodes.length - 1],
-				v2: this._nodesInfo[this._nodes.length - 2],
-				thickness: [],
-				thicknessData: [] // store the raw data
+				v1: v1,
+				v2: v2,
+				// len: lenEdge,
+				thickness: new Array(lenEdge),	// set up once when the axis is first created
+				thicknessData: new Array(lenEdge) // store the raw data
 			});
 		}
 	}

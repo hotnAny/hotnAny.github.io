@@ -67,7 +67,7 @@ function addABall(pt, clr, radius) {
 	clr = clr == undefined ? 0xff0000 : clr;
 	radius = radius == undefined ? 1 : radius;
 
-	var geometry = new THREE.SphereGeometry(radius, 10, 10);
+	var geometry = new THREE.SphereGeometry(radius, 32, 32);
 	var material = new THREE.MeshBasicMaterial({
 		color: clr
 	});
@@ -114,7 +114,7 @@ function getDist(p1, p2) {
 
 
 function getAvg(values) {
-	if(values == undefined) {
+	if (values == undefined) {
 		err('[getAvg]: input variable not an array')
 		return;
 	}
@@ -134,4 +134,51 @@ function getAvg(values) {
 	}
 
 	return sum / values.length;
+}
+
+function getMedian(values) {
+	if (values == undefined) {
+		err('[getAvg]: input variable not an array')
+		return;
+	}
+
+	if (values.length <= 0) {
+		err('[getAvg]: input arrays contain no values')
+		return;
+	}
+
+	var vals = [];
+	for (var i = values.length - 1; i >= 0; i--) {
+		if (isNaN(values[i])) {
+			err('[getAvg]: input arrays contain not numbers')
+			return;
+		}
+		vals.push(values[i]);
+	}
+
+	vals.sort();
+	return vals[vals.length / 2];
+}
+
+function getMax(values) {
+	if (values == undefined) {
+		err('[getAvg]: input variable not an array')
+		return;
+	}
+
+	if (values.length <= 0) {
+		err('[getAvg]: input arrays contain no values')
+		return;
+	}
+
+	var max = Number.MIN_VALUE;
+	for (var i = values.length - 1; i >= 0; i--) {
+		if (isNaN(values[i])) {
+			err('[getAvg]: input arrays contain not numbers')
+			return;
+		}
+		max = Math.max(values[i], max);
+	}
+
+	return max;
 }

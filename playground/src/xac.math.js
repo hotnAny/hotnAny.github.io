@@ -157,5 +157,11 @@ function p2l(x, y, z, x1, y1, z1, x2, y2, z2) {
 	var tb = (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1) + (z2 - z1) * (z2 - z1)
 	var t = -tu / tb
 
-	return Math.sqrt(dx1 * dx1 + dy1 * dy1 + dz1 * dz1 - tu * tu / tb)
+	var dist = Math.sqrt(dx1 * dx1 + dy1 * dy1 + dz1 * dz1 - tu * tu / tb);
+	var proj = [x1 + (x2 - x1) * t, y1 + (y2 - y1) * t, z1 + (z2 - z1) * t];
+	
+	return {
+		dist: dist,
+		proj: proj
+	};
 }
