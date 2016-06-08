@@ -31,12 +31,27 @@ XAC.Thing.prototype = {
 }
 
 //
+// line
+//
+XAC.Line = function(p1, p2, clr) {
+	this._g = new THREE.Geometry();
+	this._g.vertices.push(p1);
+	this._g.vertices.push(p2);
+	clr = clr == undefined ? 0x000000 : clr;
+	var mat = new THREE.LineBasicMaterial({
+		color: clr
+	});
+	this._m = new THREE.Line(this._g, mat);
+};
+XAC.Line.prototype = Object.create(XAC.Thing.prototype);
+
+//
 //	sphere
 //
-XAC.Sphere = function(r, m, highFi) {
+XAC.Sphere = function(r, mat, highFi) {
 	this.prototype = Object.create(XAC.Thing.prototype);
 	this._r = r;
 	this._g = highFi == true ? new THREE.SphereGeometry(r, 32, 32) : new THREE.SphereGeometry(r, 8, 8);
-	this._m = new THREE.Mesh(this._g, m == undefined ? MATERIALNORMAL.clone() : m.clone());
-}
+	this._m = new THREE.Mesh(this._g, mat == undefined ? MATERIALNORMAL.clone() : mat.clone());
+};
 XAC.Sphere.prototype = Object.create(XAC.Thing.prototype);

@@ -1,10 +1,27 @@
-MEDLEY.MedialAxis = function() {};
+var MEDLEY = MEDLEY || {};
+
+MEDLEY.MedialAxis = function() {
+	this._nodesInfo = []; // spatial info of nodes, contains:
+	this._nodes = []; // meshes of nodes
+	this._edgesInfo = []; // spatial info of edges, contains: 
+	this._edges = []; // meshes of edges
+
+	// visual properties
+	this._rnode = 5;
+	this._matNode = MEDLEY.MATERIALHIGHLIGHT;
+	this._matEdge = MEDLEY.MATERIALCONTRAST;
+
+	// built-in methods for manipulating axis
+	document.addEventListener('mousedown', this._mousedown, false);
+	document.addEventListener('mousemove', this._mousemove, false);
+	document.addEventListener('mouseup', this._mouseup, false);
+};
 
 MEDLEY.MedialAxis.prototype = {
 	constructor: MEDLEY.MedialAxis
 };
 
-MEDLEY.MedialAxis.addNode = function(node, vxg, toConnect) {
+MEDLEY.MedialAxis.prototype.addNodeObselete = function(node, vxg, toConnect) {
 	// check if the node is already in
 	var alreadyIn = false;
 	for (var i = this._nodes.length - 1; i >= 0; i--) {
@@ -56,7 +73,70 @@ MEDLEY.MedialAxis.addNode = function(node, vxg, toConnect) {
 	}
 }
 
-MEDLEY.MedialAxis.updateNode = function(node, pos) {
+//
+//
+//	@param	v - position of the new node
+//
+MEDLEY.MedialAxis.prototype.addNode = function(pos, toConnect) {
+	// check if the node is already in
+	var alreadyIn = false;
+	for (var i = this._nodesInfo.length - 1; i >= 0; i--) {
+		// if so, push it to the top of the stack
+		if (pos.distanceTo(this._nodesInfo[i].pos) < this._rnode) {
+			alreadyIn = true;
+			this._nodes.push(this._nodes.splice(i, 1)[0]);
+			this._nodesInfo.push(this._nodesInfo.splice(i, 1)[0]);
+			break;
+		}
+	}
+
+	if (!alreadyIn) {
+		var node = new XAC.Sphere(this._rnode, this._matNode, true).m;
+		node.position.copy(pos);
+		this._nodes.push(node);
+		this._nodesInfo.push({
+			mesh: node,
+			pos: pos,
+			// index: node.index,
+			radius: 0, // radius of its coverage on the object
+			radiusData: [] // store the raw data
+		});
+		// node.material = this._matNode;
+		// node.material.needsUpdate = true;
+
+		// this._voxelGrid[node.index[2]][node.index[1]][node.index[0]] = this.NODE;
+
+		scene.add(node);
+		log('node added at (' + pos.x + ', ' + pos.y + ', ' + pos.z + ')');
+	}
+
+	if (toConnect && this._nodes.length > 1) {
+		// var nodeLast = this._nodes[this._nodes.length - 2];
+		// var ptsEdge = this._interpolate(node, nodeLast, vxg);
+		// for (var i = ptsEdge.length - 2; i >= 1; i--) {
+		// 	ptsEdge[i].material = this._matEdge;
+		// 	ptsEdge[i].material.needsUpdate = true;
+		// }
+		// this._edges.push(ptsEdge);
+
+		var v1 = this._nodesInfo[this._nodes.length - 1];
+		var v2 = this._nodesInfo[this._nodes.length - 2];
+
+		var edge = new XAC.Line(v2.pos, v1.pos).m;
+		scene.add(edge);
+		this._edges.push(edge);
+
+		// var lenEdge = float2int(getDist(v1.pos, v2.pos) / );
+		this._edgesInfo.push({
+			v1: v1,
+			v2: v2
+			// thickness: new Array(lenEdge), // set up once when the axis is first created
+			// thicknessData: new Array(lenEdge) // store the raw data
+		});
+	}
+}
+
+MEDLEY.MedialAxis.prototype.updateNode = function(node, vxg, pos) {
 	//
 	// update info on this node
 	//
@@ -212,6 +292,18 @@ MEDLEY.MedialAxis.prototype.snapVoxelGrid = function(vxg) {
 	vxg.updateToMedialAxis(this);
 }
 
+MEDLEY.MedialAxis.prototype._mousedown = function(e) {
+
+}
+
+MEDLEY.MedialAxis.prototype._mousemove = function(e) {
+
+}
+
+MEDLEY.MedialAxis.prototype._mouseup = function(e) {
+
+}
+
 MEDLEY.MedialAxis.prototype._snapVoxel = function(kx, jy, iz, dim) {
 	var k = kx,
 		j = jy,
@@ -284,7 +376,7 @@ MEDLEY.MedialAxis.prototype._snapVoxel = function(kx, jy, iz, dim) {
 	}
 }
 
-MEDLEY.MedialAxis._interpolate = function(p1, p2, vxg) {
+MEDLEY.MedialAxis.prototype._interpolate = function(p1, p2, vxg) {
 	var pts = [];
 	var idx1 = p1.index;
 	var idx2 = p2.index;
@@ -302,7 +394,7 @@ MEDLEY.MedialAxis._interpolate = function(p1, p2, vxg) {
 	for (var i = idx1[0]; i != idx2[0] + ds[0]; i += ds[0]) {
 		for (var j = idx1[1]; j != idx2[1] + ds[1]; j += ds[1]) {
 			for (var k = idx1[2]; k != idx2[2] + ds[2]; k += ds[2]) {
-				if (vxg[k][j][i] == 1) {
+				if (vxg.grid()[k][j][i] == 1) {
 					var dist = p2l(i, j, k, idx1[0], idx1[1], idx1[2], idx2[0], idx2[1], idx2[2]).dist;
 					if (dist < 0.5) {
 						pts.push(vxg.table()[k][j][i]);
