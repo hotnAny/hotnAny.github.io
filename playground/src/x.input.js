@@ -31,19 +31,20 @@ function onMouseDown(e) {
 		return;
 	}
 
-	if(gVoxelGrid == undefined) {
+	if (gVoxelGrid == undefined) {
 		return;
 	}
 
-	gMouseDown = true;
+	// gMouseDown = true;
 	gMousePrev = XAC.hitPoint(e, [gGround]);
 
-	gVoxelSelected = XAC.hitObject(e, gVoxelGrid.voxels());
-
-	if (gVoxelSelected != undefined) {
-		gMedialAxis.addNode(gMousePrev, gGlue);
-		// snapVoxelToMediaAxis(gVoxelSelected.index[0], gVoxelSelected.index[1], gVoxelSelected.index[2], gMedialAxis, 10);
-		gGlue = true;
+	if (e.shiftKey) {
+		gVoxelSelected = XAC.hitObject(e, gVoxelGrid.voxels);
+		if (gVoxelSelected != undefined) {
+			gMedialAxis.addNode(gMousePrev, gGlue);
+			// snapVoxelToMediaAxis(gVoxelSelected.index[0], gVoxelSelected.index[1], gVoxelSelected.index[2], gMedialAxis, 10);
+			gGlue = true;
+		}
 	}
 
 }
@@ -59,10 +60,10 @@ function onMouseMove(e) {
 }
 
 function onMouseUp(e) {
-	if (gMouseDragged) {
-		updateVoxels(gVoxelGrid, DIMVOXEL, gMedialAxis);
-	}
-	gMouseDown = false;
+	// if (gMouseDragged) {
+	// 	updateVoxels(gVoxelGrid, DIMVOXEL, gMedialAxis);
+	// }
+	// gMouseDown = false;
 }
 
 function onKeyDown(e) {
@@ -72,7 +73,7 @@ function onKeyDown(e) {
 			// tSnapMode = true;
 		case 27: // ESC
 			gGlue = false;
-			snapVoxelGridToMedialAxis(gVoxelGrid, gMedialAxis, DIMVOXEL);
+			gMedialAxis.snapVoxelGrid(gVoxelGrid);
 			break;
 	}
 }

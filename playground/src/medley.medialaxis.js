@@ -20,7 +20,23 @@ MEDLEY.MedialAxis = function(scene) {
 };
 
 MEDLEY.MedialAxis.prototype = {
-	constructor: MEDLEY.MedialAxis
+	constructor: MEDLEY.MedialAxis,
+
+	get nodes() {
+		return this._nodes;
+	},
+
+	get nodesInfo() {
+		return this._nodesInfo;
+	},
+
+	get edges() {
+		return this._edges;
+	},
+
+	get edgesInfo() {
+		return this._edgesInfo;
+	}
 };
 
 //
@@ -105,31 +121,12 @@ MEDLEY.MedialAxis.prototype.render = function() {
 
 MEDLEY.MedialAxis.prototype.snapVoxelGrid = function(vxg) {
 	var visualize = false;
+	this._voxelGrid = vxg;
 
-	// TODO: initialize the medial this._, in case it has been snapped with voxels before
-
-	if (!this._isVoxelized) {
-		//
-		// for each voxel, find the anchoring edge
-		//
-		var nz = vxg.grid().length;
-		var ny = vxg.grid()[0].length;
-		var nx = vxg.grid()[0][0].length;
-
-		var nearestMedialAxis = [];
-
-		for (var i = 0; i < nz; i++) {
-			var slice = [];
-			for (var j = 0; j < 1; j++) {
-				var row = [];
-				for (var k = 0; k < nx; k++) {
-					if (vxg.grid()[i][j][k] == 1) {
-						this._snapVoxelToMediaAxis(k, j, i, vxg.dim());
-					} // voxel
-				} // x
-			} // y
-		} // z
+	for (var i = vxg.voxels.length - 1; i >= 0; i--) {
+		this._snapVoxel(vxg.voxels[i], vxg.dim);
 	}
+
 
 	//
 	// aggregation
@@ -149,8 +146,15 @@ MEDLEY.MedialAxis.prototype.snapVoxelGrid = function(vxg) {
 	for (var h = this._edgesInfo.length - 1; h >= 0; h--) {
 		var p1 = this._edgesInfo[h].v1.mesh.position;
 		var p2 = this._edgesInfo[h].v2.mesh.position;
-		var thickness = this._edgesInfo[h].thickness;
 		var thicknessData = this._edgesInfo[h].thicknessData;
+
+		if (thicknessData == undefined || thicknessData.length <= 0) {
+			continue;
+		}
+
+		this._edgesInfo[h].thickness = new Array(thicknessData.length);
+		var thickness = this._edgesInfo[h].thickness;
+
 
 		for (var i = thickness.length - 2; i >= 1; i--) {
 			var t = getMax(thicknessData[i]);
@@ -172,7 +176,7 @@ MEDLEY.MedialAxis.prototype.snapVoxelGrid = function(vxg) {
 	}
 
 	//
-	// revoxelize based on media this._
+	// revoxelize based on this axis
 	//
 	vxg.updateToMedialAxis(this);
 }
@@ -201,32 +205,34 @@ MEDLEY.MedialAxis.prototype._mouseup = function(e) {
 	if (this._maniplane != undefined) {
 		this._maniplane.destruct();
 		this._maniplane = undefined;
+
+		this._voxelGrid.updateToMedialAxis(this);
 	}
 }
 
-MEDLEY.MedialAxis.prototype._snapVoxel = function(kx, jy, iz, dim) {
-	var k = kx,
-		j = jy,
-		i = iz;
+MEDLEY.MedialAxis.prototype._snapVoxel = function(voxel, dim) {
 	var visualize = false;
+	var v = voxel.position;
+
 	//
 	// snap to edge
 	//
 	var idxEdgeMin = -1;
 	var dist2EdgeMin = Number.MAX_VALUE;
-	var projEdgeMin;
+	var projEdgeMin = new THREE.Vector3();
 	for (var h = this._edgesInfo.length - 1; h >= 0; h--) {
-		var v1 = this._edgesInfo[h].v1.index;
-		var v2 = this._edgesInfo[h].v2.index;
 
-		var p2lInfo = p2ls(k, j, i, v1[0], v1[1], v1[2], v2[0], v2[1], v2[2]);
+		var v1 = this._edgesInfo[h].v1.mesh.position;
+		var v2 = this._edgesInfo[h].v2.mesh.position;
+
+		var p2lInfo = p2ls(v.x, v.y, v.z, v1.x, v1.y, v1.z, v2.x, v2.y, v2.z);
 		if (p2lInfo != undefined) {
-			var dist = p2lInfo.dist;
-			var proj = p2lInfo.proj;
+			var dist = p2lInfo.distance;
+			var proj = p2lInfo.projection;
 			if (dist < dist2EdgeMin) {
 				idxEdgeMin = h;
 				dist2EdgeMin = dist;
-				projEdgeMin = proj;
+				projEdgeMin.set(proj[0], proj[1], proj[2]);
 			}
 		}
 	}
@@ -237,7 +243,7 @@ MEDLEY.MedialAxis.prototype._snapVoxel = function(kx, jy, iz, dim) {
 	var idxNodeMin = -1;
 	var dist2NodeMin = Number.MAX_VALUE;
 	for (var h = this._nodesInfo.length - 1; h >= 0; h--) {
-		var dist = getDist([k, j, i], this._nodesInfo[h].index);
+		var dist = v.distanceTo(this._nodes[h].position);
 		if (dist < dist2NodeMin) {
 			idxNodeMin = h;
 			dist2NodeMin = dist;
@@ -249,16 +255,19 @@ MEDLEY.MedialAxis.prototype._snapVoxel = function(kx, jy, iz, dim) {
 	//
 	if (dist2EdgeMin < dist2NodeMin) {
 		if (visualize) {
-			addALine(new THREE.Vector3(k, j, i).multiplyScalar(dim),
-				new THREE.Vector3(projEdgeMin[0], projEdgeMin[1], projEdgeMin[2]).multiplyScalar(dim));
+			addALine(v, projEdgeMin);
 		}
 
 		// register the distance to edge
-		var v1 = this._edgesInfo[idxEdgeMin].v1.index;
-		var v2 = this._edgesInfo[idxEdgeMin].v2.index;
+		var v1 = this._edgesInfo[idxEdgeMin].v1.mesh.position;
+		var v2 = this._edgesInfo[idxEdgeMin].v2.mesh.position;
 		var thicknessData = this._edgesInfo[idxEdgeMin].thicknessData;
-		// var len = this._edgesInfo[idxEdgeMin].len;
-		var idxPt = float2int(getDist(projEdgeMin, v1));
+		if (thicknessData == undefined) {
+			this._edgesInfo[idxEdgeMin].thicknessData = new Array(float2int(v2.distanceTo(v1) / dim));
+			thicknessData = this._edgesInfo[idxEdgeMin].thicknessData;
+		}
+
+		var idxPt = float2int(projEdgeMin.distanceTo(v1) / dim);
 		if (thicknessData[idxPt] == undefined) {
 			thicknessData[idxPt] = [];
 		}
@@ -266,10 +275,9 @@ MEDLEY.MedialAxis.prototype._snapVoxel = function(kx, jy, iz, dim) {
 
 	} else {
 		if (visualize) {
-			var v = this._nodesInfo[idxNodeMin].index;
-			addALine(new THREE.Vector3(k, j, i).multiplyScalar(dim), new THREE.Vector3(v[0], v[1], v[2]).multiplyScalar(dim));
+			var v0 = this._nodesInfo[idxNodeMin].mesh.position;
+			addALine(v, v0);
 		}
-
 
 		// register the distance to node
 		this._nodesInfo[idxNodeMin].radiusData.push(Math.max(this._nodesInfo[idxNodeMin].radius, dist2NodeMin));

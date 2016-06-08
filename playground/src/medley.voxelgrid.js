@@ -5,13 +5,31 @@
  *
  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
+var MEDLEY = MEDLEY || {};
+
 MEDLEY.VoxelGrid = function() {
 	this._voxels = [];
 	this._table = [];
 }
 
 MEDLEY.VoxelGrid.prototype = {
-	constructor: MEDLEY.VoxelGrid
+	constructor: MEDLEY.VoxelGrid,
+
+	get grid() {
+		return this._grid;
+	},
+
+	get dim() {
+		return this._dim;
+	},
+
+	get voxels() {
+		return this._voxels;
+	},
+
+	get table() {
+		return this._table;
+	}
 };
 
 MEDLEY.VoxelGrid.prototype.load = function(vxgRaw, dim) {
@@ -63,7 +81,7 @@ MEDLEY.VoxelGrid.prototype.render = function(hideInside) {
 				} else if (this._grid[i][j][k] != 1 && this._table[i][j][k] != undefined) {
 					var voxel = this._table[i][j][k];
 					scene.remove(voxel);
-					removeFromArray(gVoxels, voxel);
+					removeFromArray(this._voxels, voxel);
 					this._table[i][j][k] = undefined;
 				}
 			} // x
@@ -73,7 +91,7 @@ MEDLEY.VoxelGrid.prototype.render = function(hideInside) {
 	log(this._voxels.length + " voxels added.");
 }
 
-MEDLEY.VoxelGrid.prototype.updateToMedialAxis = function(axis) {
+MEDLEY.VoxelGrid.prototype.updateToMedialAxis = function(axis, node) {
 	//
 	// update the entire voxel grid based on the axis
 	//
@@ -94,24 +112,31 @@ MEDLEY.VoxelGrid.prototype.updateToMedialAxis = function(axis) {
 
 		// for each node, add voxels around it
 		for (var i = axis.nodesInfo.length - 1; i >= 0; i--) {
-			var index = axis.nodesInfo[i].index;
+			var v = axis.nodesInfo[i].mesh.position;
 			var radius = axis.nodesInfo[i].radius;
-			this._grid[index[2]][index[1]][index[0]] = axis.NODE;
+			// this._grid[index[2]][index[1]][index[0]] = axis.NODE;
 			if (radius != undefined) {
-				addSphericalVoxels(this._grid, index, radius);
+				this._addSphericalVoxels(v, radius);
 			}
 		}
 
 		// for each edge, add voxels along it
 		for (var i = axis.edgesInfo.length - 1; i >= 0; i--) {
-			var v1 = axis.edgesInfo[i].v1;
-			var v2 = axis.edgesInfo[i].v2;
+			var v1 = axis.edgesInfo[i].v1.mesh.position;
+			var v2 = axis.edgesInfo[i].v2.mesh.position;
 			var pts = axis.edges[i];
 			var thickness = axis.edgesInfo[i].thickness; // assume the thickness array has been re-interpolated
 
-			for (var j = pts.length - 1; j >= 0; j--) {
-				var k = float2int(j * thickness.length / pts.length);
-				addSphericalVoxels(this._grid, pts[j].index, thickness[k]);
+			if(thickness == undefined || thickness.length <= 0) {
+				continue;
+			}
+
+			for (var j = thickness.length - 1; j >= 0; j--) {
+				// var k = float2int(j * thickness.length / pts.length);
+				var v = v1.clone().multiplyScalar(1 - j * 1.0 / thickness.length).add(
+					v2.clone().multiplyScalar(j * 1.0 / thickness.length)
+				);
+				this._addSphericalVoxels(v, thickness[j]);
 			}
 		}
 
@@ -119,8 +144,8 @@ MEDLEY.VoxelGrid.prototype.updateToMedialAxis = function(axis) {
 		// for (var i = gVoxels.length - 1; i >= 0; i--) {
 		// 	scene.remove(gVoxels[i]);
 		// }
-		renderVoxels(vxg, dim, true);
-		axis.renderAxis();
+		this.render(false);
+		// axis.renderAxis();
 	}
 	//
 	// only update one node and its associated edges
@@ -130,22 +155,6 @@ MEDLEY.VoxelGrid.prototype.updateToMedialAxis = function(axis) {
 	}
 }
 
-
-MEDLEY.VoxelGrid.prototype.grid = function() {
-	return this._grid;
-}
-
-MEDLEY.VoxelGrid.prototype.dim = function() {
-	return this._dim;
-}
-
-MEDLEY.VoxelGrid.prototype.voxels = function() {
-	return this._voxels;
-}
-
-MEDLEY.VoxelGrid.prototype.table = function() {
-	return this._table;
-}
 
 MEDLEY.VoxelGrid.prototype._onSurface = function(i, j, k) {
 	return i * j * k == 0 || (nz - 1 - i) * (ny - 1 - j) * (nx - 1 - k) == 0 ||
@@ -163,24 +172,27 @@ MEDLEY.VoxelGrid.prototype._makeVoxel = function(dim, i, j, k, mat, noMargin) {
 		dim += 1
 	}
 
-	voxel.position.set((i + 0.5) * dim, (j + 0.5) * dim, (k + 0.5) * dim);
+	voxel.position.set(i * dim, j * dim, k * dim);
 
 	return voxel;
 }
 
-MEDLEY.VoxelGrid.prototype._addSphericalVoxels = function(vxg, index, radius) {
-	var zmin = float2int(index[2] - radius),
-		zmax = float2int(index[2] + radius),
-		ymin = float2int(index[1] - radius),
-		ymax = float2int(index[1] + radius),
-		xmin = float2int(index[0] - radius),
-		xmax = float2int(index[0] + radius);
+MEDLEY.VoxelGrid.prototype._addSphericalVoxels = function(v, radius) {
+	var vxg = this._grid;
+
+	var zmin = float2int((v.z - radius) / this._dim),
+		zmax = float2int((v.z + radius) / this._dim),
+		ymin = float2int((v.y - radius) / this._dim),
+		ymax = float2int((v.y + radius) / this._dim),
+		xmin = float2int((v.x - radius) / this._dim),
+		xmax = float2int((v.x + radius) / this._dim);
 	for (var z = zmin; z < zmax; z++) {
 		vxg[z] = vxg[z] == undefined ? [] : vxg[z];
 		for (var y = ymin; y < ymax; y++) {
 			vxg[z][y] = vxg[z][y] == undefined ? [] : vxg[z][y];
 			for (var x = xmin; x < xmax; x++) {
-				if (getDist([x, y, z], index) <= radius) {
+				var v0 = new THREE.Vector3(x, y, z).multiplyScalar(this._dim);
+				if (v0.distanceTo(v) <= radius) {
 					vxg[z][y][x] = 1;
 				}
 			}
