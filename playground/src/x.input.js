@@ -1,10 +1,10 @@
-/*------------------------------------------------------------------------------------*
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
  *
  * mouse event handlers for the operation in the various steps
  * 
  * by xiang 'anthony' chen, xiangchen@acm.org
  *
- *------------------------------------------------------------------------------------*/
+ *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 gMouseCtrls.rotateSpeed = 5.0;
 gMouseCtrls.zoomSpeed = 0.5;
@@ -20,6 +20,12 @@ document.addEventListener('mousemove', onMouseMove, false);
 document.addEventListener('mouseup', onMouseUp, false);
 document.addEventListener('keydown', onKeyDown, false);
 
+var gMouseDown = false;
+var gMouseDragged = false;
+var gMousePrev = undefined;
+var gVoxelSelected;
+var gGlue = false;
+
 function onMouseDown(e) {
 	if (e.which != LEFTMOUSE) {
 		return;
@@ -27,50 +33,56 @@ function onMouseDown(e) {
 	gMouseDown = true;
 	gMousePrev = hitPoint(e, [gGround]);
 
-	gVoxelSelected = hitObject(e, gVoxels);
+	gVoxelSelected = hitObject(e, gVoxelGrid.voxels());
 
-	// TODO: avoid adding redundant nodes
 	if (gVoxelSelected != undefined) {
-		
-		// TEMP
-		// if(tSnapMode) {
-		// 	snapVoxelToMediaAxis(gVoxelSelected.index[0], gVoxelSelected.index[1], gVoxelSelected.index[2], gma, 10);
-		// 	return;
-		// }
-
-		gma.addNode(gVoxelSelected, gGlue);
-		// snapVoxelToMediaAxis(gVoxelSelected.index[0], gVoxelSelected.index[1], gVoxelSelected.index[2], gma, 10);
+		gMedialAxis.addNode(gVoxelSelected, gVoxelGrid, gGlue);
+		// snapVoxelToMediaAxis(gVoxelSelected.index[0], gVoxelSelected.index[1], gVoxelSelected.index[2], gMedialAxis, 10);
 		gGlue = true;
 	}
 
 }
 
 function onMouseMove(e) {
-	if(gMouseDown) {
-		// var node = hitObject(e, gma.nodes);
-		if(gVoxelSelected != undefined) {
+	if (gMouseDown) {
+		if (gVoxelSelected != undefined) {
 			var mouseCurr = hitPoint(e, [gGround]);
-			// addABall(mouseCurr);
-			// var dPos = new THREE.Vector3().subVectors(mouseCurr, gMousePrev);
-			gVoxelSelected = gma.updateNode(gVoxelSelected, mouseCurr);
-			// gMousePrev = mouseCurr;
+			gVoxelSelected = gMedialAxis.updateNode(gVoxelSelected, mouseCurr);
+			gMouseDragged = true;
 		}
 	}
 }
 
 function onMouseUp(e) {
+	if (gMouseDragged) {
+		updateVoxels(gVoxelGrid, DIMVOXEL, gMedialAxis);
+	}
 	gMouseDown = false;
 }
 
 function onKeyDown(e) {
-	switch(e.keyCode) {
+	switch (e.keyCode) {
 		case 13: // ENTER
-			// snapToMedialAxis(gVoxelGrid, gma, 10);
+			// snapToMedialAxis(gVoxelGrid, gMedialAxis, 10);
 			// tSnapMode = true;
 		case 27: // ESC
 			gGlue = false;
-			snapVoxelGridToMedialAxis(gVoxelGrid, gma, DIMVOXEL);
+			snapVoxelGridToMedialAxis(gVoxelGrid, gMedialAxis, DIMVOXEL);
 			break;
 	}
 }
 
+function hitObject(e, objs) {
+	var hits = rayCast(e.clientX, e.clientY, objs);
+	if (hits.length > 0) {
+		return hits[0].object;
+	}
+	return undefined;
+}
+
+function hitPoint(e, objs) {
+	var hits = rayCast(e.clientX, e.clientY, objs);
+	if (hits.length > 0) {
+		return hits[0].point;
+	}
+}

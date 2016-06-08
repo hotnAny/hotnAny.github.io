@@ -80,21 +80,6 @@ function addABall(pt, clr, radius) {
 	return ball;
 }
 
-function hitObject(e, objs) {
-	var hits = rayCast(e.clientX, e.clientY, objs);
-	if (hits.length > 0) {
-		return hits[0].object;
-	}
-	return undefined;
-}
-
-function hitPoint(e, objs) {
-	var hits = rayCast(e.clientX, e.clientY, objs);
-	if (hits.length > 0) {
-		return hits[0].point;
-	}
-}
-
 function float2int(value) {
 	return value | 0;
 }
@@ -181,4 +166,34 @@ function getMax(values) {
 	}
 
 	return max;
+}
+
+function removeFromArray(array, elm, compFunc) {
+	// if (storage != undefined) {
+	// 	for (var i = 0; i < gVoxels.length; i++) {
+	// 		if (storage[i][0] == voxel.index[0] && storage[i][1] == voxel.index[1] && storage[i][2] == voxel.index[2]) {
+	// 			storage = storage.splice(i, 1);
+	// 		}
+	// 	}
+	// }
+
+	var toRemove = [];
+	for (var i = array.length - 1; i >= 0; i--) {
+		var equal = undefined;
+		if (compFunc != undefined) {
+			equal = compFunc(elm, array[i]);
+		} else {
+			equal = elm == array[i];
+		}
+
+		if (equal) {
+			toRemove.push(i);
+		}
+	}
+
+	for (var i = toRemove.length - 1; i >= 0; i--) {
+		array.splice(toRemove[i], 1);
+	}
+
+	return array;
 }
