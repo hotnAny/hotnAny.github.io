@@ -5,5 +5,11 @@ function unitTest(argument) {
 
 	// getMedian([3, 5, 1, 8, 6])
 
+	var thing = new XAC.Thing();
+	log(thing.g)
+	// thing.unitTest();
+	var sphere = new XAC.Sphere(10);
+	log(sphere)
+
 	log('----------------  unit test ends  ----------------');
 }
