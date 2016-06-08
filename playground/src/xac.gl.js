@@ -6,10 +6,12 @@
  *
  *------------------------------------------------------------------------------------*/
 
+var XAC = XAC || {};
+
 /*
  *	function for performing raycasting
  */
-function rayCast(x, y, objs) {
+XAC.rayCast = function(x, y, objs) {
 	var rayCaster = new THREE.Raycaster();
 	var vector = new THREE.Vector3();
 	vector.set((x / window.innerWidth) * 2 - 1, -(y / window.innerHeight) * 2 + 1, 0.5);
@@ -17,7 +19,22 @@ function rayCast(x, y, objs) {
 	vector.unproject(camera);
 	rayCaster.ray.set(camera.position, vector.sub(camera.position).normalize());
 	return rayCaster.intersectObjects(objs);
-}
+};
+
+XAC.hitObject = function(e, objs) {
+	var hits = XAC.rayCast(e.clientX, e.clientY, objs);
+	if (hits.length > 0) {
+		return hits[0].object;
+	}
+	return undefined;
+};
+
+XAC.hitPoint = function(e, objs) {
+	var hits = XAC.rayCast(e.clientX, e.clientY, objs);
+	if (hits.length > 0) {
+		return hits[0].point;
+	}
+};
 
 /*
 	scale an object around its center by factor
@@ -88,7 +105,7 @@ function scaleWithVector(obj, factors, dir) {
 /*
 	rotate an object towards a given direction
 */
-function rotateObjTo(obj, dir, isReversed) {
+XAC.rotateObjTo = function(obj, dir, isReversed) {
 	var yUp = new THREE.Vector3(0, 1, 0);
 	var angleToRotate = yUp.angleTo(dir);
 	var axisToRotate = new THREE.Vector3().crossVectors(yUp, dir).normalize();
@@ -215,7 +232,7 @@ function getBoundingBoxMesh(obj, material) {
 	return bbox;
 }
 
-function getBoundingBoxEverything(obj) {
+XAC.getBoundingBoxEverything = function(obj) {
 	var gt = gettg(obj);
 	gt.computeBoundingBox();
 	var cmax = gt.boundingBox.max;

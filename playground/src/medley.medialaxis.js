@@ -1,6 +1,8 @@
 var MEDLEY = MEDLEY || {};
 
-MEDLEY.MedialAxis = function() {
+MEDLEY.MedialAxis = function(scene) {
+	this._scene = scene;
+
 	this._nodesInfo = []; // spatial info of nodes, contains:
 	this._nodes = []; // meshes of nodes
 	this._edgesInfo = []; // spatial info of edges, contains: 
@@ -8,70 +10,18 @@ MEDLEY.MedialAxis = function() {
 
 	// visual properties
 	this._rnode = 5;
-	this._matNode = MEDLEY.MATERIALHIGHLIGHT;
-	this._matEdge = MEDLEY.MATERIALCONTRAST;
+	this._matNode = XAC.MATERIALHIGHLIGHT;
+	this._matEdge = XAC.MATERIALCONTRAST;
 
 	// built-in methods for manipulating axis
-	document.addEventListener('mousedown', this._mousedown, false);
-	document.addEventListener('mousemove', this._mousemove, false);
-	document.addEventListener('mouseup', this._mouseup, false);
+	document.addEventListener('mousedown', this._mousedown.bind(this), false);
+	document.addEventListener('mousemove', this._mousemove.bind(this), false);
+	document.addEventListener('mouseup', this._mouseup.bind(this), false);
 };
 
 MEDLEY.MedialAxis.prototype = {
 	constructor: MEDLEY.MedialAxis
 };
-
-MEDLEY.MedialAxis.prototype.addNodeObselete = function(node, vxg, toConnect) {
-	// check if the node is already in
-	var alreadyIn = false;
-	for (var i = this._nodes.length - 1; i >= 0; i--) {
-		// if so, push it to the top of the stack
-		if (node == this._nodes[i]) {
-			alreadyIn = true;
-			this._nodes.push(this._nodes.splice(i, 1)[0]);
-			this._nodesInfo.push(this._nodesInfo.splice(i, 1)[0]);
-			break;
-		}
-	}
-
-	if (!alreadyIn) {
-		this._nodes.push(node);
-		this._nodesInfo.push({
-			mesh: node,
-			index: node.index,
-			radius: 0,
-			radiusData: [] // store the raw data
-		});
-		node.material = this._matNode;
-		node.material.needsUpdate = true;
-
-		// this._voxelGrid[node.index[2]][node.index[1]][node.index[0]] = this.NODE;
-
-		log('node added at ' + node.index);
-	}
-
-	if (toConnect && this._nodes.length > 1) {
-		var nodeLast = this._nodes[this._nodes.length - 2];
-		var ptsEdge = this._interpolate(node, nodeLast, vxg);
-		for (var i = ptsEdge.length - 2; i >= 1; i--) {
-			ptsEdge[i].material = this._matEdge;
-			ptsEdge[i].material.needsUpdate = true;
-		}
-		this._edges.push(ptsEdge);
-
-		var v1 = this._nodesInfo[this._nodes.length - 1];
-		var v2 = this._nodesInfo[this._nodes.length - 2];
-		var lenEdge = float2int(getDist(v1.index, v2.index));
-
-		this._edgesInfo.push({
-			v1: v1,
-			v2: v2,
-			// len: lenEdge,
-			thickness: new Array(lenEdge), // set up once when the axis is first created
-			thicknessData: new Array(lenEdge) // store the raw data
-		});
-	}
-}
 
 //
 //
@@ -82,7 +32,7 @@ MEDLEY.MedialAxis.prototype.addNode = function(pos, toConnect) {
 	var alreadyIn = false;
 	for (var i = this._nodesInfo.length - 1; i >= 0; i--) {
 		// if so, push it to the top of the stack
-		if (pos.distanceTo(this._nodesInfo[i].pos) < this._rnode) {
+		if (pos.distanceTo(this._nodesInfo[i].mesh.position) < this._rnode) {
 			alreadyIn = true;
 			this._nodes.push(this._nodes.splice(i, 1)[0]);
 			this._nodesInfo.push(this._nodesInfo.splice(i, 1)[0]);
@@ -96,114 +46,49 @@ MEDLEY.MedialAxis.prototype.addNode = function(pos, toConnect) {
 		this._nodes.push(node);
 		this._nodesInfo.push({
 			mesh: node,
-			pos: pos,
-			// index: node.index,
+			// pos: pos,
 			radius: 0, // radius of its coverage on the object
 			radiusData: [] // store the raw data
 		});
-		// node.material = this._matNode;
-		// node.material.needsUpdate = true;
 
-		// this._voxelGrid[node.index[2]][node.index[1]][node.index[0]] = this.NODE;
-
-		scene.add(node);
+		this._scene.add(node);
 		log('node added at (' + pos.x + ', ' + pos.y + ', ' + pos.z + ')');
 	}
 
 	if (toConnect && this._nodes.length > 1) {
-		// var nodeLast = this._nodes[this._nodes.length - 2];
-		// var ptsEdge = this._interpolate(node, nodeLast, vxg);
-		// for (var i = ptsEdge.length - 2; i >= 1; i--) {
-		// 	ptsEdge[i].material = this._matEdge;
-		// 	ptsEdge[i].material.needsUpdate = true;
-		// }
-		// this._edges.push(ptsEdge);
-
 		var v1 = this._nodesInfo[this._nodes.length - 1];
 		var v2 = this._nodesInfo[this._nodes.length - 2];
 
-		var edge = new XAC.Line(v2.pos, v1.pos).m;
-		scene.add(edge);
+		var edge = new XAC.Line(v2.mesh.position, v1.mesh.position).m;
+		this._scene.add(edge);
 		this._edges.push(edge);
 
-		// var lenEdge = float2int(getDist(v1.pos, v2.pos) / );
 		this._edgesInfo.push({
 			v1: v1,
 			v2: v2
-			// thickness: new Array(lenEdge), // set up once when the axis is first created
-			// thicknessData: new Array(lenEdge) // store the raw data
 		});
 	}
 }
 
-MEDLEY.MedialAxis.prototype.updateNode = function(node, vxg, pos) {
+MEDLEY.MedialAxis.prototype.updateNode = function(node, pos) {
 	//
-	// update info on this node
+	// update this node
 	//
-	var dPos = pos.clone().sub(node.position);
-	if (dPos.length() < this._voxelDim / 2) {
-		return node;
-	}
-
-	var x = float2int(node.index[0] + 0.5 + dPos.x / this._voxelDim);
-	var y = float2int(node.index[1] + 0.5 + dPos.y / this._voxelDim);
-	var z = float2int(node.index[2] + 0.5 + dPos.z / this._voxelDim);
-
-	if (x == node.index[0] && y == node.index[1] && z == node.index[2]) {
-		return node;
-	}
-
-	var nodeNew = this._voxelTable[z][y][x];
-	if (nodeNew == undefined) {
-		nodeNew = makeVoxel(this._voxelDim, x, y, z, this._matNode, true);
-		scene.add(nodeNew);
-	}
-
-	nodeNew.index = [x, y, z];
-
-	for (var i = this._nodes.length - 1; i >= 0; i--) {
-		if (node == this._nodes[i]) {
-			this._nodes[i].material = MATERIALNORMAL;
-			this._nodes[i].material.needsUpdate = true;
-			this._nodes[i] = nodeNew;
-
-			this._nodesInfo[i].mesh = nodeNew;
-			this._nodesInfo[i].index = nodeNew.index;
-		}
-	}
+	node.position.copy(pos);
 
 	//
 	// update its edges and visuals
 	//
 	for (var i = this._edgesInfo.length - 1; i >= 0; i--) {
-		var edgePts = this._edges[i];
-		var edgeInfo = this._edgesInfo[i];
-
-		if (edgeInfo.v1.mesh == nodeNew || edgeInfo.v2.mesh == nodeNew) {
-			for (var j = edgePts.length - 2; j >= 1; j--) {
-				edgePts[j].material = MATERIALNORMAL;
-				edgePts[j].material.needsUpdate = true;
-			}
-
-			var edgePtsNew = this._interpolate(edgeInfo.v1.mesh, edgeInfo.v2.mesh, this._voxelGrid, this._voxels);
-
-			for (var j = edgePtsNew.length - 2; j >= 1; j--) {
-				edgePtsNew[j].material = this._matEdge;
-				edgePtsNew[j].material.needsUpdate = true;
-			}
-			this._edges[i] = edgePtsNew;
+		var v1 = this._edgesInfo[i].v1.mesh;
+		var v2 = this._edgesInfo[i].v2.mesh;
+		if (v1 == node || v2 == node) {
+			this._scene.remove(this._edges[i]);
+			this._edges[i] = new XAC.Line(v2.position, v1.position).m;
+			this._scene.add(this._edges[i]);
 		}
 	}
 
-	//	update visuals of this node again, as it might has been considered as a non-edge
-	nodeNew.material = this._matNode;
-	nodeNew.material.needsUpdate = true;
-
-	//
-	// update the voxel grid
-	//
-
-	return nodeNew;
 }
 
 MEDLEY.MedialAxis.prototype.render = function() {
@@ -293,15 +178,30 @@ MEDLEY.MedialAxis.prototype.snapVoxelGrid = function(vxg) {
 }
 
 MEDLEY.MedialAxis.prototype._mousedown = function(e) {
+	if (this._nodes == undefined) {
+		return;
+	}
 
+	this._nodeSelected = XAC.hitObject(e, this._nodes);
+	if (this._nodeSelected != undefined) {
+		this._maniplane = new XAC.Maniplane(this._nodeSelected);
+	}
 }
 
 MEDLEY.MedialAxis.prototype._mousemove = function(e) {
-
+	if (this._maniplane != undefined) {
+		var pos = this._maniplane.update(e);
+		this.updateNode(this._nodeSelected, pos);
+	}
 }
 
 MEDLEY.MedialAxis.prototype._mouseup = function(e) {
+	this._nodeSelected = undefined;
 
+	if (this._maniplane != undefined) {
+		this._maniplane.destruct();
+		this._maniplane = undefined;
+	}
 }
 
 MEDLEY.MedialAxis.prototype._snapVoxel = function(kx, jy, iz, dim) {

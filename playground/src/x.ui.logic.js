@@ -32,7 +32,7 @@ var initPanel = function() {
 				gVoxelGrid.load(e.target.result, 10);
 				gVoxelGrid.render(false);
 				
-				gMedialAxis = new MEDLEY.MedialAxis();
+				gMedialAxis = new MEDLEY.MedialAxis(scene);
 			});
 			reader.readAsBinaryString(files[i]);
 		}

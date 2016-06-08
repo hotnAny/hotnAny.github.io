@@ -30,13 +30,18 @@ function onMouseDown(e) {
 	if (e.which != LEFTMOUSE) {
 		return;
 	}
-	gMouseDown = true;
-	gMousePrev = hitPoint(e, [gGround]);
 
-	gVoxelSelected = hitObject(e, gVoxelGrid.voxels());
+	if(gVoxelGrid == undefined) {
+		return;
+	}
+
+	gMouseDown = true;
+	gMousePrev = XAC.hitPoint(e, [gGround]);
+
+	gVoxelSelected = XAC.hitObject(e, gVoxelGrid.voxels());
 
 	if (gVoxelSelected != undefined) {
-		gMedialAxis.addNode(gVoxelSelected, gVoxelGrid, gGlue);
+		gMedialAxis.addNode(gMousePrev, gGlue);
 		// snapVoxelToMediaAxis(gVoxelSelected.index[0], gVoxelSelected.index[1], gVoxelSelected.index[2], gMedialAxis, 10);
 		gGlue = true;
 	}
@@ -44,13 +49,13 @@ function onMouseDown(e) {
 }
 
 function onMouseMove(e) {
-	if (gMouseDown) {
-		if (gVoxelSelected != undefined) {
-			var mouseCurr = hitPoint(e, [gGround]);
-			gVoxelSelected = gMedialAxis.updateNode(gVoxelSelected, mouseCurr);
-			gMouseDragged = true;
-		}
-	}
+	// if (gMouseDown) {
+	// 	if (gVoxelSelected != undefined) {
+	// 		var mouseCurr = XAC.hitPoint(e, [gGround]);
+	// 		gVoxelSelected = gMedialAxis.updateNode(gVoxelSelected, mouseCurr);
+	// 		gMouseDragged = true;
+	// 	}
+	// }
 }
 
 function onMouseUp(e) {
@@ -69,20 +74,5 @@ function onKeyDown(e) {
 			gGlue = false;
 			snapVoxelGridToMedialAxis(gVoxelGrid, gMedialAxis, DIMVOXEL);
 			break;
-	}
-}
-
-function hitObject(e, objs) {
-	var hits = rayCast(e.clientX, e.clientY, objs);
-	if (hits.length > 0) {
-		return hits[0].object;
-	}
-	return undefined;
-}
-
-function hitPoint(e, objs) {
-	var hits = rayCast(e.clientX, e.clientY, objs);
-	if (hits.length > 0) {
-		return hits[0].point;
 	}
 }

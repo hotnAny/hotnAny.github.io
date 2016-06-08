@@ -31,7 +31,7 @@ XAC.Thing.prototype = {
 }
 
 //
-// line
+//	line
 //
 XAC.Line = function(p1, p2, clr) {
 	this._g = new THREE.Geometry();
@@ -44,6 +44,15 @@ XAC.Line = function(p1, p2, clr) {
 	this._m = new THREE.Line(this._g, mat);
 };
 XAC.Line.prototype = Object.create(XAC.Thing.prototype);
+
+//
+//	plane
+//
+XAC.Plane = function(w, l, mat) {
+	this._g = new THREE.CubeGeometry(w, 1, l);
+	this._m = new THREE.Mesh(this._g, mat == undefined ? MATERIALNORMAL.clone() : mat.clone());
+}
+XAC.Plane.prototype = Object.create(XAC.Thing.prototype);
 
 //
 //	sphere
