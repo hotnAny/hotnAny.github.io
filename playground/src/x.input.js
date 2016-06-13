@@ -49,22 +49,9 @@ function onMouseDown(e) {
 
 }
 
-function onMouseMove(e) {
-	// if (gMouseDown) {
-	// 	if (gVoxelSelected != undefined) {
-	// 		var mouseCurr = XAC.hitPoint(e, [gGround]);
-	// 		gVoxelSelected = gMedialAxis.updateNode(gVoxelSelected, mouseCurr);
-	// 		gMouseDragged = true;
-	// 	}
-	// }
-}
+function onMouseMove(e) {}
 
-function onMouseUp(e) {
-	// if (gMouseDragged) {
-	// 	updateVoxels(gVoxelGrid, DIMVOXEL, gMedialAxis);
-	// }
-	// gMouseDown = false;
-}
+function onMouseUp(e) {}
 
 function onKeyDown(e) {
 	switch (e.keyCode) {

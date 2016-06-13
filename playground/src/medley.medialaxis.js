@@ -190,11 +190,14 @@ MEDLEY.MedialAxis.prototype._mousedown = function(e) {
 
 	this._nodeSelected = XAC.hitObject(e, this._nodes);
 	if (this._nodeSelected != undefined) {
-		this._maniplane = new XAC.Maniplane({
-			pos: this._nodeSelected.position,
-			orthogonal: true,
-			showPlane: false
-		});
+		if (e.ctrlKey) {
+			// this.addNode(this._nodeSelected.position, true);
+			this._nodeSelected = this._copyNode(this._nodeSelected);
+		}
+		this._maniplane = new XAC.Maniplane(this._nodeSelected.position, true);
+
+		this.addNode(this._nodeSelected.position);
+
 	}
 }
 
@@ -214,6 +217,46 @@ MEDLEY.MedialAxis.prototype._mouseup = function(e) {
 
 		// this._voxelGrid.updateToMedialAxis(this);
 	}
+}
+
+MEDLEY.MedialAxis.prototype._copyNode = function(node) {
+	for (var i = this._nodesInfo.length - 1; i >= 0; i--) {
+		// if so, push it to the top of the stack
+		if (node.position.distanceTo(this._nodesInfo[i].mesh.position) < this._rnode) {
+			alreadyIn = true;
+			this._nodes.push(this._nodes.splice(i, 1)[0]);
+			this._nodesInfo.push(this._nodesInfo.splice(i, 1)[0]);
+			break;
+		}
+	}
+
+	var nodeNew = new XAC.Sphere(this._rnode, this._matNode, true).m;
+	nodeNew.position.copy(node.position);
+	this._nodes.push(nodeNew);
+	this._nodesInfo.push({
+		mesh: nodeNew,
+		// pos: pos,
+		radius: 0, // radius of its coverage on the object
+		radiusData: [] // store the raw data
+	});
+
+	this._scene.add(nodeNew);
+	log('node added at (' + node.position.x + ', ' + node.position.y + ', ' + node.position.z + ')');
+
+
+	var v1 = this._nodesInfo[this._nodes.length - 1];
+	var v2 = this._nodesInfo[this._nodes.length - 2];
+
+	var edge = new XAC.Line(node.position, nodeNew.position).m;
+	this._scene.add(edge);
+	this._edges.push(edge);
+
+	this._edgesInfo.push({
+		v1: v1,
+		v2: v2
+	});
+
+	return nodeNew;
 }
 
 MEDLEY.MedialAxis.prototype._snapVoxel = function(voxel, dim) {
