@@ -132,7 +132,9 @@ MEDLEY.MedialAxis.prototype.snapVoxelGrid = function(vxg) {
 	// aggregation
 	//
 	for (var h = this._nodesInfo.length - 1; h >= 0; h--) {
-		this._nodesInfo[h].radius = getMax(this._nodesInfo[h].radiusData);
+		var radius = getMax(this._nodesInfo[h].radiusData);
+
+		this._nodesInfo[h].radius = radius == undefined ? 0 : radius;
 
 		if (visualize) {
 			var ctr = this._nodesInfo[h].mesh.position;
@@ -188,7 +190,11 @@ MEDLEY.MedialAxis.prototype._mousedown = function(e) {
 
 	this._nodeSelected = XAC.hitObject(e, this._nodes);
 	if (this._nodeSelected != undefined) {
-		this._maniplane = new XAC.Maniplane(this._nodeSelected);
+		this._maniplane = new XAC.Maniplane({
+			pos: this._nodeSelected.position,
+			orthogonal: true,
+			showPlane: false
+		});
 	}
 }
 
@@ -206,7 +212,7 @@ MEDLEY.MedialAxis.prototype._mouseup = function(e) {
 		this._maniplane.destruct();
 		this._maniplane = undefined;
 
-		this._voxelGrid.updateToMedialAxis(this);
+		// this._voxelGrid.updateToMedialAxis(this);
 	}
 }
 
@@ -284,6 +290,9 @@ MEDLEY.MedialAxis.prototype._snapVoxel = function(voxel, dim) {
 	}
 }
 
+//
+// obselete
+//
 MEDLEY.MedialAxis.prototype._interpolate = function(p1, p2, vxg) {
 	var pts = [];
 	var idx1 = p1.index;
