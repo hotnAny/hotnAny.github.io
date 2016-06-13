@@ -69,11 +69,10 @@ function onMouseUp(e) {
 function onKeyDown(e) {
 	switch (e.keyCode) {
 		case 13: // ENTER
-			// snapToMedialAxis(gVoxelGrid, gMedialAxis, 10);
-			// tSnapMode = true;
+			gMedialAxis.snapVoxelGrid(gVoxelGrid);
+			gVoxelGrid.hide();
 		case 27: // ESC
 			gGlue = false;
-			gMedialAxis.snapVoxelGrid(gVoxelGrid);
 			break;
 	}
 }

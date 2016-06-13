@@ -155,6 +155,18 @@ MEDLEY.VoxelGrid.prototype.updateToMedialAxis = function(axis, node) {
 	}
 }
 
+MEDLEY.VoxelGrid.prototype.hide = function() {
+	for (var i = this._voxels.length - 1; i >= 0; i--) {
+		scene.remove(this._voxels[i]);
+	}
+}
+
+MEDLEY.VoxelGrid.prototype.show = function() {
+	for (var i = this._voxels.length - 1; i >= 0; i--) {
+		scene.add(this._voxels[i]);
+	}
+}
+
 
 MEDLEY.VoxelGrid.prototype._onSurface = function(i, j, k) {
 	return i * j * k == 0 || (nz - 1 - i) * (ny - 1 - j) * (nx - 1 - k) == 0 ||
