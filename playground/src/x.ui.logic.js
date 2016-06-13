@@ -28,11 +28,11 @@ var initPanel = function() {
 				// loadStl(e.target.result);
 
 				// EXP: only deal with voxel grid file (vxg)
-				gVoxelGrid = new MEDLEY.VoxelGrid();
+				gVoxelGrid = new CANON.VoxelGrid();
 				gVoxelGrid.load(e.target.result, 10);
 				gVoxelGrid.render(false);
 				
-				gMedialAxis = new MEDLEY.MedialAxis(scene);
+				gMedialAxis = new CANON.MedialAxis(scene);
 			});
 			reader.readAsBinaryString(files[i]);
 		}

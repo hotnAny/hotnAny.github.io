@@ -1,6 +1,6 @@
-var MEDLEY = MEDLEY || {};
+var CANON = CANON || {};
 
-MEDLEY.MedialAxis = function(scene) {
+CANON.MedialAxis = function(scene) {
 	this._scene = scene;
 
 	this._nodesInfo = []; // spatial info of nodes, contains:
@@ -19,8 +19,8 @@ MEDLEY.MedialAxis = function(scene) {
 	document.addEventListener('mouseup', this._mouseup.bind(this), false);
 };
 
-MEDLEY.MedialAxis.prototype = {
-	constructor: MEDLEY.MedialAxis,
+CANON.MedialAxis.prototype = {
+	constructor: CANON.MedialAxis,
 
 	get nodes() {
 		return this._nodes;
@@ -40,53 +40,28 @@ MEDLEY.MedialAxis.prototype = {
 };
 
 //
+//	for external use mostly - adding nodes by specifying its position
 //
-//	@param	v - position of the new node
+//	@param pos - position of the new node
+//	@param toConect - whether to connect it to the previous node
 //
-MEDLEY.MedialAxis.prototype.addNode = function(pos, toConnect) {
+CANON.MedialAxis.prototype.addNode = function(pos, toConnect) {
 	// check if the node is already in
-	var alreadyIn = false;
-	for (var i = this._nodesInfo.length - 1; i >= 0; i--) {
-		// if so, push it to the top of the stack
-		if (pos.distanceTo(this._nodesInfo[i].mesh.position) < this._rnode) {
-			alreadyIn = true;
-			this._nodes.push(this._nodes.splice(i, 1)[0]);
-			this._nodesInfo.push(this._nodesInfo.splice(i, 1)[0]);
-			break;
-		}
-	}
+	var alreadyIn = this._find(pos) >= 0;
 
 	if (!alreadyIn) {
-		var node = new XAC.Sphere(this._rnode, this._matNode, true).m;
-		node.position.copy(pos);
-		this._nodes.push(node);
-		this._nodesInfo.push({
-			mesh: node,
-			// pos: pos,
-			radius: 0, // radius of its coverage on the object
-			radiusData: [] // store the raw data
-		});
-
-		this._scene.add(node);
-		log('node added at (' + pos.x + ', ' + pos.y + ', ' + pos.z + ')');
+		this._addNode(pos);
 	}
 
 	if (toConnect && this._nodes.length > 1) {
 		var v1 = this._nodesInfo[this._nodes.length - 1];
 		var v2 = this._nodesInfo[this._nodes.length - 2];
 
-		var edge = new XAC.Line(v2.mesh.position, v1.mesh.position).m;
-		this._scene.add(edge);
-		this._edges.push(edge);
-
-		this._edgesInfo.push({
-			v1: v1,
-			v2: v2
-		});
+		this._edgeNodes(v1, v2);
 	}
 }
 
-MEDLEY.MedialAxis.prototype.updateNode = function(node, pos) {
+CANON.MedialAxis.prototype.updateNode = function(node, pos) {
 	//
 	// update this node
 	//
@@ -107,7 +82,7 @@ MEDLEY.MedialAxis.prototype.updateNode = function(node, pos) {
 
 }
 
-MEDLEY.MedialAxis.prototype.render = function() {
+CANON.MedialAxis.prototype.render = function() {
 	for (var i = this._nodes.length - 1; i >= 0; i--) {
 		this._nodes[i].material = this._matNode;
 		this._nodes[i].material.needsUpdate = true;
@@ -119,7 +94,7 @@ MEDLEY.MedialAxis.prototype.render = function() {
 	}
 }
 
-MEDLEY.MedialAxis.prototype.snapVoxelGrid = function(vxg) {
+CANON.MedialAxis.prototype.snapVoxelGrid = function(vxg) {
 	var visualize = false;
 	this._voxelGrid = vxg;
 
@@ -183,12 +158,17 @@ MEDLEY.MedialAxis.prototype.snapVoxelGrid = function(vxg) {
 	vxg.updateToMedialAxis(this);
 }
 
-MEDLEY.MedialAxis.prototype._mousedown = function(e) {
+CANON.MedialAxis.prototype._mousedown = function(e) {
 	if (this._nodes == undefined) {
 		return;
 	}
 
-	this._nodeSelected = XAC.hitObject(e, this._nodes);
+	var node = XAC.hitObject(e, this._nodes);
+	if (e.shiftKey && this._nodeSelected != undefined) {
+		this._edgeNodes(node, this._nodeSelected);
+	}
+	this._nodeSelected = node;
+
 	if (this._nodeSelected != undefined) {
 		if (e.ctrlKey) {
 			// this.addNode(this._nodeSelected.position, true);
@@ -201,16 +181,14 @@ MEDLEY.MedialAxis.prototype._mousedown = function(e) {
 	}
 }
 
-MEDLEY.MedialAxis.prototype._mousemove = function(e) {
+CANON.MedialAxis.prototype._mousemove = function(e) {
 	if (this._maniplane != undefined) {
 		var pos = this._maniplane.update(e);
 		this.updateNode(this._nodeSelected, pos);
 	}
 }
 
-MEDLEY.MedialAxis.prototype._mouseup = function(e) {
-	this._nodeSelected = undefined;
-
+CANON.MedialAxis.prototype._mouseup = function(e) {
 	if (this._maniplane != undefined) {
 		this._maniplane.destruct();
 		this._maniplane = undefined;
@@ -219,35 +197,70 @@ MEDLEY.MedialAxis.prototype._mouseup = function(e) {
 	}
 }
 
-MEDLEY.MedialAxis.prototype._copyNode = function(node) {
-	for (var i = this._nodesInfo.length - 1; i >= 0; i--) {
-		// if so, push it to the top of the stack
-		if (node.position.distanceTo(this._nodesInfo[i].mesh.position) < this._rnode) {
-			alreadyIn = true;
-			this._nodes.push(this._nodes.splice(i, 1)[0]);
-			this._nodesInfo.push(this._nodesInfo.splice(i, 1)[0]);
-			break;
-		}
-	}
+CANON.MedialAxis.prototype._copyNode = function(node) {
+	this._find(node.position);
 
-	var nodeNew = new XAC.Sphere(this._rnode, this._matNode, true).m;
-	nodeNew.position.copy(node.position);
-	this._nodes.push(nodeNew);
-	this._nodesInfo.push({
-		mesh: nodeNew,
-		// pos: pos,
-		radius: 0, // radius of its coverage on the object
-		radiusData: [] // store the raw data
-	});
-
-	this._scene.add(nodeNew);
+	var nodeNew = this._addNode(node.position);
 	log('node added at (' + node.position.x + ', ' + node.position.y + ', ' + node.position.z + ')');
-
 
 	var v1 = this._nodesInfo[this._nodes.length - 1];
 	var v2 = this._nodesInfo[this._nodes.length - 2];
 
-	var edge = new XAC.Line(node.position, nodeNew.position).m;
+	this._edgeNodes(v1, v2);
+
+	return nodeNew;
+}
+
+CANON.MedialAxis.prototype._addNode = function(pos) {
+	var nodeNew = new XAC.Sphere(this._rnode, this._matNode, true).m;
+	nodeNew.position.copy(pos);
+	this._nodes.push(nodeNew);
+	this._nodesInfo.push({
+		mesh: nodeNew,
+		edges: [],
+		// pos: pos,
+		radius: 0, // radius of its coverage on the object
+		radiusData: [] // store the raw data
+	});
+	scene.add(nodeNew);
+
+	return nodeNew;
+}
+
+CANON.MedialAxis.prototype._find = function(pos, dontTop) {
+	for (var i = this._nodesInfo.length - 1; i >= 0; i--) {
+		// if so, push it to the top of the stack
+		if (pos.distanceTo(this._nodesInfo[i].mesh.position) < this._rnode) {
+			if (dontTop) {} else {
+				this._nodes.push(this._nodes.splice(i, 1)[0]);
+				this._nodesInfo.push(this._nodesInfo.splice(i, 1)[0]);
+			}
+			return i;
+		}
+	}
+	return -1;
+}
+
+CANON.MedialAxis.prototype._edgeNodes = function(v1, v2) {
+	for (var i = this._nodes.length - 1; i >= 0; i--) {
+		if(this._nodes[i] == v1) {
+			v1 = this._nodesInfo[i];
+		}
+
+		if(this._nodes[i] == v2) {
+			v2 = this._nodesInfo[i];
+		}		
+	}
+
+	// check it already connected
+	for (var i = v1.edges.length - 1; i >= 0; i--) {
+		if (v1.edges[i].v1 == v2 || v1.edges[i].v2 == v2) {
+			return;
+		}
+	}
+
+	// connect nodes
+	var edge = new XAC.Line(v2.mesh.position, v1.mesh.position).m;
 	this._scene.add(edge);
 	this._edges.push(edge);
 
@@ -256,10 +269,12 @@ MEDLEY.MedialAxis.prototype._copyNode = function(node) {
 		v2: v2
 	});
 
-	return nodeNew;
+	// storing edge info in nodes
+	v1.edges.push(edge);
+	v2.edges.push(edge);
 }
 
-MEDLEY.MedialAxis.prototype._snapVoxel = function(voxel, dim) {
+CANON.MedialAxis.prototype._snapVoxel = function(voxel, dim) {
 	var visualize = false;
 	var v = voxel.position;
 
@@ -336,7 +351,7 @@ MEDLEY.MedialAxis.prototype._snapVoxel = function(voxel, dim) {
 //
 // obselete
 //
-MEDLEY.MedialAxis.prototype._interpolate = function(p1, p2, vxg) {
+CANON.MedialAxis.prototype._interpolate = function(p1, p2, vxg) {
 	var pts = [];
 	var idx1 = p1.index;
 	var idx2 = p2.index;

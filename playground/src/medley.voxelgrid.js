@@ -5,15 +5,15 @@
  *
  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-var MEDLEY = MEDLEY || {};
+var CANON = CANON || {};
 
-MEDLEY.VoxelGrid = function() {
+CANON.VoxelGrid = function() {
 	this._voxels = [];
 	this._table = [];
 }
 
-MEDLEY.VoxelGrid.prototype = {
-	constructor: MEDLEY.VoxelGrid,
+CANON.VoxelGrid.prototype = {
+	constructor: CANON.VoxelGrid,
 
 	get grid() {
 		return this._grid;
@@ -32,7 +32,7 @@ MEDLEY.VoxelGrid.prototype = {
 	}
 };
 
-MEDLEY.VoxelGrid.prototype.load = function(vxgRaw, dim) {
+CANON.VoxelGrid.prototype.load = function(vxgRaw, dim) {
 	this._grid = [];
 	this._dim = dim;
 
@@ -55,7 +55,7 @@ MEDLEY.VoxelGrid.prototype.load = function(vxgRaw, dim) {
 	return this._grid;
 }
 
-MEDLEY.VoxelGrid.prototype.render = function(hideInside) {
+CANON.VoxelGrid.prototype.render = function(hideInside) {
 	var nz = this._grid.length;
 	var ny = this._grid[0].length;
 	var nx = this._grid[0][0].length;
@@ -91,7 +91,7 @@ MEDLEY.VoxelGrid.prototype.render = function(hideInside) {
 	log(this._voxels.length + " voxels added.");
 }
 
-MEDLEY.VoxelGrid.prototype.updateToMedialAxis = function(axis, node) {
+CANON.VoxelGrid.prototype.updateToMedialAxis = function(axis, node) {
 	//
 	// update the entire voxel grid based on the axis
 	//
@@ -155,27 +155,27 @@ MEDLEY.VoxelGrid.prototype.updateToMedialAxis = function(axis, node) {
 	}
 }
 
-MEDLEY.VoxelGrid.prototype.hide = function() {
+CANON.VoxelGrid.prototype.hide = function() {
 	for (var i = this._voxels.length - 1; i >= 0; i--) {
 		scene.remove(this._voxels[i]);
 	}
 }
 
-MEDLEY.VoxelGrid.prototype.show = function() {
+CANON.VoxelGrid.prototype.show = function() {
 	for (var i = this._voxels.length - 1; i >= 0; i--) {
 		scene.add(this._voxels[i]);
 	}
 }
 
 
-MEDLEY.VoxelGrid.prototype._onSurface = function(i, j, k) {
+CANON.VoxelGrid.prototype._onSurface = function(i, j, k) {
 	return i * j * k == 0 || (nz - 1 - i) * (ny - 1 - j) * (nx - 1 - k) == 0 ||
 		this._grid[i - 1][j][k] != 1 || this._grid[i + 1][j][k] != 1 ||
 		this._grid[i][j - 1][k] != 1 || this._grid[i][j + 1][k] != 1 ||
 		this._grid[i][j][k - 1] != 1 || this._grid[i][j][k + 1] != 1;
 }
 
-MEDLEY.VoxelGrid.prototype._makeVoxel = function(dim, i, j, k, mat, noMargin) {
+CANON.VoxelGrid.prototype._makeVoxel = function(dim, i, j, k, mat, noMargin) {
 	var geometry = new THREE.BoxGeometry(dim, dim, dim);
 	var voxel = new THREE.Mesh(geometry, mat.clone());
 
@@ -189,7 +189,7 @@ MEDLEY.VoxelGrid.prototype._makeVoxel = function(dim, i, j, k, mat, noMargin) {
 	return voxel;
 }
 
-MEDLEY.VoxelGrid.prototype._addSphericalVoxels = function(v, radius) {
+CANON.VoxelGrid.prototype._addSphericalVoxels = function(v, radius) {
 	var vxg = this._grid;
 
 	var zmin = float2int((v.z - radius) / this._dim),
