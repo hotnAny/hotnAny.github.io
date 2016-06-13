@@ -26,6 +26,12 @@ XAC.MATERIALINVISIBLE= new THREE.MeshBasicMaterial({
      visible: false
 });
 
+XAC.MATERIALPLAIN= new THREE.MeshBasicMaterial({
+     vertexColors: 0xffffff,
+     transparent: true,
+     opacity: 0.75
+});
+
 // var DIMVOXEL = 10;
 // var gVoxels = [];
 // var gVoxelTable = []; // a lookup table for meshes that represetn each voxel
