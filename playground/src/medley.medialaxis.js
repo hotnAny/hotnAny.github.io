@@ -1,10 +1,18 @@
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ *	medial axis
+ * 	
+ *	@author Xiang 'Anthony' Chen http://xiangchen.me
+ *
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
 var CANON = CANON || {};
 
-CANON.MedialAxis = function(scene) {
-	if (scene == undefined || removeFromArray == undefined) {
-		err('missing dependency!');
-	}
+// check dependencies
+if (scene == undefined || removeFromArray == undefined) {
+	err('missing dependency!');
+}
 
+CANON.MedialAxis = function(scene) {
 	this._scene = scene;
 
 	this._nodesInfo = []; // spatial info of nodes, contains:
@@ -52,12 +60,12 @@ CANON.MedialAxis.prototype = {
 //
 //	for external use mostly - adding nodes by specifying its position
 //
-//	@param pos - position of the new node
-//	@param toConect - whether to connect it to the previous node
+//	@param	pos - position of the new node
+//	@param	toConect - whether to connect it to the previous node
 //
 CANON.MedialAxis.prototype.addNode = function(pos, toConnect) {
 	// check if the node is already in
-	var alreadyIn = this._findNode(pos) >= 0;
+	var alreadyIn = this._findNode(pos, false) >= 0;
 
 	if (!alreadyIn) {
 		this._addNode(pos);
@@ -71,6 +79,12 @@ CANON.MedialAxis.prototype.addNode = function(pos, toConnect) {
 	}
 }
 
+//
+//	update a node's position based on external input
+//
+//	@param 	node - the node being interacted with
+//	@param	pos - new position of this node
+//
 CANON.MedialAxis.prototype.updateNode = function(node, pos) {
 	// update this node
 	node.position.copy(pos);
@@ -88,7 +102,12 @@ CANON.MedialAxis.prototype.updateNode = function(node, pos) {
 	}
 }
 
-
+//
+//	special method for working with a voxel grid: 
+//		snap the voxels in the voxel grid to this medial axis
+//
+//	@param	vxg - an CANON.VoxelGrid object
+//
 CANON.MedialAxis.prototype.snapVoxelGrid = function(vxg) {
 	var visualize = false;
 	this._voxelGrid = vxg;
@@ -97,9 +116,7 @@ CANON.MedialAxis.prototype.snapVoxelGrid = function(vxg) {
 		this._snapVoxel(vxg.voxels[i], vxg.dim);
 	}
 
-	//
 	// aggregation
-	//
 	for (var h = this._nodesInfo.length - 1; h >= 0; h--) {
 		var radius = getMax(this._nodesInfo[h].radiusData);
 
@@ -146,20 +163,22 @@ CANON.MedialAxis.prototype.snapVoxelGrid = function(vxg) {
 		}
 	}
 
-	//
 	// revoxelize based on this axis
-	//
 	vxg.updateToMedialAxis(this);
 }
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * 	
+ *	event handlers
+ *
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 CANON.MedialAxis.prototype._mousedown = function(e) {
 	if (this._nodes == undefined) {
 		return;
 	}
 
-	//
 	//	clean selected edges
-	//
 	for (var i = this._edges.length - 1; i >= 0; i--) {
 		this._edges[i].material = this._matEdge;
 		this._edges[i].material.needsUpdate = true;
@@ -194,7 +213,7 @@ CANON.MedialAxis.prototype._mousedown = function(e) {
 
 		// what's actually done here is connecting node
 		// TODO: fix the confusion
-		this.addNode(this._nodeSelected.position);
+		this._findNode(this._nodeSelected.position, true);
 
 		// do not interact with edge if already interacting with node
 		return;
@@ -234,7 +253,6 @@ CANON.MedialAxis.prototype._mouseup = function(e) {
 	if (this._maniplane != undefined) {
 		this._maniplane.destruct();
 		this._maniplane = undefined;
-		// this._voxelGrid.updateToMedialAxis(this);
 	}
 }
 
@@ -247,19 +265,11 @@ CANON.MedialAxis.prototype._keydown = function(e) {
 	}
 }
 
-CANON.MedialAxis.prototype._copyNode = function(node) {
-	this._findNode(node.position);
-
-	var nodeNew = this._addNode(node.position);
-	log('node added at (' + node.position.x + ', ' + node.position.y + ', ' + node.position.z + ')');
-
-	var v1 = this._nodesInfo[this._nodes.length - 1];
-	var v2 = this._nodesInfo[this._nodes.length - 2];
-
-	this._edgeNodes(v1, v2);
-
-	return nodeNew;
-}
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * 	
+ *	internal helper routines
+ *
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 CANON.MedialAxis.prototype._addNode = function(pos) {
 	var nodeNew = new XAC.Sphere(this._rnode, this._matNode, true).m;
@@ -307,11 +317,14 @@ CANON.MedialAxis.prototype._removeNode = function(node) {
 	}
 }
 
-CANON.MedialAxis.prototype._findNode = function(pos, dontTop) {
+//
+//	find a node and maybe bring it to the top of the stack
+//
+CANON.MedialAxis.prototype._findNode = function(pos, bringToTop) {
 	for (var i = this._nodesInfo.length - 1; i >= 0; i--) {
 		// if so, push it to the top of the stack
 		if (pos.distanceTo(this._nodesInfo[i].mesh.position) < this._rnode) {
-			if (dontTop) {} else {
+			if (bringToTop) {
 				this._nodes.push(this._nodes.splice(i, 1)[0]);
 				this._nodesInfo.push(this._nodesInfo.splice(i, 1)[0]);
 			}
@@ -321,6 +334,26 @@ CANON.MedialAxis.prototype._findNode = function(pos, dontTop) {
 	return -1;
 }
 
+//
+//	copy from an existing node
+//
+CANON.MedialAxis.prototype._copyNode = function(node) {
+	this._findNode(node.position, true);
+
+	var nodeNew = this._addNode(node.position);
+	log('node added at (' + node.position.x + ', ' + node.position.y + ', ' + node.position.z + ')');
+
+	var v1 = this._nodesInfo[this._nodes.length - 1];
+	var v2 = this._nodesInfo[this._nodes.length - 2];
+
+	this._edgeNodes(v1, v2);
+
+	return nodeNew;
+}
+
+//
+//	remove an edge
+//
 CANON.MedialAxis.prototype._removeEdge = function(edge) {
 	var v1, v2;
 	scene.remove(edge);
@@ -356,6 +389,9 @@ CANON.MedialAxis.prototype._splitEdge = function(edge, pos) {
 	return v;
 }
 
+//
+//	connect two nodes with an edge
+//
 CANON.MedialAxis.prototype._edgeNodes = function(v1, v2) {
 	for (var i = this._nodes.length - 1; i >= 0; i--) {
 		if (this._nodes[i] == v1) {
@@ -374,7 +410,6 @@ CANON.MedialAxis.prototype._edgeNodes = function(v1, v2) {
 		}
 	}
 
-
 	// connect nodes
 	// var edge = new XAC.Line(v2.mesh.position, v1.mesh.position).m;
 	var edge = new XAC.ThickLine(v2.mesh.position, v1.mesh.position, 1, this._matEdge).m;
@@ -392,6 +427,9 @@ CANON.MedialAxis.prototype._edgeNodes = function(v1, v2) {
 	v2.edgesInfo.push(edgeInfo);
 }
 
+//
+//	snap a voxel (of a dim dimension) to this medial axis
+//
 CANON.MedialAxis.prototype._snapVoxel = function(voxel, dim) {
 	var visualize = false;
 	var v = voxel.position;
