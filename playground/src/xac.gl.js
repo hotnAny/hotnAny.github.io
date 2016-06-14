@@ -21,6 +21,14 @@ XAC.rayCast = function(x, y, objs) {
 	return rayCaster.intersectObjects(objs);
 };
 
+XAC.hit = function(e, objs) {
+	var hits = XAC.rayCast(e.clientX, e.clientY, objs);
+	if (hits.length > 0) {
+		return hits[0];
+	}
+	return undefined;
+}
+
 XAC.hitObject = function(e, objs) {
 	var hits = XAC.rayCast(e.clientX, e.clientY, objs);
 	if (hits.length > 0) {

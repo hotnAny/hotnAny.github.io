@@ -78,17 +78,6 @@ CANON.MedialAxis.prototype.updateNode = function(node, pos) {
 	}
 }
 
-// CANON.MedialAxis.prototype.render = function() {
-// 	for (var i = this._nodes.length - 1; i >= 0; i--) {
-// 		this._nodes[i].material = this._matNode;
-// 		this._nodes[i].material.needsUpdate = true;
-// 	}
-
-// 	for (var i = this._edges.length - 1; i >= 0; i--) {
-// 		this._edges[i].material = this._matEdge;
-// 		this._edges[i].material.needsUpdate = true;
-// 	}
-// }
 
 CANON.MedialAxis.prototype.snapVoxelGrid = function(vxg) {
 	var visualize = false;
@@ -172,7 +161,15 @@ CANON.MedialAxis.prototype._mousedown = function(e) {
 		this._maniplane = new XAC.Maniplane(this._nodeSelected.position, true);
 
 		this.addNode(this._nodeSelected.position);
-
+	} else {
+		if (e.ctrlKey) {
+			var hitOnEdge = XAC.hit(e, this._edges);
+			if(hitOnEdge != undefined) {
+				var edge = hitOnEdge.object;
+				var point = hitOnEdge.point;
+				this._split(edge, point);
+			}
+		}
 	}
 }
 
@@ -234,6 +231,24 @@ CANON.MedialAxis.prototype._find = function(pos, dontTop) {
 		}
 	}
 	return -1;
+}
+
+CANON.MedialAxis.prototype._split = function(edge, pos) {
+	var v1, v2;
+	scene.remove(edge);
+	for (var i = this._edges.length - 1; i >= 0; i--) {
+		if(this._edges[i] == edge) {
+			this._edges.splice(i, 1);
+
+			v1 = this._edgesInfo[i].v1;
+			v2 = this._edgesInfo[i].v2;
+			this._edgesInfo.splice(i, 1);
+		}
+	}
+
+	var v = this._addNode(pos);
+	this._edgeNodes(v, v1);
+	this._edgeNodes(v, v2);
 }
 
 CANON.MedialAxis.prototype._edgeNodes = function(v1, v2) {
@@ -343,35 +358,3 @@ CANON.MedialAxis.prototype._snapVoxel = function(voxel, dim) {
 		this._nodesInfo[idxNodeMin].radiusData.push(Math.max(this._nodesInfo[idxNodeMin].radius, dist2NodeMin));
 	}
 }
-
-// CANON.MedialAxis.prototype._interpolate = function(p1, p2, vxg) {
-// 	var pts = [];
-// 	var idx1 = p1.index;
-// 	var idx2 = p2.index;
-
-// 	var ds = [];
-// 	var offsets = [];
-// 	for (var i = 0; i < idx1.length; i++) {
-// 		ds[i] = Math.sign(idx2[i] - idx1[i]);
-// 		ds[i] = ds[i] == 0 ? 1 : ds[i];
-// 		offsets[i] = idx2[i] * 1.0 - idx1[i];
-// 	}
-
-// 	var v21 = new THREE.Vector3(offsets[0], offsets[1], offsets[2]);
-
-// 	for (var i = idx1[0]; i != idx2[0] + ds[0]; i += ds[0]) {
-// 		for (var j = idx1[1]; j != idx2[1] + ds[1]; j += ds[1]) {
-// 			for (var k = idx1[2]; k != idx2[2] + ds[2]; k += ds[2]) {
-// 				if (vxg.grid()[k][j][i] == 1) {
-// 					var dist = p2l(i, j, k, idx1[0], idx1[1], idx1[2], idx2[0], idx2[1], idx2[2]).dist;
-// 					if (dist < 0.5) {
-// 						pts.push(vxg.table()[k][j][i]);
-// 						// vxg[k][j][i] = this.EDGE
-// 					}
-// 				}
-// 			} // z
-// 		} // y
-// 	} // x
-
-// 	return pts;
-// }
