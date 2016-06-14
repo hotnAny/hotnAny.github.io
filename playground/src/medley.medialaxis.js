@@ -10,8 +10,9 @@ CANON.MedialAxis = function(scene) {
 
 	// visual properties
 	this._rnode = 5;
-	this._matNode = XAC.MATERIALHIGHLIGHT;
-	this._matEdge = XAC.MATERIALCONTRAST;
+	this._matNode = XAC.MATERIALCONTRAST;
+	this._clrEdge = 0x888888;
+	this._matHighlight = XAC.MATERIALHIGHLIGHT;
 
 	// built-in methods for manipulating axis
 	document.addEventListener('mousedown', this._mousedown.bind(this), false);
@@ -72,7 +73,7 @@ CANON.MedialAxis.prototype.updateNode = function(node, pos) {
 		if (v1 == node || v2 == node) {
 			this._scene.remove(this._edges[i]);
 			// this._edges[i] = new XAC.Line(v2.position, v1.position).m;
-			this._edges[i] = new XAC.ThickLine(v2.position, v1.position, 1).m;
+			this._edges[i] = new XAC.ThickLine(v2.position, v1.position, 1, this._clrEdge).m;
 			this._scene.add(this._edges[i]);
 		}
 	}
@@ -148,9 +149,18 @@ CANON.MedialAxis.prototype._mousedown = function(e) {
 	}
 
 	var node = XAC.hitObject(e, this._nodes);
-	if (e.shiftKey && this._nodeSelected != undefined) {
-		this._edgeNodes(node, this._nodeSelected);
+
+	if (this._nodeSelected != undefined) {
+		if (e.shiftKey) {
+			this._edgeNodes(node, this._nodeSelected);
+		} else {
+			for (var i = this._nodes.length - 1; i >= 0; i--) {
+				this._nodes[i].material = this._matNode;
+				this._nodes[i].material.needsUpdate = true;
+			}
+		}
 	}
+
 	this._nodeSelected = node;
 
 	if (this._nodeSelected != undefined) {
@@ -164,12 +174,17 @@ CANON.MedialAxis.prototype._mousedown = function(e) {
 	} else {
 		if (e.ctrlKey) {
 			var hitOnEdge = XAC.hit(e, this._edges);
-			if(hitOnEdge != undefined) {
+			if (hitOnEdge != undefined) {
 				var edge = hitOnEdge.object;
 				var point = hitOnEdge.point;
-				this._split(edge, point);
+				this._nodeSelected = this._split(edge, point);
 			}
 		}
+	}
+
+	if (this._nodeSelected != undefined) {
+		this._nodeSelected.material = this._matHighlight;
+		this._nodeSelected.material.needsUpdate = true;
 	}
 }
 
@@ -237,7 +252,7 @@ CANON.MedialAxis.prototype._split = function(edge, pos) {
 	var v1, v2;
 	scene.remove(edge);
 	for (var i = this._edges.length - 1; i >= 0; i--) {
-		if(this._edges[i] == edge) {
+		if (this._edges[i] == edge) {
 			this._edges.splice(i, 1);
 
 			v1 = this._edgesInfo[i].v1;
@@ -249,17 +264,19 @@ CANON.MedialAxis.prototype._split = function(edge, pos) {
 	var v = this._addNode(pos);
 	this._edgeNodes(v, v1);
 	this._edgeNodes(v, v2);
+
+	return v;
 }
 
 CANON.MedialAxis.prototype._edgeNodes = function(v1, v2) {
 	for (var i = this._nodes.length - 1; i >= 0; i--) {
-		if(this._nodes[i] == v1) {
+		if (this._nodes[i] == v1) {
 			v1 = this._nodesInfo[i];
 		}
 
-		if(this._nodes[i] == v2) {
+		if (this._nodes[i] == v2) {
 			v2 = this._nodesInfo[i];
-		}		
+		}
 	}
 
 	// check it already connected
@@ -271,7 +288,7 @@ CANON.MedialAxis.prototype._edgeNodes = function(v1, v2) {
 
 	// connect nodes
 	// var edge = new XAC.Line(v2.mesh.position, v1.mesh.position).m;
-	var edge = new XAC.ThickLine(v2.mesh.position, v1.mesh.position, 1).m;
+	var edge = new XAC.ThickLine(v2.mesh.position, v1.mesh.position, 1, this._clrEdge).m;
 	this._scene.add(edge);
 	this._edges.push(edge);
 

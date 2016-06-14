@@ -32,6 +32,7 @@ XAC.MATERIALPLAIN= new THREE.MeshBasicMaterial({
      opacity: 0.75
 });
 
+
 // var DIMVOXEL = 10;
 // var gVoxels = [];
 // var gVoxelTable = []; // a lookup table for meshes that represetn each voxel
