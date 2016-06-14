@@ -48,12 +48,8 @@ XAC.Line.prototype = Object.create(XAC.Thing.prototype);
 //
 //	thick line
 //
-XAC.ThickLine = function(p1, p2, r, clr) {
+XAC.ThickLine = function(p1, p2, r, mat) {
 	var h = p1.distanceTo(p2);
-	clr = clr == undefined ? 0x888888 : clr;
-	var mat = new THREE.LineBasicMaterial({
-		color: clr
-	});
 	var line = new XAC.Cylinder(r, h, mat);
 	this._g = line.g;
 	this._m = line.m;
