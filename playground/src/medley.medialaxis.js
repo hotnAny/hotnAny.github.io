@@ -62,37 +62,33 @@ CANON.MedialAxis.prototype.addNode = function(pos, toConnect) {
 }
 
 CANON.MedialAxis.prototype.updateNode = function(node, pos) {
-	//
 	// update this node
-	//
 	node.position.copy(pos);
 
-	//
 	// update its edges and visuals
-	//
 	for (var i = this._edgesInfo.length - 1; i >= 0; i--) {
 		var v1 = this._edgesInfo[i].v1.mesh;
 		var v2 = this._edgesInfo[i].v2.mesh;
 		if (v1 == node || v2 == node) {
 			this._scene.remove(this._edges[i]);
-			this._edges[i] = new XAC.Line(v2.position, v1.position).m;
+			// this._edges[i] = new XAC.Line(v2.position, v1.position).m;
+			this._edges[i] = new XAC.ThickLine(v2.position, v1.position, 1).m;
 			this._scene.add(this._edges[i]);
 		}
 	}
-
 }
 
-CANON.MedialAxis.prototype.render = function() {
-	for (var i = this._nodes.length - 1; i >= 0; i--) {
-		this._nodes[i].material = this._matNode;
-		this._nodes[i].material.needsUpdate = true;
-	}
+// CANON.MedialAxis.prototype.render = function() {
+// 	for (var i = this._nodes.length - 1; i >= 0; i--) {
+// 		this._nodes[i].material = this._matNode;
+// 		this._nodes[i].material.needsUpdate = true;
+// 	}
 
-	for (var i = this._edges.length - 1; i >= 0; i--) {
-		this._edges[i].material = this._matEdge;
-		this._edges[i].material.needsUpdate = true;
-	}
-}
+// 	for (var i = this._edges.length - 1; i >= 0; i--) {
+// 		this._edges[i].material = this._matEdge;
+// 		this._edges[i].material.needsUpdate = true;
+// 	}
+// }
 
 CANON.MedialAxis.prototype.snapVoxelGrid = function(vxg) {
 	var visualize = false;
@@ -101,7 +97,6 @@ CANON.MedialAxis.prototype.snapVoxelGrid = function(vxg) {
 	for (var i = vxg.voxels.length - 1; i >= 0; i--) {
 		this._snapVoxel(vxg.voxels[i], vxg.dim);
 	}
-
 
 	//
 	// aggregation
@@ -260,7 +255,8 @@ CANON.MedialAxis.prototype._edgeNodes = function(v1, v2) {
 	}
 
 	// connect nodes
-	var edge = new XAC.Line(v2.mesh.position, v1.mesh.position).m;
+	// var edge = new XAC.Line(v2.mesh.position, v1.mesh.position).m;
+	var edge = new XAC.ThickLine(v2.mesh.position, v1.mesh.position, 1).m;
 	this._scene.add(edge);
 	this._edges.push(edge);
 
@@ -348,37 +344,34 @@ CANON.MedialAxis.prototype._snapVoxel = function(voxel, dim) {
 	}
 }
 
-//
-// obselete
-//
-CANON.MedialAxis.prototype._interpolate = function(p1, p2, vxg) {
-	var pts = [];
-	var idx1 = p1.index;
-	var idx2 = p2.index;
+// CANON.MedialAxis.prototype._interpolate = function(p1, p2, vxg) {
+// 	var pts = [];
+// 	var idx1 = p1.index;
+// 	var idx2 = p2.index;
 
-	var ds = [];
-	var offsets = [];
-	for (var i = 0; i < idx1.length; i++) {
-		ds[i] = Math.sign(idx2[i] - idx1[i]);
-		ds[i] = ds[i] == 0 ? 1 : ds[i];
-		offsets[i] = idx2[i] * 1.0 - idx1[i];
-	}
+// 	var ds = [];
+// 	var offsets = [];
+// 	for (var i = 0; i < idx1.length; i++) {
+// 		ds[i] = Math.sign(idx2[i] - idx1[i]);
+// 		ds[i] = ds[i] == 0 ? 1 : ds[i];
+// 		offsets[i] = idx2[i] * 1.0 - idx1[i];
+// 	}
 
-	var v21 = new THREE.Vector3(offsets[0], offsets[1], offsets[2]);
+// 	var v21 = new THREE.Vector3(offsets[0], offsets[1], offsets[2]);
 
-	for (var i = idx1[0]; i != idx2[0] + ds[0]; i += ds[0]) {
-		for (var j = idx1[1]; j != idx2[1] + ds[1]; j += ds[1]) {
-			for (var k = idx1[2]; k != idx2[2] + ds[2]; k += ds[2]) {
-				if (vxg.grid()[k][j][i] == 1) {
-					var dist = p2l(i, j, k, idx1[0], idx1[1], idx1[2], idx2[0], idx2[1], idx2[2]).dist;
-					if (dist < 0.5) {
-						pts.push(vxg.table()[k][j][i]);
-						// vxg[k][j][i] = this.EDGE
-					}
-				}
-			} // z
-		} // y
-	} // x
+// 	for (var i = idx1[0]; i != idx2[0] + ds[0]; i += ds[0]) {
+// 		for (var j = idx1[1]; j != idx2[1] + ds[1]; j += ds[1]) {
+// 			for (var k = idx1[2]; k != idx2[2] + ds[2]; k += ds[2]) {
+// 				if (vxg.grid()[k][j][i] == 1) {
+// 					var dist = p2l(i, j, k, idx1[0], idx1[1], idx1[2], idx2[0], idx2[1], idx2[2]).dist;
+// 					if (dist < 0.5) {
+// 						pts.push(vxg.table()[k][j][i]);
+// 						// vxg[k][j][i] = this.EDGE
+// 					}
+// 				}
+// 			} // z
+// 		} // y
+// 	} // x
 
-	return pts;
-}
+// 	return pts;
+// }
