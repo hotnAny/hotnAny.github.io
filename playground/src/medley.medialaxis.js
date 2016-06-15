@@ -8,7 +8,7 @@
 var CANON = CANON || {};
 
 // check dependencies
-if (removeFromArray == undefined || addABall == undefined) {
+if (removeFromArray == undefined || float2int == undefined) {
 	err('missing dependency!');
 }
 
@@ -229,7 +229,7 @@ CANON.MedialAxis.prototype._addNode = function(pos) {
 	});
 	this._scene.add(nodeNew);
 
-	return nodeNew;
+	return this._nodesInfo[this._nodesInfo.length - 1];
 }
 
 //
@@ -241,9 +241,6 @@ CANON.MedialAxis.prototype._removeNode = function(node) {
 	// find this node from all nodes
 	for (var i = this._nodes.length - 1; i >= 0; i--) {
 		if (node == this._nodes[i]) {
-
-			//this._nodes.splice(i, 1);
-			// don't actually remove
 
 			// deal with its edges
 			var edgesInfo = this._nodesInfo[i].edgesInfo;
@@ -292,7 +289,7 @@ CANON.MedialAxis.prototype._findNode = function(pos, bringToTop) {
 CANON.MedialAxis.prototype._copyNode = function(node) {
 	this._findNode(node.position, true);
 
-	var nodeNew = this._addNode(node.position);
+	this._addNode(node.position);
 	log('node added at (' + node.position.x + ', ' + node.position.y + ', ' + node.position.z + ')');
 
 	var v1 = this._nodesInfo[this._nodes.length - 1];
@@ -300,7 +297,7 @@ CANON.MedialAxis.prototype._copyNode = function(node) {
 
 	this._addEdge(v1, v2);
 
-	return nodeNew;
+	return v1;
 }
 
 //
@@ -311,17 +308,9 @@ CANON.MedialAxis.prototype._removeEdge = function(edge) {
 	this._scene.remove(edge);
 	for (var i = this._edges.length - 1; i >= 0; i--) {
 		if (this._edges[i] == edge) {
-			// this._edges.splice(i, 1);
-
-
-			// v1 = this._edgesInfo[i].v1;
-			// removeFromArray(v1.edgesInfo, this._edgesInfo[i]);
-
-			// v2 = this._edgesInfo[i].v2;
-			// removeFromArray(v2.edgesInfo, this._edgesInfo[i]);
-
-			//this._edgesInfo.splice(i, 1);
 			this._edgesInfo[i].deleted = true;
+			v1 = this._edgesInfo[i].v1;
+			v2 = this._edgesInfo[i].v2;
 			break;
 		}
 	}
@@ -338,10 +327,43 @@ CANON.MedialAxis.prototype._removeEdge = function(edge) {
 //	split an edge at pos
 //
 CANON.MedialAxis.prototype._splitEdge = function(edge, pos) {
+	// retrieve the edge info
+	var edgeInfo;
+	for (var i = this._edges.length - 1; i >= 0; i--) {
+		if (edge == this._edges[i]) {
+			edgeInfo = this._edgesInfo[i];
+			break;
+		}
+	}
+
+	// remove the edge, add a node in between and reconnect it with new edges
 	var nodes = this._removeEdge(edge);
 	var v = this._addNode(pos);
-	this._addEdge(v, nodes.v1);
-	this._addEdge(v, nodes.v2);
+	var edgeInfo1 = this._addEdge(nodes.v1, v);
+	var edgeInfo2 = this._addEdge(v, nodes.v2);
+
+	// redistribute the thickness along the original edge
+	var thickness = edgeInfo.thickness;
+	var split = v.mesh.position.distanceTo(nodes.v1.mesh.position) /
+		nodes.v2.mesh.position.distanceTo(nodes.v1.mesh.position);
+	split = float2int(thickness.length * split);
+	if (thickness != undefined) {
+		for (var i = 0; i < thickness.length; i++) {
+			if (i <= split) {
+				edgeInfo1.thickness.push(thickness[i]);
+			}
+
+			if (i == split) {
+				v.radius = thickness[i]
+			}
+
+			if (i >= split) {
+				edgeInfo2.thickness.push(thickness[i])
+			}
+		}
+	}
+
+	this._inflate();
 
 	return v;
 }
@@ -386,7 +408,7 @@ CANON.MedialAxis.prototype._addEdge = function(v1, v2) {
 			mesh: edge,
 			v1: v1,
 			v2: v2,
-			thickness: undefined,
+			thickness: [],
 			thicknessData: []
 		};
 		this._edgesInfo.push(edgeInfo);
@@ -400,6 +422,8 @@ CANON.MedialAxis.prototype._addEdge = function(v1, v2) {
 	}
 
 	this._inflate();
+
+	return edgeInfo;
 }
 
 //
@@ -415,7 +439,7 @@ CANON.MedialAxis.prototype._inflate = function() {
 
 	// inflate the nodes
 	for (var h = this._nodesInfo.length - 1; h >= 0; h--) {
-		if(this._nodesInfo[h].deleted) {
+		if (this._nodesInfo[h].deleted) {
 			continue;
 		}
 
@@ -435,10 +459,10 @@ CANON.MedialAxis.prototype._inflate = function() {
 
 	// inflate the edges
 	for (var h = this._edgesInfo.length - 1; h >= 0; h--) {
-		if(this._edgesInfo[h].deleted) {
+		if (this._edgesInfo[h].deleted) {
 			continue;
 		}
-		
+
 		var p1 = this._edgesInfo[h].v1.mesh.position;
 		var p2 = this._edgesInfo[h].v2.mesh.position;
 
