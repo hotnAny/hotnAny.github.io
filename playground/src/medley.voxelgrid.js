@@ -235,17 +235,16 @@ CANON.MedialAxis.prototype.snapVoxelGrid = function(vxg) {
 	// aggregation
 	for (var h = this._nodesInfo.length - 1; h >= 0; h--) {
 		var radius = getMax(this._nodesInfo[h].radiusData);
+		this._nodesInfo[h].radius = radius == undefined ? vxg.dim : radius;
 
-		this._nodesInfo[h].radius = radius == undefined ? 0 : radius;
-
-		if (visualize) {
-			log('node' + h + ' : ' + radius)
-			var ctr = this._nodesInfo[h].mesh.position;
-			var r = this._nodesInfo[h].radius;
-			if (r > 0) {
-				addABall(ctr, 0x870527, r);
-			}
-		}
+		// if (visualize) {
+		// 	log('node' + h + ' : ' + radius)
+		// 	var ctr = this._nodesInfo[h].mesh.position;
+		// 	var r = this._nodesInfo[h].radius;
+		// 	if (r > 0) {
+		// 		addABall(ctr, 0x870527, r);
+		// 	}
+		// }
 	}
 
 	for (var h = this._edgesInfo.length - 1; h >= 0; h--) {
@@ -260,29 +259,31 @@ CANON.MedialAxis.prototype.snapVoxelGrid = function(vxg) {
 		this._edgesInfo[h].thickness = new Array(thicknessData.length);
 		var thickness = this._edgesInfo[h].thickness;
 
-
-		for (var i = thickness.length - 2; i >= 1; i--) {
+		for (var i = thickness.length - 1; i >= 0; i--) {
 			var t = getMax(thicknessData[i]);
 
-			if (isNaN(t) || t <= 1) {
+			if (isNaN(t) || t <= vxg.dim) {
 				t = vxg.dim;
 			}
 
 			thickness[i] = t;
 
-			if (visualize) {
-				log('edge' + h + '.' + i + ' : ' + t)
-				var ctr = p1.clone().multiplyScalar(1 - i * 1.0 / thickness.length).add(
-					p2.clone().multiplyScalar(i * 1.0 / thickness.length)
-				);
-				var r = thickness[i];
-				addABall(ctr, 0x052787, r);
-			}
+			// if (visualize) {
+			// 	log('edge' + h + '.' + i + ' : ' + t)
+			// 	var ctr = p1.clone().multiplyScalar(1 - i * 1.0 / thickness.length).add(
+			// 		p2.clone().multiplyScalar(i * 1.0 / thickness.length)
+			// 	);
+			// 	var r = thickness[i];
+			// 	addABall(ctr, 0x052787, r);
+			// }
 		}
 	}
 
 	// revoxelize based on this axis
 	vxg.updateToMedialAxis(this);
+
+	// render the medial axis with thickness
+	this._inflate();
 }
 
 

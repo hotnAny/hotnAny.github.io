@@ -50,7 +50,7 @@ XAC.Line.prototype = Object.create(XAC.Thing.prototype);
 //
 XAC.ThickLine = function(p1, p2, r, mat) {
 	var h = p1.distanceTo(p2);
-	var line = new XAC.Cylinder(r, h, mat);
+	var line = new XAC.Cylinder(r, h, mat, true);
 	this._g = line.g;
 	this._m = line.m;
 
@@ -83,7 +83,7 @@ XAC.Sphere.prototype = Object.create(XAC.Thing.prototype);
 //
 // cylinder
 //
-XAC.Cylinder = function(r, h, mat) {
+XAC.Cylinder = function(r, h, mat, openEnded) {
 	if (r.r1 != undefined && r.r2 != undefined) {
 		this._r1 = r.r1;
 		this._r2 = r.r2;
@@ -92,7 +92,7 @@ XAC.Cylinder = function(r, h, mat) {
 	}
 
 	this._h = h;
-	this._g = new THREE.CylinderGeometry(this._r1, this._r2, this._h, 32, 1);
+	this._g = new THREE.CylinderGeometry(this._r1, this._r2, this._h, 32, 1, openEnded);
 	this._m = new THREE.Mesh(this._g, mat == undefined ? XAC.MATERIALNORMAL.clone() : mat.clone());
 }
 XAC.Cylinder.prototype = Object.create(XAC.Thing.prototype);
