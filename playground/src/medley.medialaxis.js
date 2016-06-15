@@ -99,6 +99,10 @@ CANON.MedialAxis.prototype.updateNode = function(node, pos) {
 
 	// update its edges and visuals
 	for (var i = this._edgesInfo.length - 1; i >= 0; i--) {
+		if(this._edgesInfo[i].deleted) {
+			continue;
+		}
+
 		var v1 = this._edgesInfo[i].v1.mesh;
 		var v2 = this._edgesInfo[i].v2.mesh;
 		if (v1 == node || v2 == node) {
@@ -398,9 +402,9 @@ CANON.MedialAxis.prototype._addEdge = function(v1, v2) {
 
 	// connect nodes
 	// var edge = new XAC.Line(v2.mesh.position, v1.mesh.position).m;
+	var edge = new XAC.ThickLine(v2.mesh.position, v1.mesh.position, 1, this._matEdge).m;
+	this._scene.add(edge);
 	if (edgeInfo == undefined) {
-		var edge = new XAC.ThickLine(v2.mesh.position, v1.mesh.position, 1, this._matEdge).m;
-		this._scene.add(edge);
 		this._edges.push(edge);
 
 		var edgeInfo = {
@@ -418,7 +422,7 @@ CANON.MedialAxis.prototype._addEdge = function(v1, v2) {
 		v2.edgesInfo.push(edgeInfo);
 	} else {
 		edgeInfo.deleted = false;
-		this._scene.add(edgeInfo.mesh)
+		edgeInfo.mesh = edge;
 	}
 
 	this._inflate();
