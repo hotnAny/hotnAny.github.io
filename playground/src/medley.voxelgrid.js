@@ -127,7 +127,7 @@ CANON.VoxelGrid.prototype.updateToMedialAxis = function(axis, node) {
 			var pts = axis.edges[i];
 			var thickness = axis.edgesInfo[i].thickness; // assume the thickness array has been re-interpolated
 
-			if(thickness == undefined || thickness.length <= 0) {
+			if (thickness == undefined || thickness.length <= 0) {
 				continue;
 			}
 
@@ -232,21 +232,7 @@ CANON.MedialAxis.prototype.snapVoxelGrid = function(vxg) {
 		this._snapVoxel(vxg.voxels[i], vxg.dim);
 	}
 
-	// aggregation
-	for (var h = this._nodesInfo.length - 1; h >= 0; h--) {
-		var radius = getMax(this._nodesInfo[h].radiusData);
-		this._nodesInfo[h].radius = radius == undefined ? vxg.dim : radius;
-
-		// if (visualize) {
-		// 	log('node' + h + ' : ' + radius)
-		// 	var ctr = this._nodesInfo[h].mesh.position;
-		// 	var r = this._nodesInfo[h].radius;
-		// 	if (r > 0) {
-		// 		addABall(ctr, 0x870527, r);
-		// 	}
-		// }
-	}
-
+	// aggregating edges
 	for (var h = this._edgesInfo.length - 1; h >= 0; h--) {
 		var p1 = this._edgesInfo[h].v1.mesh.position;
 		var p2 = this._edgesInfo[h].v2.mesh.position;
@@ -267,16 +253,32 @@ CANON.MedialAxis.prototype.snapVoxelGrid = function(vxg) {
 			}
 
 			thickness[i] = t;
-
-			// if (visualize) {
-			// 	log('edge' + h + '.' + i + ' : ' + t)
-			// 	var ctr = p1.clone().multiplyScalar(1 - i * 1.0 / thickness.length).add(
-			// 		p2.clone().multiplyScalar(i * 1.0 / thickness.length)
-			// 	);
-			// 	var r = thickness[i];
-			// 	addABall(ctr, 0x052787, r);
-			// }
 		}
+	}
+
+	// aggregating nodes
+	for (var h = this._nodesInfo.length - 1; h >= 0; h--) {
+		var rNode = getMax(this._nodesInfo[h].radiusData);
+		rNode = rNode == undefined ? 0 : rNode;
+
+		var rEdges = 0;
+		var numEdges = 0;
+		for (var i = this._nodesInfo[h].edgesInfo.length - 1; i >= 0; i--) {
+			var edgeInfo = this._nodesInfo[h].edgesInfo[i];
+			if (edgeInfo.deleted) {
+				continue;
+			}
+
+			if (edgeInfo.thickness.length > 0) {
+				var r = this._nodesInfo[h] == edgeInfo.v1 ?
+					edgeInfo.thickness[0] : edgeInfo.thickness[edgeInfo.thickness.length - 1];
+				rEdges += r;
+				numEdges++;
+			}
+		}
+
+		// averaged across all adjacent edges and the node itself
+		this._nodesInfo[h].radius = (rEdges + rNode) / (numEdges + (rNode == 0 ? 0 : 1));
 	}
 
 	// revoxelize based on this axis
@@ -301,7 +303,6 @@ CANON.MedialAxis.prototype._snapVoxel = function(voxel, dim) {
 	var dist2EdgeMin = Number.MAX_VALUE;
 	var projEdgeMin = new THREE.Vector3();
 	for (var h = this._edgesInfo.length - 1; h >= 0; h--) {
-
 		var v1 = this._edgesInfo[h].v1.mesh.position;
 		var v2 = this._edgesInfo[h].v2.mesh.position;
 

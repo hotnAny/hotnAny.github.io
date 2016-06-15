@@ -37,6 +37,7 @@ CANON.MedialAxis = function(scene) {
 	});
 
 	this._inflations = [];
+	this._inflationsInfo = [];
 
 	// built-in methods for manipulating axis
 	document.addEventListener('mousedown', this._mousedown.bind(this), false);
@@ -99,7 +100,7 @@ CANON.MedialAxis.prototype.updateNode = function(node, pos) {
 
 	// update its edges and visuals
 	for (var i = this._edgesInfo.length - 1; i >= 0; i--) {
-		if(this._edgesInfo[i].deleted) {
+		if (this._edgesInfo[i].deleted) {
 			continue;
 		}
 
@@ -160,7 +161,7 @@ CANON.MedialAxis.prototype._mousedown = function(e) {
 		// find the node that's clicked
 		this._findNode(this._nodeSelected.position, true);
 
-		// do not interact with edge if already interacting with node
+		// stop propagation here
 		return;
 	}
 
@@ -182,15 +183,54 @@ CANON.MedialAxis.prototype._mousedown = function(e) {
 			this._nodeSelected = this._splitEdge(edge, point);
 			this._nodeSelected.material = this._matHighlight;
 			this._nodeSelected.material.needsUpdate = true;
-			return;
+		}
+
+		// stop propagation here
+		return;
+	}
+
+	//
+	//	interacting with inflation
+	//
+	this._infSelected = XAC.hitObject(e, this._inflations);
+	for (var i = this._inflations.length - 1; i >= 0; i--) {
+		if (this._inflations[i] == this._infSelected) {
+			this._infSelInfo = this._inflationsInfo[i];
+			break;
 		}
 	}
+	this._eDown = e;
 }
 
 CANON.MedialAxis.prototype._mousemove = function(e) {
 	if (this._maniplane != undefined) {
 		var pos = this._maniplane.update(e);
 		this.updateNode(this._nodeSelected, pos);
+		this._inflate();
+	}
+
+	if (this._infSelected != undefined) {
+		var yOffset = e.clientY - this._eDown.clientY;
+		var changeRate = 256;
+		var ratio = -yOffset / changeRate;
+
+		this._scene.remove(this._infSelected);
+		if (this._infSelInfo.nodeInfo != undefined) {
+			this._infSelInfo.nodeInfo.radius *= (1 + ratio);
+			// this._inflateNode(this._infSelInfo.nodeInfo);
+		} else if (this._infSelInfo.edgeInfo.thickness != undefined) {
+			var wind = 3;
+			for (var i = -wind; i <= wind; i++) {
+				var idx = Math.max(0, this._infSelInfo.idx + i);
+				idx = Math.min(this._infSelInfo.edgeInfo.thickness.length - 1, idx);
+				this._infSelInfo.edgeInfo.thickness[idx] *= (1 + ratio * (1 - Math.abs(i) / wind));
+			}
+
+			// this._inflateEdge(this._infSelInfo.edgeInfo);
+		}
+
+		this._inflate();
+		this._eDown = e;
 	}
 }
 
@@ -200,6 +240,8 @@ CANON.MedialAxis.prototype._mouseup = function(e) {
 		this._maniplane = undefined;
 		this._inflate();
 	}
+
+	this._infSelected = undefined;
 }
 
 CANON.MedialAxis.prototype._keydown = function(e) {
@@ -440,6 +482,7 @@ CANON.MedialAxis.prototype._inflate = function() {
 	}
 
 	this._inflations.splice(0, this._inflations.length);
+	this._inflationsInfo.splice(0, this._inflationsInfo.length);
 
 	// inflate the nodes
 	for (var h = this._nodesInfo.length - 1; h >= 0; h--) {
@@ -447,18 +490,7 @@ CANON.MedialAxis.prototype._inflate = function() {
 			continue;
 		}
 
-		var ctr = this._nodesInfo[h].mesh.position;
-		var r = this._nodesInfo[h].radius;
-
-		if (r == undefined) {
-			continue;
-		}
-
-		if (r > 0) {
-			var sphere = new XAC.Sphere(r, this._matInflation, true).m;
-			sphere.position.copy(ctr);
-			this._inflations.push(sphere);
-		}
+		this._inflateNode(this._nodesInfo[h]);
 	}
 
 	// inflate the edges
@@ -467,42 +499,70 @@ CANON.MedialAxis.prototype._inflate = function() {
 			continue;
 		}
 
-		var p1 = this._edgesInfo[h].v1.mesh.position;
-		var p2 = this._edgesInfo[h].v2.mesh.position;
+		// if (this._edgesInfo[h].thickness == undefined) {
+		// 	continue;
+		// }
 
-		if (this._edgesInfo[h].thickness == undefined) {
-			continue;
-		}
-
-		var thickness = this._edgesInfo[h].thickness.concat([this._edgesInfo[h].v2.radius]);
-
-		var ctr0 = p1;
-		var r0 = this._edgesInfo[h].v1.radius;
-		for (var i = 0; i < thickness.length; i++) {
-			var ctr = p1.clone().multiplyScalar(1 - (i + 1) * 1.0 / thickness.length).add(
-				p2.clone().multiplyScalar((i + 1) * 1.0 / thickness.length)
-			);
-
-			var r;
-			if (i == 0 || i == thickness.length - 1) {
-				r = thickness[i];
-			} else {
-				r = (thickness[i] + r0) / 2;
-			}
-
-			var cylinder = new XAC.ThickLine(ctr0, ctr, {
-				r1: r,
-				r2: r0
-			}, this._matInflation).m;
-			this._inflations.push(cylinder);
-
-			ctr0 = ctr;
-			r0 = r;
-		}
+		this._inflateEdge(this._edgesInfo[h]);
 	}
 
 	// add new inflations
 	for (var i = this._inflations.length - 1; i >= 0; i--) {
 		this._scene.add(this._inflations[i]);
+	}
+
+	log(this._inflations.length)
+}
+
+CANON.MedialAxis.prototype._inflateNode = function(nodeInfo) {
+	var ctr = nodeInfo.mesh.position;
+	var r = nodeInfo.radius;
+
+	if (r == undefined) {
+		return;
+	}
+
+	if (r > 0) {
+		var sphere = new XAC.Sphere(r, this._matInflation, true).m;
+		sphere.position.copy(ctr);
+		this._inflations.push(sphere);
+		this._inflationsInfo.push({
+			nodeInfo: nodeInfo
+		});
+	}
+}
+
+CANON.MedialAxis.prototype._inflateEdge = function(edgeInfo) {
+	var p1 = edgeInfo.v1.mesh.position;
+	var p2 = edgeInfo.v2.mesh.position;
+	var thickness = edgeInfo.thickness.concat([edgeInfo.v2.radius]);
+
+	var ctr0 = p1;
+	var r0 = edgeInfo.v1.radius;
+	for (var i = 0; i < thickness.length; i++) {
+		var ctr = p1.clone().multiplyScalar(1 - (i + 1) * 1.0 / thickness.length).add(
+			p2.clone().multiplyScalar((i + 1) * 1.0 / thickness.length)
+		);
+
+		var r;
+		if (i == 0 || i == thickness.length - 1) {
+			r = thickness[i];
+		} else {
+			r = (thickness[i] + r0) / 2;
+		}
+
+		var cylinder = new XAC.ThickLine(ctr0, ctr, {
+			r1: r,
+			r2: r0
+		}, this._matInflation).m;
+
+		this._inflations.push(cylinder);
+		this._inflationsInfo.push({
+			edgeInfo: edgeInfo,
+			idx: i
+		});
+
+		ctr0 = ctr;
+		r0 = r;
 	}
 }
