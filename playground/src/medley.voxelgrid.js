@@ -211,3 +211,154 @@ CANON.VoxelGrid.prototype._addSphericalVoxels = function(v, radius) {
 		}
 	}
 };
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * 	
+ *	working with a medial axis
+ *
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+//
+//	special method for working with a voxel grid: 
+//		snap the voxels in the voxel grid to this medial axis
+//
+//	@param	vxg - an CANON.VoxelGrid object
+//
+CANON.MedialAxis.prototype.snapVoxelGrid = function(vxg) {
+	var visualize = true;
+	this._voxelGrid = vxg;
+
+	for (var i = vxg.voxels.length - 1; i >= 0; i--) {
+		this._snapVoxel(vxg.voxels[i], vxg.dim);
+	}
+
+	// aggregation
+	for (var h = this._nodesInfo.length - 1; h >= 0; h--) {
+		var radius = getMax(this._nodesInfo[h].radiusData);
+
+		this._nodesInfo[h].radius = radius == undefined ? 0 : radius;
+
+		if (visualize) {
+			log('node' + h + ' : ' + radius)
+			var ctr = this._nodesInfo[h].mesh.position;
+			var r = this._nodesInfo[h].radius;
+			if (r > 0) {
+				addABall(ctr, 0x870527, r);
+			}
+		}
+	}
+
+	for (var h = this._edgesInfo.length - 1; h >= 0; h--) {
+		var p1 = this._edgesInfo[h].v1.mesh.position;
+		var p2 = this._edgesInfo[h].v2.mesh.position;
+		var thicknessData = this._edgesInfo[h].thicknessData;
+
+		if (thicknessData == undefined || thicknessData.length <= 0) {
+			continue;
+		}
+
+		this._edgesInfo[h].thickness = new Array(thicknessData.length);
+		var thickness = this._edgesInfo[h].thickness;
+
+
+		for (var i = thickness.length - 2; i >= 1; i--) {
+			var t = getMax(thicknessData[i]);
+
+			if (isNaN(t) || t <= 1) {
+				t = vxg.dim;
+			}
+
+			thickness[i] = t;
+
+			if (visualize) {
+				log('edge' + h + '.' + i + ' : ' + t)
+				var ctr = p1.clone().multiplyScalar(1 - i * 1.0 / thickness.length).add(
+					p2.clone().multiplyScalar(i * 1.0 / thickness.length)
+				);
+				var r = thickness[i];
+				addABall(ctr, 0x052787, r);
+			}
+		}
+	}
+
+	// revoxelize based on this axis
+	vxg.updateToMedialAxis(this);
+}
+
+
+//
+//	snap a voxel (of a dim dimension) to this medial axis
+//
+CANON.MedialAxis.prototype._snapVoxel = function(voxel, dim) {
+	var visualize = false;
+	var v = voxel.position;
+
+	//
+	// snap to edge
+	//
+	var idxEdgeMin = -1;
+	var dist2EdgeMin = Number.MAX_VALUE;
+	var projEdgeMin = new THREE.Vector3();
+	for (var h = this._edgesInfo.length - 1; h >= 0; h--) {
+
+		var v1 = this._edgesInfo[h].v1.mesh.position;
+		var v2 = this._edgesInfo[h].v2.mesh.position;
+
+		var p2lInfo = p2ls(v.x, v.y, v.z, v1.x, v1.y, v1.z, v2.x, v2.y, v2.z);
+		if (p2lInfo != undefined) {
+			var dist = p2lInfo.distance;
+			var proj = p2lInfo.projection;
+			if (dist < dist2EdgeMin) {
+				idxEdgeMin = h;
+				dist2EdgeMin = dist;
+				projEdgeMin.set(proj[0], proj[1], proj[2]);
+			}
+		}
+	}
+
+	//
+	// snap to node
+	//
+	var idxNodeMin = -1;
+	var dist2NodeMin = Number.MAX_VALUE;
+	for (var h = this._nodesInfo.length - 1; h >= 0; h--) {
+		var dist = v.distanceTo(this._nodes[h].position);
+		if (dist < dist2NodeMin) {
+			idxNodeMin = h;
+			dist2NodeMin = dist;
+		}
+	}
+
+	//
+	// compare the two
+	//
+	if (dist2EdgeMin < dist2NodeMin) {
+		if (visualize) {
+			addALine(v, projEdgeMin);
+		}
+
+		// register the distance to edge
+		var v1 = this._edgesInfo[idxEdgeMin].v1.mesh.position;
+		var v2 = this._edgesInfo[idxEdgeMin].v2.mesh.position;
+		var thicknessData = this._edgesInfo[idxEdgeMin].thicknessData;
+		if (thicknessData == undefined) {
+			this._edgesInfo[idxEdgeMin].thicknessData = new Array(float2int(v2.distanceTo(v1) / dim));
+			thicknessData = this._edgesInfo[idxEdgeMin].thicknessData;
+		}
+
+		var idxPt = float2int(projEdgeMin.distanceTo(v1) / dim);
+		if (thicknessData[idxPt] == undefined) {
+			thicknessData[idxPt] = [];
+		}
+		thicknessData[idxPt].push(dist2EdgeMin);
+
+	} else {
+		if (visualize) {
+			var v0 = this._nodesInfo[idxNodeMin].mesh.position;
+			addALine(v, v0);
+		}
+
+		// register the distance to node
+		this._nodesInfo[idxNodeMin].radiusData.push(Math.max(this._nodesInfo[idxNodeMin].radius, dist2NodeMin));
+	}
+}
