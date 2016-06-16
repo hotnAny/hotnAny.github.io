@@ -1,5 +1,7 @@
 var XAC = XAC || {};
 
+XAC.Const = {};
+
 // some common visual properties
 XAC.MATERIALNORMAL = new THREE.MeshPhongMaterial({
      color: COLORNORMAL,
