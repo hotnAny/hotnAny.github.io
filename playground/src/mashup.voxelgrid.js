@@ -254,6 +254,8 @@ MASHUP.MedialAxis.prototype.snapVoxelGrid = function(vxg) {
 
 			thickness[i] = t;
 		}
+
+		thicknessData = [];
 	}
 
 	// aggregating nodes
@@ -279,6 +281,7 @@ MASHUP.MedialAxis.prototype.snapVoxelGrid = function(vxg) {
 
 		// averaged across all adjacent edges and the node itself
 		this._nodesInfo[h].radius = (rEdges + rNode) / (numEdges + (rNode == 0 ? 0 : 1));
+		this._nodesInfo[h].radiusData = [];
 	}
 
 	// revoxelize based on this axis

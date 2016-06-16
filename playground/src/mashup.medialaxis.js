@@ -8,7 +8,7 @@
 var MASHUP = MASHUP || {};
 
 // check dependencies
-if (XAC.Thing == undefined || XAC.Utilities == undefined) {
+if (XAC.Thing == undefined || XAC.Utilities == undefined || XAC.Const == undefined) {
 	err('missing dependency!');
 }
 
@@ -19,6 +19,9 @@ MASHUP.MedialAxis = function(scene) {
 	this._nodes = []; // meshes of nodes
 	this._edgesInfo = []; // spatial info of edges, contains: 
 	this._edges = []; // meshes of edges
+	this._inflations = [];
+	this._inflationsInfo = [];
+	this._inflateRate = 7; // larger value smaller rate
 
 	// visual properties
 	this._radiusEdge = 1.75;
@@ -36,10 +39,6 @@ MASHUP.MedialAxis = function(scene) {
 		wireframe: true,
 		opacity: 0.25
 	});
-
-	this._inflations = [];
-	this._inflationsInfo = [];
-	this._inflateRate = 7; // larger value smaller rate
 
 	// built-in methods for manipulating axis
 	document.addEventListener('mousedown', this._mousedown.bind(this), false);
