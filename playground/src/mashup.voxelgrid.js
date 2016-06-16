@@ -5,15 +5,15 @@
  *
  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-var CANON = CANON || {};
+var MASHUP = MASHUP || {};
 
-CANON.VoxelGrid = function() {
+MASHUP.VoxelGrid = function() {
 	this._voxels = [];
 	this._table = [];
 }
 
-CANON.VoxelGrid.prototype = {
-	constructor: CANON.VoxelGrid,
+MASHUP.VoxelGrid.prototype = {
+	constructor: MASHUP.VoxelGrid,
 
 	get grid() {
 		return this._grid;
@@ -32,7 +32,7 @@ CANON.VoxelGrid.prototype = {
 	}
 };
 
-CANON.VoxelGrid.prototype.load = function(vxgRaw, dim) {
+MASHUP.VoxelGrid.prototype.load = function(vxgRaw, dim) {
 	this._grid = [];
 	this._dim = dim;
 
@@ -55,7 +55,7 @@ CANON.VoxelGrid.prototype.load = function(vxgRaw, dim) {
 	return this._grid;
 }
 
-CANON.VoxelGrid.prototype.render = function(hideInside) {
+MASHUP.VoxelGrid.prototype.render = function(hideInside) {
 	var nz = this._grid.length;
 	var ny = this._grid[0].length;
 	var nx = this._grid[0][0].length;
@@ -81,7 +81,7 @@ CANON.VoxelGrid.prototype.render = function(hideInside) {
 				} else if (this._grid[i][j][k] != 1 && this._table[i][j][k] != undefined) {
 					var voxel = this._table[i][j][k];
 					scene.remove(voxel);
-					removeFromArray(this._voxels, voxel);
+					XAC.removeFromArray(this._voxels, voxel);
 					this._table[i][j][k] = undefined;
 				}
 			} // x
@@ -91,7 +91,7 @@ CANON.VoxelGrid.prototype.render = function(hideInside) {
 	log(this._voxels.length + " voxels added.");
 }
 
-CANON.VoxelGrid.prototype.updateToMedialAxis = function(axis, node) {
+MASHUP.VoxelGrid.prototype.updateToMedialAxis = function(axis, node) {
 	//
 	// update the entire voxel grid based on the axis
 	//
@@ -132,7 +132,7 @@ CANON.VoxelGrid.prototype.updateToMedialAxis = function(axis, node) {
 			}
 
 			for (var j = thickness.length - 1; j >= 0; j--) {
-				// var k = float2int(j * thickness.length / pts.length);
+				// var k = XAC.float2int(j * thickness.length / pts.length);
 				var v = v1.clone().multiplyScalar(1 - j * 1.0 / thickness.length).add(
 					v2.clone().multiplyScalar(j * 1.0 / thickness.length)
 				);
@@ -155,27 +155,27 @@ CANON.VoxelGrid.prototype.updateToMedialAxis = function(axis, node) {
 	}
 }
 
-CANON.VoxelGrid.prototype.hide = function() {
+MASHUP.VoxelGrid.prototype.hide = function() {
 	for (var i = this._voxels.length - 1; i >= 0; i--) {
 		scene.remove(this._voxels[i]);
 	}
 }
 
-CANON.VoxelGrid.prototype.show = function() {
+MASHUP.VoxelGrid.prototype.show = function() {
 	for (var i = this._voxels.length - 1; i >= 0; i--) {
 		scene.add(this._voxels[i]);
 	}
 }
 
 
-CANON.VoxelGrid.prototype._onSurface = function(i, j, k) {
+MASHUP.VoxelGrid.prototype._onSurface = function(i, j, k) {
 	return i * j * k == 0 || (nz - 1 - i) * (ny - 1 - j) * (nx - 1 - k) == 0 ||
 		this._grid[i - 1][j][k] != 1 || this._grid[i + 1][j][k] != 1 ||
 		this._grid[i][j - 1][k] != 1 || this._grid[i][j + 1][k] != 1 ||
 		this._grid[i][j][k - 1] != 1 || this._grid[i][j][k + 1] != 1;
 }
 
-CANON.VoxelGrid.prototype._makeVoxel = function(dim, i, j, k, mat, noMargin) {
+MASHUP.VoxelGrid.prototype._makeVoxel = function(dim, i, j, k, mat, noMargin) {
 	var geometry = new THREE.BoxGeometry(dim, dim, dim);
 	var voxel = new THREE.Mesh(geometry, mat.clone());
 
@@ -189,15 +189,15 @@ CANON.VoxelGrid.prototype._makeVoxel = function(dim, i, j, k, mat, noMargin) {
 	return voxel;
 }
 
-CANON.VoxelGrid.prototype._addSphericalVoxels = function(v, radius) {
+MASHUP.VoxelGrid.prototype._addSphericalVoxels = function(v, radius) {
 	var vxg = this._grid;
 
-	var zmin = float2int((v.z - radius) / this._dim),
-		zmax = float2int((v.z + radius) / this._dim),
-		ymin = float2int((v.y - radius) / this._dim),
-		ymax = float2int((v.y + radius) / this._dim),
-		xmin = float2int((v.x - radius) / this._dim),
-		xmax = float2int((v.x + radius) / this._dim);
+	var zmin = XAC.float2int((v.z - radius) / this._dim),
+		zmax = XAC.float2int((v.z + radius) / this._dim),
+		ymin = XAC.float2int((v.y - radius) / this._dim),
+		ymax = XAC.float2int((v.y + radius) / this._dim),
+		xmin = XAC.float2int((v.x - radius) / this._dim),
+		xmax = XAC.float2int((v.x + radius) / this._dim);
 	for (var z = zmin; z < zmax; z++) {
 		vxg[z] = vxg[z] == undefined ? [] : vxg[z];
 		for (var y = ymin; y < ymax; y++) {
@@ -222,9 +222,9 @@ CANON.VoxelGrid.prototype._addSphericalVoxels = function(v, radius) {
 //	special method for working with a voxel grid: 
 //		snap the voxels in the voxel grid to this medial axis
 //
-//	@param	vxg - an CANON.VoxelGrid object
+//	@param	vxg - an MASHUP.VoxelGrid object
 //
-CANON.MedialAxis.prototype.snapVoxelGrid = function(vxg) {
+MASHUP.MedialAxis.prototype.snapVoxelGrid = function(vxg) {
 	var visualize = true;
 	this._voxelGrid = vxg;
 
@@ -292,7 +292,7 @@ CANON.MedialAxis.prototype.snapVoxelGrid = function(vxg) {
 //
 //	snap a voxel (of a dim dimension) to this medial axis
 //
-CANON.MedialAxis.prototype._snapVoxel = function(voxel, dim) {
+MASHUP.MedialAxis.prototype._snapVoxel = function(voxel, dim) {
 	var visualize = false;
 	var v = voxel.position;
 
@@ -344,11 +344,11 @@ CANON.MedialAxis.prototype._snapVoxel = function(voxel, dim) {
 		var v2 = this._edgesInfo[idxEdgeMin].v2.mesh.position;
 		var thicknessData = this._edgesInfo[idxEdgeMin].thicknessData;
 		if (thicknessData == undefined) {
-			this._edgesInfo[idxEdgeMin].thicknessData = new Array(float2int(v2.distanceTo(v1) / dim));
+			this._edgesInfo[idxEdgeMin].thicknessData = new Array(XAC.float2int(v2.distanceTo(v1) / dim));
 			thicknessData = this._edgesInfo[idxEdgeMin].thicknessData;
 		}
 
-		var idxPt = float2int(projEdgeMin.distanceTo(v1) / dim);
+		var idxPt = XAC.float2int(projEdgeMin.distanceTo(v1) / dim);
 		if (thicknessData[idxPt] == undefined) {
 			thicknessData[idxPt] = [];
 		}

@@ -8,6 +8,8 @@
 
 var XAC = XAC || {};
 
+XAC.Utilities = {};
+
 function log(msg) {
 	console.log(msg);
 }
@@ -84,7 +86,7 @@ function addABall(pt, clr, radius, opacity) {
 	return ball;
 }
 
-function float2int(value) {
+XAC.float2int = function(value) {
 	return value | 0;
 }
 
@@ -172,7 +174,7 @@ function getMax(values) {
 	return max;
 }
 
-function removeFromArray(array, elm, compFunc) {
+XAC.removeFromArray = function(array, elm, compFunc) {
 	var toRemove = [];
 	for (var i = array.length - 1; i >= 0; i--) {
 		var equal = undefined;

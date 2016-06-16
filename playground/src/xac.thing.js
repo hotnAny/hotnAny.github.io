@@ -73,7 +73,7 @@ XAC.ThickLine.prototype.update = function(p1, p2, r) {
 }
 
 //
-//	plane
+//	plane 653E944D
 //
 XAC.Plane = function(w, l, mat) {
 	this._g = new THREE.CubeGeometry(w, 1, l);

@@ -5,14 +5,14 @@
  *
  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-var CANON = CANON || {};
+var MASHUP = MASHUP || {};
 
 // check dependencies
-if (XAC.Thing == undefined || removeFromArray == undefined || float2int == undefined) {
+if (XAC.Thing == undefined || XAC.Utilities == undefined) {
 	err('missing dependency!');
 }
 
-CANON.MedialAxis = function(scene) {
+MASHUP.MedialAxis = function(scene) {
 	this._scene = scene;
 
 	this._nodesInfo = []; // spatial info of nodes, contains:
@@ -21,7 +21,8 @@ CANON.MedialAxis = function(scene) {
 	this._edges = []; // meshes of edges
 
 	// visual properties
-	this._rnode = 5;
+	this._radiusEdge = 1.75;
+	this._radiusNode = 5;
 	this._matNode = XAC.MATERIALCONTRAST;
 	this._matEdge = new THREE.MeshPhongMaterial({
 		color: 0x888888,
@@ -47,8 +48,8 @@ CANON.MedialAxis = function(scene) {
 	document.addEventListener('keydown', this._keydown.bind(this), false);
 };
 
-CANON.MedialAxis.prototype = {
-	constructor: CANON.MedialAxis,
+MASHUP.MedialAxis.prototype = {
+	constructor: MASHUP.MedialAxis,
 
 	get nodes() {
 		return this._nodes;
@@ -73,7 +74,7 @@ CANON.MedialAxis.prototype = {
 //	@param	pos - position of the new node
 //	@param	toConect - whether to connect it to the previous node
 //
-CANON.MedialAxis.prototype.addNode = function(pos, toConnect) {
+MASHUP.MedialAxis.prototype.addNode = function(pos, toConnect) {
 	// check if the node is already in
 	var alreadyIn = this._findNode(pos, false) >= 0;
 
@@ -95,7 +96,7 @@ CANON.MedialAxis.prototype.addNode = function(pos, toConnect) {
 //	@param 	node - the node being interacted with
 //	@param	pos - new position of this node
 //
-CANON.MedialAxis.prototype.updateNode = function(node, pos) {
+MASHUP.MedialAxis.prototype.updateNode = function(node, pos) {
 	// update this node
 	node.position.copy(pos);
 
@@ -109,7 +110,7 @@ CANON.MedialAxis.prototype.updateNode = function(node, pos) {
 		var v2 = this._edgesInfo[i].v2.mesh;
 		if (v1 == node || v2 == node) {
 			this._scene.remove(this._edges[i]);
-			this._edges[i] = new XAC.ThickLine(v2.position, v1.position, 1, this._matEdge).m;
+			this._edges[i] = new XAC.ThickLine(v2.position, v1.position, this._radiusEdge, this._matEdge).m;
 			this._edgesInfo[i].mesh = this._edges[i];
 			this._scene.add(this._edges[i]);
 		}
@@ -122,7 +123,7 @@ CANON.MedialAxis.prototype.updateNode = function(node, pos) {
  *
  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-CANON.MedialAxis.prototype._mousedown = function(e) {
+MASHUP.MedialAxis.prototype._mousedown = function(e) {
 	if (this._nodes == undefined) {
 		return;
 	}
@@ -208,7 +209,7 @@ CANON.MedialAxis.prototype._mousedown = function(e) {
 	this._eDown = e;
 }
 
-CANON.MedialAxis.prototype._mousemove = function(e) {
+MASHUP.MedialAxis.prototype._mousemove = function(e) {
 	if (this._maniplane != undefined) {
 		var pos = this._maniplane.update(e);
 		this.updateNode(this._nodeSelected, pos);
@@ -224,6 +225,12 @@ CANON.MedialAxis.prototype._mousemove = function(e) {
 			this._infSelInfo.nodeInfo.radius *= (1 + ratio);
 			this._inflateNode(this._infSelInfo.nodeInfo);
 		} else if (this._infSelInfo.edgeInfo.thickness != undefined) {
+			// WIP: try to experiment with a more natural way of manipulating thickness
+			// var v1 = this._infSelInfo.edgeInfo.v1.mesh.position.clone().unproject(camera);
+			// var v2 = this._infSelInfo.edgeInfo.v2.mesh.position.clone().unproject(camera);
+			// var d = p2ls(e.clientX, e.clientY, 0, v1.x, v1.y, v1.z, v2.x, v2.y, v2.z)
+			// log([e.clientX, e.clientY, 0, v1.x, v1.y, v1.z, v2.x, v2.y, v2.z])
+
 			var wind = 3;
 			for (var i = -wind; i <= wind; i++) {
 				var idx = Math.max(0, this._infSelInfo.idx + i);
@@ -238,7 +245,7 @@ CANON.MedialAxis.prototype._mousemove = function(e) {
 	}
 }
 
-CANON.MedialAxis.prototype._mouseup = function(e) {
+MASHUP.MedialAxis.prototype._mouseup = function(e) {
 	if (this._maniplane != undefined) {
 		this._maniplane.destruct();
 		this._maniplane = undefined;
@@ -248,7 +255,7 @@ CANON.MedialAxis.prototype._mouseup = function(e) {
 	this._infSelected = undefined;
 }
 
-CANON.MedialAxis.prototype._keydown = function(e) {
+MASHUP.MedialAxis.prototype._keydown = function(e) {
 	switch (e.keyCode) {
 		case 46: // DEL
 			if (this._nodeSelected != undefined) this._removeNode(this._nodeSelected);
@@ -266,8 +273,8 @@ CANON.MedialAxis.prototype._keydown = function(e) {
 //
 //	add a node at pos
 //
-CANON.MedialAxis.prototype._addNode = function(pos) {
-	var nodeNew = new XAC.Sphere(this._rnode, this._matNode, true).m;
+MASHUP.MedialAxis.prototype._addNode = function(pos) {
+	var nodeNew = new XAC.Sphere(this._radiusNode, this._matNode, true).m;
 	nodeNew.position.copy(pos);
 	this._nodes.push(nodeNew);
 	this._nodesInfo.push({
@@ -286,7 +293,7 @@ CANON.MedialAxis.prototype._addNode = function(pos) {
 //
 //	remove a node
 //
-CANON.MedialAxis.prototype._removeNode = function(node) {
+MASHUP.MedialAxis.prototype._removeNode = function(node) {
 	this._scene.remove(node);
 
 	// find this node from all nodes
@@ -309,11 +316,11 @@ CANON.MedialAxis.prototype._removeNode = function(node) {
 //
 //	find a node and maybe bring it to the top of the stack
 //
-CANON.MedialAxis.prototype._findNode = function(pos, bringToTop) {
+MASHUP.MedialAxis.prototype._findNode = function(pos, bringToTop) {
 	for (var i = this._nodesInfo.length - 1; i >= 0; i--) {
 		if (this._nodesInfo[i].deleted) continue;
 
-		if (pos.distanceTo(this._nodesInfo[i].mesh.position) < this._rnode) {
+		if (pos.distanceTo(this._nodesInfo[i].mesh.position) < this._radiusNode) {
 			if (bringToTop) {
 				this._nodes.push(this._nodes.splice(i, 1)[0]);
 				this._nodesInfo.push(this._nodesInfo.splice(i, 1)[0]);
@@ -327,7 +334,7 @@ CANON.MedialAxis.prototype._findNode = function(pos, bringToTop) {
 //
 //	copy from an existing node
 //
-CANON.MedialAxis.prototype._copyNode = function(node) {
+MASHUP.MedialAxis.prototype._copyNode = function(node) {
 	this._findNode(node.position, true);
 
 	this._addNode(node.position);
@@ -344,7 +351,7 @@ CANON.MedialAxis.prototype._copyNode = function(node) {
 //
 //	remove an edge
 //
-CANON.MedialAxis.prototype._removeEdge = function(edgeOrInfo) {
+MASHUP.MedialAxis.prototype._removeEdge = function(edgeOrInfo) {
 	var v1, v2;
 	var edgeInfo = edgeOrInfo.mesh == undefined ? undefined : edgeOrInfo;
 
@@ -374,7 +381,7 @@ CANON.MedialAxis.prototype._removeEdge = function(edgeOrInfo) {
 //
 //	split an edge at pos
 //
-CANON.MedialAxis.prototype._splitEdge = function(edge, pos) {
+MASHUP.MedialAxis.prototype._splitEdge = function(edge, pos) {
 	// retrieve the edge info
 	var edgeInfo;
 	for (var i = this._edges.length - 1; i >= 0; i--) {
@@ -394,7 +401,7 @@ CANON.MedialAxis.prototype._splitEdge = function(edge, pos) {
 	var thickness = edgeInfo.thickness;
 	var split = v.mesh.position.distanceTo(nodes.v1.mesh.position) /
 		nodes.v2.mesh.position.distanceTo(nodes.v1.mesh.position);
-	split = float2int(thickness.length * split);
+	split = XAC.float2int(thickness.length * split);
 	if (thickness != undefined) {
 		for (var i = 0; i < thickness.length; i++) {
 			if (i <= split) {
@@ -419,7 +426,7 @@ CANON.MedialAxis.prototype._splitEdge = function(edge, pos) {
 //
 //	connect two nodes with an edge
 //
-CANON.MedialAxis.prototype._addEdge = function(v1, v2) {
+MASHUP.MedialAxis.prototype._addEdge = function(v1, v2) {
 	// if input is mesh of nodes, retrieve the corresponding node info
 	for (var i = this._nodes.length - 1; i >= 0; i--) {
 		if (this._nodes[i] == v1) {
@@ -445,7 +452,7 @@ CANON.MedialAxis.prototype._addEdge = function(v1, v2) {
 	}
 
 	// connect nodes
-	var edge = new XAC.ThickLine(v2.mesh.position, v1.mesh.position, 1, this._matEdge).m;
+	var edge = new XAC.ThickLine(v2.mesh.position, v1.mesh.position, this._radiusEdge, this._matEdge).m;
 	this._scene.add(edge);
 	if (edgeInfo == undefined) {
 		this._edges.push(edge);
@@ -468,11 +475,11 @@ CANON.MedialAxis.prototype._addEdge = function(v1, v2) {
 		edgeInfo.deleted = false;
 		edgeInfo.mesh = edge;
 		for (var i = this._edgesInfo.length - 1; i >= 0; i--) {
-			if(this._edgesInfo[i] == edgeInfo) {
+			if (this._edgesInfo[i] == edgeInfo) {
 				this._edges[i] = edge;
 			}
 		}
-		
+
 		for (var i = edgeInfo.inflations.length - 1; i >= 0; i--) {
 			this._scene.add(edgeInfo.inflations[i].m)
 		}
@@ -486,7 +493,7 @@ CANON.MedialAxis.prototype._addEdge = function(v1, v2) {
 //
 //	inflate the medial axis with thicknesses
 //
-CANON.MedialAxis.prototype._inflate = function() {
+MASHUP.MedialAxis.prototype._inflate = function() {
 	// inflate the nodes
 	for (var h = this._nodesInfo.length - 1; h >= 0; h--) {
 		if (this._nodesInfo[h].deleted) continue;
@@ -500,7 +507,10 @@ CANON.MedialAxis.prototype._inflate = function() {
 	}
 }
 
-CANON.MedialAxis.prototype._inflateNode = function(nodeInfo, nodeOnly) {
+//
+//	inflate a node
+//
+MASHUP.MedialAxis.prototype._inflateNode = function(nodeInfo, nodeOnly) {
 	var ctr = nodeInfo.mesh.position;
 	var r = nodeInfo.radius;
 
@@ -525,7 +535,10 @@ CANON.MedialAxis.prototype._inflateNode = function(nodeInfo, nodeOnly) {
 	}
 }
 
-CANON.MedialAxis.prototype._inflateEdge = function(edgeInfo) {
+//
+//	inflate an edge
+//
+MASHUP.MedialAxis.prototype._inflateEdge = function(edgeInfo) {
 	var p1 = edgeInfo.v1.mesh.position;
 	var p2 = edgeInfo.v2.mesh.position;
 	var thickness = edgeInfo.thickness.concat([edgeInfo.v2.radius]);
