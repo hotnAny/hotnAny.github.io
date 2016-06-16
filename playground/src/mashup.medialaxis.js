@@ -19,13 +19,14 @@ MASHUP.MedialAxis = function(scene) {
 	this._nodes = []; // meshes of nodes
 	this._edgesInfo = []; // spatial info of edges, contains: 
 	this._edges = []; // meshes of edges
+	this._inflationsNode = [];
 	this._inflations = [];
 	this._inflationsInfo = [];
 	this._inflateRate = 7; // larger value smaller rate
 
 	// visual properties
 	this._radiusEdge = 1.75;
-	this._radiusNode = 5;
+	this._radiusNode = 7.5;
 	this._matNode = XAC.MATERIALCONTRAST;
 	this._matEdge = new THREE.MeshPhongMaterial({
 		color: 0x888888,
@@ -198,7 +199,11 @@ MASHUP.MedialAxis.prototype._mousedown = function(e) {
 	//
 	//	interacting with inflation
 	//
-	this._infSelected = XAC.hitObject(e, this._inflations);
+	this._infSelected = XAC.hitObject(e, this._inflationsNode); // nodes have higher priority to be interacted with
+	if (this._infSelected == undefined) {
+		this._infSelected = XAC.hitObject(e, this._inflations);
+	}
+	
 	for (var i = this._inflations.length - 1; i >= 0; i--) {
 		if (this._inflations[i] == this._infSelected) {
 			this._infSelInfo = this._inflationsInfo[i];
@@ -517,6 +522,7 @@ MASHUP.MedialAxis.prototype._inflateNode = function(nodeInfo, nodeOnly) {
 		if (nodeInfo.inflation == undefined) {
 			nodeInfo.inflation = new XAC.Sphere(r, this._matInflation, true);
 			this._inflations.push(nodeInfo.inflation.m);
+			this._inflationsNode.push(nodeInfo.inflation.m);
 			this._inflationsInfo.push({
 				nodeInfo: nodeInfo
 			});
