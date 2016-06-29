@@ -6,9 +6,8 @@ XAC.Const = {};
 XAC.MATERIALNORMAL = new THREE.MeshPhongMaterial({
      color: COLORNORMAL,
      transparent: true,
-     opacity: 0.5
+     opacity: 0.75
 });
-
 
 XAC.MATERIALCONTRAST = new THREE.MeshPhongMaterial({
      color: COLORCONTRAST,
@@ -32,6 +31,12 @@ XAC.MATERIALPLAIN= new THREE.MeshBasicMaterial({
      vertexColors: 0xffffff,
      transparent: true,
      opacity: 0.75
+});
+
+XAC.MATERIALFOCUS = new THREE.MeshPhongMaterial({
+     color: 0xE82C0C,
+     transparent: true,
+     opacity: 0.95
 });
 
 

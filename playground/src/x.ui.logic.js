@@ -27,17 +27,22 @@ var initPanel = function() {
 			reader.onload = (function(e) {
 				// loadStl(e.target.result);
 
-				// EXP: only deal with voxel grid file (vxg)
-				//** TEMP: experimenting with displacement vector
-				// gVoxelGrid = new MASHUP.VoxelGrid();
-				// gVoxelGrid.load(e.target.result, 10);
-				// gVoxelGrid.render(false);
-				
-				// gMedialAxis = new MASHUP.MedialAxis(scene);
+				// first drag & drop a voxel grid object (vxg)
+				if (gVoxelGrid == undefined) {
+					gVoxelGrid = new MASHUP.VoxelGrid();
+					gVoxelGrid.load(e.target.result, 10);
+					gVoxelGrid.render(false);
 
-				gVisualizer = new MASHUP.Visualizer(scene);
-				// hardcoding the dimensions for now
-				gVisualizer.visualizeDisplacement(25, 25, 1, e.target.result);
+					gMedialAxis = new MASHUP.MedialAxis(scene);
+				} else {
+					gVisualizer = new MASHUP.Visualizer(scene);
+					// hardcoding the dimensions for now
+					log([gVoxelGrid.nx, gVoxelGrid.ny, gVoxelGrid.nz]);
+					gVisualizer.visualizeDisplacement(e.target.result, gVoxelGrid);
+				}
+
+
+
 			});
 			reader.readAsBinaryString(files[i]);
 		}
