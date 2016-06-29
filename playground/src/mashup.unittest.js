@@ -11,5 +11,7 @@ function unitTest(argument) {
 	// var sphere = new XAC.Sphere(10);
 	// log(sphere)
 
+	addABall(new THREE.Vector3(0, 0, 0), 0xff0000, 5)
+
 	log('----------------  unit test ends  ----------------');
 }
