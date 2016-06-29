@@ -19,6 +19,7 @@ MASHUP.VoxelGrid.prototype = {
 		return this._grid;
 	},
 
+	// dimension of a voxel
 	get dim() {
 		return this._dim;
 	},
@@ -29,6 +30,18 @@ MASHUP.VoxelGrid.prototype = {
 
 	get table() {
 		return this._table;
+	},
+
+	get nx() {
+		return this._nx;
+	},
+
+	get ny() {
+		return this._ny;
+	},
+
+	get nz() {
+		return this._nz;
 	}
 };
 
@@ -38,39 +51,47 @@ MASHUP.VoxelGrid.prototype.load = function(vxgRaw, dim) {
 
 	// reading voxel info from vxgRaw file object
 	var vxgRawSlices = vxgRaw.split('\n\n');
-	for (var i = vxgRawSlices.length - 1; i >= 0; i--) {
+	for (var i = 0; i < vxgRawSlices.length; i++) {
 		var slice = [];
 		var vxgRawRows = vxgRawSlices[i].split('\n');
-		for (var j = vxgRawRows.length - 1; j >= 0; j--) {
+		for (var j = 0; j < vxgRawRows.length; j++) {
 			var row = vxgRawRows[j].split(',');
 			// binarize it
-			for (var k = row.length - 1; k >= 0; k--) {
+			for (var k = 0; k < row.length; k++) {
 				row[k] = row[k] >= 1 ? 1 : 0;
 			}
+
+			// for reasons i can't explain ...
+			row.reverse();
+
 			slice.push(row);
 		}
 		this._grid.push(slice);
 	}
 
+	this._nz = this._grid.length;
+	this._ny = this._grid[0].length;
+	this._nx = this._grid[0][0].length;
+
 	return this._grid;
 }
 
 MASHUP.VoxelGrid.prototype.render = function(hideInside) {
-	var nz = this._grid.length;
-	var ny = this._grid[0].length;
-	var nx = this._grid[0][0].length;
-
-	for (var i = 0; i < nz; i++) {
+	for (var i = 0; i < this._nz; i++) {
 		this._table[i] = this._table[i] == undefined ? [] : this._table[i];
-		// EXP: only showing one layer
-		for (var j = 0; j < 1; j++) {
+		for (var j = 0; j < this._ny; j++) {
 			this._table[i][j] = this._table[i][j] == undefined ? [] : this._table[i][j];
 			// var row = [];
-			for (var k = 0; k < nx; k++) {
+			for (var k = 0; k < this._nx; k++) {
 				// row[k] = undefined;
 				if (this._grid[i][j][k] == 1 && this._table[i][j][k] == undefined) {
 					if (hideInside != true || this._onSurface(i, j, k)) {
-						var voxel = this._makeVoxel(this._dim, k, j, i, MATERIALNORMAL, true);
+						var voxel = this._makeVoxel(this._dim, k, j, i, new THREE.MeshLambertMaterial({
+							color: 0x000000,
+							transparent: true,
+							wireframe: true,
+							opacity: 0.25
+						}), true);
 						voxel.index = [k, j, i];
 						scene.add(voxel);
 						// row[k] = voxel;
@@ -97,14 +118,14 @@ MASHUP.VoxelGrid.prototype.updateToMedialAxis = function(axis, node) {
 	//
 	if (node == undefined) {
 		// clear existing voxels
-		var nz = this._grid.length;
-		var ny = this._grid[0].length;
-		var nx = this._grid[0][0].length;
+		// var nz = this._grid.length;
+		// var ny = this._grid[0].length;
+		// var nx = this._grid[0][0].length;
 
-		for (var i = 0; i < nz; i++) {
+		for (var i = 0; i < this._nz; i++) {
 			// EXP: only deal with 2D for now
-			for (var j = 0; j < 1; j++) {
-				for (var k = 0; k < nx; k++) {
+			for (var j = 0; j < this._ny; j++) {
+				for (var k = 0; k < this._nx; k++) {
 					this._grid[i][j][k] = 0;
 				}
 			}
@@ -368,5 +389,4 @@ MASHUP.MedialAxis.prototype._snapVoxel = function(voxel, dim) {
 	}
 };
 
-MASHUP.MedialAxis.populateVoxels = function() {
-};
+MASHUP.MedialAxis.populateVoxels = function() {};
