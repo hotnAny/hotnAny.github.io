@@ -20,16 +20,16 @@ MASHUP.Optimization.prototype = {
 	constructor: MASHUP.Optimization
 };
 
-MASHUP.Optimization.prototype.elm2nodes = function(nelx, nely, nelz, mpx, mpy, mpz) {
+MASHUP.Optimization.elm2nodes = function(nelx, nely, nelz, mpx, mpy, mpz) {
 	var innback = [0, 1, nely + 1, nely + 2];
 	var enback = nely * (mpx - 1) + mpy;
 
 	var nnback = addScalar(innback, enback + mpx - 1);
 	var nnfront = addScalar(nnback, (nelx + 1) * (nely + 1));
-	var nn = addScalar(nnfront.concat(nnback), (mpz - 1) * (nelx + 1) * (nely + 1));
-	log('Node numbers for ' + nelx + 'x' + nely + 'x' + nelz + ' 3D element at position x = ' + mpx + ',' + ' y = ' + mpy + ' and z = ' + mpz + ' :\n' + nn);
-	log('Element number = ' + (enback + nelx * nely * (mpz - 1)));
-	log('Highest node number in domain = ' + ((nelx + 1) * (nely + 1) * (nelz + 1)));
+	// var nn = addScalar(nnfront.concat(nnback), (mpz - 1) * (nelx + 1) * (nely + 1));
+	// log('Node numbers for ' + nelx + 'x' + nely + 'x' + nelz + ' 3D element at position x = ' + mpx + ',' + ' y = ' + mpy + ' and z = ' + mpz + ' :\n' + nn);
+	// log('Element number = ' + (enback + nelx * nely * (mpz - 1)));
+	// log('Highest node number in domain = ' + ((nelx + 1) * (nely + 1) * (nelz + 1)));
 	return nn;
 };
 
@@ -47,6 +47,21 @@ MASHUP.Optimization.node2elms = function(nelx, nely, nelz, idx) {
 			for (var k = noz - 1; k < noz + 1; k++) {
 				if (0 <= i && i < nelx && 0 <= j && j < nely && 0 <= k && k < nelz) {
 					elms.push([i, j, k]);
+
+					////////////////////////////////////////////////////////////////////////////////
+					// testing
+					var nn = MASHUP.Optimization.elm2nodes(nelx, nely, nelz, i + 1, j + 1, k + 1);
+					var nodeNonExisting = true;
+					for (var h = nn.length - 1; h >= 0; h--) {
+						if (nn[h] == idx + 1) {
+							nodeNonExisting = false;
+							break;
+						}
+					}
+					if (nodeNonExisting) {
+						err('error at node ' + idx)
+					}
+					////////////////////////////////////////////////////////////////////////////////
 				}
 			}
 		}
@@ -54,3 +69,14 @@ MASHUP.Optimization.node2elms = function(nelx, nely, nelz, idx) {
 
 	return elms;
 };
+
+//
+// subroutine for adding a scalar to each element in an array
+//
+function addScalar(array, s) {
+	var array2 = [];
+	for (var i = array.length - 1; i >= 0; i--) {
+		array2.push(array[i] + s);
+	}
+	return array2;
+}
