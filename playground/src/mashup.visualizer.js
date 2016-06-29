@@ -60,8 +60,6 @@ MASHUP.Visualizer.prototype.visualizeDisplacement = function(listDisp, vxg, obj3
 			}
 		}
 
-		log('maxDisp: ' + maxDisp)
-
 		// normalize the forces
 		for (var i = 0; i < nelx; i++) {
 			for (var j = 0; j < nely; j++) {
