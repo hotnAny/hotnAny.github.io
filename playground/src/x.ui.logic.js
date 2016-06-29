@@ -28,11 +28,16 @@ var initPanel = function() {
 				// loadStl(e.target.result);
 
 				// EXP: only deal with voxel grid file (vxg)
-				gVoxelGrid = new MASHUP.VoxelGrid();
-				gVoxelGrid.load(e.target.result, 10);
-				gVoxelGrid.render(false);
+				//** TEMP: experimenting with displacement vector
+				// gVoxelGrid = new MASHUP.VoxelGrid();
+				// gVoxelGrid.load(e.target.result, 10);
+				// gVoxelGrid.render(false);
 				
-				gMedialAxis = new MASHUP.MedialAxis(scene);
+				// gMedialAxis = new MASHUP.MedialAxis(scene);
+
+				gVisualizer = new MASHUP.Visualizer(scene);
+				// hardcoding the dimensions for now
+				gVisualizer.visualizeDisplacement(25, 25, 1, e.target.result);
 			});
 			reader.readAsBinaryString(files[i]);
 		}

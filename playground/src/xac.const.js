@@ -40,3 +40,4 @@ XAC.MATERIALPLAIN= new THREE.MeshBasicMaterial({
 // var gVoxelTable = []; // a lookup table for meshes that represetn each voxel
 var gVoxelGrid;
 var gMedialAxis;
+var gVisualizer;

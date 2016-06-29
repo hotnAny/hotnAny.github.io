@@ -1,5 +1,5 @@
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- *	medial axis
+ *	Medial Axis
  * 	
  *	@author Xiang 'Anthony' Chen http://xiangchen.me
  *
@@ -203,7 +203,7 @@ MASHUP.MedialAxis.prototype._mousedown = function(e) {
 	if (this._infSelected == undefined) {
 		this._infSelected = XAC.hitObject(e, this._inflations);
 	}
-	
+
 	for (var i = this._inflations.length - 1; i >= 0; i--) {
 		if (this._inflations[i] == this._infSelected) {
 			this._infSelInfo = this._inflationsInfo[i];
