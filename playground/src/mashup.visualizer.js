@@ -13,7 +13,8 @@ if (XAC.Thing == undefined || XAC.Utilities == undefined || XAC.Const == undefin
 }
 
 MASHUP.Visualizer = function(scene) {
-
+	this._scene = scene;
+	this._arrows = [];
 };
 
 MASHUP.Visualizer.prototype = {
@@ -40,31 +41,59 @@ MASHUP.Visualizer.prototype.visualizeDisplacement = function(listDisp, vxg, obj3
 			for (var j = 0; j < nely; j++) {
 				var line = [];
 				for (var k = 0; k < nelz; k++) {
-					line.push(new THREE.Vector3());
+					// line.push(new THREE.Vector3());
+					line.push([]);
 				}
 				plane.push(line)
 			}
 			dispElms.push(plane);
 		}
 
-		// add displacement vector to corresponding elements
-		var maxDisp = Number.MIN_VALUE;
+		// collect displacement vector for corresponding elements
+		// this._maxDisp = this._maxDisp == undefined ? Number.MIN_VALUE : this._maxDisp;
 		for (var i = 0; i + 2 < arrDisp.length; i += 3) {
 			var dispNode = new THREE.Vector3(Number(arrDisp[i]), Number(arrDisp[i + 1]), Number(arrDisp[i + 2]));
 			elmsOfNode = MASHUP.Optimization.node2elms(nelx, nely, nelz, i / 3);
 			for (var j = elmsOfNode.length - 1; j >= 0; j--) {
 				var idxElm = elmsOfNode[j];
-				var vdisp = dispElms[idxElm[0]][idxElm[1]][idxElm[2]];
-				vdisp.add(dispNode);
-				maxDisp = Math.max(maxDisp, vdisp.length());
+				var disps = dispElms[idxElm[0]][idxElm[1]][idxElm[2]];
+				disps.push(dispNode);
+				// vdisp.add(dispNode);
+				// this._maxDisp = Math.max(this._maxDisp, vdisp.length());
 			}
 		}
+
+		// obtain the average displacement vector for each element
+		for (var i = 0; i < nelx; i++) {
+			for (var j = 0; j < nely; j++) {
+				for (var k = 0; k < nelz; k++) {
+					var vdisp = new THREE.Vector3();
+					for (var h = dispElms[i][j][k].length - 1; h >= 0; h--) {
+						vdisp.add(dispElms[i][j][k][h]);
+					}
+					vdisp.divideScalar(dispElms[i][j][k].length);
+					dispElms[i][j][k] = [];
+
+					// this._maxDisp = Math.max(this._maxDisp, vdisp.length());
+					dispElms[i][j][k] = vdisp;
+					// log(dispElms[i][j][k])
+				}
+			}
+		}
+
+		// log(this._maxDisp)
+
+		// clean up existing visualization
+		for (var i = this._arrows.length - 1; i >= 0; i--) {
+			this._scene.remove(this._arrows[i]);
+		}
+		this._arrows = [];
 
 		// normalize the forces
 		for (var i = 0; i < nelx; i++) {
 			for (var j = 0; j < nely; j++) {
 				for (var k = 0; k < nelz; k++) {
-					dispElms[i][j][k].divideScalar(maxDisp);
+					dispElms[i][j][k].divideScalar(vxg.nx * vxg.ny * vxg.nz)//this._maxDisp);
 					// log(dispElms[i][j][k]);
 
 					var pos = new THREE.Vector3(i, j, k).multiplyScalar(vxg.dim);
@@ -74,6 +103,8 @@ MASHUP.Visualizer.prototype.visualizeDisplacement = function(listDisp, vxg, obj3
 						arrow.children[h].material.opacity = dispElms[i][j][k].length();
 						arrow.children[h].material.needsUpdate = true;
 					}
+
+					this._arrows.push(arrow);
 				} // z
 			} // y
 		} // x
