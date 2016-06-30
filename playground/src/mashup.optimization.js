@@ -26,7 +26,7 @@ MASHUP.Optimization.elm2nodes = function(nelx, nely, nelz, mpx, mpy, mpz) {
 
 	var nnback = addScalar(innback, enback + mpx - 1);
 	var nnfront = addScalar(nnback, (nelx + 1) * (nely + 1));
-	// var nn = addScalar(nnfront.concat(nnback), (mpz - 1) * (nelx + 1) * (nely + 1));
+	var nn = addScalar(nnfront.concat(nnback), (mpz - 1) * (nelx + 1) * (nely + 1));
 	// log('Node numbers for ' + nelx + 'x' + nely + 'x' + nelz + ' 3D element at position x = ' + mpx + ',' + ' y = ' + mpy + ' and z = ' + mpz + ' :\n' + nn);
 	// log('Element number = ' + (enback + nelx * nely * (mpz - 1)));
 	// log('Highest node number in domain = ' + ((nelx + 1) * (nely + 1) * (nelz + 1)));
