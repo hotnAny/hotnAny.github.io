@@ -36,12 +36,8 @@ var initPanel = function() {
 					gMedialAxis = new MASHUP.MedialAxis(scene);
 				} else {
 					gVisualizer = gVisualizer == undefined ? new MASHUP.Visualizer(scene) : gVisualizer;
-					// hardcoding the dimensions for now
-					// log([gVoxelGrid.nx, gVoxelGrid.ny, gVoxelGrid.nz]);
 					gVisualizer.visualizeDisplacement(e.target.result, gVoxelGrid);
 				}
-
-
 
 			});
 			reader.readAsBinaryString(files[i]);
