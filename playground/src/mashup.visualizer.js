@@ -42,7 +42,6 @@ MASHUP.Visualizer.prototype.visualizeDisplacement = function(listDisp, vxg, obj3
 			for (var j = 0; j < nely; j++) {
 				var line = [];
 				for (var k = 0; k < nelz; k++) {
-					// line.push(new THREE.Vector3());
 					line.push([]);
 				}
 				plane.push(line)
@@ -72,10 +71,10 @@ MASHUP.Visualizer.prototype.visualizeDisplacement = function(listDisp, vxg, obj3
 					vdisp.divideScalar(dispElms[i][j][k].length);
 
 					// take into account the penalty
-					var xe = vxg.gridRaw[k][j][i];	// density at this voxel
+					var xe = vxg.gridRaw[k][j][i]; // density at this voxel
 					vdisp.multiplyScalar(Math.pow(xe, MASHUP.Optimization.p)); // multiplied by penalty
 
-					dispElms[i][j][k] = [];	// release the original array
+					dispElms[i][j][k] = []; // release the original array
 					dispElms[i][j][k] = vdisp; // assign the displacement vector
 				}
 			}
@@ -87,19 +86,17 @@ MASHUP.Visualizer.prototype.visualizeDisplacement = function(listDisp, vxg, obj3
 		}
 		this._arrows = [];
 
-		// normalize the forces by the diagonal length of the design domain
-		var diagVxg = Math.sqrt(vxg.nx * vxg.nx + vxg.ny * vxg.ny + vxg.nz * vxg.nz);
+		// normalize the forces by a customize worst case displacement
+		var worstDisp = Math.sqrt(vxg.nx * vxg.nx + vxg.ny * vxg.ny + vxg.nz * vxg.nz) / 2;
 		for (var i = 0; i < nelx; i++) {
 			for (var j = 0; j < nely; j++) {
 				for (var k = 0; k < nelz; k++) {
-					dispElms[i][j][k].divideScalar(diagVxg)//this._maxDisp);
-					// log(dispElms[i][j][k]);
-
 					var pos = new THREE.Vector3(i, j, k).multiplyScalar(vxg.dim);
-					var arrow = addAnArrow(pos, dispElms[i][j][k], vxg.dim * 0.8 * dispElms[i][j][k].length(), 1);
+					var arrow = addAnArrow(pos, dispElms[i][j][k], vxg.dim, 1);
 
 					for (var h = arrow.children.length - 1; h >= 0; h--) {
-						arrow.children[h].material.opacity = dispElms[i][j][k].length();
+						arrow.children[h].material.color = this._getColorFromScore(dispElms[i][j][k].length(), worstDisp);
+						arrow.children[h].material.opacity = vxg.gridRaw[k][j][i];
 						arrow.children[h].material.needsUpdate = true;
 					}
 
@@ -109,4 +106,35 @@ MASHUP.Visualizer.prototype.visualizeDisplacement = function(listDisp, vxg, obj3
 		} // x
 
 	}
+}
+
+MASHUP.Visualizer.prototype.visualizeStress = function(listDisp, vxg) {
+
+}
+
+
+MASHUP.Visualizer.prototype._computeDisplacement = function(listDisp, vxg) {
+
+}
+
+//
+//	get heatmap like color based on - 
+//	@param	score
+//	@param	maxScore
+//
+MASHUP.Visualizer.prototype._getColorFromScore = function(score, maxScore) {
+	// ceiling the score by maxScore
+	score = Math.min(score, maxScore);
+
+	// var colorSchemes = [0xd7191c, 0xfdae61, 0xffffbf, 0xa6d96a, 0x1a9641];
+	var colorSchemes = [0xd73027, 0xf46d43, 0xfdae61, 0xfee08b, 0xffffbf, 0xd9ef8b, 0xa6d96a, 0x66bd63, 0x1a9850]
+	colorSchemes.reverse(); // EXP
+	var color = new THREE.Color(0xffffff);
+	for (var k = 0; k < colorSchemes.length; k++) {
+		if (score <= maxScore * (k + 1) / colorSchemes.length) {
+			color.setHex(colorSchemes[k]);
+			break;
+		}
+	}
+	return color;
 }
