@@ -13,5 +13,8 @@ function unitTest(argument) {
 
 	addABall(new THREE.Vector3(0, 0, 0), 0xff0000, 5)
 
+	var sketchpad = new MASHUP.Sketchpad($(document.body), window.innerWidth, window.innerHeight);
+	// sketchpad.open()
+
 	log('----------------  unit test ends  ----------------');
 }
