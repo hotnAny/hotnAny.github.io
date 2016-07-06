@@ -36,7 +36,8 @@ var initPanel = function() {
 					gMedialAxis = new MASHUP.MedialAxis(scene);
 				} else {
 					gVisualizer = gVisualizer == undefined ? new MASHUP.Visualizer(scene) : gVisualizer;
-					gVisualizer.visualizeDisplacement(e.target.result, gVoxelGrid);
+					// gVisualizer.visualizeDisplacement(e.target.result, gVoxelGrid);
+					gVisualizer.visualizeStress(e.target.result, gVoxelGrid);
 				}
 
 			});
