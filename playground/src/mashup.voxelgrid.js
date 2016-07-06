@@ -42,30 +42,41 @@ MASHUP.VoxelGrid.prototype = {
 
 	get nz() {
 		return this._nz;
+	},
+
+	get gridRaw() {
+		return this._gridRaw;
 	}
 };
 
 MASHUP.VoxelGrid.prototype.load = function(vxgRaw, dim) {
 	this._grid = [];
+	this._gridRaw = [];
 	this._dim = dim;
 
 	// reading voxel info from vxgRaw file object
 	var vxgRawSlices = vxgRaw.split('\n\n');
 	for (var i = 0; i < vxgRawSlices.length; i++) {
+		var sliceRaw = [];
 		var slice = [];
 		var vxgRawRows = vxgRawSlices[i].split('\n');
 		for (var j = 0; j < vxgRawRows.length; j++) {
 			var row = vxgRawRows[j].split(',');
+			var rowRaw = []
 			// binarize it
 			for (var k = 0; k < row.length; k++) {
+				rowRaw.push(row[k]);
 				row[k] = row[k] >= 1 ? 1 : 0;
 			}
 
 			// for reasons i can't explain ...
 			row.reverse();
+			rowRaw.reverse();
 
+			sliceRaw.push(rowRaw);
 			slice.push(row);
 		}
+		this._gridRaw.push(sliceRaw);
 		this._grid.push(slice);
 	}
 

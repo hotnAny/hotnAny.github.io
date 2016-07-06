@@ -12,13 +12,13 @@ if (XAC.Thing == undefined || XAC.Utilities == undefined || XAC.Const == undefin
 	err('missing dependency!');
 }
 
-MASHUP.Optimization = function(scene) {
-
-};
+MASHUP.Optimization = function(scene) {};
 
 MASHUP.Optimization.prototype = {
 	constructor: MASHUP.Optimization
 };
+
+MASHUP.Optimization.p = 3; // for now, hard coded
 
 MASHUP.Optimization.elm2nodes = function(nelx, nely, nelz, mpx, mpy, mpz) {
 	var innback = [0, 1, nely + 1, nely + 2];
