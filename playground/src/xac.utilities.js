@@ -104,7 +104,7 @@ function getDist(p1, p2) {
 }
 
 
-function getAvg(values) {
+XAC.getAvg = function(values) {
 	if (values == undefined) {
 		err('[getAvg]: input variable not an array')
 		return;
@@ -127,21 +127,48 @@ function getAvg(values) {
 	return sum / values.length;
 }
 
+XAC.getStd = function(values, avg) {
+	if (avg == undefined) {
+		avg = XAC.getAvg(values);
+	}
+
+	if (values == undefined) {
+		err('[getStd]: input variable not an array')
+		return;
+	}
+
+	if (values.length <= 1) {
+		err('[getStd]: input arrays contain too few values')
+		return;
+	}
+
+	var sqsum = 0;
+	for (var i = values.length - 1; i >= 0; i--) {
+		if (isNaN(values[i])) {
+			err('[getStd]: input arrays contain not numbers')
+			return;
+		}
+		sqsum += Math.pow(values[i] - avg, 2);
+	}
+
+	return Math.sqrt(sqsum / (values.length - 1));
+}
+
 function getMedian(values) {
 	if (values == undefined) {
-		err('[getAvg]: input variable not an array')
+		err('[getMedian]: input variable not an array')
 		return;
 	}
 
 	if (values.length <= 0) {
-		err('[getAvg]: input arrays contain no values')
+		err('[getMedian]: input arrays contain no values')
 		return;
 	}
 
 	var vals = [];
 	for (var i = values.length - 1; i >= 0; i--) {
 		if (isNaN(values[i])) {
-			err('[getAvg]: input arrays contain not numbers')
+			err('[getMedian]: input arrays contain not numbers')
 			return;
 		}
 		vals.push(values[i]);
@@ -151,21 +178,21 @@ function getMedian(values) {
 	return vals[vals.length / 2];
 }
 
-function getMax(values) {
+XAC.getMax = function(values) {
 	if (values == undefined) {
-		err('[getAvg]: input variable not an array')
+		err('[getMax]: input variable not an array')
 		return;
 	}
 
 	if (values.length <= 0) {
-		err('[getAvg]: input arrays contain no values')
+		err('[getMax]: input arrays contain no values')
 		return;
 	}
 
 	var max = Number.MIN_VALUE;
 	for (var i = values.length - 1; i >= 0; i--) {
 		if (isNaN(values[i])) {
-			err('[getAvg]: input arrays contain not numbers')
+			err('[getMax]: input arrays contain not numbers')
 			return;
 		}
 		max = Math.max(values[i], max);
