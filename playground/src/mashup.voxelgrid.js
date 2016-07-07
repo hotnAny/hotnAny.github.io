@@ -101,7 +101,7 @@ MASHUP.VoxelGrid.prototype.render = function(hideInside) {
 							color: 0x000000,
 							transparent: true,
 							wireframe: true,
-							opacity: 0.25
+							opacity: 0.75
 						}), true);
 						voxel.index = [k, j, i];
 						scene.add(voxel);
