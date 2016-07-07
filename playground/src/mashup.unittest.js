@@ -11,14 +11,32 @@ function unitTest(argument) {
 	// var sphere = new XAC.Sphere(10);
 	// log(sphere)
 
-	addABall(new THREE.Vector3(0, 0, 0), 0xff0000, 5)
+	// addABall(new THREE.Vector3(0, 0, 0), 0xff0000, 5)
 
 	// var sketchpad = new MASHUP.Sketchpad($(document.body), window.innerWidth, window.innerHeight);
 	// sketchpad.open()
 
-	var I = numeric.identity(3);
-	numeric.mul(I, 0.5);
-	log(I)
+	// var I = numeric.identity(3);
+	// numeric.mul(I, 0.5);
+	// log(I)
+
+	// var verticesOfCube = [-1, -1, -1, 1, -1, -1, 1, 1, -1, -1, 1, -1, -1, -1, 1, 1, -1, 1, 1, 1, 1, -1, 1, 1, ];
+
+	// var indicesOfFaces = [
+	// 	2, 1, 0, 0, 3, 2,
+	// 	0, 4, 7, 7, 3, 0,
+	// 	0, 1, 5, 5, 4, 0,
+	// 	1, 2, 6, 6, 5, 1,
+	// 	2, 3, 7, 7, 6, 2,
+	// 	4, 5, 6, 6, 7, 4
+	// ];
+
+	// var geometry = new THREE.PolyhedronGeometry(verticesOfCube, indicesOfFaces, 2);
+	// var mesh = new THREE.Mesh(geometry, XAC.MATERIALNORMAL.clone());
+	// scene.add(mesh)
+
+	// var values = [3,5,2,14,8];
+	// log(XAC.getStd(values));
 
 	log('----------------  unit test ends  ----------------');
 }
