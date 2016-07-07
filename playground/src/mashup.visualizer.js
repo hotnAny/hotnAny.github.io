@@ -59,7 +59,103 @@ MASHUP.Visualizer.prototype.visualizeDisplacement = function(listDisp, vxg) {
 	} // x
 }
 
+MASHUP.Visualizer.prototype._computeStress = function(listDisp, vxg) {
+	var nelx = vxg.nx;
+	var nely = vxg.ny;
+	var nelz = vxg.nz;
+
+	var arrDisp = listDisp.split(',');
+
+	//
+	// re-tessellate voxel grid into tetrahedrals
+	//
+	var tetraGrid = [];
+	for (var i = 0; i < nelx; i++) {
+		var plane = [];
+		for (var j = 0; j < nely; j++) {
+			var line = [];
+			for (var k = 0; k < nelz; k++) {
+				var ns = MASHUP.Optimization.elm2nodes(nelx, nely, nelz, i + 1, j + 1, k + 1);
+				var tetras = [];
+
+				// indices of nodes of the 6 tetrahedrals in a cube
+				var tetraIndices = [
+					[0, 1, 2, 4],
+					[1, 3, 4, 5],
+					[1, 2, 3, 4],
+					[6, 7, 2, 4],
+					[7, 3, 4, 5],
+					[7, 2, 3, 4]
+				];
+
+				// init the tetrahedral data structure
+				for (var h = 0; h < tetraIndices.length; h++) {
+					var idxTetra = tetraIndices[h];
+					var idxNodes = [ns[idxTetra[0]] - 1, ns[idxTetra[1]] - 1, ns[idxTetra[2]] - 1, ns[idxTetra[3]] - 1];
+					var positions = [];
+					var displacements = [];
+
+					for (var l = 0; l < idxNodes.length; l++) {
+						var idx = idxNodes[l];
+						displacements.push(new THREE.Vector3(Number(arrDisp[idx * 3]), Number(arrDisp[idx * 3 + 1]), Number(arrDisp[idx * 3 + 2])));
+
+						var z = XAC.float2int(idx / (nelx + 1) / (nely + 1));
+						var x = XAC.float2int((idx - z * (nelx + 1) * (nely + 1)) / (nely + 1));
+						var y = nely - XAC.float2int(idx - z * (nelx + 1) * (nely + 1) - x * (nely + 1));
+						positions.push(new THREE.Vector3(x, y, z));
+
+						// log([idx, x, y, z])
+					}
+
+					var stress = this._computeTetraStress(positions, displacements);
+					// log(gs)
+					tetras.push({
+						idxNodes: idxNodes,
+						positions: positions,
+						stress: stress
+					});
+				}
+
+				line.push(tetras);
+			}
+			plane.push(line)
+		}
+		tetraGrid.push(plane);
+	}
+
+	log(tetraGrid)
+
+	return tetraGrid;
+}
+
+MASHUP.Visualizer.prototype._computeTetraStress = function(positions, displacements) {
+	var node = positions[0];
+	var node1 = positions[1];
+	var node2 = positions[2];
+	var node3 = positions[3];
+
+	var v1 = new THREE.Vector3().subVectors(node1, node);
+	var v2 = new THREE.Vector3().subVectors(node2, node);
+	var v3 = new THREE.Vector3().subVectors(node3, node);
+
+	node.add(displacements[0]);
+	node1.add(displacements[1]);
+	node2.add(displacements[2]);
+	node3.add(displacements[3]);
+
+	var V1 = new THREE.Vector3().subVectors(node1, node);
+	var V2 = new THREE.Vector3().subVectors(node2, node);
+	var V3 = new THREE.Vector3().subVectors(node3, node);
+
+	// should instead get the max?
+	var E = this._computeGreenStrain(v1, v2, v3, V1, V2, V3);
+	return numeric.fnorm(E);
+};
+
 MASHUP.Visualizer.prototype.visualizeStress = function(listDisp, vxg) {
+	this._computeStress(listDisp, vxg);
+	return;
+
 	var nelx = vxg.nx;
 	var nely = vxg.ny;
 	var nelz = vxg.nz;
@@ -72,13 +168,26 @@ MASHUP.Visualizer.prototype.visualizeStress = function(listDisp, vxg) {
 		}
 		return new THREE.Vector3(Number(arrDisp[idx]), Number(arrDisp[idx + 1]), Number(arrDisp[idx + 2]));;
 	};
-	
-	// var stressElms = 
+
+	var stressElms = [];
+	for (var i = 0; i < nelx; i++) {
+		var plane = [];
+		for (var j = 0; j < nely; j++) {
+			var line = [];
+			for (var k = 0; k < nelz; k++) {
+				line.push([]);
+			}
+			plane.push(line)
+		}
+		stressElms.push(plane);
+	}
 
 	// go thru each node
 	for (var i = 0; i < nelx + 1; i++) {
 		for (var j = 0; j < nely + 1; j++) {
 			for (var k = 0; k < nelz + 1; k++) {
+				var greenStrains = [];
+				var cnt = 0;
 
 				var ni, nj, nk;
 				for (var ni = i - 1; ni <= i + 1; ni += 2) {
@@ -106,14 +215,17 @@ MASHUP.Visualizer.prototype.visualizeStress = function(listDisp, vxg) {
 							var V2 = new THREE.Vector3().subVectors(node2, node);
 							var V3 = new THREE.Vector3().subVectors(node3, node);
 
-							var gs = this._computeGreenStrain(v1, v2, v3, V1, V2, V3);
-
-
-							log(gs)
+							// should instead get the max?
+							var E = this._computeGreenStrain(v1, v2, v3, V1, V2, V3);
+							var gs = numeric.fnorm(E);
+							greenStrains.push(gs);
+							// cnt++;
 
 						} // nk
 					} // nj
 				} // ni
+
+				log(greenStrains)
 
 			} // z
 		} // y
@@ -124,9 +236,13 @@ MASHUP.Visualizer.prototype._computeGreenStrain = function(v1, v2, v3, V1, V2, V
 	var U = [v1.toArray(), v2.toArray(), v3.toArray()];
 	var W = [V1.toArray(), V2.toArray(), V3.toArray()];
 	var F = numeric.dot(W, numeric.inv(U));
-	var E = numeric.sub(numeric.dot(numeric.transpose(F), F), numeric.identity(3));
-	// can't figure out how to mul by 1/2
-	return 0.5 * numeric.fnorm(E);
+
+	// DEBUG:
+	// numeric.print(F);
+	// log('------------')
+
+	var E = numeric.times(numeric.sub(numeric.dot(numeric.transpose(F), F), numeric.identity(3)), 0.5);
+	return E;
 }
 
 MASHUP.Visualizer.prototype._computeDisplacement = function(listDisp, vxg) {
@@ -206,12 +322,35 @@ MASHUP.Visualizer.prototype._getColorFromScore = function(score, maxScore) {
 	return color;
 }
 
-numeric.fnorm = function(m) {
+//
+//	SEVERAL EXTENSION OF NUMERIC LIBRARY
+//	@author Xiang 'Anthonj' Chen http://xiangchen.me
+//
+
+// compute the Frobenius norm of a matrix
+numeric.fnorm = function(matrix) {
 	var sum = 0;
-	for (var i = 0; i < m.length; i++) {
-		for (var j = 0; j < m[i].length; j++) {
-			sum += Math.pow(m[i][j], 2);
+	for (var i = 0; i < matrix.length; i++) {
+		for (var j = 0; j < matrix[i].length; j++) {
+			sum += Math.pow(matrix[i][j], 2);
 		}
 	}
 	return Math.sqrt(sum);
+}
+
+// print a matrix
+numeric.print = function(matrix) {
+	for (var i = 0; i < matrix.length; i++) {
+		log(matrix[i]);
+	}
+}
+
+// times a matrix (including vector) by a scalar
+numeric.times = function(matrix, scalar) {
+	for (var i = 0; i < matrix.length; i++) {
+		for (var j = 0; j < matrix[i].length; j++) {
+			matrix[i][j] *= scalar;
+		}
+	}
+	return matrix;
 }
