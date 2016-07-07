@@ -119,3 +119,22 @@ XAC.Cylinder.prototype.update = function(r, h, mat, openEnded) {
 		this._m.geometry = this._g;
 	}
 };
+
+//
+// 	polyhedron
+//	@param vertices - an array of THREE.Vector3
+//	@param faces - which vertices each face corresponds to
+//
+XAC.Polygon = function(vertices, faces, mat) {
+	// var arrVertices = [];
+	// for (var i = 0; i < vertices.length; i++) {
+	// 	arrVertices = arrVertices.concat(vertices[i].toArray());
+	// }
+
+	// this._g = new THREE.PolyhedronGeometry(arrVertices, faces, 1)
+	this._g = new THREE.Geometry();
+	this._g.vertices = vertices;
+	this._g.faces = faces;
+	this._m = new THREE.Mesh(this._g, mat == undefined ? XAC.MATERIALNORMAL.clone() : mat.clone());
+}
+XAC.Polygon.prototype = Object.create(XAC.Thing.prototype);
