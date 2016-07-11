@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>Template</title>
+		<title>Mashup</title>
 		<style>
 			body { margin: 0; }
 			canvas { width: 100%; height: 100% }
@@ -8,8 +8,6 @@
 	</head>
 	<body>
 
-	<!-- =========================================================== -->
-	<!-- vendor code -->
 	<script src="vendor/three.js"></script>
 	<script src="vendor/Projector.js"></script>
 	<script src="vendor/stat.min.js"></script>
@@ -22,50 +20,19 @@
 	<script src="vendor/numeric-1.2.6.js"></script>
 	<link rel="stylesheet" href="vendor/jquery-ui.min.css">
 
-	<!-- =========================================================== -->
 	<script src="src/xac.math.js"></script>
 	<script src="src/xac.thing.js"></script>
-	<script src="src/xac.utilities.js"></script>
-	<script src="src/x.init.js"></script>
-	
-	
+	<script src="src/xac.input.js"></script>
+	<script src="src/xac.utilities.js"></script>	
 	<script src="src/xac.const.js"></script>
+	<script src="src/xac.gl.js"></script>
+
 	<script src="src/mashup.medialaxis.js"></script>
 	<script src="src/mashup.voxelgrid.js"></script>
 	<script src="src/mashup.visualizer.js"></script>
 	<script src="src/mashup.optimization.js"></script>
 	<script src="src/mashup.design.js"></script>
-	
-	<script src="src/x.input.js"></script>
-	<script src="src/xac.input.js"></script>
-	<script src="src/x.ui.layout.js"></script>
-	<script src="src/x.ui.logic.js"></script>
-	<script src="src/xac.gl.js"></script>
 	<script src="src/mashup.unittest.js"></script>
+	<script src="src/mashup.js"></script>
 
-	<script>
-			/* 
-				stats visualization 
-			*/
-			var stats = new Stats();
-			stats.domElement.style.position = 'absolute';
-			stats.domElement.style.top = '0px';
-			stats.domElement.style.right = '0px';
-			document.body.appendChild( stats.domElement );
-
-			/*
-				render set up
-			*/
-			renderer.setClearColor( BACKGROUNDCOLOR );
-
-			var render = function () {
-				requestAnimationFrame( render );
-				gMouseCtrls.update();
-				stats.update(); 
-				lights[0].position.copy(camera.position);
-				renderer.render(scene, camera);
-			};
-
-			render();
-	</script>
 </html>
