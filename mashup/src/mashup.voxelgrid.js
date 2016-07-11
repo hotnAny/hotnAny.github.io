@@ -399,5 +399,3 @@ MASHUP.MedialAxis.prototype._snapVoxel = function(voxel, dim) {
 		this._nodesInfo[idxNodeMin].radiusData.push(Math.max(this._nodesInfo[idxNodeMin].radius, dist2NodeMin));
 	}
 };
-
-MASHUP.MedialAxis.populateVoxels = function() {};

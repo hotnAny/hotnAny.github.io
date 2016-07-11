@@ -33,7 +33,7 @@ $(document).ready(function() {
 	MASHUP.camera.position.copy(new THREE.Vector3(0, 0, 500));
 
 	MASHUP.mouesCtrls = new THREE.TrackballControls(MASHUP.camera, undefined, undefined);
-	MASHUP.mouesCtrls.wheelDisabled = false;
+	// MASHUP.mouesCtrls.wheelDisabled = false;
 
 	MASHUP.renderer.setClearColor(XAC.BACKGROUNDCOLOR);
 

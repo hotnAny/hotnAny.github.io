@@ -12,8 +12,9 @@ if (XAC.Thing == undefined || XAC.Utilities == undefined || XAC.Const == undefin
 	err('missing dependency!');
 }
 
-MASHUP.MedialAxis = function(scene) {
+MASHUP.MedialAxis = function(scene, camera) {
 	this._scene = scene;
+	this._camera = camera;
 
 	this._nodesInfo = []; // spatial info of nodes, contains:
 	this._nodes = []; // meshes of nodes
@@ -27,6 +28,7 @@ MASHUP.MedialAxis = function(scene) {
 	// visual properties
 	this._radiusEdge = 1.75;
 	this._radiusNode = 7.5;
+	this._radiusEdge = 5;
 	this._matNode = XAC.MATERIALCONTRAST;
 	this._matEdge = new THREE.MeshPhongMaterial({
 		color: 0x888888,
@@ -68,6 +70,14 @@ MASHUP.MedialAxis.prototype = {
 	}
 };
 
+MASHUP.MedialAxis.prototype.enableEventListeners = function() {
+	this._listening = true;
+}
+
+MASHUP.MedialAxis.prototype.disableEventListeners = function() {
+	this._listening = false;
+}
+
 //
 //	for external use mostly - adding nodes by specifying its position
 //
@@ -88,6 +98,60 @@ MASHUP.MedialAxis.prototype.addNode = function(pos, toConnect) {
 
 		this._addEdge(v1, v2);
 	}
+}
+
+//
+//	for external use mostly - adding edges by specifying a series of points
+//
+//	@param	points - input points corresponding to an edge
+//	@param	meshes - optional, some meshes that represent the edge
+//
+MASHUP.MedialAxis.prototype.addEdge = function(points, meshes) {
+	if (points == undefined || points.length < 2) {
+		return;
+	}
+
+	var edge = new THREE.Object3D();
+	if (meshes != undefined) {
+		for (var i = meshes.length - 1; i >= 0; i--) {
+			edge.add(meshes[i])
+		}
+	} else {
+		// TODO:
+	}
+
+	var v1 = this._addNode(points[0]);
+	v1.radius = this._radiusNode;
+	var v2 = this._addNode(points[points.length - 1]);
+	v2.radius = this._radiusNode;
+
+	var thickness = [];
+	for (var i = points.length - 1; i >= 0; i--) {
+		thickness.push(this._radiusEdge);
+	}
+
+	this._scene.add(edge);
+	this._edges.push(edge);
+
+	var edgeInfo = {
+		deleted: false,
+		mesh: edge,
+		v1: v1,
+		v2: v2,
+		points: points,
+		thickness: thickness,
+		inflations: []
+	};
+	this._edgesInfo.push(edgeInfo);
+
+	// storing edge info in nodes
+	v1.edgesInfo.push(edgeInfo);
+	v2.edgesInfo.push(edgeInfo);
+
+
+	this._inflate();
+
+	return edgeInfo;
 }
 
 //
@@ -124,6 +188,8 @@ MASHUP.MedialAxis.prototype.updateNode = function(node, pos) {
  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 MASHUP.MedialAxis.prototype._mousedown = function(e) {
+	if(this._listening == false) return;
+
 	if (this._nodes == undefined) {
 		return;
 	}
@@ -137,7 +203,7 @@ MASHUP.MedialAxis.prototype._mousedown = function(e) {
 	//
 	//	interacting with nodes
 	//
-	var node = XAC.hitObject(e, this._nodes);
+	var node = XAC.hitObject(e, this._nodes, this._camera);
 	if (this._nodeSelected != undefined) {
 		if (e.shiftKey) {
 			this._addEdge(node, this._nodeSelected);
@@ -175,7 +241,7 @@ MASHUP.MedialAxis.prototype._mousedown = function(e) {
 	//
 	// interacting with an edge
 	//	
-	var hitOnEdge = XAC.hit(e, this._edges);
+	var hitOnEdge = XAC.hit(e, this._edges, this._camera);
 	var edge = hitOnEdge != undefined ? hitOnEdge.object : undefined;
 
 	this._edgeSelected = edge;
@@ -199,9 +265,9 @@ MASHUP.MedialAxis.prototype._mousedown = function(e) {
 	//
 	//	interacting with inflation
 	//
-	this._infSelected = XAC.hitObject(e, this._inflationsNode); // nodes have higher priority to be interacted with
+	this._infSelected = XAC.hitObject(e, this._inflationsNode, this._camera); // nodes have higher priority to be interacted with
 	if (this._infSelected == undefined) {
-		this._infSelected = XAC.hitObject(e, this._inflations);
+		this._infSelected = XAC.hitObject(e, this._inflations, this._camera);
 	}
 
 	for (var i = this._inflations.length - 1; i >= 0; i--) {
@@ -214,6 +280,8 @@ MASHUP.MedialAxis.prototype._mousedown = function(e) {
 }
 
 MASHUP.MedialAxis.prototype._mousemove = function(e) {
+	if(this._listening == false) return;
+
 	if (this._maniplane != undefined) {
 		var pos = this._maniplane.update(e);
 		this.updateNode(this._nodeSelected, pos);
@@ -250,6 +318,8 @@ MASHUP.MedialAxis.prototype._mousemove = function(e) {
 }
 
 MASHUP.MedialAxis.prototype._mouseup = function(e) {
+	if(this._listening == false) return;
+	
 	if (this._maniplane != undefined) {
 		this._maniplane.destruct();
 		this._maniplane = undefined;
@@ -547,13 +617,22 @@ MASHUP.MedialAxis.prototype._inflateEdge = function(edgeInfo) {
 	var p1 = edgeInfo.v1.mesh.position;
 	var p2 = edgeInfo.v2.mesh.position;
 	var thickness = edgeInfo.thickness.concat([edgeInfo.v2.radius]);
+	var points = edgeInfo.points.concat([p2]);
 
 	var ctr0 = p1;
 	var r0 = edgeInfo.v1.radius;
 	for (var i = 0; i < thickness.length; i++) {
-		var ctr = p1.clone().multiplyScalar(1 - (i + 1) * 1.0 / thickness.length).add(
-			p2.clone().multiplyScalar((i + 1) * 1.0 / thickness.length)
-		);
+
+		var ctr;
+
+		if (points == undefined) {
+			ctr = p1.clone().multiplyScalar(1 - (i + 1) * 1.0 / thickness.length).add(
+				p2.clone().multiplyScalar((i + 1) * 1.0 / thickness.length)
+			);
+		} else {
+			ctr = points[i];
+		}
+
 
 		var r;
 		if (i == 0 || i == thickness.length - 1) {
