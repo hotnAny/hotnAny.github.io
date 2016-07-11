@@ -1,4 +1,4 @@
-function unitTest(argument) {
+function unitTest() {
 	log('---------------- unit test begins ----------------');
 
 	// log(p2ls(1.01, 0.5, 0, 0, 0, 0, 1, 0, 0))
@@ -11,7 +11,7 @@ function unitTest(argument) {
 	// var sphere = new XAC.Sphere(10);
 	// log(sphere)
 
-	addABall(new THREE.Vector3(0, 0, 0), 0xff0000, 5)
+	// addABall(new THREE.Vector3(0, 0, 0), 0xff0000, 5)
 
 	// var sketchpad = new MASHUP.Sketchpad($(document.body), window.innerWidth, window.innerHeight);
 	// sketchpad.open()
@@ -56,11 +56,11 @@ function unitTest(argument) {
 	// var curveObject = new THREE.Line(geometry, material);
 	// scene.add(curveObject);
 
-	document.addEventListener('keydown', function (e) {
-		if(e.keyCode == 32) {
-			log(camera);
-		}
-	}, false);
+	// document.addEventListener('keydown', function (e) {
+	// 	if(e.keyCode == 32) {
+	// 		log(camera);
+	// 	}
+	// }, false);
 
 	log('----------------  unit test ends  ----------------');
 }

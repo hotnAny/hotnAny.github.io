@@ -8,6 +8,10 @@ XAC.COLORCONTRAST = 0xD1D6E7; // is the contrast of the COLORNORMAL
 XAC.COLORHIGHLIGHT = 0xfffa90;
 XAC.COLORFOCUS = 0xE82C0C; // color to really draw users' focus
 
+XAC.BACKGROUNDCOLOR = 0xF2F0F0;
+XAC.GROUNDCOLOR = 0xF2F0F0;
+XAC.GRIDCOLOR = 0xbbbbbb;
+
 XAC.MATERIALNORMAL = new THREE.MeshPhongMaterial({
      color: XAC.COLORNORMAL,
      transparent: true,
@@ -46,6 +50,6 @@ XAC.MATERIALFOCUS = new THREE.MeshPhongMaterial({
 
 
 // TEMP: for testing on the playground
-var gVoxelGrid;
-var gMedialAxis;
-var gVisualizer;
+// var gVoxelGrid;
+// var gMedialAxis;
+// var gVisualizer;

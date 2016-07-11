@@ -9,11 +9,13 @@
 
 var MASHUP = MASHUP || {};
 
-MASHUP.Design = function(scene) {
+MASHUP.Design = function(scene, camera) {
 	this._scene = scene;
+	this._camera = camera;
+
 	this._mode = MASHUP.Design.SKETCH;
 
-	this._medialAxis = new MASHUP.MedialAxis(this._scene);
+	// this._medialAxis = new MASHUP.MedialAxis(this._scene);
 
 	// storing a list of functional parameters
 	this._loads = [];
@@ -63,11 +65,11 @@ MASHUP.Design.prototype._mousedown = function(e) {
 		return;
 	}
 
-	var hitInfo = XAC.hit(e, this._elements);
+	var hitInfo = XAC.hit(e, this._elements, this._camera);
 	var hitPoint = (hitInfo == undefined) ? new THREE.Vector3() : hitInfo.point;
 	var hitElm = (hitInfo == undefined) ? undefined : hitInfo.object;
 
-	this._maniPlane = new XAC.Maniplane(hitPoint, false, false);
+	this._maniPlane = new XAC.Maniplane(hitPoint, this._scene, this._camera);
 
 	this._posDown = {
 		x: e.clientX,
@@ -134,7 +136,7 @@ MASHUP.Design.prototype._mousemove = function(e) {
 			var inkPoint = this._maniPlane.update(e);
 			ink.position.copy(inkPoint);
 			this._ink.push(ink);
-			scene.add(ink);
+			this._scene.add(ink);
 			break;
 		case MASHUP.Design.LOADPOINT:
 			break;

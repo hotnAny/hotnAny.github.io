@@ -11,7 +11,7 @@ var XAC = XAC || {};
 /*
  *	function for performing raycasting
  */
-XAC.rayCast = function(x, y, objs) {
+XAC.rayCast = function(x, y, objs, camera) {
 	var rayCaster = new THREE.Raycaster();
 	var vector = new THREE.Vector3();
 	vector.set((x / window.innerWidth) * 2 - 1, -(y / window.innerHeight) * 2 + 1, 0.5);
@@ -21,24 +21,24 @@ XAC.rayCast = function(x, y, objs) {
 	return rayCaster.intersectObjects(objs);
 };
 
-XAC.hit = function(e, objs) {
-	var hits = XAC.rayCast(e.clientX, e.clientY, objs);
+XAC.hit = function(e, objs, camera) {
+	var hits = XAC.rayCast(e.clientX, e.clientY, objs, camera);
 	if (hits.length > 0) {
 		return hits[0];
 	}
 	return undefined;
 }
 
-XAC.hitObject = function(e, objs) {
-	var hits = XAC.rayCast(e.clientX, e.clientY, objs);
+XAC.hitObject = function(e, objs, camera) {
+	var hits = XAC.rayCast(e.clientX, e.clientY, objs, camera);
 	if (hits.length > 0) {
 		return hits[0].object;
 	}
 	return undefined;
 };
 
-XAC.hitPoint = function(e, objs) {
-	var hits = XAC.rayCast(e.clientX, e.clientY, objs);
+XAC.hitPoint = function(e, objs, camera) {
+	var hits = XAC.rayCast(e.clientX, e.clientY, objs, camera);
 	if (hits.length > 0) {
 		return hits[0].point;
 	}
