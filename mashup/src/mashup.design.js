@@ -15,14 +15,16 @@ MASHUP.Design = function(scene, camera) {
 
 	this._mode = MASHUP.Design.SKETCH;
 
-	// this._medialAxis = new MASHUP.MedialAxis(this._scene);
+	this._medialAxis = new MASHUP.MedialAxis(this._scene, this._camera);
+	this._medialAxis.disableEventListeners();
 
 	// storing a list of functional parameters
 	this._loads = [];
 	this._clearances = [];
 	this._boundaries = [];
 
-	// the currently active parameters
+	// the currently interactive parameters
+	this._inkPoints = [];
 	this._load = undefined; // {point, vector, arrow}
 	this._clearance = undefined; // {min, max, box}
 	this._boundary = undefined; // {min, max, box}
@@ -36,11 +38,11 @@ MASHUP.Design = function(scene, camera) {
 
 	this._posDown = undefined;
 
-	this._elements = [];	// visual elements that represent parameters
+	this._elements = []; // visual elements that represent parameters
 
 	// temp visual elements
 	this._ink = [];
-	this._inkSize = 3;
+	this._inkSize = 5;
 	var mat = XAC.MATERIALNORMAL.clone();
 	mat.opacity = 1.0;
 	this._inkMat = mat;
@@ -48,6 +50,8 @@ MASHUP.Design = function(scene, camera) {
 
 // editing modes
 MASHUP.Design.SKETCH = 0;
+
+MASHUP.Design.EDIT = 3;
 
 MASHUP.Design.LOADPOINT = 1.1;
 MASHUP.Design.LOADVECTOR = 1.2;
@@ -78,11 +82,6 @@ MASHUP.Design.prototype._mousedown = function(e) {
 
 	switch (this._mode) {
 		case MASHUP.Design.SKETCH:
-			// var ink = new XAC.Sphere(this._inkSize / 2, this._inkMat).m;
-			// var inkPoint = this._maniPlane.update(e);
-			// ink.position.copy(inkPoint);
-			// this._ink.push(ink);
-			// scene.add(ink);
 			break;
 		case MASHUP.Design.LOADPOINT:
 			// TODO: make sure there is a valid selection
@@ -132,11 +131,26 @@ MASHUP.Design.prototype._mousemove = function(e) {
 
 	switch (this._mode) {
 		case MASHUP.Design.SKETCH:
-			var ink = new XAC.Sphere(this._inkSize / 2, this._inkMat).m;
 			var inkPoint = this._maniPlane.update(e);
-			ink.position.copy(inkPoint);
-			this._ink.push(ink);
-			this._scene.add(ink);
+			var inkJoint = new XAC.Sphere(this._inkSize / 2, this._inkMat).m;
+			inkJoint.position.copy(inkPoint);
+
+			this._inkPoints.push(inkPoint);
+
+			this._scene.add(inkJoint);
+			if (this._ink.length > 0) {
+				var inkStroke = new XAC.ThickLine(this._inkPointPrev, inkPoint, this._inkSize / 2, this._inkMat).m;
+
+				this._scene.add(inkStroke);
+			}
+
+			this._ink.push(inkJoint);
+			this._ink.push(inkStroke);
+
+			this._inkPointPrev = inkPoint;
+			break;
+		case MASHUP.Design.EDIT:
+			this._medialAxis._mousedown(e);
 			break;
 		case MASHUP.Design.LOADPOINT:
 			break;
@@ -165,6 +179,8 @@ MASHUP.Design.prototype._mousemove = function(e) {
 			//
 			break;
 	}
+
+
 }
 
 MASHUP.Design.prototype._mouseup = function(e) {
@@ -176,10 +192,19 @@ MASHUP.Design.prototype._mouseup = function(e) {
 
 	switch (this._mode) {
 		case MASHUP.Design.SKETCH:
-			// TODO: create a bezier curve like segment (edge) in medial axis
-			//
-			// TODO: remove ink
-			//
+			// remove ink and clean up
+			for (var i = this._ink.length - 1; i >= 0; i--) {
+				this._scene.remove(this._ink[i]);
+			}
+			this._ink = [];
+
+			// convert it to topology
+			this._medialAxis.addEdge(this._inkPoints);
+			this._inkPoints = [];
+
+			break;
+		case MASHUP.Design.EDIT:
+			this._medialAxis._mousemove(e);
 			break;
 		case MASHUP.Design.LOADPOINT:
 			break;
@@ -202,6 +227,9 @@ MASHUP.Design.prototype._keydown = function(e) {
 			case MASHUP.Design.SKETCH:
 				// TODO: routine to leave some ink
 				//
+				break;
+			case MASHUP.Design.EDIT:
+				this._medialAxis._mouseup(e);
 				break;
 			case MASHUP.Design.LOADPOINT:
 				break;
