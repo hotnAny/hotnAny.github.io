@@ -6,7 +6,7 @@
  *
  *------------------------------------------------------------------------------------*/
 
-$(document.body).append(panel);
+// $(document.body).append(panel);
 
 var initPanel = function() {
 	$(document).on('dragover', function(e) {
@@ -50,4 +50,10 @@ var initPanel = function() {
 $(document).ready(function() {
 	initPanel();
 	unitTest();
+
+	// position the default camera
+	// camera.position.copy(new THREE.Vector3(0, 50, 0));
+	// var lookAt = new THREE.Vector3(0, -1, 0);
+	// var gMouseCtrls = new THREE.TrackballControls(camera, undefined, gLookAt);
+	var design = new MASHUP.Design(scene);
 })

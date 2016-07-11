@@ -3,20 +3,25 @@ var XAC = XAC || {};
 XAC.Const = {};
 
 // some common visual properties
+XAC.COLORNORMAL = 0xDB5B8A; // the normal color
+XAC.COLORCONTRAST = 0xD1D6E7; // is the contrast of the COLORNORMAL
+XAC.COLORHIGHLIGHT = 0xfffa90;
+XAC.COLORFOCUS = 0xE82C0C; // color to really draw users' focus
+
 XAC.MATERIALNORMAL = new THREE.MeshPhongMaterial({
-     color: COLORNORMAL,
+     color: XAC.COLORNORMAL,
      transparent: true,
      opacity: 0.75
 });
 
 XAC.MATERIALCONTRAST = new THREE.MeshPhongMaterial({
-     color: COLORCONTRAST,
+     color: XAC.COLORCONTRAST,
      transparent: true,
      opacity: 0.75
 });
 
 XAC.MATERIALHIGHLIGHT = new THREE.MeshPhongMaterial({
-     color: COLORHIGHLIGHT,
+     color: XAC.COLORHIGHLIGHT,
      transparent: true,
      opacity: 0.95
 });
@@ -34,15 +39,13 @@ XAC.MATERIALPLAIN= new THREE.MeshBasicMaterial({
 });
 
 XAC.MATERIALFOCUS = new THREE.MeshPhongMaterial({
-     color: 0xE82C0C,
+     color: XAC.COLORFOCUS,
      transparent: true,
      opacity: 0.95
 });
 
 
-// var DIMVOXEL = 10;
-// var gVoxels = [];
-// var gVoxelTable = []; // a lookup table for meshes that represetn each voxel
+// TEMP: for testing on the playground
 var gVoxelGrid;
 var gMedialAxis;
 var gVisualizer;
