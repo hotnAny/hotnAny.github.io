@@ -15,10 +15,12 @@ MASHUP.Design = function(scene) {
 
 	this._medialAxis = new MASHUP.MedialAxis(this._scene);
 
+	// storing a list of functional parameters
 	this._loads = [];
 	this._clearances = [];
 	this._boundaries = [];
 
+	// the currently active parameters
 	this._load = undefined; // {point, vector, arrow}
 	this._clearance = undefined; // {min, max, box}
 	this._boundary = undefined; // {min, max, box}
@@ -31,6 +33,15 @@ MASHUP.Design = function(scene) {
 	document.addEventListener('keydown', this._keydown.bind(this), false);
 
 	this._posDown = undefined;
+
+	this._elements = [];	// visual elements that represent parameters
+
+	// temp visual elements
+	this._ink = [];
+	this._inkSize = 3;
+	var mat = XAC.MATERIALNORMAL.clone();
+	mat.opacity = 1.0;
+	this._inkMat = mat;
 }
 
 // editing modes
@@ -48,8 +59,15 @@ MASHUP.Design.prototype = {
 };
 
 MASHUP.Design.prototype._mousedown = function(e) {
-	// TODO: raycast to detect element selection
-	//
+	if (e.which != XAC.LEFTMOUSE) {
+		return;
+	}
+
+	var hitInfo = XAC.hit(e, this._elements);
+	var hitPoint = (hitInfo == undefined) ? new THREE.Vector3() : hitInfo.point;
+	var hitElm = (hitInfo == undefined) ? undefined : hitInfo.object;
+
+	this._maniPlane = new XAC.Maniplane(hitPoint, false, false);
 
 	this._posDown = {
 		x: e.clientX,
@@ -58,13 +76,14 @@ MASHUP.Design.prototype._mousedown = function(e) {
 
 	switch (this._mode) {
 		case MASHUP.Design.SKETCH:
-			// TODO: create a perspective canvas
-			//
-			// TODO: routine to leave some ink
-			//
+			// var ink = new XAC.Sphere(this._inkSize / 2, this._inkMat).m;
+			// var inkPoint = this._maniPlane.update(e);
+			// ink.position.copy(inkPoint);
+			// this._ink.push(ink);
+			// scene.add(ink);
 			break;
 		case MASHUP.Design.LOADPOINT:
-		// TODO: make sure there is a valid selection
+			// TODO: make sure there is a valid selection
 			this._mode = MASHUP.Design.LOADVECTOR;
 			this._load = {
 				point: undefined,
@@ -85,6 +104,13 @@ MASHUP.Design.prototype._mousedown = function(e) {
 			this._mode = MASHUP.Design.SKETCH;
 			break;
 		case MASHUP.Design.BOUNDARYPOINT:
+			// TODO: make sure there is a valid selection
+			this._mode = MASHUP.Design.BOUNDARYAREA;
+			this._boundary = {
+				min: undefined,
+				max: undefined,
+				box: undefined
+			};
 			break;
 		case MASHUP.Design.BOUNDARYAREA:
 			break;
@@ -92,6 +118,10 @@ MASHUP.Design.prototype._mousedown = function(e) {
 }
 
 MASHUP.Design.prototype._mousemove = function(e) {
+	if (e.which != XAC.LEFTMOUSE) {
+		return;
+	}
+
 	// TODO: filter out non dragging mouse events
 	//
 
@@ -100,8 +130,11 @@ MASHUP.Design.prototype._mousemove = function(e) {
 
 	switch (this._mode) {
 		case MASHUP.Design.SKETCH:
-			// TODO: routine to leave some ink
-			//
+			var ink = new XAC.Sphere(this._inkSize / 2, this._inkMat).m;
+			var inkPoint = this._maniPlane.update(e);
+			ink.position.copy(inkPoint);
+			this._ink.push(ink);
+			scene.add(ink);
 			break;
 		case MASHUP.Design.LOADPOINT:
 			break;
@@ -124,11 +157,21 @@ MASHUP.Design.prototype._mousemove = function(e) {
 		case MASHUP.Design.BOUNDARYPOINT:
 			break;
 		case MASHUP.Design.BOUNDARYAREA:
+			// TODO: [one timer] create a box
+			//
+			// TODO: perspectively map mouse to the box and its min/max
+			//
 			break;
 	}
 }
 
 MASHUP.Design.prototype._mouseup = function(e) {
+	if (e.which != XAC.LEFTMOUSE) {
+		return;
+	}
+
+	this._maniPlane.destruct();
+
 	switch (this._mode) {
 		case MASHUP.Design.SKETCH:
 			// TODO: create a bezier curve like segment (edge) in medial axis
@@ -169,5 +212,8 @@ MASHUP.Design.prototype._keydown = function(e) {
 			case MASHUP.Design.BOUNDARYAREA:
 				break;
 		}
+	} else if (e.keyCode == 27) { // ESC
+		// TODO: cancel everything that's in progress
+		//
 	}
 }
