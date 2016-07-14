@@ -48,7 +48,9 @@ MASHUP.Design = function(scene, camera) {
 	this._inkSize = 5;
 	var mat = XAC.MATERIALNORMAL.clone();
 	mat.opacity = 1.0;
-	this._inkMat = mat;
+	this._inkMatDesign = mat;
+
+	this._inkMatBoundary = XAC.MATERIALALT.clone();
 }
 
 // editing modes
@@ -67,6 +69,9 @@ MASHUP.Design.prototype = {
 	constructor: MASHUP.Design
 };
 
+//
+//
+//
 MASHUP.Design.prototype._mousedown = function(e) {
 	if (e.which != XAC.LEFTMOUSE) {
 		return;
@@ -117,27 +122,29 @@ MASHUP.Design.prototype._mousedown = function(e) {
 			}
 			break;
 		case MASHUP.Design.CLEARANCEAREA:
-			// TODO: finalize the selection of a clearance area
-			//
+			// finalize the selection of a clearance area
 			this._clearances.push(this._clearance);
-
 			break;
 		case MASHUP.Design.BOUNDARYPOINT:
-			// TODO: make sure there is a valid selection
-			this._mode = MASHUP.Design.BOUNDARYAREA;
+			if (hitInfo != undefined) {
+				this._maniPlane.setPos(hitInfo.object.position);
+			}
 			this._boundary = {
-				min: undefined,
-				max: undefined,
-				box: undefined
+				points: [],
+				edgeInfo: undefined
 			};
 			break;
 		case MASHUP.Design.BOUNDARYAREA:
+
 			break;
 	}
 
 	this._posMove = this._posDown;
 }
 
+//
+//
+//
 MASHUP.Design.prototype._mousemove = function(e) {
 	if (e.which != XAC.LEFTMOUSE && this._glueState != true) {
 		return;
@@ -175,7 +182,6 @@ MASHUP.Design.prototype._mousemove = function(e) {
 				this._load.vector, this._load.vector.length(), 3);
 			break;
 		case MASHUP.Design.CLEARANCEAREA:
-
 			var hitPoint = this._maniPlane.update(e);
 			this._scene.remove(this._clearance.box);
 
@@ -191,6 +197,10 @@ MASHUP.Design.prototype._mousemove = function(e) {
 			this._scene.add(this._clearance.box);
 			break;
 		case MASHUP.Design.BOUNDARYPOINT:
+			// BUG: hard code to fix for now
+			if (hitPoint.x == 0 && hitPoint.y == 0 && hitPoint.z == 500) {} else {
+				this._dropInk(hitPoint);
+			}
 			break;
 		case MASHUP.Design.BOUNDARYAREA:
 			// TODO: [one timer] create a box
@@ -206,6 +216,9 @@ MASHUP.Design.prototype._mousemove = function(e) {
 	};
 }
 
+//
+//
+//
 MASHUP.Design.prototype._mouseup = function(e) {
 	if (e.which != XAC.LEFTMOUSE) {
 		return;
@@ -240,7 +253,6 @@ MASHUP.Design.prototype._mouseup = function(e) {
 				this._elements.push(edgeInfo.v2.mesh);
 				this._inkPoints = [];
 			}
-
 			break;
 		case MASHUP.Design.EDIT:
 			this._medialAxis._mouseup(e);
@@ -275,6 +287,35 @@ MASHUP.Design.prototype._mouseup = function(e) {
 			this._glueState = false;
 			break;
 		case MASHUP.Design.BOUNDARYPOINT:
+			if (this._ink.length > 0) {
+				// remove ink and clean up
+				for (var i = this._ink.length - 1; i >= 0; i--) {
+					this._scene.remove(this._ink[i]);
+				}
+				this._ink = [];
+
+				// convert it to topology and store the visual elements
+				var edgeInfo = this._medialAxis.addEdge(this._inkPoints);
+				this._boundary.edgeInfo = edgeInfo;
+
+				for (var i = edgeInfo.inflations.length - 1; i >= 0; i--) {
+					edgeInfo.inflations[i].m.material = this._inkMatBoundary.clone();
+					edgeInfo.inflations[i].m.needsUpdate = true;
+					this._elements.push(edgeInfo.inflations[i].m);
+				}
+
+				edgeInfo.v1.inflation.m.material = this._inkMatBoundary.clone();
+				edgeInfo.v1.inflation.m.material.needsUpdate = true;
+				this._elements.push(edgeInfo.v1.inflation.m);
+
+				edgeInfo.v2.inflation.m.material = this._inkMatBoundary.clone();
+				edgeInfo.v2.inflation.m.material.needsUpdate = true;
+				this._elements.push(edgeInfo.v2.inflation.m);
+
+				this._inkPoints = [];
+
+				this._boundaries.push(this._boundary);
+			}
 			break;
 		case MASHUP.Design.BOUNDARYAREA:
 			break;
@@ -311,7 +352,7 @@ MASHUP.Design.prototype._keydown = function(e) {
 //	subroutine for drawing - not independent
 //
 MASHUP.Design.prototype._dropInk = function(inkPoint, mat) {
-	var inkJoint = new XAC.Sphere(this._inkSize / 2, this._inkMat).m;
+	var inkJoint = new XAC.Sphere(this._inkSize / 2, this._inkMatDesign).m;
 	inkJoint.position.copy(inkPoint);
 
 	this._inkPoints.push(inkPoint);
@@ -319,7 +360,7 @@ MASHUP.Design.prototype._dropInk = function(inkPoint, mat) {
 	this._scene.add(inkJoint);
 	if (this._ink.length > 0) {
 		var inkStroke = new XAC.ThickLine(this._inkPointPrev, inkPoint,
-			this._inkSize / 2, mat == undefined ? this._inkMat : mat).m;
+			this._inkSize / 2, mat == undefined ? this._inkMatDesign : mat).m;
 		this._scene.add(inkStroke);
 	}
 
