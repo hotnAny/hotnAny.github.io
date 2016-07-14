@@ -120,10 +120,12 @@ MASHUP.MedialAxis.prototype.addEdge = function(points, meshes) {
 		// TODO:
 	}
 
-	var v1 = this._addNode(points[0]);
-	v1.radius = this._radiusNode;
-	var v2 = this._addNode(points[points.length - 1]);
-	v2.radius = this._radiusNode;
+	var idx1 = this._findNode(points[0], false);
+	var v1 = idx1 >= 0 ? this._nodesInfo[idx1] : this._addNode(points[0]);
+	v1.radius = v1.radius == undefined ? this._radiusNode : v1.radius;
+	var idx2 = this._findNode(points[points.length - 1], false);
+	var v2 = idx2 >= 0 ? this._nodesInfo[idx2] : this._addNode(points[points.length - 1]);
+	v2.radius = v2.radius == undefined ? this._radiusNode : v2.radius;
 
 	var thickness = [];
 	for (var i = points.length - 1; i >= 0; i--) {
@@ -406,12 +408,13 @@ MASHUP.MedialAxis.prototype._removeNode = function(node) {
 
 //
 //	find a node and maybe bring it to the top of the stack
+//	return the index of the node stored
 //
 MASHUP.MedialAxis.prototype._findNode = function(pos, bringToTop) {
 	for (var i = this._nodesInfo.length - 1; i >= 0; i--) {
 		if (this._nodesInfo[i].deleted) continue;
 
-		if (pos.distanceTo(this._nodesInfo[i].mesh.position) < this._radiusNode) {
+		if (pos.distanceTo(this._nodesInfo[i].mesh.position) < this._nodesInfo[i].radius) {
 			if (bringToTop) {
 				this._nodes.push(this._nodes.splice(i, 1)[0]);
 				this._nodesInfo.push(this._nodesInfo.splice(i, 1)[0]);
