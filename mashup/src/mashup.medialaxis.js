@@ -130,14 +130,6 @@ MASHUP.MedialAxis.prototype.addEdge = function(points, meshes) {
 		thickness.push(this._radiusEdge);
 	}
 
-	// var relpos = [];
-	// for (var i = points.length - 1; i >= 0; i--) {
-	// 	relpos.push({
-	// 		dv1: new THREE.Vector3().subVectors(points[i], v1.mesh.position),
-	// 		dv2: new THREE.Vector3().subVectors(points[i], v2.mesh.position)
-	// 	});
-	// }
-
 	this._scene.add(edge);
 	this._edges.push(edge);
 
@@ -147,7 +139,6 @@ MASHUP.MedialAxis.prototype.addEdge = function(points, meshes) {
 		v1: v1,
 		v2: v2,
 		points: points,
-		// relpos: relpos, //relative positions to v1, v2
 		thickness: thickness,
 		inflations: []
 	};
@@ -183,17 +174,19 @@ MASHUP.MedialAxis.prototype.updateNode = function(node, pos) {
 		var v1 = this._edgesInfo[i].v1.mesh;
 		var v2 = this._edgesInfo[i].v2.mesh;
 		if (v1 == node || v2 == node) {
+			// for simple straight edge
 			if (this._edgesInfo[i].points == undefined) {
 				this._scene.remove(this._edges[i]);
 				this._edges[i] = new XAC.ThickLine(v2.position, v1.position, this._radiusEdge, this._matEdge).m;
 				this._edgesInfo[i].mesh = this._edges[i];
 				this._scene.add(this._edges[i]);
-			} else {
+			}
+			// for edges with points (polygonal line)
+			else {
 				var dv = node.position.clone().sub(posPrev);
 				var len = v2.position.clone().sub(posPrev).length();
 				for (var j = this._edgesInfo[i].points.length - 1; j >= 0; j--) {
 					var pt = this._edgesInfo[i].points[j];
-					// var len2 = pt.clone().sub(v2.position).length();
 					var ratio = v1 == node ?
 						1 - 1.0 * j / this._edgesInfo[i].points.length :
 						1.0 * j / this._edgesInfo[i].points.length;
