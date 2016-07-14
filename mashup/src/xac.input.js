@@ -24,6 +24,7 @@ XAC.Maniplane = function(pos, scene, camera, orthogonal, showPlane) {
 	this._scene = scene;
 
 	this._plane = new XAC.Plane(1000, 1000, showPlane == true ? XAC.MATERIALPLAIN : XAC.MATERIALINVISIBLE).m;
+	this._plane.material.opacity = 0.5;
 	this._plane.position.copy(pos);
 
 	var vecView = new THREE.Vector3().subVectors(this._camera.position, this._plane.position);
@@ -44,7 +45,13 @@ XAC.Maniplane.prototype = {
 		return XAC.hitPoint(e, [this._plane], this._camera);
 	},
 
+	setPos: function(pos) {
+		this._plane.position.copy(pos);
+	},
+
 	destruct: function() {
 		this._scene.remove(this._plane);
+		// this._plane.material.opacity = 0.25;
+		// this._plane.material.needsUpdate = true;
 	}
 }
