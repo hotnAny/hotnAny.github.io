@@ -30,7 +30,7 @@ $(document).ready(function() {
 	MASHUP.objects = new Array();
 
 	MASHUP.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 10000);
-	MASHUP.camera.position.copy(new THREE.Vector3(0, 0, 500));
+	MASHUP.camera.position.copy(new THREE.Vector3(0, 0, 250));
 
 	MASHUP.mouesCtrls = new THREE.TrackballControls(MASHUP.camera, undefined, undefined);
 	// MASHUP.mouesCtrls.wheelDisabled = false;

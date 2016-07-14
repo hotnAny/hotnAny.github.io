@@ -73,9 +73,11 @@ function unitTest() {
 				break;
 			case 51:
 				MASHUP.design._mode = MASHUP.Design.LOADPOINT;
-				$(MASHUP.renderer.domElement).css('cursor', 'default');
+				$(MASHUP.renderer.domElement).css('cursor', 'context-menu');
 				break;
 			case 52:
+				MASHUP.design._mode = MASHUP.Design.BOUNDARYPOINT;
+				$(MASHUP.renderer.domElement).css('cursor', 'auto');
 				break;
 		}
 	}, false);
