@@ -121,6 +121,20 @@ XAC.Cylinder.prototype.update = function(r, h, mat, openEnded) {
 };
 
 //
+//	box
+//
+XAC.Box = function(w, t, l, mat) {
+	this._material = mat;
+	this.update(w, t, l, this._material);
+}
+XAC.Box.prototype = Object.create(XAC.Thing.prototype);
+XAC.Box.prototype.update = function(w, t, l) {
+	this._g = new THREE.CubeGeometry(w, t, l);
+	this._m = new THREE.Mesh(this._g, 
+		this._material == undefined ? MATERIALNORMAL.clone() : this._material.clone());
+}
+
+//
 // 	polyhedron
 //	@param vertices - an array of THREE.Vector3
 //	@param faces - which vertices each face corresponds to
