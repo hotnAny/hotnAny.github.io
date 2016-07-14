@@ -165,3 +165,18 @@ function p2l(x, y, z, x1, y1, z1, x2, y2, z2) {
 		projection: proj
 	};
 }
+
+// p, q are points, u, v are vectors, all in three.js 
+// p shoots out u, q shoots out v, what's the intersection
+function vectorsIntersection(p, u, q, v) {
+	var A = numeric.transpose([u.toArray(), v.clone().multiplyScalar(-1).toArray()]);
+	var b = numeric.transpose([new THREE.Vector3().subVectors(q, p).toArray()]);
+	log(A)
+	var Ainv = numeric.inv(A);
+	if(Ainv == undefined) {
+		err('matrix not invertible!');
+		return undefined;
+	}
+	var x = numeric.transpose(numeric.dot(Ainv, b))[0];
+	return p.clone().add(u.clone().multiplyScalar(x[0]));
+}
