@@ -115,16 +115,12 @@ MASHUP.Design.prototype._mousedown = function(e) {
 					box: undefined
 				}
 			}
-			this._mode = MASHUP.Design.LOADPOINT;
-			this._load = undefined;
-			this._glueState = false;
 			break;
 		case MASHUP.Design.CLEARANCEAREA:
 			// TODO: finalize the selection of a clearance area
 			//
-			// this._clearances.push(this._clearance);
-			// this._mode = MASHUP.Design.SKETCH;
-			// this._glueState = false;
+			this._clearances.push(this._clearance);
+
 			break;
 		case MASHUP.Design.BOUNDARYPOINT:
 			// TODO: make sure there is a valid selection
@@ -163,12 +159,13 @@ MASHUP.Design.prototype._mousemove = function(e) {
 			this._medialAxis._mousemove(e);
 			break;
 		case MASHUP.Design.LOADPOINT:
-			this._load.points.push(hitPoint);
 			var hitElm = XAC.hitObject(e, this._elements, this._camera);
-			this._load.area.push(hitElm);
-			hitElm.material = XAC.MATERIALHIGHLIGHT.clone();
-			hitElm.material.needsUpdate = true;
-			// this._dropInk(XAC.hitPoint(e, this._elements, this._camera), XAC.MATERIALHIGHLIGHT.clone());
+			if (hitElm != undefined) {
+				this._load.points.push(hitElm.position);
+				this._load.area.push(hitElm);
+				hitElm.material = XAC.MATERIALHIGHLIGHT.clone();
+				hitElm.material.needsUpdate = true;
+			}
 			break;
 		case MASHUP.Design.LOADVECTOR:
 			// show an arrow indicating the direction and magnititude of load
@@ -179,14 +176,19 @@ MASHUP.Design.prototype._mousemove = function(e) {
 			break;
 		case MASHUP.Design.CLEARANCEAREA:
 
-			// TODO: [one timer] create a box
-			// var hitPoint = this._maniPlane.update(e);
-			// var vclear = hitPoint.clone().sub(this._load.point);
-			// this._scene.remove(this._clearance.box);
+			var hitPoint = this._maniPlane.update(e);
+			this._scene.remove(this._clearance.box);
 
-			//
-			// TODO: perspectively map mouse to the box and its min/max
-			//
+			var vclear = hitPoint.clone().sub(this._load.midpt);
+			var heading = this._load.vector.clone().multiplyScalar(-1).normalize();
+			var hclear = vclear.dot(heading);
+			var wclear = Math.sqrt(Math.pow(vclear.length(), 2) - hclear * hclear) * 2;
+
+			this._clearance.box = new XAC.Box(wclear, hclear, 5, XAC.MATERIALCONTRAST).m;
+			XAC.rotateObjTo(this._clearance.box, heading);
+			this._clearance.box.position.copy(this._load.midpt.clone().add(heading.clone().multiplyScalar(0.5 * hclear)));
+
+			this._scene.add(this._clearance.box);
 			break;
 		case MASHUP.Design.BOUNDARYPOINT:
 			break;
@@ -266,8 +268,11 @@ MASHUP.Design.prototype._mouseup = function(e) {
 			}
 			break;
 		case MASHUP.Design.LOADVECTOR:
+			this._mode = MASHUP.Design.CLEARANCEAREA;
 			break;
 		case MASHUP.Design.CLEARANCEAREA:
+			this._mode = MASHUP.Design.LOADPOINT;
+			this._glueState = false;
 			break;
 		case MASHUP.Design.BOUNDARYPOINT:
 			break;
