@@ -83,6 +83,9 @@ MASHUP.Design.prototype._mousedown = function(e) {
 	switch (this._mode) {
 		case MASHUP.Design.SKETCH:
 			break;
+		case MASHUP.Design.EDIT:
+			this._medialAxis._mousedown(e);
+			break;
 		case MASHUP.Design.LOADPOINT:
 			// TODO: make sure there is a valid selection
 			this._mode = MASHUP.Design.LOADVECTOR;
@@ -150,7 +153,7 @@ MASHUP.Design.prototype._mousemove = function(e) {
 			this._inkPointPrev = inkPoint;
 			break;
 		case MASHUP.Design.EDIT:
-			this._medialAxis._mousedown(e);
+			this._medialAxis._mousemove(e);
 			break;
 		case MASHUP.Design.LOADPOINT:
 			break;
@@ -204,7 +207,7 @@ MASHUP.Design.prototype._mouseup = function(e) {
 
 			break;
 		case MASHUP.Design.EDIT:
-			this._medialAxis._mousemove(e);
+			this._medialAxis._mouseup(e);
 			break;
 		case MASHUP.Design.LOADPOINT:
 			break;
@@ -227,9 +230,6 @@ MASHUP.Design.prototype._keydown = function(e) {
 			case MASHUP.Design.SKETCH:
 				// TODO: routine to leave some ink
 				//
-				break;
-			case MASHUP.Design.EDIT:
-				this._medialAxis._mouseup(e);
 				break;
 			case MASHUP.Design.LOADPOINT:
 				break;
