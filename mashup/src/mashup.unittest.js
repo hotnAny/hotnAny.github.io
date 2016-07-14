@@ -56,11 +56,29 @@ function unitTest() {
 	// var curveObject = new THREE.Line(geometry, material);
 	// scene.add(curveObject);
 
-	// document.addEventListener('keydown', function (e) {
-	// 	if(e.keyCode == 32) {
-	// 		log(camera);
-	// 	}
-	// }, false);
+	document.addEventListener('keydown', function(e) {
+		switch (e.keyCode) {
+			case 49:
+				MASHUP.design._mode = MASHUP.Design.SKETCH;
+				MASHUP.design.disableEventListeners();
+				break;
+			case 50:
+				MASHUP.design._mode = MASHUP.Design.EDIT;
+				MASHUP.design._medialAxis.enableEventListeners();
+				break;
+			case 51:
+				break;
+			case 52:
+				break;
+		}
+	}, false);
+
+
+	var p = new THREE.Vector3(1, 0, 0);
+	var q = new THREE.Vector3(2, 0, 0);
+	var u = new THREE.Vector3(2, 1, 0);
+	var v = new THREE.Vector3(0, 1, 0);
+	log(vectorsIntersection(p, u, q, v));
 
 	log('----------------  unit test ends  ----------------');
 }
