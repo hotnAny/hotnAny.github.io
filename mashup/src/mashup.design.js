@@ -14,6 +14,7 @@ MASHUP.Design = function(scene, camera) {
 	this._camera = camera;
 
 	this._mode = MASHUP.Design.SKETCH;
+	$(MASHUP.renderer.domElement).css('cursor', 'crosshair');
 
 	this._medialAxis = new MASHUP.MedialAxis(this._scene, this._camera);
 	this._medialAxis.disableEventListeners();
@@ -73,7 +74,7 @@ MASHUP.Design.prototype._mousedown = function(e) {
 	var hitPoint = (hitInfo == undefined) ? new THREE.Vector3() : hitInfo.point;
 	var hitElm = (hitInfo == undefined) ? undefined : hitInfo.object;
 
-	this._maniPlane = new XAC.Maniplane(new THREE.Vector3(), this._scene, this._camera, false, true);
+	this._maniPlane = new XAC.Maniplane(new THREE.Vector3(), this._scene, this._camera, false, false);
 
 	this._posDown = {
 		x: e.clientX,
@@ -83,7 +84,7 @@ MASHUP.Design.prototype._mousedown = function(e) {
 	switch (this._mode) {
 		case MASHUP.Design.SKETCH:
 			if (hitInfo != undefined) {
-				this._maniPlane.setPos(hitPoint)
+				this._maniPlane.setPos(hitElm.position);
 				this._dropInk(hitInfo.point);
 			}
 			break;
@@ -189,9 +190,9 @@ MASHUP.Design.prototype._mouseup = function(e) {
 		case MASHUP.Design.SKETCH:
 			if (this._ink.length > 0) {
 				// remove ink and clean up
-				// for (var i = this._ink.length - 1; i >= 0; i--) {
-				// 	this._scene.remove(this._ink[i]);
-				// }
+				for (var i = this._ink.length - 1; i >= 0; i--) {
+					this._scene.remove(this._ink[i]);
+				}
 				this._ink = [];
 
 				// convert it to topology and store the visual elements
