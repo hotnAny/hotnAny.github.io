@@ -73,8 +73,6 @@ MASHUP.Design.prototype._mousedown = function(e) {
 	}
 
 	var hitInfo = XAC.hit(e, this._elements, this._camera);
-	var hitPoint = (hitInfo == undefined) ? new THREE.Vector3() : hitInfo.point;
-	var hitElm = (hitInfo == undefined) ? undefined : hitInfo.object;
 
 	this._maniPlane = new XAC.Maniplane(new THREE.Vector3(), this._scene, this._camera, false, false);
 
@@ -86,7 +84,7 @@ MASHUP.Design.prototype._mousedown = function(e) {
 	switch (this._mode) {
 		case MASHUP.Design.SKETCH:
 			if (hitInfo != undefined) {
-				this._maniPlane.setPos(hitElm.position);
+				this._maniPlane.setPos(hitInfo.object.position);
 				this._dropInk(hitInfo.point);
 			}
 			break;
@@ -96,29 +94,37 @@ MASHUP.Design.prototype._mousedown = function(e) {
 		case MASHUP.Design.LOADPOINT:
 			// TODO: make sure there is a valid selection
 			if (hitInfo != undefined) {
-				this._maniPlane.setPos(hitElm.position);
+				this._maniPlane.setPos(hitInfo.object.position);
 				this._load = {
-					point: hitInfo.point,
+					points: [hitInfo.point],
+					midpt: undefined,
 					vector: undefined,
-					arrow: undefined
+					area: [], // visual elements showing area of load
+					arrow: undefined // visual element showing vector of load
 				}
-
-				this._mode = MASHUP.Design.LOADVECTOR;
-				this._glueState = true;
 			}
 			break;
 		case MASHUP.Design.LOADVECTOR:
-			// TODO: finalize the creation of a load
-			//
-			this._loads.push(this._load);
+			// finalize the creation of a load
+			if (this._load != undefined) {
+				this._loads.push(this._load);
+				this._maniPlane.setPos(this._load.midpt);
+				this._clearance = {
+					min: undefined,
+					max: undefined,
+					box: undefined
+				}
+			}
+			this._mode = MASHUP.Design.LOADPOINT;
+			this._load = undefined;
 			this._glueState = false;
-			this._mode = MASHUP.Design.CLEARANCEAREA;
 			break;
 		case MASHUP.Design.CLEARANCEAREA:
 			// TODO: finalize the selection of a clearance area
 			//
-			this._clearances.push(this._clearance);
-			this._mode = MASHUP.Design.SKETCH;
+			// this._clearances.push(this._clearance);
+			// this._mode = MASHUP.Design.SKETCH;
+			// this._glueState = false;
 			break;
 		case MASHUP.Design.BOUNDARYPOINT:
 			// TODO: make sure there is a valid selection
@@ -141,36 +147,43 @@ MASHUP.Design.prototype._mousemove = function(e) {
 		return;
 	}
 
-	// TODO: filter out non dragging mouse events
-	//
-
-	// TODO: if it's dragging, ignore selection of elements
-	//
+	var hitPoint;
+	if (this._maniPlane != undefined) {
+		hitPoint = this._maniPlane.update(e);
+	}
 
 	switch (this._mode) {
 		case MASHUP.Design.SKETCH:
-			var inkPoint = this._maniPlane.update(e);
 			// BUG: hard code to fix for now
-			if (inkPoint.x == 0 && inkPoint.y == 0 && inkPoint.z == 500) {} else {
-				this._dropInk(inkPoint);
+			if (hitPoint.x == 0 && hitPoint.y == 0 && hitPoint.z == 500) {} else {
+				this._dropInk(hitPoint);
 			}
 			break;
 		case MASHUP.Design.EDIT:
 			this._medialAxis._mousemove(e);
 			break;
 		case MASHUP.Design.LOADPOINT:
+			this._load.points.push(hitPoint);
+			var hitElm = XAC.hitObject(e, this._elements, this._camera);
+			this._load.area.push(hitElm);
+			hitElm.material = XAC.MATERIALHIGHLIGHT.clone();
+			hitElm.material.needsUpdate = true;
+			// this._dropInk(XAC.hitPoint(e, this._elements, this._camera), XAC.MATERIALHIGHLIGHT.clone());
 			break;
 		case MASHUP.Design.LOADVECTOR:
 			// show an arrow indicating the direction and magnititude of load
-			var hitPoint = this._maniPlane.update(e);
 			this._scene.remove(this._load.arrow);
-			this._load.vector = hitPoint.clone().sub(this._load.point);
-			this._load.arrow = XAC.addAnArrow(this._scene, this._load.point, this._load.vector, this._load.vector.length(), 3);
+			this._load.vector = hitPoint.clone().sub(this._load.midpt);
+			this._load.arrow = XAC.addAnArrow(this._scene, this._load.midpt,
+				this._load.vector, this._load.vector.length(), 3);
 			break;
 		case MASHUP.Design.CLEARANCEAREA:
-			// TODO: [one timer] init the clearance object
-			//
+
 			// TODO: [one timer] create a box
+			// var hitPoint = this._maniPlane.update(e);
+			// var vclear = hitPoint.clone().sub(this._load.point);
+			// this._scene.remove(this._clearance.box);
+
 			//
 			// TODO: perspectively map mouse to the box and its min/max
 			//
@@ -231,6 +244,26 @@ MASHUP.Design.prototype._mouseup = function(e) {
 			this._medialAxis._mouseup(e);
 			break;
 		case MASHUP.Design.LOADPOINT:
+			if (this._load == undefined || this._load.points.length <= 0) {
+				break;
+			} else {
+				if (this._load.points.length <= 2) {
+					this._load.midpt = this._load.points[0];
+				} else {
+					var start = this._load.points[0];
+					var end = this._load.points[this._load.points.length - 1];
+					var distVarMin = start.distanceTo(end);
+					for (var i = this._load.points.length - 2; i >= 1; i--) {
+						var distVar = Math.abs(this._load.points[i].distanceTo(start) - this._load.points[i].distanceTo(end));
+						if (distVar < distVarMin) {
+							distVarMin = distVar;
+							this._load.midpt = this._load.points[i];
+						}
+					}
+				}
+				this._mode = MASHUP.Design.LOADVECTOR;
+				this._glueState = true;
+			}
 			break;
 		case MASHUP.Design.LOADVECTOR:
 			break;
@@ -272,7 +305,7 @@ MASHUP.Design.prototype._keydown = function(e) {
 //
 //	subroutine for drawing - not independent
 //
-MASHUP.Design.prototype._dropInk = function(inkPoint) {
+MASHUP.Design.prototype._dropInk = function(inkPoint, mat) {
 	var inkJoint = new XAC.Sphere(this._inkSize / 2, this._inkMat).m;
 	inkJoint.position.copy(inkPoint);
 
@@ -280,7 +313,8 @@ MASHUP.Design.prototype._dropInk = function(inkPoint) {
 
 	this._scene.add(inkJoint);
 	if (this._ink.length > 0) {
-		var inkStroke = new XAC.ThickLine(this._inkPointPrev, inkPoint, this._inkSize / 2, this._inkMat).m;
+		var inkStroke = new XAC.ThickLine(this._inkPointPrev, inkPoint,
+			this._inkSize / 2, mat == undefined ? this._inkMat : mat).m;
 		this._scene.add(inkStroke);
 	}
 
