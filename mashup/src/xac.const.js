@@ -2,6 +2,8 @@ var XAC = XAC || {};
 
 XAC.Const = {};
 
+XAC.EPSILON = 1e-6;
+
 // some common visual properties
 XAC.COLORNORMAL = 0xDB5B8A; // the normal color
 XAC.COLORCONTRAST = 0xD1D6E7; // is the contrast of the COLORNORMAL

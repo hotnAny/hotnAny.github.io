@@ -57,16 +57,23 @@ function unitTest() {
 	// scene.add(curveObject);
 
 	document.addEventListener('keydown', function(e) {
+		if (MASHUP.design._mode == MASHUP.Design.EDIT) {
+			MASHUP.design._medialAxis.disableEventListeners();
+		}
+
 		switch (e.keyCode) {
 			case 49:
 				MASHUP.design._mode = MASHUP.Design.SKETCH;
-				MASHUP.design.disableEventListeners();
+				$(MASHUP.renderer.domElement).css('cursor', 'crosshair');
 				break;
 			case 50:
 				MASHUP.design._mode = MASHUP.Design.EDIT;
+				$(MASHUP.renderer.domElement).css('cursor', 'pointer');
 				MASHUP.design._medialAxis.enableEventListeners();
 				break;
 			case 51:
+				MASHUP.design._mode = MASHUP.Design.LOADPOINT;
+				$(MASHUP.renderer.domElement).css('cursor', 'default');
 				break;
 			case 52:
 				break;

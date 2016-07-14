@@ -93,7 +93,7 @@ XAC.float2int = function(value) {
 /*
 	get the euclidean distance between two R^d points
 */
-function getDist(p1, p2) {
+XAC.getDist = function(p1, p2) {
 	var len = Math.min(p1.length, p2.length);
 	var d = 0;
 	for (var i = len - 1; i >= 0; i--) {
@@ -223,7 +223,7 @@ XAC.removeFromArray = function(array, elm, compFunc) {
 	return array;
 }
 
-function addAnArrow(v1, dir, len, r) {
+XAC.addAnArrow = function(scene, v1, dir, len, r) {
 	var flipped = len < 0;
 
 	// NOW: make an arrow
@@ -231,7 +231,7 @@ function addAnArrow(v1, dir, len, r) {
 	var lArrow = len == undefined ? 100 : Math.abs(len);
 	var bodyArrow = new XAC.Cylinder(rArrow, lArrow, XAC.MATERIALFOCUS).m;
 
-	var rArrowHead = rArrow * 2;
+	var rArrowHead = rArrow * 3;
 	var headArrow = new XAC.Cylinder({
 		r1: 0,
 		r2: rArrowHead
