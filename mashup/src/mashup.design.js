@@ -18,6 +18,8 @@ MASHUP.Design = function(scene, camera) {
 
 	this._medialAxis = new MASHUP.MedialAxis(this._scene, this._camera);
 	this._medialAxis.disableEventListeners();
+	this._medialAxis._matNode = XAC.MATERIALNORMAL.clone();
+	this._medialAxis._matInflation = XAC.MATERIALNORMAL.clone();
 
 	// storing a list of functional parameters
 	this._loads = [];
@@ -93,17 +95,23 @@ MASHUP.Design.prototype._mousedown = function(e) {
 			break;
 		case MASHUP.Design.LOADPOINT:
 			// TODO: make sure there is a valid selection
-			this._mode = MASHUP.Design.LOADVECTOR;
-			this._load = {
-				point: undefined,
-				vector: undefined,
-				arrow: undefined
+			if (hitInfo != undefined) {
+				this._maniPlane.setPos(hitElm.position);
+				this._load = {
+					point: hitInfo.point,
+					vector: undefined,
+					arrow: undefined
+				}
+
+				this._mode = MASHUP.Design.LOADVECTOR;
+				this._glueState = true;
 			}
 			break;
 		case MASHUP.Design.LOADVECTOR:
 			// TODO: finalize the creation of a load
 			//
 			this._loads.push(this._load);
+			this._glueState = false;
 			this._mode = MASHUP.Design.CLEARANCEAREA;
 			break;
 		case MASHUP.Design.CLEARANCEAREA:
@@ -124,10 +132,12 @@ MASHUP.Design.prototype._mousedown = function(e) {
 		case MASHUP.Design.BOUNDARYAREA:
 			break;
 	}
+
+	this._posMove = this._posDown;
 }
 
 MASHUP.Design.prototype._mousemove = function(e) {
-	if (e.which != XAC.LEFTMOUSE) {
+	if (e.which != XAC.LEFTMOUSE && this._glueState != true) {
 		return;
 	}
 
@@ -151,12 +161,11 @@ MASHUP.Design.prototype._mousemove = function(e) {
 		case MASHUP.Design.LOADPOINT:
 			break;
 		case MASHUP.Design.LOADVECTOR:
-			// TODO: [one timer] create a spherical widget for specifying direction
-			//
-			// TODO: [one timer] create an arrow
-			//
-			// TODO: perspectively map mouse to an arrow and update load vector
-			//
+			// show an arrow indicating the direction and magnititude of load
+			var hitPoint = this._maniPlane.update(e);
+			this._scene.remove(this._load.arrow);
+			this._load.vector = hitPoint.clone().sub(this._load.point);
+			this._load.arrow = XAC.addAnArrow(this._scene, this._load.point, this._load.vector, this._load.vector.length(), 3);
 			break;
 		case MASHUP.Design.CLEARANCEAREA:
 			// TODO: [one timer] init the clearance object
@@ -176,7 +185,10 @@ MASHUP.Design.prototype._mousemove = function(e) {
 			break;
 	}
 
-
+	this._posMove = {
+		x: e.clientX,
+		y: e.clientY
+	};
 }
 
 MASHUP.Design.prototype._mouseup = function(e) {
@@ -197,7 +209,18 @@ MASHUP.Design.prototype._mouseup = function(e) {
 
 				// convert it to topology and store the visual elements
 				var edgeInfo = this._medialAxis.addEdge(this._inkPoints);
-				this._elements.push(edgeInfo.mesh);
+
+				// edge has its own topology representation
+				if (edgeInfo.mesh.children.length > 0) {
+					this._elements = this._elements.concat(edgeInfo.mesh.children);
+				}
+				// edge only has `inflations' that represent its thickness
+				else {
+					for (var i = edgeInfo.inflations.length - 1; i >= 0; i--) {
+						this._elements.push(edgeInfo.inflations[i].m);
+					}
+				}
+
 				this._elements.push(edgeInfo.v1.mesh);
 				this._elements.push(edgeInfo.v2.mesh);
 				this._inkPoints = [];
@@ -219,7 +242,7 @@ MASHUP.Design.prototype._mouseup = function(e) {
 			break;
 	}
 
-	this._posDown = undefined;
+	// this._posDown = undefined;
 }
 
 MASHUP.Design.prototype._keydown = function(e) {
