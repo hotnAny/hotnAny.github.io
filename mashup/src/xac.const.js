@@ -33,7 +33,7 @@ XAC.MATERIALHIGHLIGHT = new THREE.MeshPhongMaterial({
      opacity: 0.95
 });
 
-XAC.MATERIALINVISIBLE= new THREE.MeshBasicMaterial({
+XAC.MATERIALINVISIBLE = new THREE.MeshBasicMaterial({
      vertexColors: 0xffffff,
      transparent: true,
      visible: false

@@ -65,7 +65,6 @@ $(document).ready(function() {
 		opacity: 0.5
 	});
 
-
 	var geometryGround = new THREE.CubeGeometry(window.innerWidth * 1000 / window.innerHeight, 1000, 1);
 	var ground = new THREE.Mesh(
 		geometryGround,
@@ -103,7 +102,6 @@ $(document).ready(function() {
 
 
 	MASHUP.design = new MASHUP.Design(MASHUP.scene, MASHUP.camera);
-
 
 	// finally do unit test
 	unitTest();
