@@ -75,15 +75,11 @@ MASHUP.Design = function(scene, camera) {
 
 // editing modes
 MASHUP.Design.SKETCH = 0;
-
 MASHUP.Design.EDIT = 3;
-
 MASHUP.Design.LOADPOINT = 1.1;
 MASHUP.Design.LOADVECTOR = 1.2;
 MASHUP.Design.CLEARANCEAREA = 1.3;
-
 MASHUP.Design.BOUNDARYPOINT = 2.1;
-MASHUP.Design.BOUNDARYAREA = 2.2;
 
 MASHUP.Design.prototype = {
 	constructor: MASHUP.Design
@@ -109,7 +105,7 @@ MASHUP.Design.prototype._mousedown = function(e) {
 	switch (this._mode) {
 		case MASHUP.Design.SKETCH:
 			if (hitInfo != undefined) {
-				this._maniPlane.setPos(hitInfo.object.position);
+				this._maniPlane.setPosition(hitInfo.object.position);
 				this._dropInk(hitInfo.point);
 			}
 			break;
@@ -118,10 +114,10 @@ MASHUP.Design.prototype._mousedown = function(e) {
 			break;
 		case MASHUP.Design.LOADPOINT:
 			if (hitInfo != undefined) {
-				this._maniPlane.setPos(hitInfo.object.position);
+				this._maniPlane.setPosition(hitInfo.object.position);
 				this._load = {
 					points: [hitInfo.point],
-					midpt: undefined,
+					midpt: hitInfo.point,
 					vector: undefined,
 					edgeInfo: this._medialAxis.getEdgeInfo(hitInfo.object), // associated edge
 					vrel: undefined, // direction relative to the associated edge
@@ -134,11 +130,12 @@ MASHUP.Design.prototype._mousedown = function(e) {
 			// finalize the creation of a load
 			if (this._load != undefined) {
 				this._loads.push(this._load);
-				this._maniPlane.setPos(this._load.midpt);
+				this._maniPlane.setPosition(this._load.midpt);
 				this._clearance = {
 					min: undefined,
 					max: undefined,
 					box: undefined,
+					midpt: this._load.midpt,
 					edgeInfo: this._load.edgeInfo // associated edge
 				}
 			}
@@ -149,7 +146,7 @@ MASHUP.Design.prototype._mousedown = function(e) {
 			break;
 		case MASHUP.Design.BOUNDARYPOINT:
 			if (hitInfo != undefined) {
-				this._maniPlane.setPos(hitInfo.object.position);
+				this._maniPlane.setPosition(hitInfo.object.position);
 			}
 			this._boundary = {
 				points: [],
@@ -180,7 +177,7 @@ MASHUP.Design.prototype._mousemove = function(e) {
 	switch (this._mode) {
 		case MASHUP.Design.SKETCH:
 			// BUG: hard code to fix for now
-			if (hitPoint.x == 0 && hitPoint.y == 0 && hitPoint.z == 500) {} else {
+			if (hitPoint == undefined || hitPoint.x == 0 && hitPoint.y == 0 && hitPoint.z == 500) {} else {
 				this._dropInk(hitPoint);
 			}
 			break;
@@ -421,8 +418,7 @@ MASHUP.Design.prototype._updateConstraints = function() {
 		load.vedge = vedge;
 
 		this._scene.remove(load.arrow);
-		load.arrow = XAC.addAnArrow(this._scene, this._load.midpt,
-			this._load.vector, this._load.vector.length(), 3);
+		load.arrow = XAC.addAnArrow(this._scene, load.midpt, load.vector, load.vector.length(), 3);
 	}
 
 	//
@@ -444,11 +440,11 @@ MASHUP.Design.prototype._updateConstraints = function() {
 		clearance.vedge = vedge;
 
 		this._scene.remove(clearance.box);
-		this._clearance.box = new XAC.Box(this._clearance.wclear, this._clearance.hclear,
+		clearance.box = new XAC.Box(clearance.wclear, clearance.hclear,
 			5, this._matClearance).m;
-		XAC.rotateObjTo(this._clearance.box, this._clearance.vector);
-		this._clearance.box.position.copy(this._load.midpt.clone()
-			.add(this._clearance.vector.clone().multiplyScalar(0.5 * clearance.hclear)));
+		XAC.rotateObjTo(clearance.box, clearance.vector);
+		clearance.box.position.copy(clearance.midpt.clone()
+			.add(clearance.vector.clone().multiplyScalar(0.5 * clearance.hclear)));
 		this._scene.add(clearance.box);
 	}
 
