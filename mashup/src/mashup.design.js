@@ -216,7 +216,7 @@ MASHUP.Design.prototype._mousemove = function(e) {
 			//
 			// compute the dimension of the clearance area
 			this._clearance.vector = this._load.vector.clone().multiplyScalar(-1).normalize();
-			var vclear = hitPoint.clone().sub(this._load.midPoint);
+			var vclear = hitPoint.clone().sub(this._clearance.midPoint);
 			this._clearance.hclear = vclear.dot(this._clearance.vector);
 			this._clearance.wclear = Math.sqrt(Math.pow(vclear.length(), 2) - Math.pow(this._clearance.hclear, 2)) * 2;
 
@@ -361,24 +361,29 @@ MASHUP.Design.prototype._mouseup = function(e) {
 //	event handler of keyboard operation
 //
 MASHUP.Design.prototype._keydown = function(e) {
-	if (e.keyCode == 46) { // DEL
+	if (e.keyCode == 27) { // ESC
 		switch (this._mode) {
 			case MASHUP.Design.SKETCH:
-				// TODO: routine to leave some ink
-				//
 				break;
 			case MASHUP.Design.LOADPOINT:
 				break;
 			case MASHUP.Design.LOADVECTOR:
+				// cancel the current operation and forfeit the creation of the load
+				this._removeLoad(this._load);
+				this._glueState = false;
+				this._mode = MASHUP.Design.LOADPOINT;
 				break;
 			case MASHUP.Design.CLEARANCEAREA:
+				this._removeClearance(this._clearance);
+				this._glueState = false;
+				this._mode = MASHUP.Design.LOADPOINT;
 				break;
 			case MASHUP.Design.BOUNDARYPOINT:
 				break;
 			case MASHUP.Design.BOUNDARYAREA:
 				break;
 		}
-	} else if (e.keyCode == 27) { // ESC
+	} else if (e.keyCode == 46) { // DEL
 		// TODO: cancel everything that's in progress
 		//
 	}
@@ -454,6 +459,20 @@ MASHUP.Design.prototype._updateConstraints = function() {
 			.add(clearance.vector.clone().multiplyScalar(0.5 * clearance.hclear)));
 		this._scene.add(clearance.box);
 	}
+}
+
+MASHUP.Design.prototype._removeLoad = function(load) {
+	for (var i = load.area.length - 1; i >= 0; i--) {
+		load.area[i].material = this._matDesign;
+		load.area[i].material.needsUpdate = true;
+	}
+	this._scene.remove(load.arrow);
+	XAC.removeFromArray(this._loads, load);
+}
+
+MASHUP.Design.prototype._removeClearance = function(clearance) {
+	this._scene.remove(clearance.box);
+	XAC.removeFromArray(this._clearances, clearance);
 }
 
 //
