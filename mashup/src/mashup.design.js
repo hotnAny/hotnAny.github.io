@@ -119,12 +119,11 @@ MASHUP.Design.prototype._mousedown = function(e) {
 		case MASHUP.Design.LOADPOINT:
 			if (hitInfo != undefined) {
 				this._maniPlane.setPos(hitInfo.object.position);
-				var edgeInfo = this._medialAxis.getEdgeInfo(hitInfo.object);
 				this._load = {
 					points: [hitInfo.point],
 					midpt: undefined,
 					vector: undefined,
-					edgeInfo: edgeInfo, // associated edge
+					edgeInfo: this._medialAxis.getEdgeInfo(hitInfo.object), // associated edge
 					vrel: undefined, // direction relative to the associated edge
 					area: [], // visual elements showing area of load
 					arrow: undefined // visual element showing vector of load
@@ -139,7 +138,8 @@ MASHUP.Design.prototype._mousedown = function(e) {
 				this._clearance = {
 					min: undefined,
 					max: undefined,
-					box: undefined
+					box: undefined,
+					edgeInfo: this._load.edgeInfo // associated edge
 				}
 			}
 			break;
@@ -211,13 +211,18 @@ MASHUP.Design.prototype._mousemove = function(e) {
 			this._scene.remove(this._clearance.box);
 
 			var vclear = hitPoint.clone().sub(this._load.midpt);
-			var heading = this._load.vector.clone().multiplyScalar(-1).normalize();
-			var hclear = vclear.dot(heading);
-			var wclear = Math.sqrt(Math.pow(vclear.length(), 2) - hclear * hclear) * 2;
+			this._clearance.vector = this._load.vector.clone().multiplyScalar(-1).normalize();
+			this._clearance.hclear = vclear.dot(this._clearance.vector);
+			this._clearance.wclear = Math.sqrt(Math.pow(vclear.length(), 2) - Math.pow(this._clearance.hclear, 2)) * 2;
 
-			this._clearance.box = new XAC.Box(wclear, hclear, 5, this._matClearance).m;
-			XAC.rotateObjTo(this._clearance.box, heading);
-			this._clearance.box.position.copy(this._load.midpt.clone().add(heading.clone().multiplyScalar(0.5 * hclear)));
+			this._clearance.box = new XAC.Box(this._clearance.wclear, this._clearance.hclear,
+				5, this._matClearance).m;
+			XAC.rotateObjTo(this._clearance.box, this._clearance.vector);
+			this._clearance.box.position.copy(this._load.midpt.clone()
+				.add(this._clearance.vector.clone().multiplyScalar(0.5 * this._clearance.hclear)));
+
+			this._clearance.vedge = new THREE.Vector3().subVectors(this._clearance.edgeInfo.points.slice(-1)[0],
+				this._clearance.edgeInfo.points[0]);
 
 			this._scene.add(this._clearance.box);
 			break;
@@ -401,25 +406,50 @@ MASHUP.Design.prototype._dropInk = function(inkPoint, mat) {
 }
 
 MASHUP.Design.prototype._updateConstraints = function() {
+	//
+	//	loads
+	//
 	for (var i = this._loads.length - 1; i >= 0; i--) {
 		var load = this._loads[i];
 		var edgeInfo = load.edgeInfo;
 		var vedge = new THREE.Vector3().subVectors(edgeInfo.points.slice(-1)[0],
-		edgeInfo.points[0]).normalize();
+			edgeInfo.points[0]);
+
 		var axis = new THREE.Vector3().crossVectors(load.vedge, vedge).normalize();
 		var angle = load.vedge.angleTo(vedge);
-		
 		load.vector.applyAxisAngle(axis, angle);
 		load.vedge = vedge;
 
 		this._scene.remove(load.arrow);
 		load.arrow = XAC.addAnArrow(this._scene, this._load.midpt,
 			this._load.vector, this._load.vector.length(), 3);
-		this._scene.add(load.arrow);
 	}
 
+	//
+	//	clearances
+	//
 	for (var i = this._clearances.length - 1; i >= 0; i--) {
-		this._clearances[i]
+		var clearance = this._clearances[i];
+		var edgeInfo = clearance.edgeInfo;
+		var vedge = new THREE.Vector3().subVectors(edgeInfo.points.slice(-1)[0],
+			edgeInfo.points[0]);
+
+		var axis = new THREE.Vector3().crossVectors(clearance.vedge, vedge).normalize();
+		var angle = clearance.vedge.angleTo(vedge);
+		clearance.vector.applyAxisAngle(axis, angle);
+
+		var scaled = vedge.length() / clearance.vedge.length();
+		clearance.wclear *= scaled;
+
+		clearance.vedge = vedge;
+
+		this._scene.remove(clearance.box);
+		this._clearance.box = new XAC.Box(this._clearance.wclear, this._clearance.hclear,
+			5, this._matClearance).m;
+		XAC.rotateObjTo(this._clearance.box, this._clearance.vector);
+		this._clearance.box.position.copy(this._load.midpt.clone()
+			.add(this._clearance.vector.clone().multiplyScalar(0.5 * clearance.hclear)));
+		this._scene.add(clearance.box);
 	}
 
 	for (var i = this._boundaries.length - 1; i >= 0; i--) {
