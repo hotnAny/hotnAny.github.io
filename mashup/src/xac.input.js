@@ -45,7 +45,7 @@ XAC.Maniplane.prototype = {
 		return XAC.hitPoint(e, [this._plane], this._camera);
 	},
 
-	setPos: function(pos) {
+	setPosition: function(pos) {
 		this._plane.position.copy(pos);
 	},
 
