@@ -55,8 +55,7 @@ MASHUP.Design = function(scene, camera) {
 	this._clearance = undefined; // {min, max, box}
 	this._boundary = undefined; // {min, max, box}
 
-	// TODO: set the camera for a default 2D (XZ-plane based) editing
-	//
+	// input event handlers
 	document.addEventListener('mousedown', this._mousedown.bind(this), false);
 	document.addEventListener('mousemove', this._mousemove.bind(this), false);
 	document.addEventListener('mouseup', this._mouseup.bind(this), false);
@@ -66,13 +65,12 @@ MASHUP.Design = function(scene, camera) {
 
 	this._elements = []; // visual elements that represent parameters
 
-	// temp visual elements
+	// drawing related visual elements
 	this._ink = [];
 	this._inkSize = 5;
 	this._inkMat = new THREE.MeshBasicMaterial({
 		color: 0x000000
 	});
-	// this._inkMatBoundary = XAC.MATERIALALT.clone();
 }
 
 // editing modes
@@ -119,13 +117,15 @@ MASHUP.Design.prototype._mousedown = function(e) {
 			this._medialAxis._mousedown(e);
 			break;
 		case MASHUP.Design.LOADPOINT:
-			// TODO: make sure there is a valid selection
 			if (hitInfo != undefined) {
 				this._maniPlane.setPos(hitInfo.object.position);
+				var edgeInfo = this._medialAxis.getEdgeInfo(hitInfo.object);
 				this._load = {
 					points: [hitInfo.point],
 					midpt: undefined,
 					vector: undefined,
+					edgeInfo: edgeInfo, // associated edge
+					vrel: undefined, // direction relative to the associated edge
 					area: [], // visual elements showing area of load
 					arrow: undefined // visual element showing vector of load
 				}
@@ -186,6 +186,7 @@ MASHUP.Design.prototype._mousemove = function(e) {
 			break;
 		case MASHUP.Design.EDIT:
 			this._medialAxis._mousemove(e);
+			this._updateConstraints();
 			break;
 		case MASHUP.Design.LOADPOINT:
 			var hitElm = XAC.hitObject(e, this._elements, this._camera);
@@ -200,6 +201,8 @@ MASHUP.Design.prototype._mousemove = function(e) {
 			// show an arrow indicating the direction and magnititude of load
 			this._scene.remove(this._load.arrow);
 			this._load.vector = hitPoint.clone().sub(this._load.midpt);
+			this._load.vedge = new THREE.Vector3().subVectors(this._load.edgeInfo.points.slice(-1)[0],
+				this._load.edgeInfo.points[0]);
 			this._load.arrow = XAC.addAnArrow(this._scene, this._load.midpt,
 				this._load.vector, this._load.vector.length(), 3);
 			break;
@@ -302,6 +305,7 @@ MASHUP.Design.prototype._mouseup = function(e) {
 			}
 			break;
 		case MASHUP.Design.LOADVECTOR:
+			// this._load.edgeInfo.mesh.add(this._load.arrow);
 			this._mode = MASHUP.Design.CLEARANCEAREA;
 			break;
 		case MASHUP.Design.CLEARANCEAREA:
@@ -394,4 +398,41 @@ MASHUP.Design.prototype._dropInk = function(inkPoint, mat) {
 	this._ink.push(inkStroke);
 
 	this._inkPointPrev = inkPoint;
+}
+
+MASHUP.Design.prototype._updateConstraints = function() {
+	for (var i = this._loads.length - 1; i >= 0; i--) {
+		var load = this._loads[i];
+		var edgeInfo = load.edgeInfo;
+		var vedge = new THREE.Vector3().subVectors(edgeInfo.points.slice(-1)[0],
+		edgeInfo.points[0]).normalize();
+		var axis = new THREE.Vector3().crossVectors(load.vedge, vedge).normalize();
+		var angle = load.vedge.angleTo(vedge);
+		
+		load.vector.applyAxisAngle(axis, angle);
+		load.vedge = vedge;
+
+		this._scene.remove(load.arrow);
+		load.arrow = XAC.addAnArrow(this._scene, this._load.midpt,
+			this._load.vector, this._load.vector.length(), 3);
+		this._scene.add(load.arrow);
+	}
+
+	for (var i = this._clearances.length - 1; i >= 0; i--) {
+		this._clearances[i]
+	}
+
+	for (var i = this._boundaries.length - 1; i >= 0; i--) {
+		this._boundaries[i]
+	}
+}
+
+MASHUP.MedialAxis.prototype.getEdgeInfo = function(mesh) {
+	for (var i = this._edgesInfo.length - 1; i >= 0; i--) {
+		for (var j = this._edgesInfo[i].inflations.length - 1; j >= 0; j--) {
+			if (this._edgesInfo[i].inflations[j].m == mesh) {
+				return this._edgesInfo[i];
+			}
+		}
+	}
 }
