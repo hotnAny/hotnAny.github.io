@@ -248,7 +248,8 @@ MASHUP.MedialAxis.prototype._mousedown = function(e) {
 		if (e.ctrlKey) {
 			this._nodeSelected = this._copyNode(this._nodeSelected);
 		}
-		this._maniplane = new XAC.Maniplane(this._nodeSelected.position, this._scene, this._camera, true);
+		// this._maniplane = new XAC.Maniplane(this._nodeSelected.position, this._scene, this._camera, true);
+		this._maniplane = new XAC.Maniplane(new THREE.Vector3(), this._scene, this._camera, true);
 
 		// find the node that's clicked
 		this._findNode(this._nodeSelected.position, true);

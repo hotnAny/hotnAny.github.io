@@ -67,7 +67,7 @@ function addALine(v1, v2, clr) {
 
 var gBalls = [];
 
-function addABall(pt, clr, radius, opacity) {
+function addABall(scene, pt, clr, radius, opacity) {
 	clr = clr == undefined ? 0xff0000 : clr;
 	radius = radius == undefined ? 1 : radius;
 
@@ -80,7 +80,7 @@ function addABall(pt, clr, radius, opacity) {
 	var ball = new THREE.Mesh(geometry, material);
 	ball.position.set(pt.x, pt.y, pt.z);
 
-	gBalls.push(ball);
+	// gBalls.push(ball);
 	scene.add(ball);
 
 	return ball;

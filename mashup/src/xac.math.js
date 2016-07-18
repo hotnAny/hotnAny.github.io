@@ -171,7 +171,6 @@ function p2l(x, y, z, x1, y1, z1, x2, y2, z2) {
 function vectorsIntersection(p, u, q, v) {
 	var A = numeric.transpose([u.toArray(), v.clone().multiplyScalar(-1).toArray()]);
 	var b = numeric.transpose([new THREE.Vector3().subVectors(q, p).toArray()]);
-	log(A)
 	var Ainv = numeric.inv(A);
 	if(Ainv == undefined) {
 		err('matrix not invertible!');
