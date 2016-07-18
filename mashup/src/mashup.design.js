@@ -20,29 +20,30 @@ MASHUP.Design = function(scene, camera) {
 	this._matDesign = new THREE.MeshLambertMaterial({
 		color: XAC.COLORNORMAL,
 		transparent: true,
-		opacity: 0.95
+		opacity: 1
 	});
 	this._matLoad = new THREE.MeshLambertMaterial({
 		color: XAC.COLORHIGHLIGHT,
 		transparent: true,
-		opacity: 0.75
+		opacity: 1
 	});
 	this._matClearance = new THREE.MeshLambertMaterial({
 		color: XAC.COLORCONTRAST,
 		transparent: true,
-		opacity: 0.75
+		opacity: 1
 	});
 	this._matBoundary = new THREE.MeshLambertMaterial({
 		color: XAC.COLORCONTRAST,
 		transparent: true,
-		opacity: 0.75
+		opacity: 1
 	});
 
 	// using a medial axis to represent design
 	this._medialAxis = new MASHUP.MedialAxis(this._scene, this._camera);
 	this._medialAxis.disableEventListeners();
-	this._medialAxis._matNode = this._matDesign; //XAC.MATERIALNORMAL.clone();
-	this._medialAxis._matInflation = this._matDesign; // XAC.MATERIALNORMAL.clone();
+	this._medialAxis._matNode = this._matDesign;
+	this._medialAxis._matInflation = this._matDesign.clone();
+	// this._medialAxis._matInflation.opacity = 0.5;
 
 	// storing a list of functional parameters
 	this._loads = [];
@@ -116,32 +117,43 @@ MASHUP.Design.prototype._mousedown = function(e) {
 			}
 			break;
 		case MASHUP.Design.EDIT:
-			// deselect selected
+
 			if (this._selected != undefined) {
-				var elms = this._selected.parent instanceof THREE.Scene ?
-					[this._selected] : this._selected.parent.children;
-				for (var i = elms.length - 1; i >= 0; i--) {
-					elms[i].material.opacity *= 2;
-					elms[i].material.needsUpdate = true;
+				for (var i = this._selected.length - 1; i >= 0; i--) {
+					this._selected[i].material.opacity *= 2;
+					this._selected[i].material.needsUpdate = true;
 				}
 			}
 
-			var selected;
+			var selected = [];
 
-			// simply relay the event to the medial axis
-			if (this._medialAxis._mousedown(e) == undefined) {
-				selected = XAC.hitObject(e, this._funcElements, this._camera);
-				if (selected != this._selected && selected != undefined) {
-					var elms = selected.parent instanceof THREE.Scene ? [selected] : selected.parent.children;
-					for (var i = elms.length - 1; i >= 0; i--) {
-						elms[i].material.opacity *= 0.5;
-						elms[i].material.needsUpdate = true;
+			var selectedDesign = this._medialAxis._mousedown(e);
+			if (selectedDesign != undefined) {
+				var edgeInfo = selectedDesign.edgeInfo;
+				if (edgeInfo != undefined) {
+					for (var i = edgeInfo.inflations.length - 1; i >= 0; i--) {
+						selected.push(edgeInfo.inflations[i].m);
 					}
 				}
+			} else {
+				funcElm = XAC.hitObject(e, this._funcElements, this._camera);
+				if (funcElm != undefined) {
+					selected = funcElm.parent instanceof THREE.Scene ?
+						[funcElm] : funcElm.parent.children;
+				}
 			}
 
-			this._selected = selected == this._selected ? undefined : selected;
+			for (var i = selected.length - 1; i >= 0; i--) {
+				if (this._selected != undefined && selected[i] == this._selected[i]) {
+					selected = [];
+					break;
+				}
+				selected[i].material.opacity *= 0.5;
+				selected[i].material.needsUpdate = true;
 
+			}
+
+			this._selected = selected;
 			break;
 		case MASHUP.Design.LOADPOINT:
 			if (hitInfo != undefined) {
