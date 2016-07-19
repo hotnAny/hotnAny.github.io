@@ -43,7 +43,8 @@ MASHUP.Design = function(scene, camera) {
 	this._medialAxis.disableEventListeners();
 	this._medialAxis._matNode = this._matDesign;
 	this._medialAxis._matInflation = this._matDesign.clone();
-	// this._medialAxis._matInflation.opacity = 0.5;
+	this._medialAxis._matHighlight = this._matDesign.clone();
+	this._medialAxis._matHighlight.opacity /= 2;
 
 	// storing a list of functional parameters
 	this._loads = [];
@@ -137,7 +138,8 @@ MASHUP.Design.prototype._mousedown = function(e) {
 				this._edgeInfo = edgeInfo;
 			} else {
 				funcElm = XAC.hitObject(e, this._funcElements, this._camera);
-				if (funcElm != undefined) {
+				if (funcElm != undefined && funcElm.parent != undefined) {
+					// get to the `leaf' elements
 					selected = funcElm.parent instanceof THREE.Scene ?
 						[funcElm] : funcElm.parent.children;
 				}
@@ -170,8 +172,6 @@ MASHUP.Design.prototype._mousedown = function(e) {
 				this._funcElements = this._funcElements.concat(this._load.arrow.children);
 				this._maniPlane.setPosition(this._load.midPoint);
 				this._clearance = {
-					min: undefined,
-					max: undefined,
 					box: undefined,
 					midPoint: this._load.midPoint,
 					edgeInfo: this._load.edgeInfo // associated edge
@@ -311,18 +311,18 @@ MASHUP.Design.prototype._mouseup = function(e) {
 				this._ink = [];
 
 				// convert it to topology and store the visual elements
-				var edgeInfo = this._medialAxis.addEdge(this._inkPoints);
+				var edgeInfo = this._medialAxis.addEdge(this._inkPoints, true);
 
 				// edge has its own topology representation
-				if (edgeInfo.mesh.children.length > 0) {
-					this._allElements = this._allElements.concat(edgeInfo.mesh.children);
+				// if (edgeInfo.mesh.children.length > 0) {
+				// 	this._allElements = this._allElements.concat(edgeInfo.mesh.children);
+				// }
+				// // edge only has `inflations' that represent its thickness
+				// else {
+				for (var i = edgeInfo.inflations.length - 1; i >= 0; i--) {
+					this._allElements.push(edgeInfo.inflations[i].m);
 				}
-				// edge only has `inflations' that represent its thickness
-				else {
-					for (var i = edgeInfo.inflations.length - 1; i >= 0; i--) {
-						this._allElements.push(edgeInfo.inflations[i].m);
-					}
-				}
+				// }
 
 				this._allElements.push(edgeInfo.v1.mesh);
 				this._allElements.push(edgeInfo.v2.mesh);
@@ -471,7 +471,7 @@ MASHUP.Design.prototype._keydown = function(e) {
 }
 
 //
-//	subroutine for drawing - not independent
+//	subroutine for drawing (not standalone)
 //
 MASHUP.Design.prototype._dropInk = function(inkPoint, mat) {
 	var inkJoint = new XAC.Sphere(this._inkSize / 2, this._inkMat).m;
@@ -496,9 +496,7 @@ MASHUP.Design.prototype._dropInk = function(inkPoint, mat) {
 //	subroutine for updating constraints between visual elements (and the info they represent)
 //
 MASHUP.Design.prototype._updateConstraints = function() {
-	//
 	//	loads
-	//
 	for (var i = this._loads.length - 1; i >= 0; i--) {
 		var load = this._loads[i];
 		var edgeInfo = load.edgeInfo;
@@ -514,9 +512,7 @@ MASHUP.Design.prototype._updateConstraints = function() {
 		load.arrow = XAC.addAnArrow(this._scene, load.midPoint, load.vector, load.vector.length(), 3);
 	}
 
-	//
 	//	clearances
-	//
 	for (var i = this._clearances.length - 1; i >= 0; i--) {
 		var clearance = this._clearances[i];
 		var edgeInfo = clearance.edgeInfo;
@@ -542,6 +538,12 @@ MASHUP.Design.prototype._updateConstraints = function() {
 	}
 }
 
+//
+//	manipulate an element based on dragging
+//	@param	elm - the element to be manipulated
+//	@param	ptnow - the current manipulating point
+//	@param	ptprev - the previous manipulating point
+//
 MASHUP.Design.prototype._manipulate = function(elm, ptnow, ptprev) {
 	var vdelta = ptnow.clone().sub(ptprev);
 	if (vdelta == undefined) {
@@ -562,16 +564,20 @@ MASHUP.Design.prototype._manipulate = function(elm, ptnow, ptprev) {
 	for (var i = this._clearances.length - 1; i >= 0; i--) {
 		if (this._clearances[i].box == elm) {
 			var clearance = this._clearances[i];
+
+			// compute `vertical' scaling
 			var vnormal = clearance.vector.clone().normalize();
 			var dh = vdelta.dot(vnormal);
 			clearance.hclear += dh;
 
+			// compute `horizontal' scaling
 			var vnow = ptnow.clone().sub(clearance.midPoint);
 			dnow = Math.sqrt(Math.pow(vnow.length(), 2) - Math.pow(vnow.dot(vnormal), 2));
 			var vprev = ptprev.clone().sub(clearance.midPoint);
 			dprev = Math.sqrt(Math.pow(vprev.length(), 2) - Math.pow(vprev.dot(vnormal), 2));
 			clearance.wclear *= 1 + (dnow / dprev - 1) * (dnow / clearance.wclear / 2);
 
+			// redraw the box
 			this._scene.remove(clearance.box);
 			clearance.box = new XAC.Box(clearance.wclear, clearance.hclear,
 				5, this._matClearance).m;
@@ -584,6 +590,9 @@ MASHUP.Design.prototype._manipulate = function(elm, ptnow, ptprev) {
 	}
 }
 
+//
+//	remove a load
+//
 MASHUP.Design.prototype._removeLoad = function(load) {
 	for (var i = load.area.length - 1; i >= 0; i--) {
 		load.area[i].material = this._matDesign;
@@ -596,6 +605,9 @@ MASHUP.Design.prototype._removeLoad = function(load) {
 	XAC.removeFromArray(this._loads, load);
 }
 
+//
+//	remove a clearance
+//
 MASHUP.Design.prototype._removeClearance = function(clearance) {
 	this._scene.remove(clearance.box);
 	XAC.removeFromArray(this._funcElements, clearance.box);
