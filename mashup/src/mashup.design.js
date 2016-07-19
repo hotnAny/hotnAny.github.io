@@ -44,7 +44,8 @@ MASHUP.Design = function(scene, camera) {
 	this._medialAxis._matNode = this._matDesign;
 	this._medialAxis._matInflation = this._matDesign.clone();
 	this._medialAxis._matHighlight = this._matDesign.clone();
-	this._medialAxis._matHighlight.opacity /= 2;
+	this._medialAxis._matHighlight.opacity *= 0.5;
+	this._medialAxis._matHighlight.needsUpdate = true;
 
 	// storing a list of functional parameters
 	this._loads = [];
@@ -65,7 +66,7 @@ MASHUP.Design = function(scene, camera) {
 
 	this._posDown = undefined;
 
-	this._allElements = []; // visual elements that represent parameters
+	this._designElements = []; // visual elements that represent parameters
 	this._funcElements = []; // visual elements specifically for functional requirements
 
 	// drawing related visual elements
@@ -83,6 +84,7 @@ MASHUP.Design.EDIT = 2;
 MASHUP.Design.LOADPOINT = 3.1;
 MASHUP.Design.LOADVECTOR = 3.2;
 MASHUP.Design.CLEARANCEAREA = 3.3;
+MASHUP.Design.CLEARANCEORIENTATION = 3.4;
 MASHUP.Design.BOUNDARYPOINT = 4;
 
 MASHUP.Design.prototype = {
@@ -97,7 +99,7 @@ MASHUP.Design.prototype._mousedown = function(e) {
 		return;
 	}
 
-	var hitInfo = XAC.hit(e, this._allElements, this._camera);
+	var hitInfo = XAC.hit(e, this._designElements, this._camera);
 
 	this._maniPlane = new XAC.Maniplane(new THREE.Vector3(), this._scene, this._camera, false, false);
 
@@ -124,27 +126,17 @@ MASHUP.Design.prototype._mousedown = function(e) {
 					this._selected[i].material.needsUpdate = true;
 				}
 			}
-
 			var selected = [];
 
-			var selectedDesign = this._medialAxis._mousedown(e);
-			if (selectedDesign != undefined) {
-				var edgeInfo = selectedDesign.edgeInfo;
-				if (edgeInfo != undefined) {
-					for (var i = edgeInfo.inflations.length - 1; i >= 0; i--) {
-						selected.push(edgeInfo.inflations[i].m);
-					}
-				}
-				this._edgeInfo = edgeInfo;
-			} else {
-				funcElm = XAC.hitObject(e, this._funcElements, this._camera);
-				if (funcElm != undefined && funcElm.parent != undefined) {
-					// get to the `leaf' elements
-					selected = funcElm.parent instanceof THREE.Scene ?
-						[funcElm] : funcElm.parent.children;
-				}
-				this._funcElm = funcElm;
+			this._edgeInfo = this._medialAxis._mousedown(e);
+
+			funcElm = XAC.hitObject(e, this._funcElements, this._camera);
+			if (funcElm != undefined && funcElm.parent != undefined) {
+				// get to the `leaf' elements
+				selected = funcElm.parent instanceof THREE.Scene ?
+					[funcElm] : funcElm.parent.children;
 			}
+			this._funcElm = funcElm;
 
 			this._selectedTemp = selected;
 
@@ -182,6 +174,8 @@ MASHUP.Design.prototype._mousedown = function(e) {
 			// finalize the selection of a clearance area
 			this._clearances.push(this._clearance);
 			this._funcElements.push(this._clearance.box);
+			break;
+		case MASHUP.Design.CLEARANCEORIENTATION:
 			break;
 		case MASHUP.Design.BOUNDARYPOINT:
 			// init the boundary object
@@ -230,12 +224,11 @@ MASHUP.Design.prototype._mousemove = function(e) {
 					this._funcElm = this._manipulate(this._funcElm, hitPoint, this._hitPointPrev);
 					this._selectedTemp = undefined;
 				}
-				this._hitPointPrev = hitPoint;
 			}
 			break;
 		case MASHUP.Design.LOADPOINT:
 			// dragging to select load points
-			var hitElm = XAC.hitObject(e, this._allElements, this._camera);
+			var hitElm = XAC.hitObject(e, this._designElements, this._camera);
 			if (hitElm != undefined) {
 				this._load.points.push(hitElm.position);
 				this._load.area.push(hitElm);
@@ -254,7 +247,6 @@ MASHUP.Design.prototype._mousemove = function(e) {
 			break;
 		case MASHUP.Design.CLEARANCEAREA:
 			// moving the mouse to specify the area of clearance
-			// var hitPoint = this._maniPlane.update(e);
 			this._scene.remove(this._clearance.box);
 
 			// compute the dimension of the clearance area
@@ -275,6 +267,24 @@ MASHUP.Design.prototype._mousemove = function(e) {
 
 			this._scene.add(this._clearance.box);
 			break;
+		case MASHUP.Design.CLEARANCEORIENTATION:
+			if (this._hitPointPrev != undefined) {
+				var vnow = hitPoint.clone().sub(this._clearance.midPoint);
+				var vprev = this._hitPointPrev.clone().sub(this._clearance.midPoint);
+				var angle = vprev.angleTo(vnow);
+				var axis = vprev.clone().cross(vnow).normalize();
+				this._clearance.vector.applyAxisAngle(axis, angle);
+
+				this._scene.remove(this._clearance.box);
+				this._clearance.box = new XAC.Box(this._clearance.wclear, this._clearance.hclear,
+					5, this._matClearance).m;
+				XAC.rotateObjTo(this._clearance.box, this._clearance.vector);
+				this._clearance.box.position.copy(this._load.midPoint.clone()
+					.add(this._clearance.vector.clone().multiplyScalar(0.5 * this._clearance.hclear)));
+
+				this._scene.add(this._clearance.box);
+			}
+			break;
 		case MASHUP.Design.BOUNDARYPOINT:
 			// BUG: hard code to fix for now
 			if (hitPoint == undefined || hitPoint.x == 0 && hitPoint.y == 0 && hitPoint.z == 500) {} else {
@@ -287,6 +297,7 @@ MASHUP.Design.prototype._mousemove = function(e) {
 		x: e.clientX,
 		y: e.clientY
 	};
+	this._hitPointPrev = hitPoint;
 }
 
 //
@@ -311,21 +322,8 @@ MASHUP.Design.prototype._mouseup = function(e) {
 				this._ink = [];
 
 				// convert it to topology and store the visual elements
-				var edgeInfo = this._medialAxis.addEdge(this._inkPoints, true);
+				this._medialAxis.addEdge(this._inkPoints, true);
 
-				// edge has its own topology representation
-				// if (edgeInfo.mesh.children.length > 0) {
-				// 	this._allElements = this._allElements.concat(edgeInfo.mesh.children);
-				// }
-				// // edge only has `inflations' that represent its thickness
-				// else {
-				for (var i = edgeInfo.inflations.length - 1; i >= 0; i--) {
-					this._allElements.push(edgeInfo.inflations[i].m);
-				}
-				// }
-
-				this._allElements.push(edgeInfo.v1.mesh);
-				this._allElements.push(edgeInfo.v2.mesh);
 				this._inkPoints = [];
 			}
 			break;
@@ -372,6 +370,9 @@ MASHUP.Design.prototype._mouseup = function(e) {
 			this._mode = MASHUP.Design.CLEARANCEAREA;
 			break;
 		case MASHUP.Design.CLEARANCEAREA:
+			this._mode = MASHUP.Design.CLEARANCEORIENTATION;
+			break;
+		case MASHUP.Design.CLEARANCEORIENTATION:
 			this._mode = MASHUP.Design.LOADPOINT;
 			this._glueState = false;
 			break;
@@ -391,20 +392,20 @@ MASHUP.Design.prototype._mouseup = function(e) {
 				for (var i = edgeInfo.inflations.length - 1; i >= 0; i--) {
 					edgeInfo.inflations[i].m.material = this._matBoundary;
 					edgeInfo.inflations[i].m.needsUpdate = true;
-					this._allElements.push(edgeInfo.inflations[i].m);
+					this._designElements.push(edgeInfo.inflations[i].m);
 				}
 
 				edgeInfo.v1.mesh.material = this._matBoundary;
 				edgeInfo.v1.mesh.material.needsUpdate = true;
 				edgeInfo.v1.inflation.m.material = this._matBoundary;
 				edgeInfo.v1.inflation.m.material.needsUpdate = true;
-				this._allElements.push(edgeInfo.v1.inflation.m);
+				this._designElements.push(edgeInfo.v1.inflation.m);
 
 				edgeInfo.v2.mesh.material = this._matBoundary;
 				edgeInfo.v2.mesh.material.needsUpdate = true;
 				edgeInfo.v2.inflation.m.material = this._matBoundary;
 				edgeInfo.v2.inflation.m.material.needsUpdate = true;
-				this._allElements.push(edgeInfo.v2.inflation.m);
+				this._designElements.push(edgeInfo.v2.inflation.m);
 
 				this._inkPoints = [];
 
@@ -419,6 +420,14 @@ MASHUP.Design.prototype._mouseup = function(e) {
 	}
 	for (var i = this._clearances.length - 1; i >= 0; i--) {
 		this._funcElements.push(this._clearances[i].box);
+	}
+
+	this._designElements = [];
+	for (var i = this._medialAxis.edgesInfo.length - 1; i >= 0; i--) {
+		var edgeInfo = this._medialAxis.edgesInfo[i];
+		for (var j = edgeInfo.inflations.length - 1; j >= 0; j--) {
+			this._designElements.push(edgeInfo.inflations[j].m);
+		}
 	}
 }
 
