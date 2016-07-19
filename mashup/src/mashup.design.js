@@ -20,22 +20,22 @@ MASHUP.Design = function(scene, camera) {
 	this._matDesign = new THREE.MeshLambertMaterial({
 		color: XAC.COLORNORMAL,
 		transparent: true,
-		opacity: 1
+		opacity: 0.75
 	});
 	this._matLoad = new THREE.MeshLambertMaterial({
 		color: XAC.COLORHIGHLIGHT,
 		transparent: true,
-		opacity: 1
+		opacity: 0.75
 	});
 	this._matClearance = new THREE.MeshLambertMaterial({
 		color: XAC.COLORCONTRAST,
 		transparent: true,
-		opacity: 1
+		opacity: 0.75
 	});
 	this._matBoundary = new THREE.MeshLambertMaterial({
 		color: XAC.COLORCONTRAST,
 		transparent: true,
-		opacity: 1
+		opacity: 0.75
 	});
 
 	// using a medial axis to represent design
@@ -117,7 +117,6 @@ MASHUP.Design.prototype._mousedown = function(e) {
 			}
 			break;
 		case MASHUP.Design.EDIT:
-
 			if (this._selected != undefined) {
 				for (var i = this._selected.length - 1; i >= 0; i--) {
 					this._selected[i].material.opacity *= 2;
@@ -135,25 +134,19 @@ MASHUP.Design.prototype._mousedown = function(e) {
 						selected.push(edgeInfo.inflations[i].m);
 					}
 				}
+				this._edgeInfo = edgeInfo;
 			} else {
 				funcElm = XAC.hitObject(e, this._funcElements, this._camera);
 				if (funcElm != undefined) {
 					selected = funcElm.parent instanceof THREE.Scene ?
 						[funcElm] : funcElm.parent.children;
 				}
+				this._funcElm = funcElm;
 			}
 
-			for (var i = selected.length - 1; i >= 0; i--) {
-				if (this._selected != undefined && selected[i] == this._selected[i]) {
-					selected = [];
-					break;
-				}
-				selected[i].material.opacity *= 0.5;
-				selected[i].material.needsUpdate = true;
+			this._selectedTemp = selected;
 
-			}
-
-			this._selected = selected;
+			this._hitPointPrev = this._maniPlane.update(e);
 			break;
 		case MASHUP.Design.LOADPOINT:
 			if (hitInfo != undefined) {
@@ -229,8 +222,16 @@ MASHUP.Design.prototype._mousemove = function(e) {
 			break;
 		case MASHUP.Design.EDIT:
 			// simply relay the event to medial axis
-			this._medialAxis._mousemove(e);
-			this._updateConstraints(); // update functional specification constrained by some edges
+			if (this._medialAxis._mousemove(e) != undefined) {
+				this._updateConstraints(); // update functional specification constrained by some edges
+			} else if (this._funcElm != undefined) {
+				if (hitPoint != undefined && this._hitPointPrev != undefined) {
+					// var vdelta = hitPoint.clone().sub(this._hitPointPrev);
+					this._funcElm = this._manipulate(this._funcElm, hitPoint, this._hitPointPrev);
+					this._selectedTemp = undefined;
+				}
+				this._hitPointPrev = hitPoint;
+			}
 			break;
 		case MASHUP.Design.LOADPOINT:
 			// dragging to select load points
@@ -256,9 +257,6 @@ MASHUP.Design.prototype._mousemove = function(e) {
 			// var hitPoint = this._maniPlane.update(e);
 			this._scene.remove(this._clearance.box);
 
-			//
-			//	TODO: what if there's no load?
-			//
 			// compute the dimension of the clearance area
 			this._clearance.vector = this._load.vector.clone().multiplyScalar(-1).normalize();
 			var vclear = hitPoint.clone().sub(this._clearance.midPoint);
@@ -334,6 +332,18 @@ MASHUP.Design.prototype._mouseup = function(e) {
 		case MASHUP.Design.EDIT:
 			// simply relay the event to medial axis
 			this._medialAxis._mouseup(e);
+			if (this._selectedTemp != undefined) {
+				for (var i = this._selectedTemp.length - 1; i >= 0; i--) {
+					if (this._selected != undefined && this._selectedTemp[i] == this._selected[i]) {
+						this._selectedTemp = [];
+						break;
+					}
+					this._selectedTemp[i].material.opacity *= 0.5;
+					this._selectedTemp[i].material.needsUpdate = true;
+
+				}
+				this._selected = this._selectedTemp;
+			}
 			break;
 		case MASHUP.Design.LOADPOINT:
 			if (this._load == undefined || this._load.points.length <= 0) {
@@ -402,6 +412,14 @@ MASHUP.Design.prototype._mouseup = function(e) {
 			}
 			break;
 	}
+
+	this._funcElements = [];
+	for (var i = this._loads.length - 1; i >= 0; i--) {
+		this._funcElements = this._funcElements.concat(this._loads[i].arrow.children);
+	}
+	for (var i = this._clearances.length - 1; i >= 0; i--) {
+		this._funcElements.push(this._clearances[i].box);
+	}
 }
 
 //
@@ -431,8 +449,24 @@ MASHUP.Design.prototype._keydown = function(e) {
 				break;
 		}
 	} else if (e.keyCode == 46) { // DEL
-		// TODO: cancel everything that's in progress
-		//
+		for (var i = this._loads.length - 1; i >= 0; i--) {
+			if (this._loads[i].arrow.children.indexOf(this._funcElm) >= 0) {
+				this._removeLoad(this._loads[i]);
+				return;
+			}
+		}
+
+		for (var i = this._clearances.length - 1; i >= 0; i--) {
+			if (this._clearances[i].box == this._funcElm) {
+				this._removeClearance(this._clearances[i]);
+				return;
+			}
+		}
+
+		if (this._edgeInfo != undefined) {
+			this._medialAxis._removeEdge(this._edgeInfo);
+		}
+
 	}
 }
 
@@ -505,6 +539,48 @@ MASHUP.Design.prototype._updateConstraints = function() {
 		clearance.box.position.copy(clearance.midPoint.clone()
 			.add(clearance.vector.clone().multiplyScalar(0.5 * clearance.hclear)));
 		this._scene.add(clearance.box);
+	}
+}
+
+MASHUP.Design.prototype._manipulate = function(elm, ptnow, ptprev) {
+	var vdelta = ptnow.clone().sub(ptprev);
+	if (vdelta == undefined) {
+		return;
+	}
+
+	for (var i = this._loads.length - 1; i >= 0; i--) {
+		var load = this._loads[i];
+		var idx = load.arrow.children.indexOf(elm);
+		if (idx >= 0) {
+			load.vector.add(vdelta);
+			this._scene.remove(load.arrow);
+			load.arrow = XAC.addAnArrow(this._scene, load.midPoint, load.vector, load.vector.length(), 3);
+			return load.arrow.children[idx];
+		}
+	}
+
+	for (var i = this._clearances.length - 1; i >= 0; i--) {
+		if (this._clearances[i].box == elm) {
+			var clearance = this._clearances[i];
+			var vnormal = clearance.vector.clone().normalize();
+			var dh = vdelta.dot(vnormal);
+			clearance.hclear += dh;
+
+			var vnow = ptnow.clone().sub(clearance.midPoint);
+			dnow = Math.sqrt(Math.pow(vnow.length(), 2) - Math.pow(vnow.dot(vnormal), 2));
+			var vprev = ptprev.clone().sub(clearance.midPoint);
+			dprev = Math.sqrt(Math.pow(vprev.length(), 2) - Math.pow(vprev.dot(vnormal), 2));
+			clearance.wclear *= 1 + (dnow / dprev - 1) * (dnow / clearance.wclear / 2);
+
+			this._scene.remove(clearance.box);
+			clearance.box = new XAC.Box(clearance.wclear, clearance.hclear,
+				5, this._matClearance).m;
+			XAC.rotateObjTo(clearance.box, clearance.vector);
+			clearance.box.position.copy(clearance.midPoint.clone()
+				.add(clearance.vector.clone().multiplyScalar(0.5 * clearance.hclear)));
+			this._scene.add(clearance.box);
+			return clearance.box;
+		}
 	}
 }
 
