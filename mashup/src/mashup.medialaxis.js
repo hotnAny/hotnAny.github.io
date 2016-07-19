@@ -26,8 +26,7 @@ MASHUP.MedialAxis = function(scene, camera) {
 	this._inflateRate = 7; // larger value smaller rate
 
 	// visual properties
-	this._radiusEdge = 1.75;
-	this._radiusNode = 5.5;
+	this._radiusNode = 5;
 	this._radiusEdge = 5;
 	this._matNode = XAC.MATERIALCONTRAST;
 	this._matEdge = new THREE.MeshPhongMaterial({
@@ -106,38 +105,24 @@ MASHUP.MedialAxis.prototype.addNode = function(pos, toConnect) {
 //	@param	points - input points corresponding to an edge
 //	@param	meshes - optional, some meshes that represent the edge
 //
-MASHUP.MedialAxis.prototype.addEdge = function(points, meshes) {
+MASHUP.MedialAxis.prototype.addEdge = function(points, autoSplit) {
 	if (points == undefined || points.length < 2) {
 		return;
 	}
 
-	var edge = new THREE.Object3D();
-	if (meshes != undefined) {
-		for (var i = meshes.length - 1; i >= 0; i--) {
-			edge.add(meshes[i])
-		}
-	} else {
-		// TODO:
-	}
-
 	var idx1 = this._findNode(points[0], false);
-	var v1 = idx1 >= 0 ? this._nodesInfo[idx1] : this._addNode(points[0]);
-	v1.radius = v1.radius == undefined ? this._radiusNode : v1.radius;
+	var v1 = idx1 >= 0 ? this._nodesInfo[idx1] : this._addNode(points[0], autoSplit);
 	var idx2 = this._findNode(points[points.length - 1], false);
-	var v2 = idx2 >= 0 ? this._nodesInfo[idx2] : this._addNode(points[points.length - 1]);
-	v2.radius = v2.radius == undefined ? this._radiusNode : v2.radius;
+	var v2 = idx2 >= 0 ? this._nodesInfo[idx2] : this._addNode(points[points.length - 1], autoSplit);
 
 	var thickness = [];
 	for (var i = points.length - 1; i >= 0; i--) {
 		thickness.push(this._radiusEdge);
 	}
 
-	this._scene.add(edge);
-	this._edges.push(edge);
-
 	var edgeInfo = {
 		deleted: false,
-		mesh: edge,
+		mesh: null,
 		v1: v1,
 		v2: v2,
 		points: points,
@@ -149,7 +134,6 @@ MASHUP.MedialAxis.prototype.addEdge = function(points, meshes) {
 	// storing edge info in nodes
 	v1.edgesInfo.push(edgeInfo);
 	v2.edgesInfo.push(edgeInfo);
-
 
 	this._inflate();
 
@@ -196,8 +180,8 @@ MASHUP.MedialAxis.prototype.updateNode = function(node, pos) {
 					this._edgesInfo[i].points[j].add(dvj);
 				}
 			}
-		}
-	}
+		} // found edge connected to ndoe
+	} // all edges
 }
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -233,6 +217,7 @@ MASHUP.MedialAxis.prototype._mousedown = function(e) {
 			}
 		}
 	}
+
 	this._nodeSelected = node;
 	if (this._nodeSelected != undefined) {
 		this._nodeSelected.material = this._matHighlight;
@@ -255,7 +240,7 @@ MASHUP.MedialAxis.prototype._mousedown = function(e) {
 		this._findNode(this._nodeSelected.position, true);
 
 		// stop propagation here
-		return;
+		return this._nodeSelected;
 	}
 
 	//
@@ -279,7 +264,7 @@ MASHUP.MedialAxis.prototype._mousedown = function(e) {
 		}
 
 		// stop propagation here
-		return;
+		return _edgeSelected;
 	}
 
 	//
@@ -290,6 +275,7 @@ MASHUP.MedialAxis.prototype._mousedown = function(e) {
 		this._infSelected = XAC.hitObject(e, this._inflations, this._camera);
 	}
 
+	this._infSelInfo = undefined;
 	for (var i = this._inflations.length - 1; i >= 0; i--) {
 		if (this._inflations[i] == this._infSelected) {
 			this._infSelInfo = this._inflationsInfo[i];
@@ -297,6 +283,8 @@ MASHUP.MedialAxis.prototype._mousedown = function(e) {
 		}
 	}
 	this._eDown = e;
+
+	return this._infSelInfo;
 }
 
 MASHUP.MedialAxis.prototype._mousemove = function(e) {
@@ -306,6 +294,7 @@ MASHUP.MedialAxis.prototype._mousemove = function(e) {
 		var pos = this._maniplane.update(e);
 		this.updateNode(this._nodeSelected, pos);
 		this._inflateNode(this._nodeInfoSel);
+		return this._nodeSelected;
 	}
 
 	if (this._infSelected != undefined) {
@@ -317,12 +306,6 @@ MASHUP.MedialAxis.prototype._mousemove = function(e) {
 			this._infSelInfo.nodeInfo.radius *= (1 + ratio);
 			this._inflateNode(this._infSelInfo.nodeInfo);
 		} else if (this._infSelInfo.edgeInfo.thickness != undefined) {
-			// WIP: try to experiment with a more natural way of manipulating thickness
-			// var v1 = this._infSelInfo.edgeInfo.v1.mesh.position.clone().unproject(camera);
-			// var v2 = this._infSelInfo.edgeInfo.v2.mesh.position.clone().unproject(camera);
-			// var d = p2ls(e.clientX, e.clientY, 0, v1.x, v1.y, v1.z, v2.x, v2.y, v2.z)
-			// log([e.clientX, e.clientY, 0, v1.x, v1.y, v1.z, v2.x, v2.y, v2.z])
-
 			var wind = 3;
 			for (var i = -wind; i <= wind; i++) {
 				var idx = Math.max(0, this._infSelInfo.idx + i);
@@ -334,6 +317,8 @@ MASHUP.MedialAxis.prototype._mousemove = function(e) {
 		}
 
 		this._eDown = e;
+
+		return this._infSelected;
 	}
 }
 
@@ -367,21 +352,39 @@ MASHUP.MedialAxis.prototype._keydown = function(e) {
 //
 //	add a node at pos
 //
-MASHUP.MedialAxis.prototype._addNode = function(pos) {
-	var nodeNew = new XAC.Sphere(this._radiusNode, this._matNode, true).m;
-	nodeNew.position.copy(pos);
-	this._nodes.push(nodeNew);
-	this._nodesInfo.push({
-		deleted: false,
-		mesh: nodeNew, // mesh representation
-		edgesInfo: [], // info of the edges connected to this node
-		radius: undefined, // radius of this node
-		radiusData: [], // store the raw data
-		inflation: undefined
-	});
-	this._scene.add(nodeNew);
+MASHUP.MedialAxis.prototype._addNode = function(pos, autoSplit) {
+	var edgeIntersected;
 
-	return this._nodesInfo[this._nodesInfo.length - 1];
+	if (autoSplit == true) {
+		for (var i = this._edgesInfo.length - 1; i >= 0 && edgeIntersected == undefined; i--) {
+			var points = this._edgesInfo[i].points;
+			for (var j = points.length - 1; j >= 0; j--) {
+				if (pos.distanceTo(points[j]) < this._radiusEdge * 2) {
+					edgeIntersected = this._edgesInfo[i];
+					break;
+				}
+			}
+		}
+	}
+
+	if (edgeIntersected == undefined) {
+		var nodeNew = new XAC.Sphere(this._radiusNode, this._matNode, true).m;
+		nodeNew.position.copy(pos);
+		this._nodes.push(nodeNew);
+		this._nodesInfo.push({
+			deleted: false,
+			mesh: nodeNew, // mesh representation
+			edgesInfo: [], // info of the edges connected to this node
+			radius: this._radiusNode * 1.1, // radius of this node
+			radiusData: [], // store the raw data
+			inflation: undefined
+		});
+		this._scene.add(nodeNew);
+		return this._nodesInfo[this._nodesInfo.length - 1];
+	} else {
+		return this._splitEdge(edgeIntersected, pos);
+	}
+
 }
 
 //
@@ -446,23 +449,11 @@ MASHUP.MedialAxis.prototype._copyNode = function(node) {
 //
 //	remove an edge
 //
-MASHUP.MedialAxis.prototype._removeEdge = function(edgeOrInfo) {
-	var v1, v2;
-	var edgeInfo = edgeOrInfo.mesh == undefined ? undefined : edgeOrInfo;
-
-	if (edgeInfo == undefined) {
-		for (var i = this._edges.length - 1; i >= 0; i--) {
-			if (this._edges[i] == edgeOrInfo) {
-				edgeInfo = this._edgesInfo[i];
-				break;
-			}
-		}
-	}
-
+MASHUP.MedialAxis.prototype._removeEdge = function(edgeInfo) {
 	this._scene.remove(edgeInfo.mesh);
 	edgeInfo.deleted = true;
-	v1 = edgeInfo.v1;
-	v2 = edgeInfo.v2;
+	var v1 = edgeInfo.v1;
+	var v2 = edgeInfo.v2;
 	for (var j = edgeInfo.inflations.length - 1; j >= 0; j--) {
 		this._scene.remove(edgeInfo.inflations[j].m);
 	}
@@ -475,39 +466,41 @@ MASHUP.MedialAxis.prototype._removeEdge = function(edgeOrInfo) {
 
 //
 //	split an edge at pos
+//	@param	edge - can be a mesh representing an edge, or its info
 //
-MASHUP.MedialAxis.prototype._splitEdge = function(edge, pos) {
-	// retrieve the edge info
-	var edgeInfo;
-	for (var i = this._edges.length - 1; i >= 0; i--) {
-		if (edge == this._edges[i]) {
-			edgeInfo = this._edgesInfo[i];
-			break;
+MASHUP.MedialAxis.prototype._splitEdge = function(edgeInfo, pos) {
+	// remove the edge, add a node in between and reconnect it with new edges
+	var nodes = this._removeEdge(edgeInfo);
+	var v = this._addNode(pos);
+
+	var dmin = Number.MAX_VALUE;
+	var idxSplit = -1;
+	for (var i = edgeInfo.points.length - 1; i >= 0; i--) {
+		var d = pos.distanceTo(edgeInfo.points[i]);
+		if (d < dmin) {
+			dmin = d;
+			idxSplit = i;
 		}
 	}
-
-	// remove the edge, add a node in between and reconnect it with new edges
-	var nodes = this._removeEdge(edge);
-	var v = this._addNode(pos);
-	var edgeInfo1 = this._addEdge(nodes.v1, v);
-	var edgeInfo2 = this._addEdge(v, nodes.v2);
+	var edgeInfo1 = this._addEdge(nodes.v1, v, edgeInfo.points.slice(0, idxSplit));
+	var edgeInfo2 = this._addEdge(v, nodes.v2, edgeInfo.points.slice(idxSplit + 1));
 
 	// redistribute the thickness along the original edge
 	var thickness = edgeInfo.thickness;
-	var split = v.mesh.position.distanceTo(nodes.v1.mesh.position) /
+	var splitRatio = v.mesh.position.distanceTo(nodes.v1.mesh.position) /
 		nodes.v2.mesh.position.distanceTo(nodes.v1.mesh.position);
-	split = XAC.float2int(thickness.length * split);
+	idxSplit = idxSplit < 0 ? XAC.float2int(thickness.length * splitRatio) : idxSplit;
 	if (thickness != undefined) {
 		for (var i = 0; i < thickness.length; i++) {
-			if (i <= split) {
+			if (i < idxSplit) {
 				edgeInfo1.thickness.push(thickness[i]);
 			}
 
-			if (i == split) {
+			if (i == idxSplit) {
 				v.radius = thickness[i]
 			}
 
-			if (i >= split) {
+			if (i > idxSplit) {
 				edgeInfo2.thickness.push(thickness[i])
 			}
 		}
@@ -521,7 +514,7 @@ MASHUP.MedialAxis.prototype._splitEdge = function(edge, pos) {
 //
 //	connect two nodes with an edge
 //
-MASHUP.MedialAxis.prototype._addEdge = function(v1, v2) {
+MASHUP.MedialAxis.prototype._addEdge = function(v1, v2, points) {
 	// if input is mesh of nodes, retrieve the corresponding node info
 	for (var i = this._nodes.length - 1; i >= 0; i--) {
 		if (this._nodes[i] == v1) {
@@ -546,17 +539,13 @@ MASHUP.MedialAxis.prototype._addEdge = function(v1, v2) {
 		}
 	}
 
-	// connect nodes
-	var edge = new XAC.ThickLine(v2.mesh.position, v1.mesh.position, this._radiusEdge, this._matEdge).m;
-	this._scene.add(edge);
+	// connect nodes (that have never been connected)
 	if (edgeInfo == undefined) {
-		this._edges.push(edge);
-
 		var edgeInfo = {
 			deleted: false,
-			mesh: edge,
 			v1: v1,
 			v2: v2,
+			points: points,
 			thickness: [],
 			thicknessData: [],
 			inflations: []
@@ -566,14 +555,10 @@ MASHUP.MedialAxis.prototype._addEdge = function(v1, v2) {
 		// storing edge info in nodes
 		v1.edgesInfo.push(edgeInfo);
 		v2.edgesInfo.push(edgeInfo);
-	} else {
+	}
+	// connect nodes (that were connected but deleted)
+	else {
 		edgeInfo.deleted = false;
-		edgeInfo.mesh = edge;
-		for (var i = this._edgesInfo.length - 1; i >= 0; i--) {
-			if (this._edgesInfo[i] == edgeInfo) {
-				this._edges[i] = edge;
-			}
-		}
 
 		for (var i = edgeInfo.inflations.length - 1; i >= 0; i--) {
 			this._scene.add(edgeInfo.inflations[i].m)
@@ -653,7 +638,6 @@ MASHUP.MedialAxis.prototype._inflateEdge = function(edgeInfo) {
 		} else {
 			ctr = points[i];
 		}
-
 
 		var r;
 		if (i == 0 || i == thickness.length - 1) {
