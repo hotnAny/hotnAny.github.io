@@ -72,7 +72,7 @@ $(document).ready(function() {
 	);
 
 	ground.position.z -= 1;
-	MASHUP.scene.add(ground);
+	// MASHUP.scene.add(ground);
 
 	//
 	// draw grid
