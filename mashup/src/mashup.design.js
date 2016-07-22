@@ -45,7 +45,6 @@ MASHUP.Design = function(scene, camera) {
 	this._medialAxis._matInflation = this._matDesign.clone();
 	this._medialAxis._matHighlight = this._matDesign.clone();
 	this._medialAxis._matHighlight.opacity *= 0.5;
-	this._medialAxis._matHighlight.needsUpdate = true;
 
 	// storing a list of functional parameters
 	this._loads = [];
@@ -128,7 +127,7 @@ MASHUP.Design.prototype._mousedown = function(e) {
 			}
 			var selected = [];
 
-			this._edgeInfo = this._medialAxis._mousedown(e);
+			this._medialAxis._mousedown(e);
 
 			funcElm = XAC.hitObject(e, this._funcElements, this._camera);
 			if (funcElm != undefined && funcElm.parent != undefined) {
@@ -343,7 +342,9 @@ MASHUP.Design.prototype._mouseup = function(e) {
 				// add to the medial axis with auto-added nodes
 				//
 				var anglePrev;
-				for (var i = 0; i < mergedPoints.length - 1; i++) {
+				var autoSplit = true;
+				// i starting at 2 to avoid corner cases at the starting point
+				for (var i = 2; i < mergedPoints.length - 2; i++) {
 					if (i - 1 < 0 || i + 1 >= mergedPoints.length) {
 						continue;
 					}
@@ -354,8 +355,9 @@ MASHUP.Design.prototype._mouseup = function(e) {
 
 					if (anglePrev != undefined) {
 						if (Math.abs(angle - anglePrev) > Math.PI / 4) {
-							log([anglePrev, angle])
-							this._medialAxis.addEdge(mergedPoints.slice(0, i + 1), true);
+							log([i, anglePrev, angle])
+							this._medialAxis.addEdge(mergedPoints.slice(0, i + 1), autoSplit);
+							autoSplit = false;
 							mergedPoints = mergedPoints.slice(i);
 							i = 0;
 							anglePrev = undefined;
@@ -365,7 +367,7 @@ MASHUP.Design.prototype._mouseup = function(e) {
 
 					anglePrev = angle;
 				}
-				this._medialAxis.addEdge(mergedPoints, true);
+				this._medialAxis.addEdge(mergedPoints, autoSplit);
 
 				this._inkPoints = [];
 			}
@@ -515,9 +517,7 @@ MASHUP.Design.prototype._keydown = function(e) {
 			}
 		}
 
-		if (this._edgeInfo != undefined) {
-			this._medialAxis._removeEdge(this._edgeInfo);
-		}
+		this._medialAxis._keydown(e);
 
 	}
 }
