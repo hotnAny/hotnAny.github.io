@@ -315,14 +315,57 @@ MASHUP.Design.prototype._mouseup = function(e) {
 			break;
 		case MASHUP.Design.SKETCH:
 			if (this._ink.length > 0) {
+				//
 				// remove ink and clean up
+				//
 				for (var i = this._ink.length - 1; i >= 0; i--) {
 					this._scene.remove(this._ink[i]);
 				}
 				this._ink = [];
 
-				// convert it to topology and store the visual elements
-				this._medialAxis.addEdge(this._inkPoints, true);
+				//
+				// merge points that are too close to each other
+				//
+				var mergedPoints = [];
+				var minSpacing = 5;
+
+				mergedPoints.push(this._inkPoints[0]);
+				for (var i = 1; i < this._inkPoints.length - 2; i++) {
+					var mergedPoint = this._inkPoints[i].clone();
+					while (i < this._inkPoints.length - 1 && this._inkPoints[i + 1].distanceTo(mergedPoint) < minSpacing) {
+						mergedPoint.add(this._inkPoints[++i]).multiplyScalar(0.5);
+					}
+					mergedPoints.push(mergedPoint);
+				}
+				mergedPoints.push(this._inkPoints.slice(-1)[0]);
+
+				//
+				// add to the medial axis with auto-added nodes
+				//
+				var anglePrev;
+				for (var i = 0; i < mergedPoints.length - 1; i++) {
+					if (i - 1 < 0 || i + 1 >= mergedPoints.length) {
+						continue;
+					}
+
+					var v1 = mergedPoints[i + 1].clone().sub(mergedPoints[i]);
+					var v0 = mergedPoints[i].clone().sub(mergedPoints[i - 1]);
+					var angle = v1.angleTo(v0);
+
+					if (anglePrev != undefined) {
+						if (Math.abs(angle - anglePrev) > Math.PI / 4) {
+							log([anglePrev, angle])
+							this._medialAxis.addEdge(mergedPoints.slice(0, i + 1), true);
+							mergedPoints = mergedPoints.slice(i);
+							i = 0;
+							anglePrev = undefined;
+							continue;
+						}
+					}
+
+					anglePrev = angle;
+				}
+				this._medialAxis.addEdge(mergedPoints, true);
 
 				this._inkPoints = [];
 			}
