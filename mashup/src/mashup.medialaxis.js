@@ -26,28 +26,34 @@ MASHUP.MedialAxis = function(scene, camera) {
 	this._inflateRate = 7; // larger value smaller rate
 
 	// visual properties
+	this._opacityNormal = 0.75;
+	this._opacitySelected = this._opacityNormal / 2;
+
 	this._radiusNode = 5;
 	this._radiusEdge = 5;
 	this._matNode = XAC.MATERIALCONTRAST;
 	this._matEdge = new THREE.MeshPhongMaterial({
 		color: 0x888888,
 		transparent: true,
-		opacity: 0.75
+		opacity: this._opacityNormal
 	});
 	this._matHighlight = XAC.MATERIALHIGHLIGHT;
 	this._matInflation = new THREE.MeshLambertMaterial({
 		color: 0xaaaaaa,
 		transparent: true,
 		wireframe: true,
-		opacity: 0.25
+		opacity: this._opacityNormal / 3
 	});
 
 	// built-in methods for manipulating axis
-	document.addEventListener('mousedown', this._mousedown.bind(this), false);
-	document.addEventListener('mousemove', this._mousemove.bind(this), false);
-	document.addEventListener('mouseup', this._mouseup.bind(this), false);
-	document.addEventListener('keydown', this._keydown.bind(this), false);
+	// document.addEventListener('mousedown', this._mousedown.bind(this), false);
+	// document.addEventListener('mousemove', this._mousemove.bind(this), false);
+	// document.addEventListener('mouseup', this._mouseup.bind(this), false);
+	// document.addEventListener('keydown', this._keydown.bind(this), false);
 };
+
+MASHUP.MedialAxis.NODE = 0;
+MASHUP.MedialAxis.EDGE = 1;
 
 MASHUP.MedialAxis.prototype = {
 	constructor: MASHUP.MedialAxis,
@@ -111,9 +117,9 @@ MASHUP.MedialAxis.prototype.addEdge = function(points, autoSplit) {
 	}
 
 	var idx1 = this._findNode(points[0], false);
-	var v1 = idx1 >= 0 ? this._nodesInfo[idx1] : this._addNode(points[0], autoSplit);
+	var v1 = idx1 >= 0 ? this._nodesInfo[idx1] : this._addNode(points[0].clone(), autoSplit);
 	var idx2 = this._findNode(points[points.length - 1], false);
-	var v2 = idx2 >= 0 ? this._nodesInfo[idx2] : this._addNode(points[points.length - 1], autoSplit);
+	var v2 = idx2 >= 0 ? this._nodesInfo[idx2] : this._addNode(points[points.length - 1].clone(), autoSplit);
 
 	var thickness = [];
 	for (var i = points.length - 1; i >= 0; i--) {
@@ -121,6 +127,7 @@ MASHUP.MedialAxis.prototype.addEdge = function(points, autoSplit) {
 	}
 
 	var edgeInfo = {
+		type: MASHUP.MedialAxis.EDGE,
 		deleted: false,
 		mesh: null,
 		v1: v1,
@@ -141,7 +148,7 @@ MASHUP.MedialAxis.prototype.addEdge = function(points, autoSplit) {
 }
 
 //
-//	update a node's position based on external input
+//	update a node's position and its connected edges based on external input
 //
 //	@param 	node - the node being interacted with
 //	@param	pos - new position of this node
@@ -157,8 +164,8 @@ MASHUP.MedialAxis.prototype.updateNode = function(node, pos) {
 			continue;
 		}
 
-		var v1 = this._edgesInfo[i].v1.mesh;
-		var v2 = this._edgesInfo[i].v2.mesh;
+		var v1 = this._edgesInfo[i].v1;
+		var v2 = this._edgesInfo[i].v2;
 		if (v1 == node || v2 == node) {
 			// for simple straight edge
 			if (this._edgesInfo[i].points == undefined) {
@@ -191,7 +198,7 @@ MASHUP.MedialAxis.prototype.updateNode = function(node, pos) {
  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 MASHUP.MedialAxis.prototype._mousedown = function(e) {
-	if (this._listening == false) return;
+	// if (this._listening == false) return;
 
 	if (this._nodes == undefined) {
 		return;
@@ -206,30 +213,64 @@ MASHUP.MedialAxis.prototype._mousedown = function(e) {
 	//
 	//	interacting with nodes
 	//
-	var node = XAC.hitObject(e, this._nodes, this._camera);
+	// var node = XAC.hitObject(e, this._nodes, this._camera);
+	// if (this._nodeSelected != undefined) {
+	// 	if (e.shiftKey) {
+	// 		this._addEdge(node, this._nodeSelected);
+	// 	} else {
+	// 		for (var i = this._nodes.length - 1; i >= 0; i--) {
+	// 			this._nodes[i].material = this._matNode;
+	// 			this._nodes[i].material.needsUpdate = true;
+	// 		}
+	// 	}
+	// }
+
+	// this._nodeSelected = node;
+	// if (this._nodeSelected != undefined) {
+	// 	this._nodeSelected.material = this._matHighlight;
+	// 	this._nodeSelected.material.needsUpdate = true;
+	// 	for (var i = this._nodes.length - 1; i >= 0; i--) {
+	// 		if (this._nodes[i] == this._nodeSelected) {
+	// 			this._nodeInfoSel = this._nodesInfo[i];
+	// 		}
+	// 	}
+	// }
+
+	// if (this._nodeSelected != undefined) {
+	// 	if (e.ctrlKey) {
+	// 		this._nodeSelected = this._copyNode(this._nodeSelected);
+	// 	}
+	// 	// this._maniplane = new XAC.Maniplane(this._nodeSelected.position, this._scene, this._camera, true);
+	// 	this._maniplane = new XAC.Maniplane(new THREE.Vector3(), this._scene, this._camera, true);
+
+	// 	// find the node that's clicked
+	// 	this._findNode(this._nodeSelected.position, true);
+
+	// 	// stop propagation here
+	// 	return this._nodeSelected;
+	// }
+
 	if (this._nodeSelected != undefined) {
-		if (e.shiftKey) {
-			this._addEdge(node, this._nodeSelected);
-		} else {
-			for (var i = this._nodes.length - 1; i >= 0; i--) {
-				this._nodes[i].material = this._matNode;
-				this._nodes[i].material.needsUpdate = true;
+		this._nodeSelected.inflation.m.material = this._matInflation;
+		this._nodeSelected.inflation.m.material.needsUpdate = true;
+	}
+
+	var hitOnNode;
+	for (var i = this._nodesInfo.length - 1; i >= 0; i--) {
+		hitOnNode = XAC.hit(e, [this._nodesInfo[i].inflation.m], this._camera);
+		if (hitOnNode != undefined) {
+			if (this.__nodeSelected != this._nodesInfo[i]) {
+				this._nodesInfo[i].inflation.m.material = this._matHighlight;
+				this._nodesInfo[i].inflation.m.material.needsUpdate = true;
+				this._nodeSelected = this._nodesInfo[i];
+			} else {
+				this._nodeSelected = undefined;
 			}
+			break;
 		}
 	}
 
-	this._nodeSelected = node;
-	if (this._nodeSelected != undefined) {
-		this._nodeSelected.material = this._matHighlight;
-		this._nodeSelected.material.needsUpdate = true;
-		for (var i = this._nodes.length - 1; i >= 0; i--) {
-			if (this._nodes[i] == this._nodeSelected) {
-				this._nodeInfoSel = this._nodesInfo[i];
-			}
-		}
-	}
-
-	if (this._nodeSelected != undefined) {
+	if(hitOnNode != undefined) {
 		if (e.ctrlKey) {
 			this._nodeSelected = this._copyNode(this._nodeSelected);
 		}
@@ -245,14 +286,33 @@ MASHUP.MedialAxis.prototype._mousedown = function(e) {
 
 	//
 	// interacting with an edge
-	//	
-	var hitOnEdge = XAC.hit(e, this._edges, this._camera);
-	var edge = hitOnEdge != undefined ? hitOnEdge.object : undefined;
-
-	this._edgeSelected = edge;
+	//
 	if (this._edgeSelected != undefined) {
-		this._edgeSelected.material = this._matHighlight;
-		this._edgeSelected.material.needsUpdate = true;
+		for (var j = this._edgeSelected.inflations.length - 1; j >= 0; j--) {
+			this._edgeSelected.inflations[j].m.material = this._matInflation;
+			this._edgeSelected.inflations[j].m.material.needsUpdate = true;
+		}
+	}
+
+	var hitOnEdge;
+	for (var i = this._edgesInfo.length - 1; i >= 0; i--) {
+		var elmsInf = [];
+		for (var j = this._edgesInfo[i].inflations.length - 1; j >= 0; j--) {
+			elmsInf.push(this._edgesInfo[i].inflations[j].m);
+		}
+		hitOnEdge = XAC.hit(e, elmsInf, this._camera);
+		if (hitOnEdge != undefined) {
+			if (this._edgeSelected != this._edgesInfo[i]) {
+				for (var j = this._edgesInfo[i].inflations.length - 1; j >= 0; j--) {
+					this._edgesInfo[i].inflations[j].m.material = this._matHighlight;
+					this._edgesInfo[i].inflations[j].m.material.needsUpdate = true;
+				}
+				this._edgeSelected = this._edgesInfo[i];
+			} else {
+				this._edgeSelected = undefined;
+			}
+			break;
+		}
 	}
 
 	if (hitOnEdge != undefined) {
@@ -264,13 +324,14 @@ MASHUP.MedialAxis.prototype._mousedown = function(e) {
 		}
 
 		// stop propagation here
-		return _edgeSelected;
+		return this._edgeSelected;
 	}
 
 	//
 	//	interacting with inflation
 	//
-	this._infSelected = XAC.hitObject(e, this._inflationsNode, this._camera); // nodes have higher priority to be interacted with
+	// nodes have higher priority to be interacted with
+	this._infSelected = XAC.hitObject(e, this._inflationsNode, this._camera);
 	if (this._infSelected == undefined) {
 		this._infSelected = XAC.hitObject(e, this._inflations, this._camera);
 	}
@@ -288,12 +349,16 @@ MASHUP.MedialAxis.prototype._mousedown = function(e) {
 }
 
 MASHUP.MedialAxis.prototype._mousemove = function(e) {
-	if (this._listening == false) return;
+	// if (this._listening == false) return;
 
 	if (this._maniplane != undefined) {
+		// log(this._nodeSelected.inflation.m.position.toArray());
 		var pos = this._maniplane.update(e);
 		this.updateNode(this._nodeSelected, pos);
-		this._inflateNode(this._nodeInfoSel);
+		// addABall(this._scene, this._nodeSelected.inflation.m.position, 0xff0000, 2.5, 1)
+		this._inflateNode(this._nodeSelected);
+		// log(this._nodeSelected.position.toArray());
+		// log('---')
 		return this._nodeSelected;
 	}
 
@@ -323,7 +388,7 @@ MASHUP.MedialAxis.prototype._mousemove = function(e) {
 }
 
 MASHUP.MedialAxis.prototype._mouseup = function(e) {
-	if (this._listening == false) return;
+	// if (this._listening == false) return;
 
 	if (this._maniplane != undefined) {
 		this._maniplane.destruct();
@@ -368,18 +433,20 @@ MASHUP.MedialAxis.prototype._addNode = function(pos, autoSplit) {
 	}
 
 	if (edgeIntersected == undefined) {
-		var nodeNew = new XAC.Sphere(this._radiusNode, this._matNode, true).m;
-		nodeNew.position.copy(pos);
-		this._nodes.push(nodeNew);
+		// var nodeNew = new XAC.Sphere(this._radiusNode, this._matNode, true).m;
+		// nodeNew.position.copy(pos);
+		// this._nodes.push(nodeNew);
 		this._nodesInfo.push({
+			type: MASHUP.MedialAxis.NODE,
 			deleted: false,
-			mesh: nodeNew, // mesh representation
+			position: pos,
+			// mesh: nodeNew, // mesh representation
 			edgesInfo: [], // info of the edges connected to this node
 			radius: this._radiusNode * 1.1, // radius of this node
 			radiusData: [], // store the raw data
 			inflation: undefined
 		});
-		this._scene.add(nodeNew);
+		// this._scene.add(nodeNew);
 		return this._nodesInfo[this._nodesInfo.length - 1];
 	} else {
 		return this._splitEdge(edgeIntersected, pos);
@@ -418,7 +485,7 @@ MASHUP.MedialAxis.prototype._findNode = function(pos, bringToTop) {
 	for (var i = this._nodesInfo.length - 1; i >= 0; i--) {
 		if (this._nodesInfo[i].deleted) continue;
 
-		if (pos.distanceTo(this._nodesInfo[i].mesh.position) < this._nodesInfo[i].radius) {
+		if (pos.distanceTo(this._nodesInfo[i].position) < this._nodesInfo[i].radius) {
 			if (bringToTop) {
 				this._nodes.push(this._nodes.splice(i, 1)[0]);
 				this._nodesInfo.push(this._nodesInfo.splice(i, 1)[0]);
@@ -487,8 +554,8 @@ MASHUP.MedialAxis.prototype._splitEdge = function(edgeInfo, pos) {
 
 	// redistribute the thickness along the original edge
 	var thickness = edgeInfo.thickness;
-	var splitRatio = v.mesh.position.distanceTo(nodes.v1.mesh.position) /
-		nodes.v2.mesh.position.distanceTo(nodes.v1.mesh.position);
+	var splitRatio = v.position.distanceTo(nodes.v1.position) /
+		nodes.v2.position.distanceTo(nodes.v1.position);
 	idxSplit = idxSplit < 0 ? XAC.float2int(thickness.length * splitRatio) : idxSplit;
 	if (thickness != undefined) {
 		for (var i = 0; i < thickness.length; i++) {
@@ -542,6 +609,7 @@ MASHUP.MedialAxis.prototype._addEdge = function(v1, v2, points) {
 	// connect nodes (that have never been connected)
 	if (edgeInfo == undefined) {
 		var edgeInfo = {
+			type: MASHUP.MedialAxis.EDGE,
 			deleted: false,
 			v1: v1,
 			v2: v2,
@@ -591,7 +659,7 @@ MASHUP.MedialAxis.prototype._inflate = function() {
 //	inflate a node
 //
 MASHUP.MedialAxis.prototype._inflateNode = function(nodeInfo, nodeOnly) {
-	var ctr = nodeInfo.mesh.position;
+	var ctr = nodeInfo.position;
 	var r = nodeInfo.radius;
 
 	if (r > 0) {
@@ -607,6 +675,7 @@ MASHUP.MedialAxis.prototype._inflateNode = function(nodeInfo, nodeOnly) {
 			nodeInfo.inflation.update(r);
 		}
 		nodeInfo.inflation.m.position.copy(ctr);
+
 	}
 
 	if (nodeOnly) {} else {
@@ -620,8 +689,8 @@ MASHUP.MedialAxis.prototype._inflateNode = function(nodeInfo, nodeOnly) {
 //	inflate an edge
 //
 MASHUP.MedialAxis.prototype._inflateEdge = function(edgeInfo) {
-	var p1 = edgeInfo.v1.mesh.position;
-	var p2 = edgeInfo.v2.mesh.position;
+	var p1 = edgeInfo.v1.position;
+	var p2 = edgeInfo.v2.position;
 	var thickness = edgeInfo.thickness.concat([edgeInfo.v2.radius]);
 	var points = edgeInfo.points.concat([p2]);
 
