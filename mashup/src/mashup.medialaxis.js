@@ -109,8 +109,8 @@ MASHUP.MedialAxis.prototype.addEdge = function(points, autoSplit) {
 	var node1 = idx1 >= 0 ? this._nodes[idx1] : this._addNode(points[0].clone(),
 		autoSplit);
 	var idx2 = this._findNode(points[points.length - 1], false);
-	var node2 = idx2 >= 0 ? this._nodes[idx2] : this._addNode(points[points.length -
-		1].clone(), autoSplit);
+	var node2 = idx2 >= 0 ? this._nodes[idx2] : this._addNode(points.slice(-1)[0]
+		.clone(), autoSplit);
 
 	// initialize thickness
 	var thickness = [];
@@ -120,24 +120,6 @@ MASHUP.MedialAxis.prototype.addEdge = function(points, autoSplit) {
 
 	// create an edge
 	var edge = this._addEdge(node1, node2, points);
-	// var edge = {
-	// 	type: MASHUP.MedialAxis.EDGE,
-	// 	deleted: false,
-	// 	node1: node1,
-	// 	node2: node2,
-	// 	points: points,
-	// 	thickness: thickness,
-	// 	inflations: []
-	// };
-	// this._edges.push(edge);
-	//
-	// // storing edge info in nodes
-	// node1.edges.push(edge);
-	// node2.edges.push(edge);
-
-	// this._inflateNode(node1);
-	// this._inflateNode(node2);
-	// this._inflateEdge(edge);
 
 	return edge;
 }
@@ -170,8 +152,8 @@ MASHUP.MedialAxis.prototype.updateNode = function(node, pos) {
 			for (var j = this._edges[i].points.length - 1; j >= 0; j--) {
 				var pt = this._edges[i].points[j];
 				var ratio = node1 == node ?
-					1 - 1.0 * j / this._edges[i].points.length :
-					1.0 * j / this._edges[i].points.length;
+					1 - 1.0 * j / (this._edges[i].points.length - 1) :
+					1.0 * j / (this._edges[i].points.length - 1);
 				var dvj = dv.clone().multiplyScalar(ratio);
 				this._edges[i].points[j].add(dvj);
 			}
@@ -442,7 +424,6 @@ MASHUP.MedialAxis.prototype._copyNode = function(node) {
 	this._findNode(node.position, true);
 
 	this._addNode(node.position);
-	// log('node added at (' + node.position.x + ', ' + node.position.y + ', ' + node.position.z + ')');
 
 	var node1 = this._nodes[this._nodes.length - 1];
 	var node2 = this._nodes[this._nodes.length - 2];
