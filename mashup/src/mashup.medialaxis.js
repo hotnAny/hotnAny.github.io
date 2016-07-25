@@ -25,6 +25,9 @@ MASHUP.MedialAxis = function(scene, camera) {
 	this._inflationsInfo = [];
 	this._inflateRate = 7; // larger value smaller rate
 
+	// if set true, deleted edges will be used to reconnect its nodes
+	this.RESTORINGEDGE = true;
+
 	// visual properties
 	this._opacityNormal = 0.75;
 	this._radiusNode = 5;
@@ -159,6 +162,11 @@ MASHUP.MedialAxis.prototype.updateNode = function(node, pos) {
 				points[j].add(dvj);
 			}
 
+			// DEBUG
+			if (points[points.length - 1] == undefined || points[0] == undefined) {
+				log(points)
+			}
+
 			// make sure the end of points stick to the moving node
 			if (node1 == node) {
 				points[0].copy(pos);
@@ -279,8 +287,10 @@ MASHUP.MedialAxis.prototype._mousemove = function(e) {
 
 	if (this._maniplane != undefined) {
 		var pos = this._maniplane.update(e);
-		this.updateNode(this._nodeSelected, pos);
-		this._inflateNode(this._nodeSelected);
+		if (pos != undefined) {
+			this.updateNode(this._nodeSelected, pos);
+			this._inflateNode(this._nodeSelected);
+		}
 		return this._nodeSelected;
 	}
 
@@ -474,9 +484,6 @@ MASHUP.MedialAxis.prototype._removeEdge = function(edge) {
 //
 MASHUP.MedialAxis.prototype._splitEdge = function(edge, pos) {
 	// remove the edge, add a node in between and reconnect it with new edges
-	var edge = this._removeEdge(edge);
-	var node = this._addNode(pos);
-
 	var dmin = Number.MAX_VALUE;
 	var idxSplit = -1;
 	for (var i = edge.points.length - 1; i >= 0; i--) {
@@ -486,6 +493,18 @@ MASHUP.MedialAxis.prototype._splitEdge = function(edge, pos) {
 			idxSplit = i;
 		}
 	}
+
+	if (idxSplit <= 0) {
+		return edge.node1;
+	}
+
+	if (idxSplit >= edge.points.length - 1) {
+		return edge.node2;
+	}
+
+	var edge = this._removeEdge(edge);
+	var node = this._addNode(pos);
+
 	var edge1 = this._addEdge(edge.node1, node, edge.points.slice(0, idxSplit));
 	var edge2 = this._addEdge(node, edge.node2, edge.points.slice(idxSplit + 1));
 
@@ -522,13 +541,16 @@ MASHUP.MedialAxis.prototype._splitEdge = function(edge, pos) {
 MASHUP.MedialAxis.prototype._addEdge = function(node1, node2, points) {
 	// check it's already connected, or used to be connected
 	var edge;
-	for (var i = node1.edges.length - 1; i >= 0; i--) {
-		if (node1.edges[i].node1 == node2 || node1.edges[i].node2 == node2) {
-			if (node1.edges[i].deleted) {
-				edge = node1.edges[i];
-				break;
-			} else {
-				return;
+
+	if (this.RESTORINGEDGE) {
+		for (var i = node1.edges.length - 1; i >= 0; i--) {
+			if (node1.edges[i].node1 == node2 || node1.edges[i].node2 == node2) {
+				if (node1.edges[i].deleted) {
+					edge = node1.edges[i];
+					break;
+				} else {
+					return; // edge already exists
+				}
 			}
 		}
 	}

@@ -40,11 +40,10 @@ MASHUP.Design = function(scene, camera) {
 
 	// using a medial axis to represent design
 	this._medialAxis = new MASHUP.MedialAxis(this._scene, this._camera);
-	// this._medialAxis.disableEventListeners();
 	this._medialAxis._matNode = this._matDesign;
 	this._medialAxis._matInflation = this._matDesign.clone();
-	// this._medialAxis._matHighlight = this._matDesign.clone();
 	this._medialAxis._matHighlight.opacity = 1;
+	this._medialAxis.RESTORINGEDGE = false;
 
 	// storing a list of functional parameters
 	this._loads = [];
@@ -320,8 +319,12 @@ MASHUP.Design.prototype._mouseup = function(e) {
 				//
 				// remove ink and clean up
 				//
-				for (var i = this._ink.length - 1; i >= 0; i--) {
-					this._scene.remove(this._ink[i]);
+				var lenTotal = 0;
+				for (var i = this._inkPoints.length - 1; i >= 0; i--) {
+					this._scene.remove(this._ink[2 * i]);
+					this._scene.remove(this._ink[2 * i + 1]);
+					if (i > 0)
+						lenTotal += this._inkPoints[i].distanceTo(this._inkPoints[i - 1]);
 				}
 				this._ink = [];
 
@@ -329,7 +332,7 @@ MASHUP.Design.prototype._mouseup = function(e) {
 				// merge points that are too close to each other
 				//
 				var mergedPoints = [];
-				var minSpacing = 5;
+				var minSpacing = lenTotal / 25;
 
 				mergedPoints.push(this._inkPoints[0]);
 				for (var i = 1; i < this._inkPoints.length - 2; i++) {
