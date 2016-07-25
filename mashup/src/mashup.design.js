@@ -2,7 +2,7 @@
  *	a mashup design, consisting of
  *		- a user-created low-fi model (the geometry)
  *		- a series of functional requirments (the functions)
- * 	
+ *
  *	@author Xiang 'Anthony' Chen http://xiangchen.me
  *
  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -20,17 +20,17 @@ MASHUP.Design = function(scene, camera) {
 	this._matDesign = new THREE.MeshLambertMaterial({
 		color: XAC.COLORNORMAL,
 		transparent: true,
-		opacity: 0.75
+		opacity: 1
 	});
 	this._matLoad = new THREE.MeshLambertMaterial({
-		color: XAC.COLORHIGHLIGHT,
+		color: XAC.COLORALT,
 		transparent: true,
-		opacity: 0.75
+		opacity: 1
 	});
 	this._matClearance = new THREE.MeshLambertMaterial({
 		color: XAC.COLORCONTRAST,
 		transparent: true,
-		opacity: 0.75
+		opacity: 0.5
 	});
 	this._matBoundary = new THREE.MeshLambertMaterial({
 		color: XAC.COLORCONTRAST,
@@ -40,11 +40,11 @@ MASHUP.Design = function(scene, camera) {
 
 	// using a medial axis to represent design
 	this._medialAxis = new MASHUP.MedialAxis(this._scene, this._camera);
-	this._medialAxis.disableEventListeners();
+	// this._medialAxis.disableEventListeners();
 	this._medialAxis._matNode = this._matDesign;
 	this._medialAxis._matInflation = this._matDesign.clone();
-	this._medialAxis._matHighlight = this._matDesign.clone();
-	this._medialAxis._matHighlight.opacity *= 0.5;
+	// this._medialAxis._matHighlight = this._matDesign.clone();
+	this._medialAxis._matHighlight.opacity = 1;
 
 	// storing a list of functional parameters
 	this._loads = [];
@@ -100,7 +100,8 @@ MASHUP.Design.prototype._mousedown = function(e) {
 
 	var hitInfo = XAC.hit(e, this._designElements, this._camera);
 
-	this._maniPlane = new XAC.Maniplane(new THREE.Vector3(), this._scene, this._camera, false, false);
+	this._maniPlane = new XAC.Maniplane(new THREE.Vector3(), this._scene, this._camera,
+		false, false);
 
 	this._posDown = {
 		x: e.clientX,
@@ -108,9 +109,6 @@ MASHUP.Design.prototype._mousedown = function(e) {
 	};
 
 	switch (this._mode) {
-		case MASHUP.Design.POINTER:
-
-			break;
 		case MASHUP.Design.SKETCH:
 			// attemp to drop the 1st ink
 			if (hitInfo != undefined) {
@@ -132,8 +130,8 @@ MASHUP.Design.prototype._mousedown = function(e) {
 			funcElm = XAC.hitObject(e, this._funcElements, this._camera);
 			if (funcElm != undefined && funcElm.parent != undefined) {
 				// get to the `leaf' elements
-				selected = funcElm.parent instanceof THREE.Scene ?
-					[funcElm] : funcElm.parent.children;
+				selected = funcElm.parent instanceof THREE.Scene ? [funcElm] : funcElm.parent
+					.children;
 			}
 			this._funcElm = funcElm;
 
@@ -149,7 +147,7 @@ MASHUP.Design.prototype._mousedown = function(e) {
 					points: [hitInfo.point],
 					midPoint: hitInfo.point,
 					vector: undefined,
-					edgeInfo: this._medialAxis.getEdgeInfo(hitInfo.object), // associated edge
+					edge: this._medialAxis.getEdgeInfo(hitInfo.object), // associated edge
 					vrel: undefined, // direction relative to the associated edge
 					area: [], // visual elements showing area of load
 					arrow: undefined // visual element showing vector of load
@@ -165,7 +163,7 @@ MASHUP.Design.prototype._mousedown = function(e) {
 				this._clearance = {
 					box: undefined,
 					midPoint: this._load.midPoint,
-					edgeInfo: this._load.edgeInfo // associated edge
+					edge: this._load.edge // associated edge
 				}
 			}
 			break;
@@ -183,7 +181,7 @@ MASHUP.Design.prototype._mousedown = function(e) {
 			}
 			this._boundary = {
 				points: [],
-				edgeInfo: undefined
+				edge: undefined
 			};
 			break;
 	}
@@ -205,11 +203,10 @@ MASHUP.Design.prototype._mousemove = function(e) {
 	}
 
 	switch (this._mode) {
-		case MASHUP.Design.POINTER:
-			break;
 		case MASHUP.Design.SKETCH:
 			// BUG: hard code to fix for now
-			if (hitPoint == undefined || hitPoint.x == 0 && hitPoint.y == 0 && hitPoint.z == 500) {} else {
+			if (hitPoint == undefined || hitPoint.x == 0 && hitPoint.y == 0 && hitPoint
+				.z == 500) {} else {
 				this._dropInk(hitPoint);
 			}
 			break;
@@ -239,10 +236,11 @@ MASHUP.Design.prototype._mousemove = function(e) {
 			// show an arrow indicating the direction and magnititude of load
 			this._scene.remove(this._load.arrow);
 			this._load.vector = hitPoint.clone().sub(this._load.midPoint);
-			this._load.vedge = new THREE.Vector3().subVectors(this._load.edgeInfo.points.slice(-1)[0],
-				this._load.edgeInfo.points[0]);
+			this._load.vedge = new THREE.Vector3().subVectors(this._load.edge.points.slice(-
+					1)[0],
+				this._load.edge.points[0]);
 			this._load.arrow = XAC.addAnArrow(this._scene, this._load.midPoint,
-				this._load.vector, this._load.vector.length(), 3);
+				this._load.vector, this._load.vector.length(), 3, this._matLoad);
 			break;
 		case MASHUP.Design.CLEARANCEAREA:
 			// moving the mouse to specify the area of clearance
@@ -252,17 +250,20 @@ MASHUP.Design.prototype._mousemove = function(e) {
 			this._clearance.vector = this._load.vector.clone().multiplyScalar(-1).normalize();
 			var vclear = hitPoint.clone().sub(this._clearance.midPoint);
 			this._clearance.hclear = vclear.dot(this._clearance.vector);
-			this._clearance.wclear = Math.sqrt(Math.pow(vclear.length(), 2) - Math.pow(this._clearance.hclear, 2)) * 2;
+			this._clearance.wclear = Math.sqrt(Math.pow(vclear.length(), 2) - Math.pow(
+				this._clearance.hclear, 2)) * 2;
 
 			// create a mesh representation clearance
 			this._clearance.box = new XAC.Box(this._clearance.wclear, this._clearance.hclear,
 				5, this._matClearance).m;
 			XAC.rotateObjTo(this._clearance.box, this._clearance.vector);
 			this._clearance.box.position.copy(this._load.midPoint.clone()
-				.add(this._clearance.vector.clone().multiplyScalar(0.5 * this._clearance.hclear)));
+				.add(this._clearance.vector.clone().multiplyScalar(0.5 * this._clearance.hclear))
+			);
 
-			this._clearance.vedge = new THREE.Vector3().subVectors(this._clearance.edgeInfo.points.slice(-1)[0],
-				this._clearance.edgeInfo.points[0]);
+			this._clearance.vedge = new THREE.Vector3().subVectors(this._clearance.edge
+				.points.slice(-1)[0],
+				this._clearance.edge.points[0]);
 
 			this._scene.add(this._clearance.box);
 			break;
@@ -279,14 +280,16 @@ MASHUP.Design.prototype._mousemove = function(e) {
 					5, this._matClearance).m;
 				XAC.rotateObjTo(this._clearance.box, this._clearance.vector);
 				this._clearance.box.position.copy(this._load.midPoint.clone()
-					.add(this._clearance.vector.clone().multiplyScalar(0.5 * this._clearance.hclear)));
+					.add(this._clearance.vector.clone().multiplyScalar(0.5 * this._clearance
+						.hclear)));
 
 				this._scene.add(this._clearance.box);
 			}
 			break;
 		case MASHUP.Design.BOUNDARYPOINT:
 			// BUG: hard code to fix for now
-			if (hitPoint == undefined || hitPoint.x == 0 && hitPoint.y == 0 && hitPoint.z == 500) {} else {
+			if (hitPoint == undefined || hitPoint.x == 0 && hitPoint.y == 0 && hitPoint
+				.z == 500) {} else {
 				this._dropInk(hitPoint);
 			}
 			break;
@@ -331,7 +334,8 @@ MASHUP.Design.prototype._mouseup = function(e) {
 				mergedPoints.push(this._inkPoints[0]);
 				for (var i = 1; i < this._inkPoints.length - 2; i++) {
 					var mergedPoint = this._inkPoints[i].clone();
-					while (i < this._inkPoints.length - 1 && this._inkPoints[i + 1].distanceTo(mergedPoint) < minSpacing) {
+					while (i < this._inkPoints.length - 1 && this._inkPoints[i + 1].distanceTo(
+							mergedPoint) < minSpacing) {
 						mergedPoint.add(this._inkPoints[++i]).multiplyScalar(0.5);
 					}
 					mergedPoints.push(mergedPoint);
@@ -377,7 +381,8 @@ MASHUP.Design.prototype._mouseup = function(e) {
 			this._medialAxis._mouseup(e);
 			if (this._selectedTemp != undefined) {
 				for (var i = this._selectedTemp.length - 1; i >= 0; i--) {
-					if (this._selected != undefined && this._selectedTemp[i] == this._selected[i]) {
+					if (this._selected != undefined && this._selectedTemp[i] == this._selected[
+							i]) {
 						this._selectedTemp = [];
 						break;
 					}
@@ -399,7 +404,8 @@ MASHUP.Design.prototype._mouseup = function(e) {
 					var end = this._load.points[this._load.points.length - 1];
 					var distVarMin = start.distanceTo(end);
 					for (var i = this._load.points.length - 2; i >= 1; i--) {
-						var distVar = Math.abs(this._load.points[i].distanceTo(start) - this._load.points[i].distanceTo(end));
+						var distVar = Math.abs(this._load.points[i].distanceTo(start) - this._load
+							.points[i].distanceTo(end));
 						if (distVar < distVarMin) {
 							distVarMin = distVar;
 							this._load.midPoint = this._load.points[i];
@@ -411,7 +417,7 @@ MASHUP.Design.prototype._mouseup = function(e) {
 			}
 			break;
 		case MASHUP.Design.LOADVECTOR:
-			// this._load.edgeInfo.mesh.add(this._load.arrow);
+			// this._load.edge.mesh.add(this._load.arrow);
 			this._mode = MASHUP.Design.CLEARANCEAREA;
 			break;
 		case MASHUP.Design.CLEARANCEAREA:
@@ -430,27 +436,25 @@ MASHUP.Design.prototype._mouseup = function(e) {
 				this._ink = [];
 
 				// convert it to topology and store the visual elements
-				var edgeInfo = this._medialAxis.addEdge(this._inkPoints);
-				this._boundary.edgeInfo = edgeInfo;
+				var edge = this._medialAxis.addEdge(this._inkPoints);
+				this._boundary.edge = edge;
 
 				// redraw the boundary
-				for (var i = edgeInfo.inflations.length - 1; i >= 0; i--) {
-					edgeInfo.inflations[i].m.material = this._matBoundary;
-					edgeInfo.inflations[i].m.needsUpdate = true;
-					this._designElements.push(edgeInfo.inflations[i].m);
+				for (var i = edge.inflations.length - 1; i >= 0; i--) {
+					edge.inflations[i].m.material = this._matBoundary;
+					edge.inflations[i].m.needsUpdate = true;
+					this._designElements.push(edge.inflations[i].m);
 				}
 
-				edgeInfo.v1.mesh.material = this._matBoundary;
-				edgeInfo.v1.mesh.material.needsUpdate = true;
-				edgeInfo.v1.inflation.m.material = this._matBoundary;
-				edgeInfo.v1.inflation.m.material.needsUpdate = true;
-				this._designElements.push(edgeInfo.v1.inflation.m);
+				edge.v1.mesh.material = this._matBoundary;
+				edge.v1.mesh.material.needsUpdate = true;
+				edge.v1.inflation.m.material = this._matBoundary;
+				this._designElements.push(edge.v1.inflation.m);
 
-				edgeInfo.v2.mesh.material = this._matBoundary;
-				edgeInfo.v2.mesh.material.needsUpdate = true;
-				edgeInfo.v2.inflation.m.material = this._matBoundary;
-				edgeInfo.v2.inflation.m.material.needsUpdate = true;
-				this._designElements.push(edgeInfo.v2.inflation.m);
+				edge.v2.mesh.material = this._matBoundary;
+				edge.v2.mesh.material.needsUpdate = true;
+				edge.v2.inflation.m.material = this._matBoundary;
+				this._designElements.push(edge.v2.inflation.m);
 
 				this._inkPoints = [];
 
@@ -468,10 +472,10 @@ MASHUP.Design.prototype._mouseup = function(e) {
 	}
 
 	this._designElements = [];
-	for (var i = this._medialAxis.edgesInfo.length - 1; i >= 0; i--) {
-		var edgeInfo = this._medialAxis.edgesInfo[i];
-		for (var j = edgeInfo.inflations.length - 1; j >= 0; j--) {
-			this._designElements.push(edgeInfo.inflations[j].m);
+	for (var i = this._medialAxis.edges.length - 1; i >= 0; i--) {
+		var edge = this._medialAxis.edges[i];
+		for (var j = edge.inflations.length - 1; j >= 0; j--) {
+			this._designElements.push(edge.inflations[j].m);
 		}
 	}
 }
@@ -517,7 +521,23 @@ MASHUP.Design.prototype._keydown = function(e) {
 			}
 		}
 
-		this._medialAxis._keydown(e);
+		// if an edge is deleted, remove its functional requirments
+		var edge = this._medialAxis._keydown(e);
+		if (edge.type == MASHUP.MedialAxis.EDGE) {
+			// find corresponding load
+			for (var i = 0; i < this._loads.length; i++) {
+				if (this._loads[i].edge == edge) {
+					this._removeLoad(this._loads[i]);
+				}
+			}
+
+			// find corresponding clerance
+			for (var i = 0; i < this._clearances.length; i++) {
+				if (this._clearances[i].edge == edge) {
+					this._removeClearance(this._clearances[i]);
+				}
+			}
+		}
 
 	}
 }
@@ -551,9 +571,9 @@ MASHUP.Design.prototype._updateConstraints = function() {
 	//	loads
 	for (var i = this._loads.length - 1; i >= 0; i--) {
 		var load = this._loads[i];
-		var edgeInfo = load.edgeInfo;
-		var vedge = new THREE.Vector3().subVectors(edgeInfo.points.slice(-1)[0],
-			edgeInfo.points[0]);
+		var edge = load.edge;
+		var vedge = new THREE.Vector3().subVectors(edge.points.slice(-1)[0],
+			edge.points[0]);
 
 		var axis = new THREE.Vector3().crossVectors(load.vedge, vedge).normalize();
 		var angle = load.vedge.angleTo(vedge);
@@ -561,15 +581,16 @@ MASHUP.Design.prototype._updateConstraints = function() {
 		load.vedge = vedge;
 
 		this._scene.remove(load.arrow);
-		load.arrow = XAC.addAnArrow(this._scene, load.midPoint, load.vector, load.vector.length(), 3);
+		load.arrow = XAC.addAnArrow(this._scene, load.midPoint, load.vector, load.vector
+			.length(), 3, this._matLoad);
 	}
 
 	//	clearances
 	for (var i = this._clearances.length - 1; i >= 0; i--) {
 		var clearance = this._clearances[i];
-		var edgeInfo = clearance.edgeInfo;
-		var vedge = new THREE.Vector3().subVectors(edgeInfo.points.slice(-1)[0],
-			edgeInfo.points[0]);
+		var edge = clearance.edge;
+		var vedge = new THREE.Vector3().subVectors(edge.points.slice(-1)[0],
+			edge.points[0]);
 
 		var axis = new THREE.Vector3().crossVectors(clearance.vedge, vedge).normalize();
 		var angle = clearance.vedge.angleTo(vedge);
@@ -608,7 +629,8 @@ MASHUP.Design.prototype._manipulate = function(elm, ptnow, ptprev) {
 		if (idx >= 0) {
 			load.vector.add(vdelta);
 			this._scene.remove(load.arrow);
-			load.arrow = XAC.addAnArrow(this._scene, load.midPoint, load.vector, load.vector.length(), 3);
+			load.arrow = XAC.addAnArrow(this._scene, load.midPoint, load.vector, load.vector
+				.length(), 3, this._matLoad);
 			return load.arrow.children[idx];
 		}
 	}
@@ -626,7 +648,8 @@ MASHUP.Design.prototype._manipulate = function(elm, ptnow, ptprev) {
 			var vnow = ptnow.clone().sub(clearance.midPoint);
 			dnow = Math.sqrt(Math.pow(vnow.length(), 2) - Math.pow(vnow.dot(vnormal), 2));
 			var vprev = ptprev.clone().sub(clearance.midPoint);
-			dprev = Math.sqrt(Math.pow(vprev.length(), 2) - Math.pow(vprev.dot(vnormal), 2));
+			dprev = Math.sqrt(Math.pow(vprev.length(), 2) - Math.pow(vprev.dot(vnormal),
+				2));
 			clearance.wclear *= 1 + (dnow / dprev - 1) * (dnow / clearance.wclear / 2);
 
 			// redraw the box
@@ -670,10 +693,10 @@ MASHUP.Design.prototype._removeClearance = function(clearance) {
 //	extend medial axis to retrieve edge info from its representatin (mesh)
 //
 MASHUP.MedialAxis.prototype.getEdgeInfo = function(mesh) {
-	for (var i = this._edgesInfo.length - 1; i >= 0; i--) {
-		for (var j = this._edgesInfo[i].inflations.length - 1; j >= 0; j--) {
-			if (this._edgesInfo[i].inflations[j].m == mesh) {
-				return this._edgesInfo[i];
+	for (var i = this.edges.length - 1; i >= 0; i--) {
+		for (var j = this.edges[i].inflations.length - 1; j >= 0; j--) {
+			if (this.edges[i].inflations[j].m == mesh) {
+				return this.edges[i];
 			}
 		}
 	}

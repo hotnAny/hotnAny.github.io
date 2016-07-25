@@ -328,8 +328,8 @@ MASHUP.MedialAxis.prototype._mouseup = function(e) {
 MASHUP.MedialAxis.prototype._keydown = function(e) {
 	switch (e.keyCode) {
 		case 46: // DEL
-			if (this._nodeSelected != undefined) this._removeNode(this._nodeSelected);
-			if (this._edgeSelected != undefined) this._removeEdge(this._edgeSelected);
+			if (this._nodeSelected != undefined) return this._removeNode(this._nodeSelected);
+			if (this._edgeSelected != undefined) return this._removeEdge(this._edgeSelected);
 			break;
 	}
 }
@@ -390,7 +390,7 @@ MASHUP.MedialAxis.prototype._removeNode = function(node) {
 			// deal with its edges
 			var edges = this._nodes[i].edges;
 			for (var j = edges.length - 1; j >= 0; j--) {
-				this._removeEdge(edges[j]);
+				if (edges[j].deleted != true) this._removeEdge(edges[j]);
 			}
 			this._nodes[i].deleted = true;
 
@@ -437,19 +437,25 @@ MASHUP.MedialAxis.prototype._copyNode = function(node) {
 //	remove an edge
 //
 MASHUP.MedialAxis.prototype._removeEdge = function(edge) {
+	var isNodeEdgeless = function(node) {
+		for (var i = 0; i < node.edges.length; i++) {
+			if (node.edges[i].deleted != true) {
+				return false;
+			}
+		}
+		return true;
+	}
 	this._scene.remove(edge.mesh);
 	edge.deleted = true;
-	var node1 = edge.node1;
-	var node2 = edge.node2;
 	for (var j = edge.inflations.length - 1; j >= 0; j--) {
 		this._scene.remove(edge.inflations[j].m);
 		this._scene.remove(edge.joints[j - 1 < 0 ? 0 : j - 1].m);
 	}
 
-	return {
-		node1: node1,
-		node2: node2
-	};
+	if (isNodeEdgeless(edge.node1)) this._removeNode(edge.node1);
+	if (isNodeEdgeless(edge.node2)) this._removeNode(edge.node2);
+
+	return edge;
 }
 
 //
@@ -458,7 +464,7 @@ MASHUP.MedialAxis.prototype._removeEdge = function(edge) {
 //
 MASHUP.MedialAxis.prototype._splitEdge = function(edge, pos) {
 	// remove the edge, add a node in between and reconnect it with new edges
-	var nodes = this._removeEdge(edge);
+	var edge = this._removeEdge(edge);
 	var node = this._addNode(pos);
 
 	var dmin = Number.MAX_VALUE;
@@ -470,13 +476,13 @@ MASHUP.MedialAxis.prototype._splitEdge = function(edge, pos) {
 			idxSplit = i;
 		}
 	}
-	var edge1 = this._addEdge(nodes.node1, node, edge.points.slice(0, idxSplit));
-	var edge2 = this._addEdge(node, nodes.node2, edge.points.slice(idxSplit + 1));
+	var edge1 = this._addEdge(edge.node1, node, edge.points.slice(0, idxSplit));
+	var edge2 = this._addEdge(node, edge.node2, edge.points.slice(idxSplit + 1));
 
 	// redistribute the thickness along the original edge
 	var thickness = edge.thickness;
-	var splitRatio = node.position.distanceTo(nodes.node1.position) /
-		nodes.node2.position.distanceTo(nodes.node1.position);
+	var splitRatio = node.position.distanceTo(edge.node1.position) /
+		edge.node2.position.distanceTo(edge.node1.position);
 	idxSplit = idxSplit < 0 ? XAC.float2int(thickness.length * splitRatio) :
 		idxSplit;
 	edge1.thickness = [];
