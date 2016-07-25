@@ -119,24 +119,25 @@ MASHUP.MedialAxis.prototype.addEdge = function(points, autoSplit) {
 	}
 
 	// create an edge
-	var edge = {
-		type: MASHUP.MedialAxis.EDGE,
-		deleted: false,
-		node1: node1,
-		node2: node2,
-		points: points,
-		thickness: thickness,
-		inflations: []
-	};
-	this._edges.push(edge);
+	var edge = this._addEdge(node1, node2, points);
+	// var edge = {
+	// 	type: MASHUP.MedialAxis.EDGE,
+	// 	deleted: false,
+	// 	node1: node1,
+	// 	node2: node2,
+	// 	points: points,
+	// 	thickness: thickness,
+	// 	inflations: []
+	// };
+	// this._edges.push(edge);
+	//
+	// // storing edge info in nodes
+	// node1.edges.push(edge);
+	// node2.edges.push(edge);
 
-	// storing edge info in nodes
-	node1.edges.push(edge);
-	node2.edges.push(edge);
-
-	this._inflateNode(node1);
-	this._inflateNode(node2);
-	this._inflateEdge(edge);
+	// this._inflateNode(node1);
+	// this._inflateNode(node2);
+	// this._inflateEdge(edge);
 
 	return edge;
 }
@@ -369,9 +370,9 @@ MASHUP.MedialAxis.prototype._addNode = function(pos, autoSplit) {
 					edgeIntersected = this._edges[i];
 					break;
 				}
-			}
-		}
-	}
+			} // for the poitns on each edge
+		} // for each edge
+	} // auto split or not
 
 	if (edgeIntersected == undefined) {
 		this._nodes.push({
@@ -383,12 +384,13 @@ MASHUP.MedialAxis.prototype._addNode = function(pos, autoSplit) {
 			radiusData: [], // store the raw data
 			inflation: undefined
 		});
-		// this._scene.add(nodeNew);
-		return this._nodes[this._nodes.length - 1];
+
+		var node = this._nodes.slice(-1)[0];
+		this._inflateNode(node);
+		return node;
 	} else {
 		return this._splitEdge(edgeIntersected, pos);
 	}
-
 }
 
 //
@@ -406,7 +408,6 @@ MASHUP.MedialAxis.prototype._removeNode = function(node) {
 			for (var j = edges.length - 1; j >= 0; j--) {
 				this._removeEdge(edges[j]);
 			}
-			// this._nodes.splice(i, 1);
 			this._nodes[i].deleted = true;
 
 			this._scene.remove(this._nodes[i].inflation.m);
@@ -459,6 +460,7 @@ MASHUP.MedialAxis.prototype._removeEdge = function(edge) {
 	var node2 = edge.node2;
 	for (var j = edge.inflations.length - 1; j >= 0; j--) {
 		this._scene.remove(edge.inflations[j].m);
+		this._scene.remove(edge.joints[j].m);
 	}
 
 	return {
@@ -474,7 +476,7 @@ MASHUP.MedialAxis.prototype._removeEdge = function(edge) {
 MASHUP.MedialAxis.prototype._splitEdge = function(edge, pos) {
 	// remove the edge, add a node in between and reconnect it with new edges
 	var nodes = this._removeEdge(edge);
-	var v = this._addNode(pos);
+	var node = this._addNode(pos);
 
 	var dmin = Number.MAX_VALUE;
 	var idxSplit = -1;
@@ -485,51 +487,38 @@ MASHUP.MedialAxis.prototype._splitEdge = function(edge, pos) {
 			idxSplit = i;
 		}
 	}
-	var edgeInfo1 = this._addEdge(nodes.node1, v, edge.points.slice(0, idxSplit));
-	var edgeInfo2 = this._addEdge(v, nodes.node2, edge.points.slice(idxSplit + 1));
+	var edge1 = this._addEdge(nodes.node1, node, edge.points.slice(0, idxSplit));
+	var edge2 = this._addEdge(node, nodes.node2, edge.points.slice(idxSplit + 1));
 
 	// redistribute the thickness along the original edge
 	var thickness = edge.thickness;
-	var splitRatio = v.position.distanceTo(nodes.node1.position) /
+	var splitRatio = node.position.distanceTo(nodes.node1.position) /
 		nodes.node2.position.distanceTo(nodes.node1.position);
 	idxSplit = idxSplit < 0 ? XAC.float2int(thickness.length * splitRatio) :
 		idxSplit;
 	if (thickness != undefined) {
 		for (var i = 0; i < thickness.length; i++) {
 			if (i < idxSplit) {
-				edgeInfo1.thickness.push(thickness[i]);
+				edge1.thickness.push(thickness[i]);
 			}
 
 			if (i == idxSplit) {
-				v.radius = thickness[i]
+				node.radius = thickness[i]
 			}
 
 			if (i > idxSplit) {
-				edgeInfo2.thickness.push(thickness[i])
+				edge2.thickness.push(thickness[i])
 			}
 		}
 	}
 
-	this._inflate();
-
-	return v;
+	return node;
 }
 
 //
 //	connect two nodes with an edge
 //
 MASHUP.MedialAxis.prototype._addEdge = function(node1, node2, points) {
-	// // if input is mesh of nodes, retrieve the corresponding node info
-	// for (var i = this._nodes.length - 1; i >= 0; i--) {
-	// 	if (this._nodes[i] == node1) {
-	// 		node1 = this._nodes[i];
-	// 	}
-
-	// 	if (this._nodes[i] == node2) {
-	// 		node2 = this._nodes[i];
-	// 	}
-	// }
-
 	// check it's already connected, or used to be connected
 	var edge;
 	for (var i = node1.edges.length - 1; i >= 0; i--) {
@@ -553,8 +542,14 @@ MASHUP.MedialAxis.prototype._addEdge = function(node1, node2, points) {
 			points: points,
 			thickness: [],
 			thicknessData: [],
-			inflations: []
+			inflations: [],
+			joints: []
 		};
+
+		for (var i = edge.points.length - 1; i >= 0; i--) {
+			edge.thickness.push(this._radiusEdge);
+		}
+
 		this._edges.push(edge);
 
 		// storing edge info in nodes
@@ -564,13 +559,12 @@ MASHUP.MedialAxis.prototype._addEdge = function(node1, node2, points) {
 	// connect nodes (that were connected but deleted)
 	else {
 		edge.deleted = false;
-
 		for (var i = edge.inflations.length - 1; i >= 0; i--) {
 			this._scene.add(edge.inflations[i].m)
 		}
 	}
 
-	this._inflate();
+	this._inflateEdge(edge);
 
 	return edge;
 }
@@ -634,15 +628,17 @@ MASHUP.MedialAxis.prototype._inflateEdge = function(edge) {
 	var ctr0 = p1;
 	var r0 = edge.node1.radius;
 	for (var i = 0; i < thickness.length; i++) {
-
 		var ctr;
-
 		if (points == undefined) {
 			ctr = p1.clone().multiplyScalar(1 - (i + 1) * 1.0 / thickness.length).add(
 				p2.clone().multiplyScalar((i + 1) * 1.0 / thickness.length)
 			);
 		} else {
 			ctr = points[i];
+		}
+
+		if (ctr == undefined) {
+			continue;
 		}
 
 		var r;
@@ -658,6 +654,12 @@ MASHUP.MedialAxis.prototype._inflateEdge = function(edge) {
 				r2: r0
 			}, this._matInflation);
 
+			if (i < thickness.length - 1) {
+				var joint = new XAC.Sphere(r, this._matInflation);
+				joint.m.position.copy(ctr);
+				edge.joints.push(joint);
+			}
+
 			this._inflations.push(inflation.m);
 			this._inflationsInfo.push({
 				edge: edge,
@@ -665,12 +667,17 @@ MASHUP.MedialAxis.prototype._inflateEdge = function(edge) {
 			});
 
 			edge.inflations.push(inflation);
+			this._scene.add(joint.m);
 			this._scene.add(edge.inflations[i].m);
 		} else {
 			edge.inflations[i].update(ctr0, ctr, {
 				r1: r,
 				r2: r0
 			});
+
+			if (i < thickness.length - 1) {
+				edge.joints[i].m.position.copy(ctr);
+			}
 		}
 
 		ctr0 = ctr;
