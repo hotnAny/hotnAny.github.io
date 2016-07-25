@@ -193,6 +193,7 @@ MASHUP.MedialAxis.prototype._mousedown = function(e) {
 	if (this._edgeSelected != undefined) {
 		for (var j = this._edgeSelected.inflations.length - 1; j >= 0; j--) {
 			this._edgeSelected.inflations[j].m.material = this._matInflation;
+			this._edgeSelected.joints[j - 1 < 0 ? 0 : j - 1].m.material = this._matInflation;
 		}
 		this._edgeSelected = undefined;
 	}
@@ -335,6 +336,7 @@ MASHUP.MedialAxis.prototype._mouseup = function(e) {
 	if (this._edgeSelected != undefined) {
 		for (var j = this._edgeSelected.inflations.length - 1; j >= 0; j--) {
 			this._edgeSelected.inflations[j].m.material = this._matHighlight;
+			this._edgeSelected.joints[j - 1 < 0 ? 0 : j - 1].m.material = this._matHighlight;
 		}
 	}
 
@@ -460,7 +462,7 @@ MASHUP.MedialAxis.prototype._removeEdge = function(edge) {
 	var node2 = edge.node2;
 	for (var j = edge.inflations.length - 1; j >= 0; j--) {
 		this._scene.remove(edge.inflations[j].m);
-		this._scene.remove(edge.joints[j].m);
+		this._scene.remove(edge.joints[j - 1 < 0 ? 0 : j - 1].m);
 	}
 
 	return {
@@ -496,6 +498,8 @@ MASHUP.MedialAxis.prototype._splitEdge = function(edge, pos) {
 		nodes.node2.position.distanceTo(nodes.node1.position);
 	idxSplit = idxSplit < 0 ? XAC.float2int(thickness.length * splitRatio) :
 		idxSplit;
+	edge1.thickness = [];
+	edge2.thickness = [];
 	if (thickness != undefined) {
 		for (var i = 0; i < thickness.length; i++) {
 			if (i < idxSplit) {
@@ -654,20 +658,20 @@ MASHUP.MedialAxis.prototype._inflateEdge = function(edge) {
 				r2: r0
 			}, this._matInflation);
 
-			if (i < thickness.length - 1) {
-				var joint = new XAC.Sphere(r, this._matInflation);
-				joint.m.position.copy(ctr);
-				edge.joints.push(joint);
-			}
-
 			this._inflations.push(inflation.m);
 			this._inflationsInfo.push({
 				edge: edge,
 				idx: i
 			});
-
 			edge.inflations.push(inflation);
-			this._scene.add(joint.m);
+
+			if (i < thickness.length - 1) {
+				var joint = new XAC.Sphere(r, this._matInflation);
+				joint.m.position.copy(ctr);
+				edge.joints.push(joint);
+				this._scene.add(joint.m);
+			}
+
 			this._scene.add(edge.inflations[i].m);
 		} else {
 			edge.inflations[i].update(ctr0, ctr, {
