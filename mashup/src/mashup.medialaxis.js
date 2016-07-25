@@ -149,13 +149,21 @@ MASHUP.MedialAxis.prototype.updateNode = function(node, pos) {
 			// based on its degree of separation to the manipulated node
 			var dv = node.position.clone().sub(posPrev);
 			var len = node2.position.clone().sub(posPrev).length();
-			for (var j = this._edges[i].points.length - 1; j >= 0; j--) {
-				var pt = this._edges[i].points[j];
+			var points = this._edges[i].points;
+			for (var j = points.length - 1; j >= 0; j--) {
+				var pt = points[j];
 				var ratio = node1 == node ?
-					1 - 1.0 * j / (this._edges[i].points.length - 1) :
-					1.0 * j / (this._edges[i].points.length - 1);
+					1 - 1.0 * j / (points.length - 1) :
+					1.0 * j / (points.length - 1);
 				var dvj = dv.clone().multiplyScalar(ratio);
-				this._edges[i].points[j].add(dvj);
+				points[j].add(dvj);
+			}
+
+			// make sure the end of points stick to the moving node
+			if (node1 == node) {
+				points[0].copy(pos);
+			} else {
+				points[points.length - 1].copy(pos);
 			}
 		} // found edge connected to ndoe
 	} // all edges
@@ -313,6 +321,7 @@ MASHUP.MedialAxis.prototype._mouseup = function(e) {
 
 	if (this._nodeSelected != undefined) {
 		this._nodeSelected.inflation.m.material = this._matInflation;
+		this._nodeSelected = undefined;
 	}
 
 	if (this._edgeSelected != undefined) {
@@ -348,6 +357,7 @@ MASHUP.MedialAxis.prototype._addNode = function(pos, autoSplit) {
 
 	if (autoSplit == true) {
 		for (var i = this._edges.length - 1; i >= 0 && edgeIntersected == undefined; i--) {
+			if (this._edges[i].deleted) continue;
 			var points = this._edges[i].points;
 			for (var j = points.length - 1; j >= 0; j--) {
 				if (pos.distanceTo(points[j]) < this._radiusEdge * 2) {

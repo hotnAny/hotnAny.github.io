@@ -359,7 +359,7 @@ MASHUP.Design.prototype._mouseup = function(e) {
 
 					if (anglePrev != undefined) {
 						if (Math.abs(angle - anglePrev) > Math.PI / 4) {
-							log([i, anglePrev, angle])
+							// log([i, anglePrev, angle])
 							this._medialAxis.addEdge(mergedPoints.slice(0, i + 1), autoSplit);
 							autoSplit = false;
 							mergedPoints = mergedPoints.slice(i);
