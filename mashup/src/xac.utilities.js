@@ -1,7 +1,7 @@
 /*------------------------------------------------------------------------------------*
  *
  * useful recurring routines
- * 
+ *
  * by xiang 'anthony' chen, xiangchen@acm.org
  *
  *------------------------------------------------------------------------------------*/
@@ -223,27 +223,31 @@ XAC.removeFromArray = function(array, elm, compFunc) {
 	return array;
 }
 
-XAC.addAnArrow = function(scene, v1, dir, len, r) {
+XAC.addAnArrow = function(scene, v1, dir, len, r, mat) {
 	var flipped = len < 0;
 
 	// NOW: make an arrow
 	var rArrow = r == undefined ? 1.5 : r;
 	var lArrow = len == undefined ? 100 : Math.abs(len);
-	var bodyArrow = new XAC.Cylinder(rArrow, lArrow, XAC.MATERIALFOCUS).m;
+	var bodyArrow = new XAC.Cylinder(rArrow, lArrow,
+		mat == undefined ? XAC.MATERIALFOCUS : mat).m;
 
 	var rArrowHead = rArrow * 3;
 	var headArrow = new XAC.Cylinder({
 		r1: 0,
 		r2: rArrowHead
-	}, rArrowHead * 2, XAC.MATERIALFOCUS).m;
-	headArrow.position.add(new THREE.Vector3(0, 1, 0).multiplyScalar(lArrow * 0.5 + rArrowHead));
+	}, rArrowHead * 2, mat == undefined ? XAC.MATERIALFOCUS : mat).m;
+	headArrow.position.add(new THREE.Vector3(0, 1, 0).multiplyScalar(lArrow * 0.5 +
+		rArrowHead));
 
 	var arrow = new THREE.Object3D();
 	arrow.add(bodyArrow);
 	arrow.add(headArrow);
 
-	XAC.rotateObjTo(arrow, dir.clone().normalize().multiplyScalar(flipped == true ? -1 : 1));
-	arrow.position.copy(v1.clone().add(dir.clone().normalize().multiplyScalar(lArrow * 0.5 + (flipped == true ? rArrowHead * 2 : 0))));
+	XAC.rotateObjTo(arrow, dir.clone().normalize().multiplyScalar(flipped == true ?
+		-1 : 1));
+	arrow.position.copy(v1.clone().add(dir.clone().normalize().multiplyScalar(
+		lArrow * 0.5 + (flipped == true ? rArrowHead * 2 : 0))));
 
 	scene.add(arrow);
 	return arrow;
