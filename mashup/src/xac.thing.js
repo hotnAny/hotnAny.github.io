@@ -73,11 +73,12 @@ XAC.ThickLine.prototype.update = function(p1, p2, r) {
 }
 
 //
-//	plane 653E944D
+//	plane
 //
 XAC.Plane = function(w, l, mat) {
 	this._g = new THREE.CubeGeometry(w, 1, l);
-	this._m = new THREE.Mesh(this._g, mat == undefined ? XAC.MATERIALNORMAL.clone() : mat.clone());
+	this._m = new THREE.Mesh(this._g, mat == undefined ? XAC.MATERIALNORMAL.clone() :
+		mat.clone());
 }
 XAC.Plane.prototype = Object.create(XAC.Thing.prototype);
 
@@ -87,12 +88,15 @@ XAC.Plane.prototype = Object.create(XAC.Thing.prototype);
 XAC.Sphere = function(r, mat, highFi) {
 	this._r = r;
 	this._highFi = highFi;
-	this._g = this._highFi == true ? new THREE.SphereGeometry(r, 32, 32) : new THREE.SphereGeometry(r, 8, 8);
-	this._m = new THREE.Mesh(this._g, mat == undefined ? XAC.MATERIALNORMAL.clone() : mat.clone());
+	this._g = this._highFi == true ? new THREE.SphereGeometry(r, 32, 32) : new THREE
+		.SphereGeometry(r, 8, 8);
+	this._m = new THREE.Mesh(this._g, mat == undefined ? XAC.MATERIALNORMAL.clone() :
+		mat.clone());
 };
 XAC.Sphere.prototype = Object.create(XAC.Thing.prototype);
 XAC.Sphere.prototype.update = function(r) {
-	this._m.geometry = this._highFi == true ? new THREE.SphereGeometry(r, 32, 32) : new THREE.SphereGeometry(r, 8, 8);
+	this._m.geometry = this._highFi == true ? new THREE.SphereGeometry(r, 32, 32) :
+		new THREE.SphereGeometry(r, 8, 8);
 }
 
 //
@@ -112,9 +116,11 @@ XAC.Cylinder.prototype.update = function(r, h, mat, openEnded) {
 		this._r1 = this._r2 = r;
 	}
 
-	this._g = new THREE.CylinderGeometry(this._r1, this._r2, this._h, 32, 1, openEnded);
+	this._g = new THREE.CylinderGeometry(this._r1, this._r2, this._h, 32, 1,
+		openEnded);
 	if (this._m == undefined) {
-		this._m = new THREE.Mesh(this._g, mat == undefined ? XAC.MATERIALNORMAL.clone() : mat.clone());
+		this._m = new THREE.Mesh(this._g, mat == undefined ? XAC.MATERIALNORMAL.clone() :
+			mat.clone());
 	} else {
 		this._m.geometry = this._g;
 	}
@@ -130,8 +136,9 @@ XAC.Box = function(w, t, l, mat) {
 XAC.Box.prototype = Object.create(XAC.Thing.prototype);
 XAC.Box.prototype.update = function(w, t, l) {
 	this._g = new THREE.CubeGeometry(w, t, l);
-	this._m = new THREE.Mesh(this._g, 
-		this._material == undefined ? MATERIALNORMAL.clone() : this._material.clone());
+	this._m = new THREE.Mesh(this._g,
+		this._material == undefined ? MATERIALNORMAL.clone() : this._material.clone()
+	);
 }
 
 //
@@ -149,6 +156,7 @@ XAC.Polygon = function(vertices, faces, mat) {
 	this._g = new THREE.Geometry();
 	this._g.vertices = vertices;
 	this._g.faces = faces;
-	this._m = new THREE.Mesh(this._g, mat == undefined ? XAC.MATERIALNORMAL.clone() : mat.clone());
+	this._m = new THREE.Mesh(this._g, mat == undefined ? XAC.MATERIALNORMAL.clone() :
+		mat.clone());
 }
 XAC.Polygon.prototype = Object.create(XAC.Thing.prototype);
