@@ -30,7 +30,7 @@ MASHUP.MedialAxis = function(scene, camera) {
 
 	// visual properties
 	this._opacityNormal = 0.75;
-	this._radiusNode = 5;
+	this._radiusNode = 5.5;
 	this._radiusEdge = 5;
 	this._matNode = XAC.MATERIALCONTRAST;
 	this._matEdge = new THREE.MeshPhongMaterial({

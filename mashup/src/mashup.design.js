@@ -124,8 +124,6 @@ MASHUP.Design.prototype._mousedown = function(e) {
 			}
 			var selected = [];
 
-			this._medialAxis._mousedown(e);
-
 			funcElm = XAC.hitObject(e, this._funcElements, this._camera);
 			if (funcElm != undefined && funcElm.parent != undefined) {
 				// get to the `leaf' elements
@@ -133,8 +131,21 @@ MASHUP.Design.prototype._mousedown = function(e) {
 					.children;
 			}
 			this._funcElm = funcElm;
-
 			this._selectedTemp = selected;
+
+			// functional elements have priority
+			if (this._funcElm == undefined) {
+				this._medialAxis._mousedown(e);
+			}
+
+			for (var i = 0; i < this._boundaries.length; i++) {
+				var edge = this._boundaries[i].edge;
+				// redraw the boundary
+				for (var j = edge.inflations.length - 1; j >= 0; j--) {
+					edge.inflations[j].m.material = this._matBoundary;
+					edge.joints[j < 1 ? 0 : j - 1].m.material = this._matBoundary;
+				}
+			}
 
 			this._hitPointPrev = this._maniPlane.update(e);
 			break;
@@ -215,7 +226,6 @@ MASHUP.Design.prototype._mousemove = function(e) {
 				this._updateConstraints(); // update functional specification constrained by some edges
 			} else if (this._funcElm != undefined) {
 				if (hitPoint != undefined && this._hitPointPrev != undefined) {
-					// var vdelta = hitPoint.clone().sub(this._hitPointPrev);
 					this._funcElm = this._manipulate(this._funcElm, hitPoint, this._hitPointPrev);
 					this._selectedTemp = undefined;
 				}
@@ -380,8 +390,6 @@ MASHUP.Design.prototype._mouseup = function(e) {
 			}
 			break;
 		case MASHUP.Design.EDIT:
-			// simply relay the event to medial axis
-			this._medialAxis._mouseup(e);
 			if (this._selectedTemp != undefined) {
 				for (var i = this._selectedTemp.length - 1; i >= 0; i--) {
 					if (this._selected != undefined && this._selectedTemp[i] == this._selected[
@@ -394,7 +402,16 @@ MASHUP.Design.prototype._mouseup = function(e) {
 
 				}
 				this._selected = this._selectedTemp;
+			} else {
+				this._medialAxis._mouseup(e);
 			}
+
+			for (var i = 0; i < this._boundaries.length; i++) {
+				var edge = this._boundaries[i].edge;
+				edge.node1.inflation.m.material = this._matBoundary;
+				edge.node2.inflation.m.material = this._matBoundary;
+			}
+
 			break;
 		case MASHUP.Design.LOADPOINT:
 			if (this._load == undefined || this._load.points.length <= 0) {
@@ -445,19 +462,15 @@ MASHUP.Design.prototype._mouseup = function(e) {
 				// redraw the boundary
 				for (var i = edge.inflations.length - 1; i >= 0; i--) {
 					edge.inflations[i].m.material = this._matBoundary;
-					edge.inflations[i].m.needsUpdate = true;
-					this._designElements.push(edge.inflations[i].m);
+					edge.joints[i < 1 ? 0 : i - 1].m.material = this._matBoundary;
+					this._funcElements.push(edge.inflations[i].m);
 				}
 
-				edge.v1.mesh.material = this._matBoundary;
-				edge.v1.mesh.material.needsUpdate = true;
-				edge.v1.inflation.m.material = this._matBoundary;
-				this._designElements.push(edge.v1.inflation.m);
+				edge.node1.inflation.m.material = this._matBoundary;
+				this._funcElements.push(edge.node1.inflation.m);
 
-				edge.v2.mesh.material = this._matBoundary;
-				edge.v2.mesh.material.needsUpdate = true;
-				edge.v2.inflation.m.material = this._matBoundary;
-				this._designElements.push(edge.v2.inflation.m);
+				edge.node2.inflation.m.material = this._matBoundary;
+				this._funcElements.push(edge.node2.inflation.m);
 
 				this._inkPoints = [];
 
