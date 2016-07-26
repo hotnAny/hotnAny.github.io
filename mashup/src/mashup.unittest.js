@@ -56,6 +56,12 @@ function unitTest() {
 	// var curveObject = new THREE.Line(geometry, material);
 	// scene.add(curveObject);
 
+	// var p = new THREE.Vector3(1, 0, 0);
+	// var q = new THREE.Vector3(2, 0, 0);
+	// var u = new THREE.Vector3(2, 1, 0);
+	// var v = new THREE.Vector3(0, 1, 0);
+	// log(vectorsIntersection(p, u, q, v));
+
 	document.addEventListener('keydown', function(e) {
 		// if (MASHUP.design._mode != MASHUP.Design.EDIT) {
 		// MASHUP.design._medialAxis.disableEventListeners();
@@ -83,15 +89,11 @@ function unitTest() {
 				MASHUP.design._mode = MASHUP.Design.BOUNDARYPOINT;
 				$(MASHUP.renderer.domElement).css('cursor', 'auto');
 				break;
+			case 83: //S
+				log(MASHUP.design.getData());
+				break;
 		}
 	}, false);
-
-
-	var p = new THREE.Vector3(1, 0, 0);
-	var q = new THREE.Vector3(2, 0, 0);
-	var u = new THREE.Vector3(2, 1, 0);
-	var v = new THREE.Vector3(0, 1, 0);
-	log(vectorsIntersection(p, u, q, v));
 
 	log('----------------  unit test ends  ----------------');
 }

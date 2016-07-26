@@ -763,3 +763,44 @@ MASHUP.Design.prototype._postProcessInk = function() {
 
 	return mergedPoints;
 }
+
+//
+//	get the data of the design, including func. req.
+//
+MASHUP.Design.prototype.getData = function() {
+	var mashup = {}
+	mashup.design = [];
+	for (var i = 0; i < this._medialAxis.edges.length; i++) {
+		mashup.design.push(this._medialAxis.pack(this._medialAxis.edges[i]));
+	}
+	return JSON.stringify(mashup);
+}
+
+//
+//	pack the elements (edges and/or nodes) into JSONable format
+//
+MASHUP.MedialAxis.prototype.pack = function(elm) {
+	if (elm.type == MASHUP.MedialAxis.EDGE) {
+		var edge = {};
+		edge.type = elm.type;
+		edge.deleted = elm.deleted;
+		edge.node1 = elm.node1.position.toArray().trim(2);
+		edge.node2 = elm.node2.position.toArray().trim(2);
+		edge.points = [];
+		for (var i = 0; i < elm.points.length; i++) {
+			edge.points.push(elm.points[i].toArray().trim(2));
+		}
+		edge.thickness = elm.thickness;
+		return edge;
+	}
+}
+
+//
+//	trim each number in the array to a given precision
+//
+Array.prototype.trim = function(numDigits) {
+	for (i = 0; i < this.length; i++) {
+		this[i] = this[i].toFixed(numDigits);
+	}
+	return this;
+}
