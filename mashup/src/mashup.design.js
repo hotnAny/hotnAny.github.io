@@ -35,7 +35,7 @@ MASHUP.Design = function(scene, camera) {
 	this._matBoundary = new THREE.MeshLambertMaterial({
 		color: XAC.COLORCONTRAST,
 		transparent: true,
-		opacity: 0.75
+		opacity: 1
 	});
 
 	// using a medial axis to represent design
@@ -122,8 +122,8 @@ MASHUP.Design.prototype._mousedown = function(e) {
 					this._selected[i].material.needsUpdate = true;
 				}
 			}
-			var selected = [];
 
+			var selected = [];
 			funcElm = XAC.hitObject(e, this._funcElements, this._camera);
 			if (funcElm != undefined && funcElm.parent != undefined) {
 				// get to the `leaf' elements
@@ -131,6 +131,7 @@ MASHUP.Design.prototype._mousedown = function(e) {
 					.children;
 			}
 			this._funcElm = funcElm;
+			// selection tem - will cancel later if func elm is manipulated, not selected
 			this._selectedTemp = selected;
 
 			// functional elements have priority
@@ -227,7 +228,7 @@ MASHUP.Design.prototype._mousemove = function(e) {
 			} else if (this._funcElm != undefined) {
 				if (hitPoint != undefined && this._hitPointPrev != undefined) {
 					this._funcElm = this._manipulate(this._funcElm, hitPoint, this._hitPointPrev);
-					this._selectedTemp = undefined;
+					this._selectedTemp = [];
 				}
 			}
 			break;
@@ -326,34 +327,7 @@ MASHUP.Design.prototype._mouseup = function(e) {
 			break;
 		case MASHUP.Design.SKETCH:
 			if (this._ink.length > 0) {
-				//
-				// remove ink and clean up
-				//
-				var lenTotal = 0;
-				for (var i = this._inkPoints.length - 1; i >= 0; i--) {
-					this._scene.remove(this._ink[2 * i]);
-					this._scene.remove(this._ink[2 * i + 1]);
-					if (i > 0)
-						lenTotal += this._inkPoints[i].distanceTo(this._inkPoints[i - 1]);
-				}
-				this._ink = [];
-
-				//
-				// merge points that are too close to each other
-				//
-				var mergedPoints = [];
-				var minSpacing = lenTotal / 25;
-
-				mergedPoints.push(this._inkPoints[0]);
-				for (var i = 1; i < this._inkPoints.length - 2; i++) {
-					var mergedPoint = this._inkPoints[i].clone();
-					while (i < this._inkPoints.length - 1 && this._inkPoints[i + 1].distanceTo(
-							mergedPoint) < minSpacing) {
-						mergedPoint.add(this._inkPoints[++i]).multiplyScalar(0.5);
-					}
-					mergedPoints.push(mergedPoint);
-				}
-				mergedPoints.push(this._inkPoints.slice(-1)[0]);
+				var mergedPoints = this._postProcessInk();
 
 				//
 				// add to the medial axis with auto-added nodes
@@ -390,7 +364,7 @@ MASHUP.Design.prototype._mouseup = function(e) {
 			}
 			break;
 		case MASHUP.Design.EDIT:
-			if (this._selectedTemp != undefined) {
+			if (this._selectedTemp.length > 0) {
 				for (var i = this._selectedTemp.length - 1; i >= 0; i--) {
 					if (this._selected != undefined && this._selectedTemp[i] == this._selected[
 							i]) {
@@ -448,34 +422,31 @@ MASHUP.Design.prototype._mouseup = function(e) {
 			this._glueState = false;
 			break;
 		case MASHUP.Design.BOUNDARYPOINT:
-			if (this._ink.length > 0) {
-				// remove ink and clean up
-				for (var i = this._ink.length - 1; i >= 0; i--) {
-					this._scene.remove(this._ink[i]);
-				}
-				this._ink = [];
+			// remove ink and clean up
+			var mergedPoints = this._postProcessInk();
 
-				// convert it to topology and store the visual elements
-				var edge = this._medialAxis.addEdge(this._inkPoints);
-				this._boundary.edge = edge;
+			log(mergedPoints.length)
 
-				// redraw the boundary
-				for (var i = edge.inflations.length - 1; i >= 0; i--) {
-					edge.inflations[i].m.material = this._matBoundary;
-					edge.joints[i < 1 ? 0 : i - 1].m.material = this._matBoundary;
-					this._funcElements.push(edge.inflations[i].m);
-				}
+			// convert it to topology and store the visual elements
+			var edge = this._medialAxis.addEdge(mergedPoints);
+			this._boundary.edge = edge;
 
-				edge.node1.inflation.m.material = this._matBoundary;
-				this._funcElements.push(edge.node1.inflation.m);
-
-				edge.node2.inflation.m.material = this._matBoundary;
-				this._funcElements.push(edge.node2.inflation.m);
-
-				this._inkPoints = [];
-
-				this._boundaries.push(this._boundary);
+			// redraw the boundary
+			for (var i = edge.inflations.length - 1; i >= 0; i--) {
+				edge.inflations[i].m.material = this._matBoundary;
+				edge.joints[i < 1 ? 0 : i - 1].m.material = this._matBoundary;
+				this._funcElements.push(edge.inflations[i].m);
 			}
+
+			edge.node1.inflation.m.material = this._matBoundary;
+			this._funcElements.push(edge.node1.inflation.m);
+
+			edge.node2.inflation.m.material = this._matBoundary;
+			this._funcElements.push(edge.node2.inflation.m);
+
+			this._inkPoints = [];
+
+			this._boundaries.push(this._boundary);
 			break;
 	}
 
@@ -716,4 +687,36 @@ MASHUP.MedialAxis.prototype.getEdgeInfo = function(mesh) {
 			}
 		}
 	}
+}
+
+//
+//	subroutine for post processing drawn ink points
+//
+MASHUP.Design.prototype._postProcessInk = function() {
+	// remove temp ink, compute their circumference
+	var lenTotal = 0;
+	for (var i = this._inkPoints.length - 1; i >= 0; i--) {
+		this._scene.remove(this._ink[2 * i]);
+		this._scene.remove(this._ink[2 * i + 1]);
+		if (i > 0)
+			lenTotal += this._inkPoints[i].distanceTo(this._inkPoints[i - 1]);
+	}
+	this._ink = [];
+
+	// merge points that are too close to each other
+	var mergedPoints = [];
+	var minSpacing = lenTotal / 25;
+
+	mergedPoints.push(this._inkPoints[0]);
+	for (var i = 1; i < this._inkPoints.length - 2; i++) {
+		var mergedPoint = this._inkPoints[i].clone();
+		while (i < this._inkPoints.length - 1 && this._inkPoints[i + 1].distanceTo(
+				mergedPoint) < minSpacing) {
+			mergedPoint.add(this._inkPoints[++i]).multiplyScalar(0.5);
+		}
+		mergedPoints.push(mergedPoint);
+	}
+	mergedPoints.push(this._inkPoints.slice(-1)[0]);
+
+	return mergedPoints;
 }
