@@ -16,32 +16,35 @@ MASHUP.Design = function(scene, camera) {
 	this._mode = MASHUP.Design.SKETCH;
 	$(MASHUP.renderer.domElement).css('cursor', 'crosshair');
 
+	this._opacityFull = 1.0;
+	this._opacityHalf = 0.5;
+
 	// color scheme
 	this._matDesign = new THREE.MeshLambertMaterial({
 		color: XAC.COLORNORMAL,
 		transparent: true,
-		opacity: 1
+		opacity: this._opacityFull
 	});
 	this._matLoad = new THREE.MeshLambertMaterial({
 		color: XAC.COLORALT,
 		transparent: true,
-		opacity: 1
+		opacity: this._opacityFull
 	});
 	this._matClearance = new THREE.MeshLambertMaterial({
 		color: XAC.COLORCONTRAST,
 		transparent: true,
-		opacity: 0.5
+		opacity: this._opacityHalf
 	});
 	this._matBoundary = new THREE.MeshLambertMaterial({
 		color: XAC.COLORCONTRAST,
 		transparent: true,
-		opacity: 1
+		opacity: this._opacityFull
 	});
 
 	// using a medial axis to represent design
 	this._medialAxis = new MASHUP.MedialAxis(this._scene, this._camera);
 	this._medialAxis._matNode = this._matDesign;
-	this._medialAxis._matInflation = this._matDesign.clone();
+	this._medialAxis._matInflation = this._matDesign;
 	this._medialAxis._matHighlight.opacity = 1;
 	this._medialAxis.RESTORINGEDGE = false;
 
@@ -118,7 +121,7 @@ MASHUP.Design.prototype._mousedown = function(e) {
 		case MASHUP.Design.EDIT:
 			if (this._selected != undefined) {
 				for (var i = this._selected.length - 1; i >= 0; i--) {
-					this._selected[i].material.opacity *= 2;
+					this._selected[i].material.opacity = this._opacityHalf;
 					this._selected[i].material.needsUpdate = true;
 				}
 			}
@@ -239,7 +242,6 @@ MASHUP.Design.prototype._mousemove = function(e) {
 				this._load.points.push(hitElm.position);
 				this._load.area.push(hitElm);
 				hitElm.material = this._matLoad;
-				hitElm.material.needsUpdate = true;
 			}
 			break;
 		case MASHUP.Design.LOADVECTOR:
@@ -371,7 +373,7 @@ MASHUP.Design.prototype._mouseup = function(e) {
 						this._selectedTemp = [];
 						break;
 					}
-					this._selectedTemp[i].material.opacity *= 0.5;
+					this._selectedTemp[i].material.opacity = this._opacityFull;
 					this._selectedTemp[i].material.needsUpdate = true;
 
 				}

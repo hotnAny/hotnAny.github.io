@@ -699,7 +699,7 @@ MASHUP.MedialAxis.prototype._inflateEdge = function(edge) {
 			});
 
 			if (i < thickness.length - 1) {
-				edge.joints[i].m.position.copy(ctr);
+				edge.joints[i].update(r, ctr); //.m.position.copy(ctr);
 			}
 		}
 

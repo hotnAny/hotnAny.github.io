@@ -94,9 +94,12 @@ XAC.Sphere = function(r, mat, highFi) {
 		mat.clone());
 };
 XAC.Sphere.prototype = Object.create(XAC.Thing.prototype);
-XAC.Sphere.prototype.update = function(r) {
-	this._m.geometry = this._highFi == true ? new THREE.SphereGeometry(r, 32, 32) :
+XAC.Sphere.prototype.update = function(r, ctr) {
+	if (r != undefined)
+		this._m.geometry = this._highFi == true ? new THREE.SphereGeometry(r, 32, 32) :
 		new THREE.SphereGeometry(r, 8, 8);
+	if (ctr != undefined)
+		this._m.position.copy(ctr);
 }
 
 //
@@ -104,7 +107,6 @@ XAC.Sphere.prototype.update = function(r) {
 //
 XAC.Cylinder = function(r, h, mat, openEnded) {
 	this.update(r, h, mat, openEnded)
-		// this._m = new THREE.Mesh(this._g, mat == undefined ? XAC.MATERIALNORMAL.clone() : mat.clone());
 }
 XAC.Cylinder.prototype = Object.create(XAC.Thing.prototype);
 XAC.Cylinder.prototype.update = function(r, h, mat, openEnded) {
