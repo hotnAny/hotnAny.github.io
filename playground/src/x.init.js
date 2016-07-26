@@ -51,10 +51,10 @@ var objects = new Array();
 
 
 var camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 10000);
-var gPosCam = new THREE.Vector3(0, 0, 500); //(0, 2.5, 4);
-camera.position.copy(gPosCam); //.multiplyScalar(80));
+var gPosCam = new THREE.Vector3(0, 2.5, 4);
+camera.position.copy(gPosCam.multiplyScalar(80));
 
-// var gLookAt = new THREE.Vector3(10, 0, 10).multiplyScalar(10);
+var gLookAt = new THREE.Vector3(10, 0, 10).multiplyScalar(10);
 // var gLookAt = new THREE.Vector3(20, 0, -10);
 var gMouseCtrls = new THREE.TrackballControls(camera, undefined, undefined);
 var gWheelDisabled = false;
@@ -70,17 +70,17 @@ function drawGround(yOffset) {
      });
 
 
-     var geometryGround = new THREE.CubeGeometry(window.innerWidth * 1000 / window.innerHeight, 1000, 1);
+     var geometryGround = new THREE.CubeGeometry(1000, 1, 1000);
      var ground = new THREE.Mesh(
           geometryGround,
           groundMaterial,
           0 // mass
      );
 
-     ground.position.z -= yOffset;
+     ground.position.y -= yOffset;
      return ground;
 }
-var gGround = drawGround(1);
+var gGround = drawGround(0);
 scene.add(gGround);
 
 //
@@ -92,19 +92,16 @@ function drawGrid(yOffset) {
      });
      var lineGeometry = new THREE.Geometry();
      var floor = 0.5 - yOffset;
-     var ylength = 1000;
-     var xlength = XAC.float2int(ylength * window.innerWidth / window.innerHeight);
      var step = 25;
-     xlength = XAC.float2int(xlength / step) * step;
 
-     for (var i = 0; i <= xlength / step; i++) {
-          lineGeometry.vertices.push(new THREE.Vector3(i * step - xlength / 2, -ylength / 2, floor));
-          lineGeometry.vertices.push(new THREE.Vector3(i * step - xlength / 2, ylength / 2, floor));
-     }
+     for (var i = 0; i <= 40; i++) {
 
-     for (var i = 0; i <= ylength / step; i++) {
-          lineGeometry.vertices.push(new THREE.Vector3(-xlength / 2, i * step - ylength / 2, floor));
-          lineGeometry.vertices.push(new THREE.Vector3(xlength / 2, i * step - ylength / 2, floor));
+          lineGeometry.vertices.push(new THREE.Vector3(-500, floor, i * step - 500));
+          lineGeometry.vertices.push(new THREE.Vector3(500, floor, i * step - 500));
+
+          lineGeometry.vertices.push(new THREE.Vector3(i * step - 500, floor, -500));
+          lineGeometry.vertices.push(new THREE.Vector3(i * step - 500, floor, 500));
+
      }
 
      return new THREE.Line(lineGeometry, lineMaterial, THREE.LinePieces);

@@ -55,5 +55,5 @@ $(document).ready(function() {
 	// camera.position.copy(new THREE.Vector3(0, 50, 0));
 	// var lookAt = new THREE.Vector3(0, -1, 0);
 	// var gMouseCtrls = new THREE.TrackballControls(camera, undefined, gLookAt);
-	var design = new MASHUP.Design(scene);
+	// var design = new MASHUP.Design(scene);
 })
