@@ -55,9 +55,9 @@ MASHUP.Design = function(scene, camera) {
 
 	// the currently interactive parameters
 	this._inkPoints = [];
-	this._load = undefined; // {point, vector, arrow}
-	this._clearance = undefined; // {min, max, box}
-	this._boundary = undefined; // {min, max, box}
+	this._load = undefined;
+	this._clearance = undefined;
+	this._boundary = undefined;
 
 	// input event handlers
 	document.addEventListener('mousedown', this._mousedown.bind(this), false);
@@ -73,9 +73,8 @@ MASHUP.Design = function(scene, camera) {
 	// drawing related visual elements
 	this._ink = [];
 	this._inkSize = 5;
-	this._inkMat = new THREE.MeshBasicMaterial({
-		color: 0x000000
-	});
+	this._inkMat = XAC.MATERIALALT.clone();
+	this._inkMat.opacity = 1;
 }
 
 // editing modes
@@ -93,7 +92,9 @@ MASHUP.Design.prototype = {
 };
 
 //
+//
 //	event handler for mouse down
+//
 //
 MASHUP.Design.prototype._mousedown = function(e) {
 	if (e.which != XAC.LEFTMOUSE) {
@@ -112,13 +113,14 @@ MASHUP.Design.prototype._mousedown = function(e) {
 
 	switch (this._mode) {
 		case MASHUP.Design.SKETCH:
-			// attemp to drop the 1st ink
 			if (hitInfo != undefined) {
 				this._maniPlane.setPosition(hitInfo.object.position);
 				this._dropInk(hitInfo.point);
 			}
 			break;
+
 		case MASHUP.Design.EDIT:
+			// restoring previously selected items
 			if (this._selected != undefined) {
 				for (var i = this._selected.length - 1; i >= 0; i--) {
 					this._selected[i].material.opacity = this._opacityHalf;
@@ -127,6 +129,7 @@ MASHUP.Design.prototype._mousedown = function(e) {
 			}
 
 			var selected = [];
+			// attempt to select amongst functional elements
 			funcElm = XAC.hitObject(e, this._funcElements, this._camera);
 			if (funcElm != undefined && funcElm.parent != undefined) {
 				// get to the `leaf' elements
@@ -137,22 +140,24 @@ MASHUP.Design.prototype._mousedown = function(e) {
 			// selection tem - will cancel later if func elm is manipulated, not selected
 			this._selectedTemp = selected;
 
-			// functional elements have priority
+			// select design only if no func. elms. selected
 			if (this._funcElm == undefined) {
 				this._medialAxis._mousedown(e);
 			}
 
 			for (var i = 0; i < this._boundaries.length; i++) {
 				var edge = this._boundaries[i].edge;
-				// redraw the boundary
+				// redraw the boundary, diff from other design
 				for (var j = edge.inflations.length - 1; j >= 0; j--) {
 					edge.inflations[j].m.material = this._matBoundary;
 					edge.joints[j < 1 ? 0 : j - 1].m.material = this._matBoundary;
 				}
 			}
 
+			// record hit point for manipulation
 			this._hitPointPrev = this._maniPlane.update(e);
 			break;
+
 		case MASHUP.Design.LOADPOINT:
 			if (hitInfo != undefined) {
 				// use the selected point to initialize the load object
@@ -162,12 +167,12 @@ MASHUP.Design.prototype._mousedown = function(e) {
 					midPoint: hitInfo.point,
 					vector: undefined,
 					edge: this._medialAxis.getEdgeInfo(hitInfo.object), // associated edge
-					vrel: undefined, // direction relative to the associated edge
 					area: [], // visual elements showing area of load
 					arrow: undefined // visual element showing vector of load
 				}
 			}
 			break;
+
 		case MASHUP.Design.LOADVECTOR:
 			// finalize the creation of a load and init the clearance object immediately
 			if (this._load != undefined) {
@@ -181,13 +186,16 @@ MASHUP.Design.prototype._mousedown = function(e) {
 				}
 			}
 			break;
+
 		case MASHUP.Design.CLEARANCEAREA:
 			// finalize the selection of a clearance area
 			this._clearances.push(this._clearance);
 			this._funcElements.push(this._clearance.box);
 			break;
+
 		case MASHUP.Design.CLEARANCEORIENTATION:
 			break;
+
 		case MASHUP.Design.BOUNDARYPOINT:
 			// init the boundary object
 			if (hitInfo != undefined) {
@@ -198,13 +206,16 @@ MASHUP.Design.prototype._mousedown = function(e) {
 				edge: undefined
 			};
 			break;
+
 	}
 
 	this._posMove = this._posDown;
 }
 
 //
+//
 //	event handler of mouse move
+//
 //
 MASHUP.Design.prototype._mousemove = function(e) {
 	if (e.which != XAC.LEFTMOUSE && this._glueState != true) {
@@ -224,17 +235,19 @@ MASHUP.Design.prototype._mousemove = function(e) {
 				this._dropInk(hitPoint);
 			}
 			break;
+
 		case MASHUP.Design.EDIT:
-			// simply relay the event to medial axis
-			if (this._medialAxis._mousemove(e) != undefined) {
-				this._updateConstraints(); // update functional specification constrained by some edges
-			} else if (this._funcElm != undefined) {
+			// either manipulating a func. elm or the design
+			if (this._funcElm != undefined) {
 				if (hitPoint != undefined && this._hitPointPrev != undefined) {
 					this._funcElm = this._manipulate(this._funcElm, hitPoint, this._hitPointPrev);
 					this._selectedTemp = [];
 				}
+			} else if (this._medialAxis._mousemove(e) != undefined) {
+				this._updateConstraints(); // update functional specification constrained by some edges
 			}
 			break;
+
 		case MASHUP.Design.LOADPOINT:
 			// dragging to select load points
 			var hitElm = XAC.hitObject(e, this._designElements, this._camera);
@@ -244,6 +257,7 @@ MASHUP.Design.prototype._mousemove = function(e) {
 				hitElm.material = this._matLoad;
 			}
 			break;
+
 		case MASHUP.Design.LOADVECTOR:
 			// show an arrow indicating the direction and magnititude of load
 			this._scene.remove(this._load.arrow);
@@ -254,6 +268,7 @@ MASHUP.Design.prototype._mousemove = function(e) {
 			this._load.arrow = XAC.addAnArrow(this._scene, this._load.midPoint,
 				this._load.vector, this._load.vector.length(), 3, this._matLoad);
 			break;
+
 		case MASHUP.Design.CLEARANCEAREA:
 			// moving the mouse to specify the area of clearance
 			this._scene.remove(this._clearance.box);
@@ -279,7 +294,9 @@ MASHUP.Design.prototype._mousemove = function(e) {
 
 			this._scene.add(this._clearance.box);
 			break;
+
 		case MASHUP.Design.CLEARANCEORIENTATION:
+			// move the mouse the rotate the clearance area
 			if (this._hitPointPrev != undefined) {
 				var vnow = hitPoint.clone().sub(this._clearance.midPoint);
 				var vprev = this._hitPointPrev.clone().sub(this._clearance.midPoint);
@@ -298,6 +315,7 @@ MASHUP.Design.prototype._mousemove = function(e) {
 				this._scene.add(this._clearance.box);
 			}
 			break;
+
 		case MASHUP.Design.BOUNDARYPOINT:
 			// BUG: hard code to fix for now
 			if (hitPoint == undefined || hitPoint.x == 0 && hitPoint.y == 0 && hitPoint
@@ -315,7 +333,9 @@ MASHUP.Design.prototype._mousemove = function(e) {
 }
 
 //
+//
 //	event handler of mouse up
+//
 //
 MASHUP.Design.prototype._mouseup = function(e) {
 	if (e.which != XAC.LEFTMOUSE) {
@@ -327,45 +347,46 @@ MASHUP.Design.prototype._mouseup = function(e) {
 	switch (this._mode) {
 		case MASHUP.Design.POINTER:
 			break;
-		case MASHUP.Design.SKETCH:
-			if (this._ink.length > 0) {
-				var mergedPoints = this._postProcessInk();
 
-				//
-				// add to the medial axis with auto-added nodes
-				//
-				var anglePrev;
-				var autoSplit = true;
-				// i starting at 2 to avoid corner cases at the starting point
-				for (var i = 2; i < mergedPoints.length - 2; i++) {
-					if (i - 1 < 0 || i + 1 >= mergedPoints.length) {
+		case MASHUP.Design.SKETCH:
+			if (this._ink.length < 0) break;
+
+			var mergedPoints = this._postProcessInk();
+
+			// add to the medial axis with auto-added nodes
+			var anglePrev;
+			var autoSplit = true;
+
+			// i starting at 2 to avoid corner cases at the starting point
+			for (var i = 2; i < mergedPoints.length - 2; i++) {
+				if (i - 1 < 0 || i + 1 >= mergedPoints.length) {
+					continue;
+				}
+
+				var v1 = mergedPoints[i + 1].clone().sub(mergedPoints[i]);
+				var v0 = mergedPoints[i].clone().sub(mergedPoints[i - 1]);
+				var angle = v1.angleTo(v0);
+
+				if (anglePrev != undefined) {
+					if (Math.abs(angle - anglePrev) > Math.PI / 4) {
+						// log([i, anglePrev, angle])
+						this._medialAxis.addEdge(mergedPoints.slice(0, i + 1), autoSplit);
+						autoSplit = false;
+						mergedPoints = mergedPoints.slice(i);
+						i = 0;
+						anglePrev = undefined;
 						continue;
 					}
-
-					var v1 = mergedPoints[i + 1].clone().sub(mergedPoints[i]);
-					var v0 = mergedPoints[i].clone().sub(mergedPoints[i - 1]);
-					var angle = v1.angleTo(v0);
-
-					if (anglePrev != undefined) {
-						if (Math.abs(angle - anglePrev) > Math.PI / 4) {
-							// log([i, anglePrev, angle])
-							this._medialAxis.addEdge(mergedPoints.slice(0, i + 1), autoSplit);
-							autoSplit = false;
-							mergedPoints = mergedPoints.slice(i);
-							i = 0;
-							anglePrev = undefined;
-							continue;
-						}
-					}
-
-					anglePrev = angle;
 				}
-				this._medialAxis.addEdge(mergedPoints, autoSplit);
-
-				this._inkPoints = [];
+				anglePrev = angle;
 			}
+			this._medialAxis.addEdge(mergedPoints, autoSplit);
+
+			this._inkPoints = [];
 			break;
+
 		case MASHUP.Design.EDIT:
+			// highlight selection or wrap up design manipulation
 			if (this._selectedTemp.length > 0) {
 				for (var i = this._selectedTemp.length - 1; i >= 0; i--) {
 					if (this._selected != undefined && this._selectedTemp[i] == this._selected[
@@ -382,6 +403,7 @@ MASHUP.Design.prototype._mouseup = function(e) {
 				this._medialAxis._mouseup(e);
 			}
 
+			// redraw boundary to make it diff from other design elms
 			for (var i = 0; i < this._boundaries.length; i++) {
 				var edge = this._boundaries[i].edge;
 				edge.node1.inflation.m.material = this._matBoundary;
@@ -389,40 +411,45 @@ MASHUP.Design.prototype._mouseup = function(e) {
 			}
 
 			break;
+
 		case MASHUP.Design.LOADPOINT:
-			if (this._load == undefined || this._load.points.length <= 0) {
-				break;
+			if (this._load == undefined || this._load.points.length <= 0) break;
+
+			// find the mid point of loading given a series of selected points
+			if (this._load.points.length <= 2) {
+				this._load.midPoint = this._load.points[0];
 			} else {
-				if (this._load.points.length <= 2) {
-					this._load.midPoint = this._load.points[0];
-				} else {
-					var start = this._load.points[0];
-					var end = this._load.points[this._load.points.length - 1];
-					var distVarMin = start.distanceTo(end);
-					for (var i = this._load.points.length - 2; i >= 1; i--) {
-						var distVar = Math.abs(this._load.points[i].distanceTo(start) - this._load
-							.points[i].distanceTo(end));
-						if (distVar < distVarMin) {
-							distVarMin = distVar;
-							this._load.midPoint = this._load.points[i];
-						}
+				var start = this._load.points[0];
+				var end = this._load.points.slice(-1)[0];
+				var distVarMin = start.distanceTo(end);
+				for (var i = this._load.points.length - 2; i >= 1; i--) {
+					var distVar = Math.abs(this._load.points[i].distanceTo(start) - this._load
+						.points[i].distanceTo(end));
+					if (distVar < distVarMin) {
+						distVarMin = distVar;
+						this._load.midPoint = this._load.points[i];
 					}
 				}
-				this._mode = MASHUP.Design.LOADVECTOR;
-				this._glueState = true;
 			}
+			this._mode = MASHUP.Design.LOADVECTOR;
+			this._glueState = true;
 			break;
+
 		case MASHUP.Design.LOADVECTOR:
-			// this._load.edge.mesh.add(this._load.arrow);
 			this._mode = MASHUP.Design.CLEARANCEAREA;
 			break;
+
 		case MASHUP.Design.CLEARANCEAREA:
 			this._mode = MASHUP.Design.CLEARANCEORIENTATION;
 			break;
+
 		case MASHUP.Design.CLEARANCEORIENTATION:
 			this._mode = MASHUP.Design.LOADPOINT;
+			this._load = undefined;
+			this._clearance = undefined;
 			this._glueState = false;
 			break;
+
 		case MASHUP.Design.BOUNDARYPOINT:
 			// remove ink and clean up
 			var mergedPoints = this._postProcessInk();
@@ -452,6 +479,7 @@ MASHUP.Design.prototype._mouseup = function(e) {
 			break;
 	}
 
+	// updating the storage of all functional and design elements
 	this._funcElements = [];
 	for (var i = this._loads.length - 1; i >= 0; i--) {
 		this._funcElements = this._funcElements.concat(this._loads[i].arrow.children);
@@ -477,23 +505,34 @@ MASHUP.Design.prototype._keydown = function(e) {
 		switch (this._mode) {
 			case MASHUP.Design.SKETCH:
 				break;
+
 			case MASHUP.Design.LOADPOINT:
 				break;
+
 			case MASHUP.Design.LOADVECTOR:
 				// cancel the current operation and forfeit the creation of the load
 				this._removeLoad(this._load);
 				this._glueState = false;
 				this._mode = MASHUP.Design.LOADPOINT;
+				this._load = undefined;
 				break;
+
 			case MASHUP.Design.CLEARANCEAREA:
 				this._removeClearance(this._clearance);
+				// merging these two cases here
+			case MASHUP.Design.CLEARANCEORIENTATION:
 				this._glueState = false;
 				this._mode = MASHUP.Design.LOADPOINT;
+				this._load = undefined;
+				this._clearances = undefined;
 				break;
+
 			case MASHUP.Design.BOUNDARYPOINT:
 				break;
+
 			case MASHUP.Design.BOUNDARYAREA:
 				break;
+
 		}
 	} else if (e.keyCode == 46) { // DEL
 		for (var i = this._loads.length - 1; i >= 0; i--) {
@@ -707,7 +746,7 @@ MASHUP.Design.prototype._postProcessInk = function() {
 
 	// merge points that are too close to each other
 	var mergedPoints = [];
-	var minSpacing = lenTotal / 25;
+	var minSpacing = Math.min(lenTotal / 50, 5);
 
 	mergedPoints.push(this._inkPoints[0]);
 	for (var i = 1; i < this._inkPoints.length - 2; i++) {
@@ -719,6 +758,8 @@ MASHUP.Design.prototype._postProcessInk = function() {
 		mergedPoints.push(mergedPoint);
 	}
 	mergedPoints.push(this._inkPoints.slice(-1)[0]);
+
+	// log(minSpacing + ', ' + mergedPoints.length)
 
 	return mergedPoints;
 }
