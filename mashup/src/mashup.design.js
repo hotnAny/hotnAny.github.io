@@ -137,7 +137,7 @@ MASHUP.Design.prototype._mousedown = function(e) {
 					.children;
 			}
 			this._funcElm = funcElm;
-			// selection tem - will cancel later if func elm is manipulated, not selected
+			// selection temp - will cancel later if func elm is manipulated, not selected
 			this._selectedTemp = selected;
 
 			// select design only if no func. elms. selected
@@ -527,7 +527,7 @@ MASHUP.Design.prototype._keydown = function(e) {
 				this._glueState = false;
 				this._mode = MASHUP.Design.LOADPOINT;
 				this._load = undefined;
-				this._clearances = undefined;
+				this._clearance = undefined;
 				break;
 
 			case MASHUP.Design.BOUNDARYPOINT:
@@ -535,7 +535,6 @@ MASHUP.Design.prototype._keydown = function(e) {
 
 			case MASHUP.Design.BOUNDARYAREA:
 				break;
-
 		}
 	} else if (e.keyCode == 46) { // DEL
 		for (var i = this._loads.length - 1; i >= 0; i--) {
@@ -787,17 +786,34 @@ MASHUP.Design.prototype.getData = function() {
 		for (var j = 0; j < this._loads[i].points.length; j++) {
 			load.points.push(this._loads[i].points[j].toArray().trim(2));
 		}
-
 		load.vectors = this._distriute(load.points, this._loads[i].vector,
 			this._loads[i].midPoint);
-
 		mashup.loads.push(load);
 	}
+
+	// the clearances
+	mashup.clearances = [];
+	for (var i = 0; i < this._clearances.length; i++) {
+		var clearance = [];
+		var vertices = this._clearances[i].box.geometry.vertices;
+		for (var j = 0; j < vertices.length; j++) {
+			clearance.push(vertices[j].toArray().trim(2));
+		}
+		mashup.clearances.push(clearance);
+	}
+
+	// the boundaries
+	mashup.boundaries = [];
 
 	return JSON.stringify(mashup);
 }
 
+//
+//	subroutine for distributing a load vector across load points
+//
 MASHUP.Design.prototype._distriute = function(points, vector, midPoint) {
+	var distrVectors = [];
+
 	// fit the load points on an arc
 	var circleInfo = XAC.fitCircle(points);
 	var ctr = new THREE.Vector3(circleInfo.x0, circleInfo.y0, circleInfo.z0);
@@ -811,12 +827,15 @@ MASHUP.Design.prototype._distriute = function(points, vector, midPoint) {
 		var angle = umid.angleTo(u);
 		var axis = umid.clone().cross(u).normalize();
 
-		var v = vector.clone().applyAxisAngle(axis, angle);
+		distrVectors.push(vector.clone().applyAxisAngle(axis, angle).divideScalar(
+			points.length).toArray().trim(2));
 
 		// DEBUG: to show the load direction at each point
-		XAC.addAnArrow(this._scene, point, v, len, 2, this._matLoad);
-		log([point, v, len])
+		// XAC.addAnArrow(this._scene, point, v, len, 2, this._matLoad);
+		// log([point, v, len])
 	}
+
+	return distrVectors;
 }
 
 //
