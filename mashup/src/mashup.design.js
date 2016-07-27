@@ -769,11 +769,54 @@ MASHUP.Design.prototype._postProcessInk = function() {
 //
 MASHUP.Design.prototype.getData = function() {
 	var mashup = {}
+
+	// the design
 	mashup.design = [];
 	for (var i = 0; i < this._medialAxis.edges.length; i++) {
 		mashup.design.push(this._medialAxis.pack(this._medialAxis.edges[i]));
 	}
+
+	// the loads
+	mashup.loads = [];
+	for (var i = 0; i < this._loads.length; i++) {
+		var load = {};
+		load.points = [];
+		for (var j = 0; j < this._loads[i].points.length; j++) {
+			load.points.push(this._loads[i].points[j].toArray().trim(2));
+		}
+
+		load.vectors = this._distriute(load.points, this._loads[i].vector,
+			this._loads[i].midPoint);
+
+		mashup.loads.push(load);
+	}
+
 	return JSON.stringify(mashup);
+}
+
+MASHUP.Design.prototype._distriute = function(points, vector, midPoint) {
+	// fit the load points on an arc
+	var circleInfo = XAC.fitCircle(points);
+	var ctr = new THREE.Vector3(circleInfo.x0, circleInfo.y0, circleInfo.z0);
+
+	var umid = midPoint.clone().sub(ctr);
+	var len = vector.length() / points.length;
+	for (var i = 0; i < points.length; i++) {
+		var point = new THREE.Vector3().fromArray(points[i]);
+		var u = point.clone().sub(ctr);
+		var angle = umid.angleTo(u);
+		var axis = umid.clone().cross(u).normalize();
+
+		var v = vector.clone().applyAxisAngle(axis, angle);
+
+		// DEBUG: to show the load direction at each point
+		XAC.addAnArrow(this._scene, point, v, len * 10, 2, this._matLoad);
+		log([point, v, len])
+	}
+	// log(circleInfo)
+	// addABall(this._scene, new THREE.Vector3(circleInfo.x0, circleInfo.y0,
+	// circleInfo.z0), 0xff0000, 5, 1.0);
+	// distribute the loads cocentrically
 }
 
 //
@@ -800,7 +843,7 @@ MASHUP.MedialAxis.prototype.pack = function(elm) {
 //
 Array.prototype.trim = function(numDigits) {
 	for (i = 0; i < this.length; i++) {
-		this[i] = this[i].toFixed(numDigits);
+		this[i] = Number(this[i].toFixed(numDigits));
 	}
 	return this;
 }
