@@ -90,10 +90,13 @@ function unitTest() {
 				$(MASHUP.renderer.domElement).css('cursor', 'auto');
 				break;
 			case 83: //S
-				log(MASHUP.design.getData());
+				var strData = MASHUP.design.getData();
+				XAC.pingServer('localhost', '9999', ['mashup'], [strData]);
 				break;
 		}
 	}, false);
+
+	// XAC.pingServer('localhost', '9999', ['tpd'], ['testpath']);
 
 	log('----------------  unit test ends  ----------------');
 }
