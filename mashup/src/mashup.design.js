@@ -787,7 +787,7 @@ MASHUP.Design.prototype.getData = function() {
 	mashup.design = [];
 	for (var i = 0; i < this._medialAxis.edges.length; i++) {
 		var edge = this._medialAxis.edges[i];
-		if (boundaryEdges.indexOf(edge) >= 0 || edge.deleted = true) continue;
+		if (boundaryEdges.indexOf(edge) >= 0 || edge.deleted == true) continue;
 		mashup.design.push(this._medialAxis.pack(edge));
 	}
 
