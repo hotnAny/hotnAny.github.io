@@ -252,9 +252,12 @@ MASHUP.Design.prototype._mousemove = function(e) {
 			// dragging to select load points
 			var hitElm = XAC.hitObject(e, this._designElements, this._camera);
 			if (hitElm != undefined) {
-				this._load.points.push(hitElm.position);
-				this._load.area.push(hitElm);
-				hitElm.material = this._matLoad;
+				if (this._load.points.length > 0 && hitElm.position.distanceTo(this._load.points
+						.slice(-1)[0]) > 0) {
+					this._load.points.push(hitElm.position);
+					this._load.area.push(hitElm);
+					hitElm.material = this._matLoad;
+				}
 			}
 			break;
 
@@ -799,6 +802,7 @@ MASHUP.Design.prototype._distriute = function(points, vector, midPoint) {
 	var circleInfo = XAC.fitCircle(points);
 	var ctr = new THREE.Vector3(circleInfo.x0, circleInfo.y0, circleInfo.z0);
 
+	// distribute the loads cocentrically
 	var umid = midPoint.clone().sub(ctr);
 	var len = vector.length() / points.length;
 	for (var i = 0; i < points.length; i++) {
@@ -810,13 +814,9 @@ MASHUP.Design.prototype._distriute = function(points, vector, midPoint) {
 		var v = vector.clone().applyAxisAngle(axis, angle);
 
 		// DEBUG: to show the load direction at each point
-		XAC.addAnArrow(this._scene, point, v, len * 10, 2, this._matLoad);
+		XAC.addAnArrow(this._scene, point, v, len, 2, this._matLoad);
 		log([point, v, len])
 	}
-	// log(circleInfo)
-	// addABall(this._scene, new THREE.Vector3(circleInfo.x0, circleInfo.y0,
-	// circleInfo.z0), 0xff0000, 5, 1.0);
-	// distribute the loads cocentrically
 }
 
 //
