@@ -1,6 +1,6 @@
 /*
 	math routines
-	
+
 	requiring numeric.js and three.js
 */
 
@@ -9,6 +9,22 @@
 	ref: http://stackoverflow.com/questions/10900141/fast-plane-fitting-to-many-points
 	svd related: http://www.mathworks.com/help/matlab/ref/svd.html
 */
+
+var XAC = XAC || {};
+
+/*
+	get the euclidean distance between two R^d points
+*/
+XAC.getDist = function(p1, p2) {
+	var len = Math.min(p1.length, p2.length);
+	var d = 0;
+	for (var i = len - 1; i >= 0; i--) {
+		d += Math.pow(p1[i] - p2[i], 2);
+	}
+
+	return Math.sqrt(d);
+}
+
 function pts2pl(points) {
 	var G = [];
 
@@ -166,16 +182,150 @@ function p2l(x, y, z, x1, y1, z1, x2, y2, z2) {
 	};
 }
 
-// p, q are points, u, v are vectors, all in three.js 
+// p, q are points, u, v are vectors, all in three.js
 // p shoots out u, q shoots out v, what's the intersection
 function vectorsIntersection(p, u, q, v) {
 	var A = numeric.transpose([u.toArray(), v.clone().multiplyScalar(-1).toArray()]);
 	var b = numeric.transpose([new THREE.Vector3().subVectors(q, p).toArray()]);
 	var Ainv = numeric.inv(A);
-	if(Ainv == undefined) {
+	if (Ainv == undefined) {
 		err('matrix not invertible!');
 		return undefined;
 	}
 	var x = numeric.transpose(numeric.dot(Ainv, b))[0];
 	return p.clone().add(u.clone().multiplyScalar(x[0]));
+}
+
+/*
+	fitting a circle to a set of (x, y) points
+
+	@author
+		xiang 'anthony' chen, xiangchen@acm.org
+	@return
+		center of the circle: (xCtr, y0)
+		radius of the circle: radius
+		err: mean square error
+	@references
+		http://jsxgraph.uni-bayreuth.de/wiki/index.php/Least-squares_circle_fitting
+*/
+XAC.fitCircle = function(p) {
+	var M = [],
+		X = [],
+		Y = [],
+		y = [],
+		MT, B, c, z, n, l;
+
+	n = p.length;
+	l = 0;
+
+	for (i = 0; i < n; i++) {
+		M.push([p[i][0], p[i][1], p[i][2], 1.0]);
+		y.push(p[i][0] * p[i][0] + p[i][1] * p[i][1] + p[i][2] * p[i][2]);
+
+		if (i > 0) {
+			l += XAC.getDist(p[i], p[i - 1]);
+		}
+	}
+
+	MT = numeric.transpose(M);
+	B = numeric.dot(MT, M);
+	c = numeric.dot(MT, y);
+	z = numeric.solve(B, c);
+
+	var xm = z[0] * 0.5;
+	var ym = z[1] * 0.5;
+	var zm = z[2] * 0.5;
+	var r = Math.sqrt(z[2] + xm * xm + ym * ym + zm * zm);
+
+	/*
+		computing errors
+	*/
+	var err = 0;
+	for (i = 0; i < n; i++) {
+		var d = XAC.getDist(p[i], [xm, ym, zm]);
+		var subErr = (d - r) * (d - r);
+		// console.log("subErr " + subErr);
+		err += subErr;
+	}
+
+	//
+	//	newbies
+	//
+	err = Math.sqrt(err / n);
+
+	//
+	//	oldies
+	//
+	// err = Math.sqrt(err / n) * (2 * Math.PI * r) / l;
+
+	console.log("fitting circle error: " + err);
+
+	return {
+		x0: xm,
+		y0: ym,
+		z0: zm,
+		r: r,
+		err: err,
+		l: l
+	};
+}
+
+/*
+	fitting a straight line to a set of (x, y) points in p
+
+	@author
+		xiang 'anthony' chen, xiangchen@acm.org
+	@return
+		b0, b1 where y = b0 + b1 * x,
+		err: mean square error
+	@references
+		http://www.stat.purdue.edu/~jennings/stat514/stat512notes/topic3.pdf
+*/
+XAC.fitLine = function(p) {
+	var X = [],
+		Xt, Y = [],
+		b;
+	n = p.length;
+	for (i = 0; i < n; i++) {
+		X.push([1, p[i][0]]);
+		Y.push(p[i][1]);
+	}
+
+	Xt = numeric.transpose(X);
+	var XtX = numeric.dot(Xt, X);
+	var XtY = numeric.dot(Xt, Y);
+	b = numeric.solve(XtX, XtY);
+
+	/*
+		computing errors
+	*/
+	var err = numeric.norm2(numeric.sub(numeric.dot(X, b), Y));
+	err = Math.sqrt(err * err / n);
+	console.log("fitting line error: " + err);
+
+	return {
+		b0: b[0],
+		b1: b[1],
+		err: err
+	};
+}
+
+/*
+	distance between two points
+*/
+function dist(x0, y0, x1, y1) {
+	return Math.sqrt((x0 - x1) * (x0 - x1) + (y0 - y1) * (y0 - y1));
+}
+
+/*
+	rotate a vector by theta (radian)
+*/
+function rotateVector(v, theta) {
+	var cos = Math.cos(theta);
+	var sin = Math.sin(theta);
+	var R = [
+		[cos, -sin],
+		[sin, cos]
+	];
+	return numeric.dot(R, v);
 }
