@@ -239,3 +239,35 @@ XAC.addAnArrow = function(scene, v1, dir, len, r, mat) {
 	scene.add(arrow);
 	return arrow;
 }
+
+//
+//	sending web sockets to a server
+//
+XAC.pingServer = function(host, port, keys, values) {
+	if (XAC.xmlhttp == undefined) {
+		XAC.xmlhttp = new XMLHttpRequest();
+		XAC.xmlhttp.onreadystatechange = function() {
+			if (XAC.xmlhttp.readyState == 4 && XAC.xmlhttp.status == 200) {
+				log(XAC.xmlhttp.responseText);
+			}
+		}
+	}
+
+	var prefix = "http://";
+	XAC.xmlhttp.open("POST", prefix + host + ":" + port, true);
+	XAC.xmlhttp.setRequestHeader("Content-type", "text/html");
+	XAC.xmlhttp.timeout = 3000;
+
+	var strMsg = '?';
+	if (keys == undefined || values == undefined) {
+		XAC.xmlhttp.send();
+	} else {
+		for (var i = 0; i < keys.length; i++) {
+			strMsg += keys[i] + '=' + values[i];
+			if (i < keys.length - 1) {
+				strMsg += '&';
+			}
+		}
+		XAC.xmlhttp.send(strMsg);
+	}
+}
