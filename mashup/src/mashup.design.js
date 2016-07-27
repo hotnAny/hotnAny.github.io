@@ -352,7 +352,7 @@ MASHUP.Design.prototype._mouseup = function(e) {
 			break;
 
 		case MASHUP.Design.SKETCH:
-			if (this._ink.length < 0) break;
+			if (this._ink.length <= 0) break;
 
 			var mergedPoints = this._postProcessInk();
 

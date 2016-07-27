@@ -91,12 +91,14 @@ function unitTest() {
 				break;
 			case 83: //S
 				var strData = MASHUP.design.getData();
-				XAC.pingServer('localhost', '9999', ['mashup'], [strData]);
+				XAC.pingServer('localhost', '9999', ['mashup', 'query', 'resolution',
+					'material', 'originality', 'verbose'
+				], [strData, 0, 100, 0.45, 1.0, 1]);
 				break;
 		}
 	}, false);
 
-	// XAC.pingServer('localhost', '9999', ['tpd'], ['testpath']);
+	XAC.pingServer('localhost', '9999', ['tpd'], ['testpath']);
 
 	log('----------------  unit test ends  ----------------');
 }
