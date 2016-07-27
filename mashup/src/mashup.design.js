@@ -456,8 +456,7 @@ MASHUP.Design.prototype._mouseup = function(e) {
 		case MASHUP.Design.BOUNDARYPOINT:
 			// remove ink and clean up
 			var mergedPoints = this._postProcessInk();
-
-			log(mergedPoints.length)
+			this._boundary.points = mergedPoints;
 
 			// convert it to topology and store the visual elements
 			var edge = this._medialAxis.addEdge(mergedPoints);
@@ -772,10 +771,24 @@ MASHUP.Design.prototype._postProcessInk = function() {
 MASHUP.Design.prototype.getData = function() {
 	var mashup = {}
 
+	// the boundaries
+	mashup.boundaries = [];
+	var boundaryEdges = [];
+	for (var i = 0; i < this._boundaries.length; i++) {
+		var points = [];
+		for (var j = 0; j < this._boundaries[i].points.length; j++) {
+			points.push(this._boundaries[i].points[j].toArray().trim(2));
+		}
+		mashup.boundaries.push(points);
+		boundaryEdges.push(this._boundaries[i].edge);
+	}
+
 	// the design
 	mashup.design = [];
 	for (var i = 0; i < this._medialAxis.edges.length; i++) {
-		mashup.design.push(this._medialAxis.pack(this._medialAxis.edges[i]));
+		var edge = this._medialAxis.edges[i];
+		if (boundaryEdges.indexOf(edge) >= 0 || edge.deleted = true) continue;
+		mashup.design.push(this._medialAxis.pack(edge));
 	}
 
 	// the loads
@@ -801,9 +814,6 @@ MASHUP.Design.prototype.getData = function() {
 		}
 		mashup.clearances.push(clearance);
 	}
-
-	// the boundaries
-	mashup.boundaries = [];
 
 	return JSON.stringify(mashup);
 }
@@ -844,8 +854,8 @@ MASHUP.Design.prototype._distriute = function(points, vector, midPoint) {
 MASHUP.MedialAxis.prototype.pack = function(elm) {
 	if (elm.type == MASHUP.MedialAxis.EDGE) {
 		var edge = {};
-		edge.type = elm.type;
-		edge.deleted = elm.deleted;
+		// edge.type = elm.type;
+		// edge.deleted = elm.deleted;
 		edge.node1 = elm.node1.position.toArray().trim(2);
 		edge.node2 = elm.node2.position.toArray().trim(2);
 		edge.points = [];
