@@ -254,7 +254,7 @@ def proc_post_data(post_data):
         for i in xrange(0, len(points)):
             load_point = [int((points[i][0]-vmin[0])/dim_voxel), int((points[i][1]-vmin[1])/dim_voxel)]
             load_points.append(load_point)
-            load_values_x.append(vectors[i][0])
+            load_values_x.append(vectors[i][0])     # assuming vectors' norms sum up to 1
             load_values_y.append(vectors[i][1])
     timestamp(msg='compute load points')
 
@@ -308,11 +308,15 @@ def proc_post_data(post_data):
             p1 = voxels[k+1]
             boudary_elms.append([int(p0[0]), int(p0[1])])
             boudary_elms.append([int(p1[0]), int(p1[1])])
-            t0 = 10.0
-            t1 = 10.0
+            t0 = 5
+            t1 = 5
 
-            for j in xrange(int(p0[1]), int(p1[1])):
-                for i in xrange(int(p0[0]), int(p1[0])):
+            xmin = min(int(p0[0]), int(p1[0])) - 1
+            xmax = max(int(p0[0]), int(p1[0])) + 1
+            ymin = min(int(p0[1]), int(p1[1])) - 1
+            ymax = max(int(p0[1]), int(p1[1])) + 1
+            for j in xrange(ymin, ymax):
+                for i in xrange(xmin, xmax):
                     try:
                         if is_in_segment([i * 1.0, j * 1.0], p0, p1, t0, t1):
                             boudary_elms.append([i, j, 1])
