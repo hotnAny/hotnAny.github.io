@@ -16,11 +16,17 @@ import subprocess
 import json
 import math
 import time
+import datetime
+
+from nodenums import node_nums_3d
+from nodenums import elm_num_3d
 
 INFINITY = 1e9
 EPSILON = 1e-9
 ANALYSIS = 0
 OPTIMIZATION = 1
+
+tpd_template = '{"PROB_TYPE":"comp", "PROB_NAME":"NONAME", "ETA": "0.4", "DOF_PN": "3", "VOL_FRAC": "0.3", "FILT_RAD": "1.5", "ELEM_K": "H8", "NUM_ELEM_X":"10", "NUM_ELEM_Y":"10", "NUM_ELEM_Z":"10", "NUM_ITER":"50", "FXTR_NODE_X":"", "FXTR_NODE_Y":"", "FXTR_NODE_Z":"", "LOAD_NODE_X":"", "LOAD_VALU_X":"", "LOAD_NODE_Y":"", "LOAD_VALU_Y":"", "LOAD_NODE_Z":"", "LOAD_VALU_Z":"", "P_FAC":"1", "P_HOLD":"15", "P_INCR":"0.2", "P_CON":"1", "P_MAX":"3", "Q_FAC":"1", "Q_HOLD":"15", "Q_INCR":"0.05", "Q_CON":"1", "Q_MAX":"5"}';
 
 test_data_01 = {"mashup":
  ['{"boundaries":[],"design":[{"node1":[-59.31,49.74,0.5],"node2":[26.53,-21.74,0.5],"points":[[-59.31,49.74,0.5],[-57.47,47.16,0.5],[-54.16,44.21,0.5],[-49.37,39.79,0.5],[-43.1,34.63,0.5],[-36.47,29.47,0.5],[-29.84,23.95,0.5],[-23.58,18.42,0.5],[-14.74,10.68,0.5],[-3.32,1.84,0.5],[4.05,-4.42,0.5],[9.95,-8.84,0.5],[15.47,-12.89,0.5],[20.26,-16.95,0.5],[25.7,-21.09,0.5],[26.53,-21.74,0.5]],"thickness":[5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5]}],"loads":[],"clearances":[]}']}
@@ -57,12 +63,15 @@ def test():
     # if is_in_segment([2.0, -2.0], [1.0, 1.0], [-1.0, -3.0], 1, 3):
     #     print 'in'
 
-    print on_left_side([1,2],[0,1],[3,3])
-    print on_left_side([2,1],[0,1],[3,3])
+    # print on_left_side([1,2],[0,1],[3,3])
+    # print on_left_side([2,1],[0,1],[3,3])
 
-    t0 = timestamp()
+    # tpd = json.loads(tpd_template)
+    # print tpd["DOF_PN"]
+
+    # t0 = timestamp()
     proc_post_data(test_data_04)
-    timestamp(t=t0)
+    # timestamp(t=t0)
     return
 
 #
@@ -142,7 +151,7 @@ def proc_post_data(post_data):
     # read other params
     #
     query = int(safe_retrieve_one(post_data, 'query', ANALYSIS))
-    resolution = int(safe_retrieve_one(post_data, 'resolution', 100))
+    resolution = int(safe_retrieve_one(post_data, 'resolution', 64))
     material = float(safe_retrieve_one(post_data, 'material', 0.3))
     originality = float(safe_retrieve_one(post_data, 'originality', 1.0))
     verbose = int(safe_retrieve_one(post_data, 'verbose', 0))
@@ -217,7 +226,7 @@ def proc_post_data(post_data):
 
     timestamp(msg='convert points to voxels')
 
-    # compute the ACTV_ELEMs
+    # compute the design elements
     actv_elms = []
     for edge in design:
         voxels = edge['voxels']
@@ -242,7 +251,7 @@ def proc_post_data(post_data):
                     except:
                         continue
 
-    timestamp(msg='compute ACTV_ELEMs')
+    timestamp(msg='compute design elements')
 
     # compute load points
     load_points = []
@@ -259,7 +268,7 @@ def proc_post_data(post_data):
     timestamp(msg='compute load points')
 
     # compute clearances
-    clearance_elms = []
+    pasv_elms = []
     for clearance in clearances:
         voxels_clearance = []
         for v in clearance:
@@ -288,12 +297,12 @@ def proc_post_data(post_data):
                 if side2 != side3:
                     continue
 
-                clearance_elms.append([i, j, 1])
+                pasv_elms.append([i, j, 1])
 
     timestamp(msg='compute clearances')
 
     # compute boundaries
-    boudary_elms = []
+    boundary_elms = []
 
     for boundary in boundaries:
         voxels = []
@@ -306,8 +315,8 @@ def proc_post_data(post_data):
         for k in xrange(0, len(voxels) - 1):
             p0 = voxels[k]
             p1 = voxels[k+1]
-            boudary_elms.append([int(p0[0]), int(p0[1])])
-            boudary_elms.append([int(p1[0]), int(p1[1])])
+            boundary_elms.append([int(p0[0]), int(p0[1])])
+            boundary_elms.append([int(p1[0]), int(p1[1])])
             t0 = 5
             t1 = 5
 
@@ -315,11 +324,12 @@ def proc_post_data(post_data):
             xmax = max(int(p0[0]), int(p1[0])) + 1
             ymin = min(int(p0[1]), int(p1[1])) - 1
             ymax = max(int(p0[1]), int(p1[1])) + 1
+
             for j in xrange(ymin, ymax):
                 for i in xrange(xmin, xmax):
                     try:
                         if is_in_segment([i * 1.0, j * 1.0], p0, p1, t0, t1):
-                            boudary_elms.append([i, j, 1])
+                            boundary_elms.append([i, j, 1])
                     except:
                         continue
 
@@ -344,7 +354,7 @@ def proc_post_data(post_data):
             idx = j * (nelx + 1) + nelx - 1 - i
             debug_voxelgrid[2 * idx + 1] = '.'
 
-        for cp in clearance_elms:
+        for cp in pasv_elms:
             i = cp[0]
             j = cp[1]
             idx = j * (nelx + 1) + nelx - 1 - i
@@ -356,7 +366,7 @@ def proc_post_data(post_data):
             idx = j * (nelx + 1) + nelx - 1 - i
             debug_voxelgrid[2 * idx + 1] = 'O'
 
-        for bp in boudary_elms:
+        for bp in boundary_elms:
             i = bp[0]
             j = bp[1]
             idx = j * (nelx + 1) + nelx - 1 - i
@@ -364,6 +374,62 @@ def proc_post_data(post_data):
 
         print ''.join(debug_voxelgrid)[::-1]
     # END DEBUG
+
+    # preparing for tpd file
+    str_load_points = ''
+    load_values_x_str = []
+    load_values_y_str = []
+    load_nodes = [node_nums_3d(nelx, nely, 1, x[0]+1, x[1]+1, 1) for x in load_points]
+    for i in xrange(0, len(load_points)):
+        node_str_array = [str(x) for x in load_nodes[i]]
+        str_load_points += ';'.join(node_str_array)
+        if i < len(load_points) - 1:
+            str_load_points += ';'
+
+        load_values_x_str.append(str(load_values_x[i]) + '@' + str(len(node_str_array)))
+        load_values_y_str.append(str(load_values_y[i]) + '@' + str(len(node_str_array)))
+
+    # print str_load_points
+    # print ';'.join(load_values_x_str)
+    # print ';'.join(load_values_y_str)
+
+    boundary_nodes = [node_nums_3d(nelx, nely, 1, x[0]+1, x[1]+1, 1) for x in boundary_elms]
+    str_boundary = ''
+    for i in xrange(0, len(boundary_nodes)):
+        node_str_array = [str(x) for x in boundary_nodes[i]]
+        str_boundary += ';'.join(node_str_array)
+        if i < len(boundary_nodes) - 1:
+            str_boundary += ';'
+    # print str_boundary
+
+    tpd = json.loads(tpd_template)
+    tpd['PROB_NAME'] = 'mashup_' + str(long(time.time()))
+    tpd['NUM_ELEM_X'] = nelx
+    tpd['NUM_ELEM_Y'] = nely
+    tpd['NUM_ELEM_Z'] = 1
+    tpd['FXTR_NODE_X'] = str_boundary
+    tpd['FXTR_NODE_Y'] = str_boundary
+    tpd['FXTR_NODE_Z'] = str_boundary
+    tpd['LOAD_NODE_X'] = str_load_points
+    tpd['LOAD_VALU_X'] = ';'.join(load_values_x_str)
+    tpd['LOAD_NODE_Y']= str_load_points
+    tpd['LOAD_VALU_Y'] = ';'.join(load_values_y_str)
+    # tpd['LOAD_NODE_Z']
+    # tpd['LOAD_VALU_Z']
+    tpd['ACTV_ELEM'] = ';'.join([str(elm_num_3d(nelx, nely, 1, x[0]+1, x[1]+1, 1)) for x in actv_elms])
+    tpd['PASV_ELEM'] = ';'.join([str(elm_num_3d(nelx, nely, 1, x[0]+1, x[1]+1, 1)) for x in pasv_elms])
+
+    # print tpd['PASV_ELEM']
+
+    str_tpd = '[ToPy Problem Definition File v2007]\n'
+    for var in tpd:
+        str_tpd += var + ': ' + str(tpd[var]) + '\n'
+
+    fname = 'mashup_' + time.strftime("%m%d_%H%M%S") + '.tpd'
+    # print fname
+    f = open(fname, 'w')
+    f.write(str_tpd)
+    f.close()
 
     tpd_path = ''
 
