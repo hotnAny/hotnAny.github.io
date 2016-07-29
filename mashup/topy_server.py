@@ -272,8 +272,6 @@ def proc_post_data(post_data):
         p2 = voxels_clearance[6]
         p3 = voxels_clearance[4]
 
-        # clearance_bounds.append([p0, p1, p2, p3])
-
         for j in xrange(0, nely):
             for i in xrange(0, nelx):
                 p = [i*1.0, j*1.0]
@@ -294,7 +292,36 @@ def proc_post_data(post_data):
 
     timestamp(msg='compute clearances')
 
-    show_debug = False
+    # compute boundaries
+    boudary_elms = []
+
+    for boundary in boundaries:
+        voxels = []
+
+        for point in boundary:
+            bx = math.floor((point[0]-vmin[0])/dim_voxel)
+            by = math.floor((point[1]-vmin[1])/dim_voxel)
+            voxels.append([bx, by])
+
+        for k in xrange(0, len(voxels) - 1):
+            p0 = voxels[k]
+            p1 = voxels[k+1]
+            boudary_elms.append([int(p0[0]), int(p0[1])])
+            boudary_elms.append([int(p1[0]), int(p1[1])])
+            t0 = 10.0
+            t1 = 10.0
+
+            for j in xrange(int(p0[1]), int(p1[1])):
+                for i in xrange(int(p0[0]), int(p1[0])):
+                    try:
+                        if is_in_segment([i * 1.0, j * 1.0], p0, p1, t0, t1):
+                            boudary_elms.append([i, j, 1])
+                    except:
+                        continue
+
+    timestamp(msg='compute boundaries')
+
+    show_debug = True
 
     # DEBUG: print out the design and specs
     if show_debug:
@@ -324,6 +351,12 @@ def proc_post_data(post_data):
             j = lp[1]
             idx = j * (nelx + 1) + nelx - 1 - i
             debug_voxelgrid[2 * idx + 1] = 'O'
+
+        for bp in boudary_elms:
+            i = bp[0]
+            j = bp[1]
+            idx = j * (nelx + 1) + nelx - 1 - i
+            debug_voxelgrid[2 * idx + 1] = '*'
 
         print ''.join(debug_voxelgrid)[::-1]
     # END DEBUG
