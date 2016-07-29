@@ -810,9 +810,13 @@ MASHUP.Design.prototype.getData = function() {
 		var clearance = [];
 		var vertices = this._clearances[i].box.geometry.vertices;
 		for (var j = 0; j < vertices.length; j++) {
-			clearance.push(vertices[j].toArray().trim(2));
+			var vtransformed = XAC.getTransformedVector(vertices[j], this._clearances[i]
+				.box);
+			clearance.push(vtransformed.toArray().trim(2));
 		}
 		mashup.clearances.push(clearance);
+
+		log(clearance)
 	}
 
 	return JSON.stringify(mashup);

@@ -1,7 +1,7 @@
 /*------------------------------------------------------------------------------------*
  *
  * graphics-related library, based on three.js
- * 
+ *
  * by xiang 'anthony' chen, xiangchen@acm.org
  *
  *------------------------------------------------------------------------------------*/
@@ -14,7 +14,8 @@ var XAC = XAC || {};
 XAC.rayCast = function(x, y, objs, camera) {
 	var rayCaster = new THREE.Raycaster();
 	var vector = new THREE.Vector3();
-	vector.set((x / window.innerWidth) * 2 - 1, -(y / window.innerHeight) * 2 + 1, 0.5);
+	vector.set((x / window.innerWidth) * 2 - 1, -(y / window.innerHeight) * 2 + 1,
+		0.5);
 	var projector = new THREE.Projector();
 	vector.unproject(camera);
 	rayCaster.ray.set(camera.position, vector.sub(camera.position).normalize());
@@ -117,7 +118,8 @@ XAC.rotateObjTo = function(obj, dir, isReversed) {
 	var yUp = new THREE.Vector3(0, 1, 0);
 	var angleToRotate = yUp.angleTo(dir);
 	var axisToRotate = new THREE.Vector3().crossVectors(yUp, dir).normalize();
-	obj.rotateOnAxis(axisToRotate, isReversed == true ? angleToRotate * -1 : angleToRotate);
+	obj.rotateOnAxis(axisToRotate, isReversed == true ? angleToRotate * -1 :
+		angleToRotate);
 }
 
 
@@ -129,7 +131,8 @@ function rotateGeoTo(geo, dir, isReversed) {
 	var yUp = new THREE.Vector3(0, 1, 0);
 	var angleToRotate = yUp.angleTo(dir);
 	var axisToRotate = new THREE.Vector3().crossVectors(yUp, dir).normalize();
-	mr.makeRotationAxis(axisToRotate, isReversed == true ? angleToRotate * -1 : angleToRotate);
+	mr.makeRotationAxis(axisToRotate, isReversed == true ? angleToRotate * -1 :
+		angleToRotate);
 	geo.applyMatrix(mr);
 }
 
@@ -189,7 +192,7 @@ function gettg(mesh) {
 	return gt;
 }
 
-function getTransformedVector(v, mesh) {
+XAC.getTransformedVector = function(v, mesh) {
 	var vt = v.clone();
 	vt.applyMatrix4(mesh.matrixWorld);
 	return vt;
@@ -315,8 +318,10 @@ function getEndPointsAlong(obj, dir) {
 	var gt = gettg(obj);
 	var range = project(gt.vertices, dir);
 
-	var endMin = ctr.clone().add(dir.clone().normalize().multiplyScalar(range[0] - ctrVal));
-	var endMax = ctr.clone().add(dir.clone().normalize().multiplyScalar(range[1] - ctrVal));
+	var endMin = ctr.clone().add(dir.clone().normalize().multiplyScalar(range[0] -
+		ctrVal));
+	var endMax = ctr.clone().add(dir.clone().normalize().multiplyScalar(range[1] -
+		ctrVal));
 
 	log(endMin)
 	log(endMax)
@@ -395,7 +400,8 @@ function removeDisconnectedComponents(pt, pts, dist) {
 	}
 
 	// if there is a 'gap', discard the set of far away points
-	if (minPosDist != Infinity && maxNegDist != -Infinity && minPosDist - maxNegDist > dist) {
+	if (minPosDist != Infinity && maxNegDist != -Infinity && minPosDist -
+		maxNegDist > dist) {
 		return toKeep;
 	} else {
 		return pts;
