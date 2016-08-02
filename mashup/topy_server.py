@@ -75,6 +75,8 @@ def test():
 
     # print bound([4, 3, 19], [3, 8, 10], [9, 20, 15])
 
+    print on_left_side([4, 3], [65.0, 1.0], [65.0, 1.0])
+
     t0 = timestamp()
     proc_post_data(test_data_01)
     timestamp(t=t0, msg='total time')
@@ -131,6 +133,8 @@ def is_in_segment(p, p0, p1, t0, t1):
 def on_left_side(p, p0, p1):
     v = [p[0]-p0[0], p[1]-p0[1]]
     v1 = [p1[0]-p0[0], p1[1]-p0[1]]
+    if abs(v[0]-v1[0]) < EPSILON or abs(v[1]-v1[1]) < EPSILON:
+        return None
     return v1[0]*v[1] - v1[1]*v[0] > 0
 
 #
@@ -278,7 +282,8 @@ def proc_post_data(post_data):
         points = load['points']
         vectors = load['vectors']
         for i in xrange(0, len(points)):
-            load_point = [int((points[i][0]-vmin[0])/dim_voxel), int((points[i][1]-vmin[1])/dim_voxel)]
+            point = bound(points[i], vmin, vmax)
+            load_point = [int((point[0]-vmin[0])/dim_voxel), int((point[1]-vmin[1])/dim_voxel)]
             load_points.append(load_point)
             load_values_x.append(vectors[i][0])     # assuming vectors' norms sum up to 1
             load_values_y.append(vectors[i][1])
@@ -289,30 +294,34 @@ def proc_post_data(post_data):
     pasv_elms = []
     for clearance in clearances:
         voxels_clearance = []
-        for v in clearance:
-            vx = math.floor((v[0]-vmin[0])/dim_voxel)
-            vy = math.floor((v[1]-vmin[1])/dim_voxel)
-            voxels_clearance.append([min(max(0, vx), nelx), min(max(0, vy), nely)])
+        for point in clearance:
+            point = bound(point, vmin, vmax)
+            cx = math.floor((point[0]-vmin[0])/dim_voxel)
+            cy = math.floor((point[1]-vmin[1])/dim_voxel)
+            # voxels_clearance.append([min(max(0, cx), nelx), min(max(0, cy), nely)])
+            voxels_clearance.append([cx, cy])
 
         p0 = voxels_clearance[0]
         p1 = voxels_clearance[2]
         p2 = voxels_clearance[6]
         p3 = voxels_clearance[4]
 
+        print p0, p1, p2, p3
+
         for j in xrange(0, nely):
             for i in xrange(0, nelx):
                 p = [i*1.0, j*1.0]
                 side0 = on_left_side(p, p0, p1)
                 side1 = on_left_side(p, p1, p2)
-                if side0 != side1:
+                if side0 != side1 or side0 == None:
                     continue
 
                 side2 = on_left_side(p, p2, p3)
-                if side1 != side2:
+                if side1 != side2 or side1 == None:
                     continue
 
                 side3 = on_left_side(p, p3, p0)
-                if side2 != side3:
+                if side2 != side3 or side2 == None:
                     continue
 
                 pasv_elms.append([i, j, 1])
@@ -384,14 +393,17 @@ def proc_post_data(post_data):
         for cp in pasv_elms:
             i = cp[0]
             j = cp[1]
-            idx = j * (nelx + 1) + nelx - 1 - i
-            debug_voxelgrid[2 * idx + 1] = 'x'
+            idx = 2 * (j * (nelx + 1) + nelx - 1 - i) + 1
+            if idx < len(debug_voxelgrid):
+                debug_voxelgrid[idx] = 'x'
 
         for lp in load_points:
             i = lp[0]
             j = lp[1]
-            idx = j * (nelx + 1) + nelx - 1 - i
-            debug_voxelgrid[2 * idx + 1] = 'O'
+            idx = 2 * (j * (nelx + 1) + nelx - 1 - i) + 1
+            print idx
+            if idx < len(debug_voxelgrid):
+                debug_voxelgrid[idx] = 'O'
 
         for bp in boundary_elms:
             i = bp[0]
@@ -467,7 +479,6 @@ def proc_post_data(post_data):
 class S(BaseHTTPRequestHandler):
     def __init__(self, request, client_address, server):
         BaseHTTPRequestHandler.__init__(self, request, client_address, server)
-        # self.timeout = 10
 
     def _set_headers(self):
         self.send_response(200)
@@ -490,9 +501,11 @@ class S(BaseHTTPRequestHandler):
         post_str = self.rfile.read(content_length)
         post_data = parse_qs(urlparse(self.path + post_str).query)
 
+        t0 = timestamp()
         result_initial = proc_post_data(post_data)
+        timestamp(t=t0, msg='total time')
 
-        # TODO: package the result
+        print result_initial
         self.wfile.write(result_initial)
 
 #
