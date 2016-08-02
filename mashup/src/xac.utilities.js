@@ -243,24 +243,15 @@ XAC.addAnArrow = function(scene, v1, dir, len, r, mat) {
 //
 //	sending web sockets to a server
 //
-XAC.pingServer = function(host, port, keys, values) {
-	if (XAC.xmlhttp == undefined) {
-		XAC.xmlhttp = new XMLHttpRequest();
-		XAC.xmlhttp.onreadystatechange = function() {
-			if (XAC.xmlhttp.readyState == 4 && XAC.xmlhttp.status == 200) {
-				log(XAC.xmlhttp.responseText);
-			}
-		}
-	}
-
+XAC.pingServer = function(xmlhttp, host, port, keys, values) {
 	var prefix = "http://";
-	XAC.xmlhttp.open("POST", prefix + host + ":" + port, true);
-	XAC.xmlhttp.setRequestHeader("Content-type", "text/html");
-	XAC.xmlhttp.timeout = 3000;
+	xmlhttp.open("POST", prefix + host + ":" + port, true);
+	xmlhttp.setRequestHeader("Content-type", "text/html");
+	// wait forever
 
 	var strMsg = '?';
 	if (keys == undefined || values == undefined) {
-		XAC.xmlhttp.send();
+		xmlhttp.send();
 	} else {
 		for (var i = 0; i < keys.length; i++) {
 			strMsg += keys[i] + '=' + values[i];
@@ -268,6 +259,22 @@ XAC.pingServer = function(host, port, keys, values) {
 				strMsg += '&';
 			}
 		}
-		XAC.xmlhttp.send(strMsg);
+		xmlhttp.send(strMsg);
 	}
+}
+
+//
+//	read text file from local path
+//
+XAC.readTextFile = function(file) {
+	var rawFile = new XMLHttpRequest();
+	rawFile.open("GET", file, false);
+	rawFile.onreadystatechange = function() {
+		if (rawFile.readyState === 4) {
+			if (rawFile.status === 200 || rawFile.status == 0) {
+				return rawFile.responseText;
+			}
+		}
+	}
+	rawFile.send(null);
 }
