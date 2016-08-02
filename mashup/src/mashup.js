@@ -1,6 +1,6 @@
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  *	Main of the Mashup project
- * 	
+ *
  *	@author Xiang 'Anthony' Chen http://xiangchen.me
  *
  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -29,10 +29,12 @@ $(document).ready(function() {
 	MASHUP.scene = new THREE.Scene();
 	MASHUP.objects = new Array();
 
-	MASHUP.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 10000);
+	MASHUP.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight,
+		1, 10000);
 	MASHUP.camera.position.copy(new THREE.Vector3(0, 0, 250));
 
-	MASHUP.mouesCtrls = new THREE.TrackballControls(MASHUP.camera, undefined, undefined);
+	MASHUP.mouesCtrls = new THREE.TrackballControls(MASHUP.camera, undefined,
+		undefined);
 	// MASHUP.mouesCtrls.wheelDisabled = false;
 
 	MASHUP.renderer.setClearColor(XAC.BACKGROUNDCOLOR);
@@ -65,7 +67,8 @@ $(document).ready(function() {
 		opacity: 0.5
 	});
 
-	var geometryGround = new THREE.CubeGeometry(window.innerWidth * 1000 / window.innerHeight, 1000, 1);
+	var geometryGround = new THREE.CubeGeometry(window.innerWidth * 1000 /
+		window.innerHeight, 1000, 1);
 	var ground = new THREE.Mesh(
 		geometryGround,
 		groundMaterial
@@ -88,19 +91,34 @@ $(document).ready(function() {
 	xlength = XAC.float2int(xlength / step) * step;
 
 	for (var i = 0; i <= xlength / step; i++) {
-		lineGeometry.vertices.push(new THREE.Vector3(i * step - xlength / 2, -ylength / 2, floor));
-		lineGeometry.vertices.push(new THREE.Vector3(i * step - xlength / 2, ylength / 2, floor));
+		lineGeometry.vertices.push(new THREE.Vector3(i * step - xlength / 2, -
+			ylength / 2, floor));
+		lineGeometry.vertices.push(new THREE.Vector3(i * step - xlength / 2,
+			ylength / 2, floor));
 	}
 
 	for (var i = 0; i <= ylength / step; i++) {
-		lineGeometry.vertices.push(new THREE.Vector3(-xlength / 2, i * step - ylength / 2, floor));
-		lineGeometry.vertices.push(new THREE.Vector3(xlength / 2, i * step - ylength / 2, floor));
+		lineGeometry.vertices.push(new THREE.Vector3(-xlength / 2, i * step -
+			ylength / 2, floor));
+		lineGeometry.vertices.push(new THREE.Vector3(xlength / 2, i * step -
+			ylength / 2, floor));
 	}
 
 	var grid = new THREE.Line(lineGeometry, lineMaterial, THREE.LinePieces);
 	MASHUP.scene.add(grid);
 
+	//
+	//	set up communication
+	//
+	MASHUP.xmlhttp = new XMLHttpRequest();
+	MASHUP.xmlhttp.timeout = 1e9;
+	MASHUP.xmlhttp.onreadystatechange = function() {
+		if (MASHUP.xmlhttp.readyState == 4 && MASHUP.xmlhttp.status == 200) {
+			log(MASHUP.xmlhttp.responseText);
+		}
+	}
 
+	//	init an empty design
 	MASHUP.design = new MASHUP.Design(MASHUP.scene, MASHUP.camera);
 
 	// finally do unit test

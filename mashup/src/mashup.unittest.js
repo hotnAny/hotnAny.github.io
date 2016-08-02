@@ -99,7 +99,12 @@ function unitTest() {
 		}
 	}, false);
 
-	// XAC.pingServer('localhost', '9999', ['tpd'], ['testpath']);
+	// try {
+	XAC.pingServer(MASHUP.xmlhttp, 'localhost', '9999', ['tpd'], ['testpath']);
+	// log('server ok')
+	// } catch (e) {
+	// err('cannot connect to server')
+	// }
 
 	log('----------------  unit test ends  ----------------');
 }
