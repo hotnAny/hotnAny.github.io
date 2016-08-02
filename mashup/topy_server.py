@@ -73,10 +73,19 @@ def test():
     # tpd = json.loads(tpd_template)
     # print tpd["DOF_PN"]
 
+    # print bound([4, 3, 19], [3, 8, 10], [9, 20, 15])
+
     t0 = timestamp()
     proc_post_data(test_data_01)
     timestamp(t=t0, msg='total time')
     return
+
+
+def bound(ls, ls_min, ls_max):
+    ls_bounded = []
+    for i in xrange(0, len(ls)):
+        ls_bounded.append(min(max(ls[i], ls_min[i]), ls_max[i]))
+    return ls_bounded
 
 #
 #   check if a point p is in the segment p0-p1 with t0-t1 thickness
@@ -183,7 +192,7 @@ def proc_post_data(post_data):
         print '3d is too slow currently unsupported'
         return
 
-    dim_voxel = max(dim_voxel, 2)
+    dim_voxel = max(dim_voxel, 2)   # avoid very tiny voxels
 
     #
     #
@@ -204,7 +213,8 @@ def proc_post_data(post_data):
     nelx = int(nelx * (1+ 2 * relaxation))
     nely = int(nely * (1+ 2 * relaxation))
 
-    print nelx, nely
+    print 'voxel grid size: ', nelx, nely
+    print 'min/max:', vmin, vmax
 
     # convert points to voxels
     for edge in design:
@@ -316,23 +326,31 @@ def proc_post_data(post_data):
         voxels = []
 
         for point in boundary:
+            point = bound(point, vmin, vmax)
             bx = math.floor((point[0]-vmin[0])/dim_voxel)
             by = math.floor((point[1]-vmin[1])/dim_voxel)
+
             voxels.append([bx, by])
 
         for k in xrange(0, len(voxels) - 1):
             p0 = voxels[k]
             p1 = voxels[k+1]
+
             boundary_elms.append([int(p0[0]), int(p0[1])])
             boundary_elms.append([int(p1[0]), int(p1[1])])
             # empirically set boundary to have width 5*2=10
             t0 = 5
             t1 = 5
 
-            xmin = min(int(p0[0]), int(p1[0])) - 1
-            xmax = max(int(p0[0]), int(p1[0])) + 1
-            ymin = min(int(p0[1]), int(p1[1])) - 1
-            ymax = max(int(p0[1]), int(p1[1])) + 1
+            xmin = min(p0[0], p1[0]) - 1
+            xmax = max(p0[0], p1[0]) + 1
+            ymin = min(p0[1], p1[1]) - 1
+            ymax = max(p0[1], p1[1]) + 1
+
+            xmin = int(max(0, xmin))
+            xmax = int(min(xmax, vmax[0]))
+            ymin = int(max(0, ymin))
+            ymax = int(min(ymax, vmax[1]))
 
             for j in xrange(ymin, ymax):
                 for i in xrange(xmin, xmax):
@@ -378,8 +396,9 @@ def proc_post_data(post_data):
         for bp in boundary_elms:
             i = bp[0]
             j = bp[1]
-            idx = j * (nelx + 1) + nelx - 1 - i
-            debug_voxelgrid[2 * idx + 1] = '*'
+            idx = 2 * (j * (nelx + 1) + nelx - 1 - i) + 1
+            if idx < len(debug_voxelgrid):
+                debug_voxelgrid[idx] = '*'
 
         print ''.join(debug_voxelgrid)[::-1]
     # END DEBUG
