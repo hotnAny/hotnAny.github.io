@@ -1,6 +1,6 @@
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  *	Visualizer - contains a collection of visualization techniques
- * 	
+ *
  *	@author Xiang 'Anthonj' Chen http://xiangchen.me
  *
  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -8,13 +8,18 @@
 var MASHUP = MASHUP || {};
 
 // check dependencies
-if (XAC.Thing == undefined || XAC.Utilities == undefined || XAC.Const == undefined) {
+if (XAC.Thing == undefined || XAC.Utilities == undefined || XAC.Const ==
+	undefined) {
 	err('missing dependency!');
 }
 
 MASHUP.Visualizer = function(scene) {
 	this._scene = scene;
 	this._arrows = [];
+	this._visualElements = [];
+
+	// yield strength, https://en.wikipedia.org/wiki/Ultimate_tensile_strength
+	this._yieldStrength = Math.pow(40.0, 1.5);
 };
 
 MASHUP.Visualizer.prototype = {
@@ -47,7 +52,8 @@ MASHUP.Visualizer.prototype._computeDisplacement = function(listDisp, vxg) {
 
 	// collect displacement vector for corresponding elements
 	for (var i = 0; i + 2 < arrDisp.length; i += 3) {
-		var dispNode = new THREE.Vector3(Number(arrDisp[i]), Number(arrDisp[i + 1]), Number(arrDisp[i + 2]));
+		var dispNode = new THREE.Vector3(Number(arrDisp[i]), Number(arrDisp[i + 1]),
+			Number(arrDisp[i + 2]));
 		elmsOfNode = MASHUP.Optimization.node2elms(nelx, nely, nelz, i / 3);
 		for (var j = elmsOfNode.length - 1; j >= 0; j--) {
 			var idxElm = elmsOfNode[j];
@@ -106,7 +112,8 @@ MASHUP.Visualizer.prototype.visualizeDisplacement = function(listDisp, vxg) {
 				var arrow = addAnArrow(pos, dispElms[i][j][k], vxg.dim, 1);
 
 				for (var h = arrow.children.length - 1; h >= 0; h--) {
-					arrow.children[h].material.color = this._getHeatmapColor(dispElms[i][j][k].length(), worstDisp);
+					arrow.children[h].material.color = this._getHeatmapColor(dispElms[i][j][k]
+						.length(), worstDisp);
 					arrow.children[h].material.opacity = vxg.gridRaw[k][j][i];
 					arrow.children[h].material.needsUpdate = true;
 				}
@@ -134,7 +141,8 @@ MASHUP.Visualizer.prototype._computeStress = function(listDisp, vxg) {
 		for (var j = 0; j < nely; j++) {
 			var line = [];
 			for (var k = 0; k < nelz; k++) {
-				var ns = MASHUP.Optimization.elm2nodes(nelx, nely, nelz, i + 1, j + 1, k + 1);
+				var ns = MASHUP.Optimization.elm2nodes(nelx, nely, nelz, i + 1, j + 1, k +
+					1);
 				var tetras = [];
 
 				// the compositions of tetrahedrons of a cube
@@ -150,17 +158,21 @@ MASHUP.Visualizer.prototype._computeStress = function(listDisp, vxg) {
 				// init the tetrahedral data structure
 				for (var h = 0; h < tetraIndices.length; h++) {
 					var idxTetra = tetraIndices[h];
-					var idxNodes = [ns[idxTetra[0]] - 1, ns[idxTetra[1]] - 1, ns[idxTetra[2]] - 1, ns[idxTetra[3]] - 1];
+					var idxNodes = [ns[idxTetra[0]] - 1, ns[idxTetra[1]] - 1, ns[idxTetra[2]] -
+						1, ns[idxTetra[3]] - 1
+					];
 					var positions = [];
 					var displacements = [];
 
 					for (var l = 0; l < idxNodes.length; l++) {
 						var idx = idxNodes[l];
-						displacements.push(new THREE.Vector3(Number(arrDisp[idx * 3]), Number(arrDisp[idx * 3 + 1]), Number(arrDisp[idx * 3 + 2])));
+						displacements.push(new THREE.Vector3(Number(arrDisp[idx * 3]), Number(
+							arrDisp[idx * 3 + 1]), Number(arrDisp[idx * 3 + 2])));
 
 						var z = XAC.float2int(idx / (nelx + 1) / (nely + 1));
 						var x = XAC.float2int((idx - z * (nelx + 1) * (nely + 1)) / (nely + 1));
-						var y = nely - XAC.float2int(idx - z * (nelx + 1) * (nely + 1) - x * (nely + 1));
+						var y = nely - XAC.float2int(idx - z * (nelx + 1) * (nely + 1) - x * (
+							nely + 1));
 						positions.push(new THREE.Vector3(x, y, z));
 					}
 
@@ -200,7 +212,8 @@ MASHUP.Visualizer.prototype._computeStress = function(listDisp, vxg) {
 //
 //	compute stress for a given tetrahedron
 //
-MASHUP.Visualizer.prototype._computeTetraStress = function(positions, displacements) {
+MASHUP.Visualizer.prototype._computeTetraStress = function(positions,
+	displacements) {
 	var node = positions[0].clone();
 	var node1 = positions[1].clone();
 	var node2 = positions[2].clone();
@@ -255,14 +268,16 @@ MASHUP.Visualizer.prototype.visualizeStress = function(listDisp, vxg) {
 
 				var alpha = 0.25;
 				var mat = new THREE.MeshBasicMaterial({
-					color: this._getHeatmapColor(stressElm, maxStress),
+					color: this._getHeatmapColor(stressElm, this._yieldStrength), // maxStress),
 					transparent: true,
 					opacity: vxg.gridRaw[k][j][i] * (0.75 - alpha) + alpha,
 					side: THREE.DoubleSide
 				});
 
 				// TODO: store the visualization elements
-				scene.add(vxg._makeVoxel(vxg.dim, i, j, k, mat, true));
+				var elm = vxg._makeVoxel(vxg.dim, i, j, k, mat, true);
+				this._scene.add(elm);
+				this._visualElements.push(elm);
 
 			} // z
 		} // y
@@ -272,17 +287,19 @@ MASHUP.Visualizer.prototype.visualizeStress = function(listDisp, vxg) {
 //
 //	compute green strain
 //
-MASHUP.Visualizer.prototype._computeGreenStrain = function(v1, v2, v3, V1, V2, V3) {
+MASHUP.Visualizer.prototype._computeGreenStrain = function(v1, v2, v3, V1, V2,
+	V3) {
 	var U = [v1.toArray(), v2.toArray(), v3.toArray()];
 	var W = [V1.toArray(), V2.toArray(), V3.toArray()];
 	var F = numeric.dot(W, numeric.inv(U));
 	// E = 1/2 (F^T * F - I)
-	var E = numeric.times(numeric.sub(numeric.dot(numeric.transpose(F), F), numeric.identity(3)), 0.5);
+	var E = numeric.times(numeric.sub(numeric.dot(numeric.transpose(F), F),
+		numeric.identity(3)), 0.5);
 	return E;
 }
 
 //
-//	get heatmap like color based on - 
+//	get heatmap like color based on -
 //	@param	score
 //	@param	maxScore
 //
@@ -291,7 +308,9 @@ MASHUP.Visualizer.prototype._getHeatmapColor = function(score, maxScore) {
 	score = Math.min(score, maxScore);
 
 	// var colorSchemes = [0xd7191c, 0xfdae61, 0xffffbf, 0xa6d96a, 0x1a9641];
-	var colorSchemes = [0xd73027, 0xf46d43, 0xfdae61, 0xfee08b, 0xffffbf, 0xd9ef8b, 0xa6d96a, 0x66bd63, 0x1a9850]
+	var colorSchemes = [0xd73027, 0xf46d43, 0xfdae61, 0xfee08b, 0xffffbf,
+		0xd9ef8b, 0xa6d96a, 0x66bd63, 0x1a9850
+	]
 	colorSchemes.reverse(); // EXP
 	var color = new THREE.Color(0xffffff);
 	for (var k = 0; k < colorSchemes.length; k++) {
@@ -301,6 +320,12 @@ MASHUP.Visualizer.prototype._getHeatmapColor = function(score, maxScore) {
 		}
 	}
 	return color;
+}
+
+MASHUP.Visualizer.prototype.clear = function() {
+	for (var i = 0; i < this._visualElements.length; i++) {
+		this._scene.remove(this._visualElements[i]);
+	}
 }
 
 //

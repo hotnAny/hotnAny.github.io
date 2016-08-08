@@ -1,13 +1,16 @@
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  *	voxel grid
- * 	
+ *
  *	@author Xiang 'Anthony' Chen http://xiangchen.me
  *
  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 var MASHUP = MASHUP || {};
 
-MASHUP.VoxelGrid = function() {
+MASHUP.VoxelGrid = function(scene, origin) {
+	this._scene = scene;
+	this._origin = origin;
+
 	this._voxels = [];
 	this._table = [];
 }
@@ -63,15 +66,15 @@ MASHUP.VoxelGrid.prototype.load = function(vxgRaw, dim) {
 		for (var j = 0; j < vxgRawRows.length; j++) {
 			var row = vxgRawRows[j].split(',');
 			var rowRaw = []
-			// binarize it
+				// binarize it
 			for (var k = 0; k < row.length; k++) {
 				rowRaw.push(row[k]);
 				row[k] = row[k] >= 1 ? 1 : 0;
 			}
 
 			// for reasons i can't explain ...
-			row.reverse();
-			rowRaw.reverse();
+			// row.reverse();
+			// rowRaw.reverse();
 
 			sliceRaw.push(rowRaw);
 			slice.push(row);
@@ -104,7 +107,10 @@ MASHUP.VoxelGrid.prototype.render = function(hideInside) {
 							opacity: 0.75
 						}), true);
 						voxel.index = [k, j, i];
-						scene.add(voxel);
+						// log(voxel.position.toArray())
+						// log(voxel.position.toArray())
+						// log('---')
+						this._scene.add(voxel);
 						// row[k] = voxel;
 						// this._grid[i][j][k].idxMesh = gVoxels.length; // store the voxel's index in gVoxels
 						this._voxels.push(voxel);
@@ -112,7 +118,7 @@ MASHUP.VoxelGrid.prototype.render = function(hideInside) {
 					}
 				} else if (this._grid[i][j][k] != 1 && this._table[i][j][k] != undefined) {
 					var voxel = this._table[i][j][k];
-					scene.remove(voxel);
+					this._scene.remove(voxel);
 					XAC.removeFromArray(this._voxels, voxel);
 					this._table[i][j][k] = undefined;
 				}
@@ -174,7 +180,7 @@ MASHUP.VoxelGrid.prototype.updateToMedialAxis = function(axis, node) {
 
 		// re-render the voxel grid
 		// for (var i = gVoxels.length - 1; i >= 0; i--) {
-		// 	scene.remove(gVoxels[i]);
+		// 	this._scene.remove(gVoxels[i]);
 		// }
 		this.render(false);
 		// axis.renderAxis();
@@ -189,13 +195,13 @@ MASHUP.VoxelGrid.prototype.updateToMedialAxis = function(axis, node) {
 
 MASHUP.VoxelGrid.prototype.hide = function() {
 	for (var i = this._voxels.length - 1; i >= 0; i--) {
-		scene.remove(this._voxels[i]);
+		this._scene.remove(this._voxels[i]);
 	}
 }
 
 MASHUP.VoxelGrid.prototype.show = function() {
 	for (var i = this._voxels.length - 1; i >= 0; i--) {
-		scene.add(this._voxels[i]);
+		this._scene.add(this._voxels[i]);
 	}
 }
 
@@ -217,6 +223,10 @@ MASHUP.VoxelGrid.prototype._makeVoxel = function(dim, i, j, k, mat, noMargin) {
 	}
 
 	voxel.position.set(i * dim, j * dim, k * dim);
+
+	if (this._origin != undefined) {
+		voxel.position.copy(this._origin.clone().add(voxel.position))
+	}
 
 	return voxel;
 }
@@ -245,13 +255,13 @@ MASHUP.VoxelGrid.prototype._addSphericalVoxels = function(v, radius) {
 };
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * 	
+ *
  *	working with a medial axis
  *
  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 //
-//	special method for working with a voxel grid: 
+//	special method for working with a voxel grid:
 //		snap the voxels in the voxel grid to this medial axis
 //
 //	@param	vxg - an MASHUP.VoxelGrid object
@@ -312,7 +322,8 @@ MASHUP.MedialAxis.prototype.snapVoxelGrid = function(vxg) {
 		}
 
 		// averaged across all adjacent edges and the node itself
-		this._nodesInfo[h].radius = (rEdges + rNode) / (numEdges + (rNode == 0 ? 0 : 1));
+		this._nodesInfo[h].radius = (rEdges + rNode) / (numEdges + (rNode == 0 ? 0 :
+			1));
 		this._nodesInfo[h].radiusData = [];
 	}
 
@@ -379,7 +390,8 @@ MASHUP.MedialAxis.prototype._snapVoxel = function(voxel, dim) {
 		var v2 = this._edgesInfo[idxEdgeMin].v2.mesh.position;
 		var thicknessData = this._edgesInfo[idxEdgeMin].thicknessData;
 		if (thicknessData == undefined) {
-			this._edgesInfo[idxEdgeMin].thicknessData = new Array(XAC.float2int(v2.distanceTo(v1) / dim));
+			this._edgesInfo[idxEdgeMin].thicknessData = new Array(XAC.float2int(v2.distanceTo(
+				v1) / dim));
 			thicknessData = this._edgesInfo[idxEdgeMin].thicknessData;
 		}
 
@@ -396,6 +408,7 @@ MASHUP.MedialAxis.prototype._snapVoxel = function(voxel, dim) {
 		}
 
 		// register the distance to node
-		this._nodesInfo[idxNodeMin].radiusData.push(Math.max(this._nodesInfo[idxNodeMin].radius, dist2NodeMin));
+		this._nodesInfo[idxNodeMin].radiusData.push(Math.max(this._nodesInfo[
+			idxNodeMin].radius, dist2NodeMin));
 	}
 };

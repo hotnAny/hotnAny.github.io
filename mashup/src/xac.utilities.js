@@ -266,15 +266,21 @@ XAC.pingServer = function(xmlhttp, host, port, keys, values) {
 //
 //	read text file from local path
 //
-XAC.readTextFile = function(file) {
+XAC.readTextFile = function(file, followup) {
 	var rawFile = new XMLHttpRequest();
 	rawFile.open("GET", file, false);
 	rawFile.onreadystatechange = function() {
 		if (rawFile.readyState === 4) {
 			if (rawFile.status === 200 || rawFile.status == 0) {
-				return rawFile.responseText;
+				if (followup != undefined) followup(rawFile.responseText);
 			}
 		}
 	}
 	rawFile.send(null);
+}
+
+
+XAC.getParameterByName = function(name, url) {
+	var match = RegExp('[?&]' + name + '=([^&]*)').exec(url);
+	return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
 }

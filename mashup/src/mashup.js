@@ -115,6 +115,36 @@ $(document).ready(function() {
 	MASHUP.xmlhttp.onreadystatechange = function() {
 		if (MASHUP.xmlhttp.readyState == 4 && MASHUP.xmlhttp.status == 200) {
 			log(MASHUP.xmlhttp.responseText);
+			var name = XAC.getParameterByName('name', MASHUP.xmlhttp.responseText);
+			var dimVoxel = XAC.getParameterByName('dim_voxel', MASHUP.xmlhttp.responseText);
+			var xmin = XAC.getParameterByName('xmin', MASHUP.xmlhttp.responseText);
+			var ymin = XAC.getParameterByName('ymin', MASHUP.xmlhttp.responseText);
+
+			// log([name, dimVoxel, xmin, xmax])
+
+			// TODO:  what type of result it is
+			// var resultName = MASHUP.xmlhttp.responseText;
+			// var resultName = './mashup_1470164320'
+			var resultVoxelGrid = name + '_analyzed.vxg';
+			var resultDisp = name + '_analyzed.disp';
+
+			MASHUP.voxelGrid = new MASHUP.VoxelGrid(MASHUP.scene, new THREE.Vector3(
+				parseFloat(xmin), parseFloat(ymin), 5));
+			XAC.readTextFile(resultVoxelGrid, function(dataVoxelGrid) {
+				if (dataVoxelGrid != undefined) {
+					MASHUP.voxelGrid.load(dataVoxelGrid, dimVoxel);
+					// MASHUP.voxelGrid.render(false);
+
+					MASHUP.visualizer = MASHUP.visualizer == undefined ? new MASHUP.Visualizer(
+						MASHUP.scene) : MASHUP.visualizer;
+					MASHUP.visualizer.clear();
+					XAC.readTextFile(resultDisp, function(dataDisp) {
+						if (dataDisp != undefined) {
+							MASHUP.visualizer.visualizeStress(dataDisp, MASHUP.voxelGrid);
+						}
+					});
+				}
+			});
 		}
 	}
 

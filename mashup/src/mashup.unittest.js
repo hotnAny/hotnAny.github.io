@@ -92,9 +92,9 @@ function unitTest() {
 			case 83: //S
 				var strData = MASHUP.design.getData();
 				log(strData)
-				XAC.pingServer('localhost', '9999', ['mashup', 'query', 'resolution',
-					'material', 'originality', 'verbose'
-				], [strData, 0, 64, 0.45, 1.0, 1]);
+				XAC.pingServer(MASHUP.xmlhttp, 'localhost', '9999', ['mashup', 'query',
+					'resolution', 'material', 'originality', 'verbose'
+				], [strData, 0, 32, 0.45, 1.0, 1]);
 				break;
 		}
 	}, false);

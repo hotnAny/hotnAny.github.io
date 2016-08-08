@@ -793,6 +793,12 @@ MASHUP.Design.prototype.getData = function() {
 
 	// the loads
 	mashup.loads = [];
+	var sumLoads = 0;
+	for (var i = 0; i < this._loads.length; i++) {
+		sumLoads += this._loads[i].vector.length();
+	}
+	log('sumLoads: ' + sumLoads)
+
 	for (var i = 0; i < this._loads.length; i++) {
 		var load = {};
 		load.points = [];
@@ -800,7 +806,7 @@ MASHUP.Design.prototype.getData = function() {
 			load.points.push(this._loads[i].points[j].toArray().trim(2));
 		}
 		load.vectors = this._distriute(load.points, this._loads[i].vector,
-			this._loads[i].midPoint);
+			this._loads[i].midPoint, sumLoads);
 		mashup.loads.push(load);
 	}
 
@@ -815,8 +821,6 @@ MASHUP.Design.prototype.getData = function() {
 			clearance.push(vtransformed.toArray().trim(2));
 		}
 		mashup.clearances.push(clearance);
-
-		log(clearance)
 	}
 
 	return JSON.stringify(mashup);
@@ -825,7 +829,8 @@ MASHUP.Design.prototype.getData = function() {
 //
 //	subroutine for distributing a load vector across load points
 //
-MASHUP.Design.prototype._distriute = function(points, vector, midPoint) {
+MASHUP.Design.prototype._distriute = function(points, vector, midPoint,
+	normalizeFactor) {
 	var distrVectors = [];
 
 	// fit the load points on an arc
@@ -842,7 +847,7 @@ MASHUP.Design.prototype._distriute = function(points, vector, midPoint) {
 		var axis = umid.clone().cross(u).normalize();
 
 		distrVectors.push(vector.clone().applyAxisAngle(axis, angle).divideScalar(
-			points.length).toArray().trim(2));
+			points.length).divideScalar(normalizeFactor).toArray().trim(2));
 
 		// DEBUG: to show the load direction at each point
 		// XAC.addAnArrow(this._scene, point, v, len, 2, this._matLoad);
@@ -858,8 +863,6 @@ MASHUP.Design.prototype._distriute = function(points, vector, midPoint) {
 MASHUP.MedialAxis.prototype.pack = function(elm) {
 	if (elm.type == MASHUP.MedialAxis.EDGE) {
 		var edge = {};
-		// edge.type = elm.type;
-		// edge.deleted = elm.deleted;
 		edge.node1 = elm.node1.position.toArray().trim(2);
 		edge.node2 = elm.node2.position.toArray().trim(2);
 		edge.points = [];
