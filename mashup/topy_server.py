@@ -173,7 +173,7 @@ def proc_post_data(post_data):
     verbose = int(safe_retrieve_one(post_data, 'verbose', 0))
 
     #
-    # TODO: convert everything to tpd and save it locally
+    # convert everything to tpd and save it locally
     #
 
     # compute resolution of the voxel grid
@@ -214,6 +214,8 @@ def proc_post_data(post_data):
     vmax[0] += nelx * relaxation * dim_voxel
     vmax[1] += nely * relaxation * dim_voxel
 
+    nelx_old = nelx
+    nely_old = nely
     nelx = int(nelx * (1+ 2 * relaxation))
     nely = int(nely * (1+ 2 * relaxation))
 
@@ -306,8 +308,6 @@ def proc_post_data(post_data):
         p2 = voxels_clearance[6]
         p3 = voxels_clearance[4]
 
-        print p0, p1, p2, p3
-
         for j in xrange(0, nely):
             for i in xrange(0, nelx):
                 p = [i*1.0, j*1.0]
@@ -327,6 +327,19 @@ def proc_post_data(post_data):
                 pasv_elms.append([i, j, 1])
 
     timestamp(msg='compute clearances')
+
+    # set extended domain to be passive
+    dnelx = int(math.floor((nelx - nelx_old) / 2))
+    dnely = int(math.floor((nely - nely_old) / 2))
+    for j in xrange(0, dnely):
+        for i in xrange(0, nelx):
+            pasv_elms.append([i, j, 1])
+            pasv_elms.append([i, nely - 1 - j, 1])
+
+    for j in xrange(0, nely):
+        for i in xrange(0, dnelx):
+            pasv_elms.append([i, j, 1])
+            pasv_elms.append([nelx - 1 - i, j, 1])
 
     # compute boundaries
     boundary_elms = []
@@ -401,7 +414,6 @@ def proc_post_data(post_data):
             i = lp[0]
             j = lp[1]
             idx = 2 * (j * (nelx + 1) + nelx - 1 - i) + 1
-            print idx
             if idx < len(debug_voxelgrid):
                 debug_voxelgrid[idx] = 'O'
 
