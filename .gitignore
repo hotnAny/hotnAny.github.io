@@ -1,2 +1,5 @@
 /playground/recycle/
 *.stl
+*.vxg
+*.disp
+*.tpd
