@@ -358,40 +358,51 @@ synthesis!')
 
         Kfree = self._updateK(self.K.copy())
 
-#        # if self.dofpn < 3 and self.nelz == 0: #  Direct solver
+        # [xac] for debugging
         Kfree_original = Kfree
-        Kfree = Kfree.to_csr() #  Need CSR for SuperLU factorisation
-        lu = superlu.factorize(Kfree)
-        lu.solve(self.rfree, self.dfree)
+
+        #
+        # [xac] experimenting with always using direct solver, as our problem is mostly 2D
+        #
+        force_using_direct_solver = True
+
+        if force_using_direct_solver or self.dofpn < 3 and self.nelz == 0: #  Direct solver
+            print '[xac] direct solver in use'
+            Kfree = Kfree.to_csr() #  Need CSR for SuperLU factorisation
+            lu = superlu.factorize(Kfree)
+            lu.solve(self.rfree, self.dfree)
+
+            if self.probtype == 'mech':
+                lu.solve(self.rfreeout, self.dfreeout)  # mechanism synthesis
+
+        else: #  Iterative solver for 3D problems
+            print '[xac] iterative solver in use'
+            Kfree = Kfree.to_sss()
+            preK = precon.ssor(Kfree) #  Preconditioned Kfree
+            (info, numitr, relerr) = \
+            itsolvers.pcg(Kfree, self.rfree, self.dfree, 1e-8, 8000, preK)
+            if info < 0:
+                print 'PySparse error: Type:', info,', at', numitr, \
+'iterations.'
+                raise ToPyError('Solution for FEA did not converge.')
+            else:
+                print 'ToPy: Solution for FEA converged after', numitr, \
+'iterations.'
+            if self.probtype == 'mech':  # mechanism synthesis
+                (info, numitr, relerr) = \
+                itsolvers.pcg(Kfree, self.rfreeout, self.dfreeout, 1e-8, \
+                8000, preK)
+                if info < 0:
+                    print 'PySparse error: Type:', info,', at', numitr, \
+'iterations.'
+                    raise ToPyError('Solution for FEA of adjoint load case \
+                    did not converge.')
 
         # [xac] check residue of matrix solving
         # rcomp = zeros_like(self.rfree)
         # Kfree_original.matvec(self.dfree, rcomp)
         # print subtract(self.rfree, rcomp)
 
-        if self.probtype == 'mech':
-            lu.solve(self.rfreeout, self.dfreeout)  # mechanism synthesis
-#         else: #  Iterative solver for 3D problems
-#             Kfree = Kfree.to_sss()
-#             preK = precon.ssor(Kfree) #  Preconditioned Kfree
-#             (info, numitr, relerr) = \
-#             itsolvers.pcg(Kfree, self.rfree, self.dfree, 1e-8, 8000, preK)
-#             if info < 0:
-#                 print 'PySparse error: Type:', info,', at', numitr, \
-# 'iterations.'
-#                 raise ToPyError('Solution for FEA did not converge.')
-#             else:
-#                 print 'ToPy: Solution for FEA converged after', numitr, \
-# 'iterations.'
-#             if self.probtype == 'mech':  # mechanism synthesis
-#                 (info, numitr, relerr) = \
-#                 itsolvers.pcg(Kfree, self.rfreeout, self.dfreeout, 1e-8, \
-#                 8000, preK)
-#                 if info < 0:
-#                     print 'PySparse error: Type:', info,', at', numitr, \
-# 'iterations.'
-#                     raise ToPyError('Solution for FEA of adjoint load case \
-#                     did not converge.')
 
         # Update displacement vectors:
         self.d[self.freedof] = self.dfree
