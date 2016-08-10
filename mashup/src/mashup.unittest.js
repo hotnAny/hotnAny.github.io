@@ -62,6 +62,11 @@ function unitTest() {
 	// var v = new THREE.Vector3(0, 1, 0);
 	// log(vectorsIntersection(p, u, q, v));
 
+	// DEBUG: distance fields
+	var dfs = [];
+	var intval = 0.5;
+	var step = 0.05;
+
 	document.addEventListener('keydown', function(e) {
 		// if (MASHUP.design._mode != MASHUP.Design.EDIT) {
 		// MASHUP.design._medialAxis.disableEventListeners();
@@ -99,16 +104,33 @@ function unitTest() {
 			case 68: //D
 				MASHUP.mixedInitiative = MASHUP.mixedInitiative == null ? new MASHUP.MixedInitiatives(MASHUP.scene) :
 					MASHUP.mixedInitiative;
-				MASHUP.mixedInitiative._computeDistanceField(MASHUP.design);
+				dfs.push(MASHUP.mixedInitiative._computeDistanceField(MASHUP.design));
+				intval = 2 - dfs.length;
 				break;
-			case 78: //N
-				MASHUP.design = new MASHUP.Design(MASHUP.scene, MASHUP.camera);
+			case 37: // left arrow
+				intval += step;
+				intval = Math.min(intval, 1);
+				if (dfs.length == 2) {
+					MASHUP.mixedInitiative._interpolateDistanceFields(dfs[0], dfs[1], intval);
+				}
+				break;
+			case 39: // right arrow
+				intval -= step;
+				intval = Math.max(0, intval);
+				if (dfs.length == 2) {
+					MASHUP.mixedInitiative._interpolateDistanceFields(dfs[0], dfs[1], intval);
+				}
+				break;
+			case 67: // C
+				MASHUP.mixedInitiative._clearDump();
 				break;
 		}
 	}, false);
 
+
+
 	// try {
-	XAC.pingServer(MASHUP.xmlhttp, 'localhost', '9999', ['tpd'], ['testpath']);
+	// XAC.pingServer(MASHUP.xmlhttp, 'localhost', '9999', ['tpd'], ['testpath']);
 	// log('server ok')
 	// } catch (e) {
 	// err('cannot connect to server')

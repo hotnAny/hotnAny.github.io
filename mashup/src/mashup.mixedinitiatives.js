@@ -2,12 +2,18 @@ var MASHUP = MASHUP || {};
 
 MASHUP.MixedInitiatives = function(scene, camera) {
     this._scene = scene;
+    this._dump = [];
 }
 
 MASHUP.MixedInitiatives.prototype = {
     constructor: MASHUP.MixedInitiatives
 };
 
+MASHUP.MixedInitiatives.DFVOXELSIZE = 2.5;
+
+//
+//  compute distance field of a mashup design
+//
 MASHUP.MixedInitiatives.prototype._computeDistanceField = function(design) {
     var assign = function(v, dfval) {
         var idx = vxg.getIndex(v);
@@ -25,9 +31,10 @@ MASHUP.MixedInitiatives.prototype._computeDistanceField = function(design) {
     var bbox = medialAxis.boundingBox();
     var vxg = new MASHUP.VoxelGrid(this._scene, bbox.min);
 
-    vxg._dim = 2;
+    vxg._dim = MASHUP.MixedInitiatives.DFVOXELSIZE;
     vxg._nx = XAC.float2int((bbox.max.x - bbox.min.x) / vxg._dim) + 1;
     vxg._ny = XAC.float2int((bbox.max.y - bbox.min.y) / vxg._dim) + 1;
+    // suppress it to 1 just for the 2d case
     vxg._nz = 1; //XAC.float2int((bbox.max.z - bbox.min.z) / vxg._dim) + 1;
 
     log('distance field: ' + vxg._nx + ' x ' + vxg._ny + ' x ' + vxg._nz)
@@ -70,7 +77,6 @@ MASHUP.MixedInitiatives.prototype._computeDistanceField = function(design) {
     }
 
     // flood fill to find distance fied
-
     while (counter < numVoxels) {
         var buf = [];
 
@@ -99,27 +105,68 @@ MASHUP.MixedInitiatives.prototype._computeDistanceField = function(design) {
                         counter++;
                     }
                 }
-            }
-        }
+            } // visiting neighbors
+        } // visiting last round's computations
 
         bufPrev = XAC.copyArray(buf);
     }
 
     // visualize to debug
-    for (var i = 0; i < vxg.nx; i++) {
-        for (var j = 0; j < vxg.ny; j++) {
-            for (var k = 0; k < vxg.nz; k++) {
-                var mat = XAC.MATERIALWIRE.clone();
-                mat.opacity = 1.0 / (1 + df[i][j][k]);
-                var voxel = vxg._makeVoxel(vxg.dim, i, j + vxg.ny * 1.5, k, mat,
-                    true);
-                this._scene.add(voxel)
-            }
-        }
-    }
+    this._showDistanceField(df);
+
+    return df;
 }
 
-MASHUP
+//
+//  interpolate between two distance fields
+//
+MASHUP.MixedInitiatives.prototype._interpolateDistanceFields = function(df1, df2, val) {
+    var df = []
+    for (var i = 0; i < df1.length; i++) {
+        var dfyz = [];
+        for (var j = 0; j < df1[0].length; j++) {
+            dfz = [];
+            for (var k = 0; k < df1[0][0].length; k++) {
+                dfz.push(df1[i][j][k] * val + df2[i][j][k] * (1 - val));
+            }
+            dfyz.push(dfz);
+        }
+        df.push(dfyz);
+    }
+
+    this._showDistanceField(df);
+}
+
+//
+//  show distance fields as a voxel grid
+//
+MASHUP.MixedInitiatives.prototype._showDistanceField = function(df) {
+    var vxg = new MASHUP.VoxelGrid(this._scene, new THREE.Vector3(50, -50, 0));
+
+    var counter = 0;
+    for (var i = 0; i < df.length; i++) {
+        for (var j = 0; j < df[0].length; j++) {
+            for (var k = 0; k < df[0][0].length; k++) {
+                var opacity = 1.0 / (1 + df[i][j][k]);
+
+                if (this._dump[counter] == undefined) {
+                    var mat = XAC.MATERIALWIRE.clone();
+                    mat.opacity = opacity;
+                    var voxel = vxg._makeVoxel(MASHUP.MixedInitiatives.DFVOXELSIZE, i, j, k,
+                        mat, true);
+                    this._scene.add(voxel);
+                    this._dump.push(voxel);
+                } else {
+                    var voxel = this._dump[counter];
+                    voxel.material.opacity = opacity;
+                    voxel.material.needsUpdate = true;
+                }
+
+                counter++;
+            } // k
+        } // j
+    } // i
+}
 
 //
 //
