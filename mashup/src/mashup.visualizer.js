@@ -247,6 +247,8 @@ MASHUP.Visualizer.prototype.visualizeStress = function(listDisp, vxg) {
 	var nelx = vxg.nx;
 	var nely = vxg.ny;
 	var nelz = vxg.nz;
+	var diag = Math.sqrt(nelx * nelx + nely * nely + nelz * nelz);
+	var normalizeFactor = this._yieldStrength * diag / (MASHUP.MedialAxis.DEFAULTEDGERADIUS * 2);
 
 	// vxg.hide();
 
@@ -268,20 +270,81 @@ MASHUP.Visualizer.prototype.visualizeStress = function(listDisp, vxg) {
 
 				var alpha = 0.25;
 				var mat = new THREE.MeshBasicMaterial({
-					color: this._getHeatmapColor(stressElm, this._yieldStrength), // maxStress),
+					color: this._getHeatmapColor(stressElm, normalizeFactor), // maxStress),
 					transparent: true,
 					opacity: vxg.gridRaw[k][j][i] * (0.75 - alpha) + alpha,
 					side: THREE.DoubleSide
 				});
 
 				// TODO: store the visualization elements
-				var elm = vxg._makeVoxel(vxg.dim, i, j, k, mat, true);
+				// TEMP: debugging
+				var elm = vxg._makeVoxel(vxg.dim, i + nelx * 1.5, j, k, mat, true);
 				this._scene.add(elm);
 				this._visualElements.push(elm);
 
 			} // z
 		} // y
 	} // x
+}
+
+MASHUP.Visualizer.prototype.visualizeStressInVivo = function(listDisp, vxg,
+	meshes) {
+	var stressInfo = this._computeStress(listDisp, vxg);
+	var tetraGrid = stressInfo.tetraGrid;
+
+	var dimVoxel = vxg.dim;
+	var origin = vxg.origin;
+	var nelx = vxg.nx;
+	var nely = vxg.ny;
+	var nelz = vxg.nz;
+	var diag = Math.sqrt(nelx * nelx + nely * nely + nelz * nelz);
+	var normalizeFactor = this._yieldStrength * diag / (5 * 2);
+	log('normalizeFactor: ' + normalizeFactor)
+
+	for (var i = 0; i < meshes.length; i++) {
+		var mesh = meshes[i];
+		mesh.material = new THREE.MeshBasicMaterial({
+			vertexColors: THREE.VertexColors,
+			transparent: true,
+			opacity: 1
+		});
+		// mesh.material.needsUpdate = true;
+		mesh.geometry.dynamic = true;
+		var gt = XAC.getTransformedGeometry(mesh);
+
+		for (var j = 0; j < mesh.geometry.faces.length; j++) {
+			var face = mesh.geometry.faces[j];
+			var vindices = [face.a, face.b, face.c];
+			var posFace = new THREE.Vector3();
+			for (var k = 0; k < vindices.length; k++) {
+				posFace.add(gt.vertices[vindices[k]]);
+			}
+			posFace.divideScalar(vindices.length);
+
+			var iv = XAC.clamp(XAC.float2int((posFace.x - origin.x) / dimVoxel), 0,
+				nelx - 1);
+			var jv = XAC.clamp(XAC.float2int((posFace.y - origin.y) / dimVoxel), 0,
+				nely - 1);
+			var kv = XAC.clamp(XAC.float2int((posFace.z - origin.z) / dimVoxel), 0,
+				nelz - 1);
+
+			var tetras = tetraGrid[iv][jv][kv];
+
+			// TODO: figure out whether should take max or avg of stress
+			var stressElm = 0;
+			for (var h = 0; h < tetras.length; h++) {
+				stressElm = Math.max(stressElm, tetras[h].stress);
+				// stressElm += tetras[h].stress;
+			} // tetra
+			// stressElm /= tetras.length;
+
+			var color = this._getHeatmapColor(stressElm, normalizeFactor);
+			// addABall(this._scene, posFace, color, 3, 1)
+			face.color.copy(color);
+		}
+
+		mesh.geometry.colorsNeedUpdate = true;
+	}
 }
 
 //
@@ -308,8 +371,11 @@ MASHUP.Visualizer.prototype._getHeatmapColor = function(score, maxScore) {
 	score = Math.min(score, maxScore);
 
 	// var colorSchemes = [0xd7191c, 0xfdae61, 0xffffbf, 0xa6d96a, 0x1a9641];
-	var colorSchemes = [0xd73027, 0xf46d43, 0xfdae61, 0xfee08b, 0xffffbf,
-		0xd9ef8b, 0xa6d96a, 0x66bd63, 0x1a9850
+	// var colorSchemes = [0xd73027, 0xf46d43, 0xfdae61, 0xfee08b, 0xffffbf,
+	// 	0xd9ef8b, 0xa6d96a, 0x66bd63, 0x1a9850
+	// ]
+	var colorSchemes = [0xa50026, 0xd73027, 0xf46d43, 0xfdae61, 0xfee08b,
+		0xffffbf, 0xd9ef8b, 0xa6d96a, 0x66bd63, 0x1a9850, 0x006837
 	]
 	colorSchemes.reverse(); // EXP
 	var color = new THREE.Color(0xffffff);
@@ -359,4 +425,10 @@ numeric.times = function(matrix, scalar) {
 		}
 	}
 	return matrix;
+}
+
+XAC.clamp = function(val, vmin, vmax) {
+	val = Math.max(vmin, val);
+	val = Math.min(val, vmax);
+	return val;
 }
