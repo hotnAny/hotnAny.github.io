@@ -3,6 +3,7 @@ var XAC = XAC || {};
 XAC.Const = {};
 
 XAC.EPSILON = 1e-6;
+XAC.INFINITY = 1e9;
 
 // some common visual properties
 XAC.COLORNORMAL = 0xDB5B8A; // the normal color
@@ -16,45 +17,52 @@ XAC.GROUNDCOLOR = 0xF2F0F0;
 XAC.GRIDCOLOR = 0xbbbbbb;
 
 XAC.MATERIALNORMAL = new THREE.MeshPhongMaterial({
-     color: XAC.COLORNORMAL,
-     transparent: true,
-     opacity: 0.75
+    color: XAC.COLORNORMAL,
+    transparent: true,
+    opacity: 0.75
 });
 
 XAC.MATERIALCONTRAST = new THREE.MeshBasicMaterial({
-     color: XAC.COLORCONTRAST,
-     transparent: true,
-     opacity: 0.75
+    color: XAC.COLORCONTRAST,
+    transparent: true,
+    opacity: 0.75
 });
 
 XAC.MATERIALHIGHLIGHT = new THREE.MeshPhongMaterial({
-     color: XAC.COLORHIGHLIGHT,
-     transparent: true,
-     opacity: 0.95
+    color: XAC.COLORHIGHLIGHT,
+    transparent: true,
+    opacity: 0.95
 });
 
 XAC.MATERIALINVISIBLE = new THREE.MeshBasicMaterial({
-     vertexColors: 0xffffff,
-     transparent: true,
-     visible: false
+    vertexColors: 0xffffff,
+    transparent: true,
+    visible: false
 });
 
-XAC.MATERIALPLAIN= new THREE.MeshBasicMaterial({
-     vertexColors: 0xffffff,
-     transparent: true,
-     opacity: 0.75
+XAC.MATERIALPLAIN = new THREE.MeshBasicMaterial({
+    vertexColors: 0xffffff,
+    transparent: true,
+    opacity: 0.75
 });
 
 XAC.MATERIALFOCUS = new THREE.MeshPhongMaterial({
-     color: XAC.COLORFOCUS,
-     transparent: true,
-     opacity: 0.95
+    color: XAC.COLORFOCUS,
+    transparent: true,
+    opacity: 0.95
 });
 
 XAC.MATERIALALT = new THREE.MeshBasicMaterial({
-     color: XAC.COLORALT,
-     transparent: true,
-     opacity: 0.75
+    color: XAC.COLORALT,
+    transparent: true,
+    opacity: 0.75
+});
+
+XAC.MATERIALWIRE = new THREE.MeshBasicMaterial({
+    color: XAC.COLORALT,
+    transparent: true,
+    wireframe: true,
+    opacity: 0.75
 });
 
 

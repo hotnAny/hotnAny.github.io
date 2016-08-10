@@ -426,9 +426,3 @@ numeric.times = function(matrix, scalar) {
 	}
 	return matrix;
 }
-
-XAC.clamp = function(val, vmin, vmax) {
-	val = Math.max(vmin, val);
-	val = Math.min(val, vmax);
-	return val;
-}

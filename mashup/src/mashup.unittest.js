@@ -96,6 +96,14 @@ function unitTest() {
 					'resolution', 'material', 'originality', 'verbose'
 				], [strData, 0, 64, 0.45, 1.0, 1]);
 				break;
+			case 68: //D
+				MASHUP.mixedInitiative = MASHUP.mixedInitiative == null ? new MASHUP.MixedInitiatives(MASHUP.scene) :
+					MASHUP.mixedInitiative;
+				MASHUP.mixedInitiative._computeDistanceField(MASHUP.design);
+				break;
+			case 78: //N
+				MASHUP.design = new MASHUP.Design(MASHUP.scene, MASHUP.camera);
+				break;
 		}
 	}, false);
 
