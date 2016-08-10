@@ -12,18 +12,11 @@ from __future__ import division
 
 from string import lower
 
-# [xac]
-import numpy
-numpy.set_printoptions(threshold=numpy.nan)
-
 from numpy import arange, array, dot, floor, indices, maximum, minimum, ones,\
 put, setdiff1d, in1d, sqrt, where, zeros, zeros_like, append, empty,\
 abs, take, log, allclose, clip, log2, equal, subtract
 
 from pysparse import superlu, itsolvers, precon
-
-# [xac]
-from pysparse import spmatrix
 
 from parser import tpd_file2dict
 
@@ -358,19 +351,14 @@ synthesis!')
 
         Kfree = self._updateK(self.K.copy())
 
-#        # if self.dofpn < 3 and self.nelz == 0: #  Direct solver
-        Kfree_original = Kfree
+        # if self.dofpn < 3 and self.nelz == 0: #  Direct solver
         Kfree = Kfree.to_csr() #  Need CSR for SuperLU factorisation
         lu = superlu.factorize(Kfree)
         lu.solve(self.rfree, self.dfree)
-
-        # [xac] check residue of matrix solving
-        # rcomp = zeros_like(self.rfree)
-        # Kfree_original.matvec(self.dfree, rcomp)
-        # print subtract(self.rfree, rcomp)
-
         if self.probtype == 'mech':
             lu.solve(self.rfreeout, self.dfreeout)  # mechanism synthesis
+            print 'debugging matrix solving'
+            print subtract(self.rfreeout, dot(Kfree, self.dfreeout))
 #         else: #  Iterative solver for 3D problems
 #             Kfree = Kfree.to_sss()
 #             preK = precon.ssor(Kfree) #  Preconditioned Kfree
