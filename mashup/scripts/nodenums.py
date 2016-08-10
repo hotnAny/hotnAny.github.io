@@ -77,11 +77,18 @@ def node_nums_3d(nelx, nely, nelz, mpx, mpy, mpz):
     nnback = innback + enback + mpx - 1
     nnfront = nnback + (nelx + 1) * (nely + 1)
     nn = hstack((nnback, nnfront)) + (mpz - 1) * (nelx + 1) * (nely + 1)
-    print 'Node numbers for 3D element at position x =', mpx, ',', 'y =', \
-mpy, 'and z =', mpz, ':\n', nn
-    print 'Element number =', enback + nelx * nely * (mpz - 1)
-    print 'Highest node number in domain =', (nelx + 1) * (nely + 1) *\
-    (nelz + 1)
+    # print 'Node numbers for 3D element at position x =', mpx, ',', 'y =', \
+# mpy, 'and z =', mpz, ':\n', nn
+    # print 'Element number =', enback + nelx * nely * (mpz - 1)
+    # print 'Highest node number in domain =', (nelx + 1) * (nely + 1) *\
+    # (nelz + 1)
     return nn
 
 # EOF nodenums.py
+
+#
+#   xac: get element number
+#
+def elm_num_3d(nelx, nely, nelz, mpx, mpy, mpz):
+    enback = nely * (mpx - 1) + mpy
+    return enback + nelx * nely * (mpz - 1)
