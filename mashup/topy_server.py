@@ -151,6 +151,8 @@ def safe_retrieve_all(buffer, key, alt):
 #   processing incoming data
 #
 def proc_post_data(post_data):
+    subprocess.call('rm mashup_*', shell=True)
+
     if 'mashup' not in post_data:
         # self.wfile.write('no design information')
         return 'no design information'
@@ -385,7 +387,7 @@ def proc_post_data(post_data):
 
     timestamp(msg='compute boundaries')
 
-    show_debug = False
+    show_debug = True
 
     # DEBUG: print out the design and specs
     if show_debug:
@@ -437,6 +439,7 @@ def proc_post_data(post_data):
     load_nodes = [node_nums_3d(nelx, nely, 1, x[0]+1, x[1]+1, 1) for x in load_points]
     for i in xrange(0, len(load_points)):
         node_str_array = [str(x) for x in load_nodes[i]]
+
         str_load_points += ';'.join(node_str_array)
         if i < len(load_points) - 1:
             str_load_points += ';'
@@ -526,7 +529,11 @@ class S(BaseHTTPRequestHandler):
         post_data = parse_qs(urlparse(self.path + post_str).query)
 
         t0 = timestamp()
-        result_msg = proc_post_data(post_data)
+        try:
+            result_msg = proc_post_data(post_data)
+        except:
+            print sys.exc_info()
+            result_msg = 'error'
         timestamp(t=t0, msg='total time')
 
         print result_msg
