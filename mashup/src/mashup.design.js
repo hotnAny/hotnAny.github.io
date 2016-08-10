@@ -20,7 +20,7 @@ MASHUP.Design = function(scene, camera) {
 	this._opacityHalf = 0.5;
 
 	// color scheme
-	this._matDesign = new THREE.MeshLambertMaterial({
+	this._matDesign = new THREE.MeshBasicMaterial({
 		color: XAC.COLORNORMAL,
 		transparent: true,
 		opacity: this._opacityFull
@@ -35,7 +35,7 @@ MASHUP.Design = function(scene, camera) {
 		transparent: true,
 		opacity: this._opacityHalf
 	});
-	this._matBoundary = new THREE.MeshLambertMaterial({
+	this._matBoundary = new THREE.MeshBasicMaterial({
 		color: XAC.COLORCONTRAST,
 		transparent: true,
 		opacity: this._opacityFull
@@ -857,6 +857,10 @@ MASHUP.Design.prototype._distriute = function(points, vector, midPoint,
 	return distrVectors;
 }
 
+MASHUP.Design.prototype.getDesignElements = function() {
+	return this._designElements;
+}
+
 //
 //	pack the elements (edges and/or nodes) into JSONable format
 //
@@ -865,13 +869,26 @@ MASHUP.MedialAxis.prototype.pack = function(elm) {
 		var edge = {};
 		edge.node1 = elm.node1.position.toArray().trim(2);
 		edge.node2 = elm.node2.position.toArray().trim(2);
-		edge.points = [];
+
+		edge.points = [edge.node1];
 		for (var i = 0; i < elm.points.length; i++) {
 			edge.points.push(elm.points[i].toArray().trim(2));
 		}
-		edge.thickness = elm.thickness;
+		edge.points.push(edge.node2);
+
+		edge.thickness = XAC.copyArray(elm.thickness);
+		edge.thickness.push(elm.node2.radius);
+		edge.thickness = [elm.node1.radius].concat(edge.thickness);
+
 		return edge;
 	}
+	// else if (elm.type == MASHUP.MedialAxis.NODE) {
+	// 	var node = {};
+	// 	node.node1 = elm.position.toArray().trim(2);
+	// 	node.points = [node.node1];
+	// 	node.thickness = elm.radius;
+	// 	return node;
+	// }
 }
 
 //

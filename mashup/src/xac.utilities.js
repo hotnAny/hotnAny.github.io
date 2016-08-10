@@ -284,3 +284,11 @@ XAC.getParameterByName = function(name, url) {
 	var match = RegExp('[?&]' + name + '=([^&]*)').exec(url);
 	return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
 }
+
+XAC.copyArray = function(array) {
+	var arrayCopy = [];
+	for (var i = 0; i < array.length; i++) {
+		arrayCopy.push(array[i]);
+	}
+	return arrayCopy;
+}

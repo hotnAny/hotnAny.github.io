@@ -185,7 +185,7 @@ function markVertexNeighbors(obj) {
 /*
 	get the geometry from a mesh with transformation matrix applied
 */
-function gettg(mesh) {
+XAC.getTransformedGeometry = function(mesh) {
 	mesh.updateMatrixWorld();
 	var gt = mesh.geometry.clone();
 	gt.applyMatrix(mesh.matrixWorld);

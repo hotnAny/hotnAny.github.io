@@ -49,6 +49,10 @@ MASHUP.VoxelGrid.prototype = {
 
 	get gridRaw() {
 		return this._gridRaw;
+	},
+
+	get origin() {
+		return this._origin;
 	}
 };
 

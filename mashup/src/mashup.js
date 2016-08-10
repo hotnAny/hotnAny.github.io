@@ -120,11 +120,8 @@ $(document).ready(function() {
 			var xmin = XAC.getParameterByName('xmin', MASHUP.xmlhttp.responseText);
 			var ymin = XAC.getParameterByName('ymin', MASHUP.xmlhttp.responseText);
 
-			// log([name, dimVoxel, xmin, xmax])
-
 			// TODO:  what type of result it is
 			// var resultName = MASHUP.xmlhttp.responseText;
-			// var resultName = './mashup_1470164320'
 			var resultVoxelGrid = name + '_analyzed.vxg';
 			var resultDisp = name + '_analyzed.disp';
 
@@ -140,7 +137,9 @@ $(document).ready(function() {
 					MASHUP.visualizer.clear();
 					XAC.readTextFile(resultDisp, function(dataDisp) {
 						if (dataDisp != undefined) {
-							MASHUP.visualizer.visualizeStress(dataDisp, MASHUP.voxelGrid);
+							// MASHUP.visualizer.visualizeStress(dataDisp, MASHUP.voxelGrid);
+							MASHUP.visualizer.visualizeStressInVivo(dataDisp, MASHUP.voxelGrid,
+								MASHUP.design.getDesignElements());
 						}
 					});
 				}

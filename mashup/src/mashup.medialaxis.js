@@ -30,8 +30,8 @@ MASHUP.MedialAxis = function(scene, camera) {
 
 	// visual properties
 	this._opacityNormal = 0.75;
-	this._radiusNode = 5.5;
-	this._radiusEdge = 5;
+	this._radiusNode = MASHUP.MedialAxis.DEFAULTEDGERADIUS * 1.1;
+	this._radiusEdge = MASHUP.MedialAxis.DEFAULTEDGERADIUS;
 	this._matNode = XAC.MATERIALCONTRAST;
 	this._matEdge = new THREE.MeshPhongMaterial({
 		color: 0x888888,
@@ -49,6 +49,8 @@ MASHUP.MedialAxis = function(scene, camera) {
 
 MASHUP.MedialAxis.NODE = 0;
 MASHUP.MedialAxis.EDGE = 1;
+
+MASHUP.MedialAxis.DEFAULTEDGERADIUS = 5;
 
 MASHUP.MedialAxis.prototype = {
 	constructor: MASHUP.MedialAxis,
