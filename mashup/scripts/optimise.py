@@ -51,16 +51,18 @@ def optimise(t, query_type):
         t.filter_sens_sigmund()
         t.update_desvars_oc()
         # Below this line we print and create images:
-        if t.nelz:
-            topy.create_3d_geom(t.desvars, prefix=t.probname, \
-            iternum=t.itercount, time='none')
-        else:
-            topy.create_2d_imag(t.desvars, prefix=t.probname, \
-            iternum=t.itercount, time='none')
+        print '[xac] NOT creating output images ...'
+        # if t.nelz:
+        #     topy.create_3d_geom(t.desvars, prefix=t.probname, \
+        #     iternum=t.itercount, time='none')
+        # else:
+        #     topy.create_2d_imag(t.desvars, prefix=t.probname, \
+        #     iternum=t.itercount, time='none')
         print '%4i  | %3.6e | %3.3f | %3.4e | %3.3f | %3.3f |  %1.3f  |  %3.3f '\
-        % (t.itercount, t.objfval, t.desvars.sum()/(t.nelx * t.nely * nelz), \
+        % (t.itercount, t.objfval, t.desvars.sum()/(t.nelx * t.nely * t.nelz), \
         t.change, t.p, t.q, t.eta.mean(), t.svtfrac)
         # Build a list of average etas:
+        global etas_avg
         etas_avg.append(t.eta.mean())
 
     global is_itr0
@@ -84,8 +86,12 @@ def main(argv):
     print '[xac] query type: ', 'analysis' if query_type == QUERY_ANALYZE else 'optimize'
 
     # Set up ToPy:
+    print '[xac] setting up topy ...'
     t = topy.Topology()
+    t.query_type = query_type;
+    print '[xac] loading topy tpd ...'
     t.load_tpd_file(argv[1])
+    print '[xac] setting up parameters ...'
     t.set_top_params()
 
     # XAC: for query, mark non-design elements as void
@@ -113,9 +119,10 @@ def main(argv):
     print '[xac] finished setup'
 
     # Create empty list for later use:
+    global etas_avg
     etas_avg = []
 
-    # XAC | DEBUG: for compare displacements before/after optimization
+    # [xac] DEBUG: for compare displacements before/after optimization
     global is_itr0
     is_itr0 = True
 
@@ -140,15 +147,17 @@ def main(argv):
     except AttributeError:
         for i in range(t.numiter):
             optimise(t, query_type)
-            numpy.set_printoptions(threshold=numpy.nan)
 
-            # XAC: early exit for analysis
+            # [xac] set print out format
+            # numpy.set_printoptions(threshold=numpy.nan)
+
+            # [xac] early exit for analysis
             if query_type == QUERY_ANALYZE:
                 break
     te = time()
 
     ######################################################
-    # XAC: WRITING THE FINAL RESULT TO A TEXT FILE
+    # [xac] WRITING THE FINAL RESULT TO A TEXT FILE
 
     if query_type == QUERY_OPTIMIZE:
         write_to_file_1d(t.d, t.probname + '_optimized.disp')

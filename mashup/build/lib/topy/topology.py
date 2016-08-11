@@ -69,6 +69,9 @@ class Topology:
         self.change = 1
         self.svtfrac = None
 
+        # [xac]
+        self.query_type = None
+
     # ======================
     # === Public methods ===
     # ======================
@@ -261,53 +264,57 @@ NUM_ELEM_Z) = %d x %d x %d' % (self.nelx, self.nely, self.nelz)
         self.actv = self.topydict['ACTV_ELEM']
         if self.actv.any():
             print 'Active elements (ACTV_ELEM) specified'
-            #
-            #
-            #################### CONSTRUCTION AREA BEGINS ####################
-            #
-            #
-            self.pw = []  # penalty weights
-            r = math.sqrt(self.nelx**2 + self.nely**2 + self.nelz**2) / 2;
-            # p0 = self.p * 0.5
-            #
-            #   convert elm num to coord/index
-            #
-            self.actv_coords = []
-            for elm_num in self.actv:
-                elm_num -= 1    # original number starts from 1
-                mpz = math.floor(elm_num / (self.nelx * self.nely))
-                mpx = math.floor((elm_num - mpz * (self.nelx * self.nely)) / self.nely)
-                mpy = math.floor(elm_num - mpz * (self.nelx * self.nely) - mpx * self.nely)
-                elm_num += 1    # restore original value
-                self.actv_coords.append([mpx, mpy, mpz]);
-            print '[xac] precomputed weighted penalties'
 
-            #
-            #   weigh penalty based on min dist to actv elms
-            #
-            for i in xrange(self.nelx):
-                slashes = []
-                for j in xrange(self.nely):
-                    dices = []
-                    for k in xrange(self.nelz):
-                        # print [i, j, k]
-                        dmin = r
-                        for elm in self.actv_coords:
-                            d = math.sqrt((i-elm[0])**2 + (j-elm[1])**2 + (k-elm[2])**2)
-                            dmin = min(dmin, d)
-                        # dices.append(round(dmin, 2)) # for testing
-                        # dices.append(1 - dmin/r) # linear
-                        dices.append(math.exp(1 - dmin/r)) # exp
-                    slashes.append(dices)
-                    # print(dices)
-                self.pw.append(slashes)
-            #
-            #
-            #################### CONSTRUCTION AREA BEGINS ####################
-            #
-            #
+            if self.query_type == 1: # optimize
+                #
+                #
+                #################### CONSTRUCTION AREA BEGINS ####################
+                #
+                #
+                self.pw = []  # penalty weights
+                r = math.sqrt(self.nelx**2 + self.nely**2 + self.nelz**2) / 2;
+                # p0 = self.p * 0.5
+                #
+                #   convert elm num to coord/index
+                #
+                self.actv_coords = []
+                for elm_num in self.actv:
+                    elm_num -= 1    # original number starts from 1
+                    mpz = math.floor(elm_num / (self.nelx * self.nely))
+                    mpx = math.floor((elm_num - mpz * (self.nelx * self.nely)) / self.nely)
+                    mpy = math.floor(elm_num - mpz * (self.nelx * self.nely) - mpx * self.nely)
+                    elm_num += 1    # restore original value
+                    self.actv_coords.append([mpx, mpy, mpz]);
+                print '[xac] precomputed weighted penalties'
+
+                #
+                #   weigh penalty based on min dist to actv elms
+                #
+                for i in xrange(self.nelx):
+                    slashes = []
+                    for j in xrange(self.nely):
+                        dices = []
+                        for k in xrange(self.nelz):
+                            # print [i, j, k]
+                            dmin = r
+                            for elm in self.actv_coords:
+                                d = math.sqrt((i-elm[0])**2 + (j-elm[1])**2 + (k-elm[2])**2)
+                                dmin = min(dmin, d)
+                            # dices.append(round(dmin, 2)) # for testing
+                            # dices.append(1 - dmin/r) # linear
+                            dices.append(math.exp(1 - dmin/r)) # exp
+                        slashes.append(dices)
+                        # print(dices)
+                    self.pw.append(slashes)
+                #
+                #
+                #################### CONSTRUCTION AREA ENDS ####################
+                #
+                #
         else:
             print 'No active elements (ACTV_ELEM) specified'
+
+        print '[xac] done!'
 
         # Set parameters for compliant mechanism synthesis, if they exist:
         if self.probtype == 'mech':
@@ -365,7 +372,9 @@ synthesis!')
         # [xac] experimenting with always using direct solver, as our problem is mostly 2D
         #
         force_using_direct_solver = True
+        # self.query_type == 0
 
+        # hardcoded: 0 is analyze
         if force_using_direct_solver or self.dofpn < 3 and self.nelz == 0: #  Direct solver
             print '[xac] direct solver in use'
             Kfree = Kfree.to_csr() #  Need CSR for SuperLU factorisation
