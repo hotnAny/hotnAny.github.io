@@ -110,28 +110,31 @@ $(document).ready(function() {
 	//
 	//	set up communication
 	//
+	MASHUP.QUERYANALYZE = 0;
+	MASHUP.QUERYOPTIMIZE = 1;
 	MASHUP.xmlhttp = new XMLHttpRequest();
 	MASHUP.xmlhttp.timeout = 1e9;
 	MASHUP.xmlhttp.onreadystatechange = function() {
 		if (MASHUP.xmlhttp.readyState == 4 && MASHUP.xmlhttp.status == 200) {
 			log(MASHUP.xmlhttp.responseText);
 			var name = XAC.getParameterByName('name', MASHUP.xmlhttp.responseText);
+			MASHUP.thisQuery = XAC.getParameterByName('query', MASHUP.xmlhttp.responseText);
 			var dimVoxel = XAC.getParameterByName('dim_voxel', MASHUP.xmlhttp.responseText);
 			var xmin = XAC.getParameterByName('xmin', MASHUP.xmlhttp.responseText);
 			var ymin = XAC.getParameterByName('ymin', MASHUP.xmlhttp.responseText);
 
-			// TODO:  what type of result it is
-			// var resultName = MASHUP.xmlhttp.responseText;
-			var resultVoxelGrid = name + '_analyzed.vxg';
-			var resultDisp = name + '_analyzed.disp';
+			var postfix = MASHUP.thisQuery == MASHUP.QUERYANALYZE ? 'analyzed' : 'optimized';
+			var resultVoxelGrid = name + '_' + postfix + '.vxg';
+			var resultDisp = name + '_' + postfix + '.disp';
 
 			MASHUP.voxelGrid = new MASHUP.VoxelGrid(MASHUP.scene, new THREE.Vector3(
 				parseFloat(xmin), parseFloat(ymin), 5));
-			XAC.readTextFile(resultVoxelGrid, function(dataVoxelGrid) {
-				if (dataVoxelGrid != undefined) {
-					MASHUP.voxelGrid.load(dataVoxelGrid, dimVoxel);
-					// MASHUP.voxelGrid.render(false);
 
+			XAC.readTextFile(resultVoxelGrid, function(dataVoxelGrid) {
+				if (dataVoxelGrid == undefined) return;
+
+				MASHUP.voxelGrid.load(dataVoxelGrid, dimVoxel);
+				if (MASHUP.thisQuery == MASHUP.QUERYANALYZE) {
 					MASHUP.visualizer = MASHUP.visualizer == undefined ? new MASHUP.Visualizer(
 						MASHUP.scene) : MASHUP.visualizer;
 					MASHUP.visualizer.clear();
@@ -142,6 +145,8 @@ $(document).ready(function() {
 								MASHUP.design.getDesignElements());
 						}
 					});
+				} else if (MASHUP.thisQuery == MASHUP.QUERYOPTIMIZE) {
+					MASHUP.voxelGrid.render(false);
 				}
 			});
 		}

@@ -882,13 +882,6 @@ MASHUP.MedialAxis.prototype.pack = function(elm) {
 
 		return edge;
 	}
-	// else if (elm.type == MASHUP.MedialAxis.NODE) {
-	// 	var node = {};
-	// 	node.node1 = elm.position.toArray().trim(2);
-	// 	node.points = [node.node1];
-	// 	node.thickness = elm.radius;
-	// 	return node;
-	// }
 }
 
 //

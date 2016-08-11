@@ -58,6 +58,8 @@ MASHUP.MixedInitiatives.prototype._computeDistanceField = function(design) {
     var bufPrev = [];
     var edges = medialAxis.edges;
     for (var i = 0; i < edges.length; i++) {
+        if (edges[i].deleted) continue;
+
         bufPrev.push(assign(edges[i].node1.position, 0));
         bufPrev.push(assign(edges[i].node2.position, 0));
         var points = edges[i].points;

@@ -248,7 +248,7 @@ MASHUP.Visualizer.prototype.visualizeStress = function(listDisp, vxg) {
 	var nely = vxg.ny;
 	var nelz = vxg.nz;
 	var diag = Math.sqrt(nelx * nelx + nely * nely + nelz * nelz);
-	var normalizeFactor = this._yieldStrength * diag / (MASHUP.MedialAxis.DEFAULTEDGERADIUS * 2);
+	var normalizeFactor = this._yieldStrength; // * diag / (MASHUP.MedialAxis.DEFAULTEDGERADIUS * 2);
 
 	// vxg.hide();
 
@@ -298,7 +298,7 @@ MASHUP.Visualizer.prototype.visualizeStressInVivo = function(listDisp, vxg,
 	var nely = vxg.ny;
 	var nelz = vxg.nz;
 	var diag = Math.sqrt(nelx * nelx + nely * nely + nelz * nelz);
-	var normalizeFactor = this._yieldStrength * diag / (5 * 2);
+	var normalizeFactor = this._yieldStrength; // * diag / (5 * 2);
 	log('normalizeFactor: ' + normalizeFactor)
 
 	for (var i = 0; i < meshes.length; i++) {
