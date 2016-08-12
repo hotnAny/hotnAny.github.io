@@ -5,9 +5,9 @@
  *
  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-var MASHUP = MASHUP || {};
+var FORTE = FORTE || {};
 
-MASHUP.VoxelGrid = function(scene, origin) {
+FORTE.VoxelGrid = function(scene, origin) {
 	this._scene = scene;
 	this._origin = origin;
 
@@ -15,8 +15,8 @@ MASHUP.VoxelGrid = function(scene, origin) {
 	this._table = [];
 }
 
-MASHUP.VoxelGrid.prototype = {
-	constructor: MASHUP.VoxelGrid,
+FORTE.VoxelGrid.prototype = {
+	constructor: FORTE.VoxelGrid,
 
 	get grid() {
 		return this._grid;
@@ -56,7 +56,7 @@ MASHUP.VoxelGrid.prototype = {
 	}
 };
 
-MASHUP.VoxelGrid.prototype.load = function(vxgRaw, dim) {
+FORTE.VoxelGrid.prototype.load = function(vxgRaw, dim) {
 	this._grid = [];
 	this._gridRaw = [];
 	this._dim = dim;
@@ -94,7 +94,7 @@ MASHUP.VoxelGrid.prototype.load = function(vxgRaw, dim) {
 	return this._grid;
 }
 
-MASHUP.VoxelGrid.prototype.render = function(hideInside) {
+FORTE.VoxelGrid.prototype.render = function(hideInside) {
 	for (var i = 0; i < this._nz; i++) {
 		this._table[i] = this._table[i] == undefined ? [] : this._table[i];
 		for (var j = 0; j < this._ny; j++) {
@@ -133,7 +133,7 @@ MASHUP.VoxelGrid.prototype.render = function(hideInside) {
 	log(this._voxels.length + " voxels added.");
 }
 
-MASHUP.VoxelGrid.prototype.updateToMedialAxis = function(axis, node) {
+FORTE.VoxelGrid.prototype.updateToMedialAxis = function(axis, node) {
 	//
 	// update the entire voxel grid based on the axis
 	//
@@ -197,27 +197,27 @@ MASHUP.VoxelGrid.prototype.updateToMedialAxis = function(axis, node) {
 	}
 }
 
-MASHUP.VoxelGrid.prototype.hide = function() {
+FORTE.VoxelGrid.prototype.hide = function() {
 	for (var i = this._voxels.length - 1; i >= 0; i--) {
 		this._scene.remove(this._voxels[i]);
 	}
 }
 
-MASHUP.VoxelGrid.prototype.show = function() {
+FORTE.VoxelGrid.prototype.show = function() {
 	for (var i = this._voxels.length - 1; i >= 0; i--) {
 		this._scene.add(this._voxels[i]);
 	}
 }
 
 
-MASHUP.VoxelGrid.prototype._onSurface = function(i, j, k) {
+FORTE.VoxelGrid.prototype._onSurface = function(i, j, k) {
 	return i * j * k == 0 || (nz - 1 - i) * (ny - 1 - j) * (nx - 1 - k) == 0 ||
 		this._grid[i - 1][j][k] != 1 || this._grid[i + 1][j][k] != 1 ||
 		this._grid[i][j - 1][k] != 1 || this._grid[i][j + 1][k] != 1 ||
 		this._grid[i][j][k - 1] != 1 || this._grid[i][j][k + 1] != 1;
 }
 
-MASHUP.VoxelGrid.prototype._makeVoxel = function(dim, i, j, k, mat, noMargin) {
+FORTE.VoxelGrid.prototype._makeVoxel = function(dim, i, j, k, mat, noMargin) {
 	var geometry = new THREE.BoxGeometry(dim, dim, dim);
 	var voxel = new THREE.Mesh(geometry, mat.clone());
 
@@ -235,7 +235,7 @@ MASHUP.VoxelGrid.prototype._makeVoxel = function(dim, i, j, k, mat, noMargin) {
 	return voxel;
 }
 
-MASHUP.VoxelGrid.prototype._addSphericalVoxels = function(v, radius) {
+FORTE.VoxelGrid.prototype._addSphericalVoxels = function(v, radius) {
 	var vxg = this._grid;
 
 	var zmin = XAC.float2int((v.z - radius) / this._dim),
@@ -268,9 +268,9 @@ MASHUP.VoxelGrid.prototype._addSphericalVoxels = function(v, radius) {
 //	special method for working with a voxel grid:
 //		snap the voxels in the voxel grid to this medial axis
 //
-//	@param	vxg - an MASHUP.VoxelGrid object
+//	@param	vxg - an FORTE.VoxelGrid object
 //
-MASHUP.MedialAxis.prototype.snapVoxelGrid = function(vxg) {
+FORTE.MedialAxis.prototype.snapVoxelGrid = function(vxg) {
 	var visualize = true;
 	this._voxelGrid = vxg;
 
@@ -342,7 +342,7 @@ MASHUP.MedialAxis.prototype.snapVoxelGrid = function(vxg) {
 //
 //	snap a voxel (of a dim dimension) to this medial axis
 //
-MASHUP.MedialAxis.prototype._snapVoxel = function(voxel, dim) {
+FORTE.MedialAxis.prototype._snapVoxel = function(voxel, dim) {
 	var visualize = false;
 	var v = voxel.position;
 

@@ -47,8 +47,8 @@ class S(BaseHTTPRequestHandler):
         	tpd_path = post_data['tpd'][0]
         	# print ['python', rel_topy_path, tpd_path]
         	subprocess.call('python ' + rel_topy_path + ' ' + tpd_path, shell=True)
-        elif 'mashup' in post_data:
-            print post_data['mashup'][0]
+        elif 'forte' in post_data:
+            print post_data['forte'][0]
 
 #
 #   running the server

@@ -1,20 +1,37 @@
-var MASHUP = MASHUP || {};
+var FORTE = FORTE || {};
 
-MASHUP.MixedInitiatives = function(scene, camera) {
+FORTE.MixedInitiatives = function(scene, camera) {
     this._scene = scene;
     this._dump = [];
+
+    document.addEventListener('mousedown', this._mousedown.bind(this), false);
+    document.addEventListener('mousemove', this._mousemove.bind(this), false);
+    document.addEventListener('mouseup', this._mouseup.bind(this), false);
+    // document.addEventListener('keydown', this._keydown.bind(this), false);
 }
 
-MASHUP.MixedInitiatives.prototype = {
-    constructor: MASHUP.MixedInitiatives
+FORTE.MixedInitiatives.prototype = {
+    constructor: FORTE.MixedInitiatives
 };
 
-MASHUP.MixedInitiatives.DFVOXELSIZE = 2.5;
+FORTE.MixedInitiatives.DFVOXELSIZE = 2.5;
+
+FORTE.MixedInitiatives.prototype.mousedown = function(e) {
+
+};
+
+FORTE.MixedInitiatives.prototype.mousemove = function(e) {
+
+};
+
+FORTE.MixedInitiatives.prototype.mouseup = function(e) {
+
+};
 
 //
-//  compute distance field of a mashup design
+//  compute distance field of a forte design
 //
-MASHUP.MixedInitiatives.prototype._computeDistanceField = function(design) {
+FORTE.MixedInitiatives.prototype._computeDistanceField = function(design) {
     var assign = function(v, dfval) {
         var idx = vxg.getIndex(v);
         if (df[idx[0]][idx[1]][idx[2]] == XAC.INFINITY) {
@@ -29,9 +46,9 @@ MASHUP.MixedInitiatives.prototype._computeDistanceField = function(design) {
     // make a voxel grid
     var medialAxis = design._medialAxis;
     var bbox = medialAxis.boundingBox();
-    var vxg = new MASHUP.VoxelGrid(this._scene, bbox.min);
+    var vxg = new FORTE.VoxelGrid(this._scene, bbox.min);
 
-    vxg._dim = MASHUP.MixedInitiatives.DFVOXELSIZE;
+    vxg._dim = FORTE.MixedInitiatives.DFVOXELSIZE;
     vxg._nx = XAC.float2int((bbox.max.x - bbox.min.x) / vxg._dim) + 1;
     vxg._ny = XAC.float2int((bbox.max.y - bbox.min.y) / vxg._dim) + 1;
     // suppress it to 1 just for the 2d case
@@ -69,7 +86,7 @@ MASHUP.MixedInitiatives.prototype._computeDistanceField = function(design) {
             var nbtwn = points[j].clone().sub(points[j + 1]).length() / vxg.dim;
             var dx = (points[j + 1].x - points[j].x) / nbtwn;
             var dy = (points[j + 1].y - points[j].y) / nbtwn;
-            // ignor z for now
+            // ignore z for now
 
             for (var k = 1; k < nbtwn; k++) {
                 var p = points[j].clone().add(new THREE.Vector3(dx * k, dy * k, 0));
@@ -122,7 +139,7 @@ MASHUP.MixedInitiatives.prototype._computeDistanceField = function(design) {
 //
 //  interpolate between two distance fields
 //
-MASHUP.MixedInitiatives.prototype._interpolateDistanceFields = function(df1, df2, val) {
+FORTE.MixedInitiatives.prototype._interpolateDistanceFields = function(df1, df2, val) {
     var df = []
     for (var i = 0; i < df1.length; i++) {
         var dfyz = [];
@@ -142,8 +159,8 @@ MASHUP.MixedInitiatives.prototype._interpolateDistanceFields = function(df1, df2
 //
 //  show distance fields as a voxel grid
 //
-MASHUP.MixedInitiatives.prototype._showDistanceField = function(df) {
-    var vxg = new MASHUP.VoxelGrid(this._scene, new THREE.Vector3(50, -50, 0));
+FORTE.MixedInitiatives.prototype._showDistanceField = function(df) {
+    var vxg = new FORTE.VoxelGrid(this._scene, new THREE.Vector3(50, -50, 0));
 
     var counter = 0;
     for (var i = 0; i < df.length; i++) {
@@ -154,7 +171,7 @@ MASHUP.MixedInitiatives.prototype._showDistanceField = function(df) {
                 if (this._dump[counter] == undefined) {
                     var mat = XAC.MATERIALWIRE.clone();
                     mat.opacity = opacity;
-                    var voxel = vxg._makeVoxel(MASHUP.MixedInitiatives.DFVOXELSIZE, i, j, k,
+                    var voxel = vxg._makeVoxel(FORTE.MixedInitiatives.DFVOXELSIZE, i, j, k,
                         mat, true);
                     this._scene.add(voxel);
                     this._dump.push(voxel);
@@ -176,7 +193,7 @@ MASHUP.MixedInitiatives.prototype._showDistanceField = function(df) {
 //
 //
 
-MASHUP.MedialAxis.prototype.boundingBox = function() {
+FORTE.MedialAxis.prototype.boundingBox = function() {
     var bbox = {
         min: new THREE.Vector3(XAC.INFINITY, XAC.INFINITY, XAC.INFINITY),
         max: new THREE.Vector3(-XAC.INFINITY, -XAC.INFINITY, -XAC.INFINITY)
@@ -206,7 +223,7 @@ MASHUP.MedialAxis.prototype.boundingBox = function() {
     return bbox;
 }
 
-MASHUP.VoxelGrid.prototype.getIndex = function(v) {
+FORTE.VoxelGrid.prototype.getIndex = function(v) {
     var vrel = v.clone().sub(this._origin);
     var i = XAC.clamp(XAC.float2int(vrel.x / this._dim), 0, this._nx - 1);
     var j = XAC.clamp(XAC.float2int(vrel.y / this._dim), 0, this._ny - 1);

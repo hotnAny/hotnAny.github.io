@@ -5,7 +5,7 @@
  *
  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-var MASHUP = MASHUP || {};
+var FORTE = FORTE || {};
 
 // check dependencies
 if (XAC.Thing == undefined || XAC.Utilities == undefined || XAC.Const ==
@@ -13,7 +13,7 @@ if (XAC.Thing == undefined || XAC.Utilities == undefined || XAC.Const ==
 	err('missing dependency!');
 }
 
-MASHUP.MedialAxis = function(scene, camera) {
+FORTE.MedialAxis = function(scene, camera) {
 	this._scene = scene;
 	this._camera = camera;
 
@@ -30,8 +30,8 @@ MASHUP.MedialAxis = function(scene, camera) {
 
 	// visual properties
 	this._opacityNormal = 0.75;
-	this._radiusNode = MASHUP.MedialAxis.DEFAULTEDGERADIUS * 1.1;
-	this._radiusEdge = MASHUP.MedialAxis.DEFAULTEDGERADIUS;
+	this._radiusNode = FORTE.MedialAxis.DEFAULTEDGERADIUS * 1.1;
+	this._radiusEdge = FORTE.MedialAxis.DEFAULTEDGERADIUS;
 	this._matNode = XAC.MATERIALCONTRAST;
 	this._matEdge = new THREE.MeshPhongMaterial({
 		color: 0x888888,
@@ -47,13 +47,13 @@ MASHUP.MedialAxis = function(scene, camera) {
 	});
 };
 
-MASHUP.MedialAxis.NODE = 0;
-MASHUP.MedialAxis.EDGE = 1;
+FORTE.MedialAxis.NODE = 0;
+FORTE.MedialAxis.EDGE = 1;
 
-MASHUP.MedialAxis.DEFAULTEDGERADIUS = 5;
+FORTE.MedialAxis.DEFAULTEDGERADIUS = 5;
 
-MASHUP.MedialAxis.prototype = {
-	constructor: MASHUP.MedialAxis,
+FORTE.MedialAxis.prototype = {
+	constructor: FORTE.MedialAxis,
 
 	get nodes() {
 		return this._nodes;
@@ -67,7 +67,7 @@ MASHUP.MedialAxis.prototype = {
 //
 //	allow events listeners to be added to the main web app, rather than called
 //
-MASHUP.MedialAxis.addEventListeners = function() {
+FORTE.MedialAxis.addEventListeners = function() {
 	document.addEventListener('mousedown', this._mousedown.bind(this), false);
 	document.addEventListener('mousemove', this._mousemove.bind(this), false);
 	document.addEventListener('mouseup', this._mouseup.bind(this), false);
@@ -80,7 +80,7 @@ MASHUP.MedialAxis.addEventListeners = function() {
 //	@param	pos - position of the new node
 //	@param	toConect - whether to connect it to the previous node
 //
-MASHUP.MedialAxis.prototype.addNode = function(pos, toConnect) {
+FORTE.MedialAxis.prototype.addNode = function(pos, toConnect) {
 	// check if the node is already in
 	var alreadyIn = this._findNode(pos, false) >= 0;
 
@@ -104,7 +104,7 @@ MASHUP.MedialAxis.prototype.addNode = function(pos, toConnect) {
 //	@param	points - input points corresponding to an edge
 //	@param	autoSplit - whether to split it when the edge starts on another edge
 //
-MASHUP.MedialAxis.prototype.addEdge = function(points, autoSplit) {
+FORTE.MedialAxis.prototype.addEdge = function(points, autoSplit) {
 	if (points == undefined || points.length < 2) {
 		return;
 	}
@@ -135,7 +135,7 @@ MASHUP.MedialAxis.prototype.addEdge = function(points, autoSplit) {
 //	@param 	node - the node being interacted with
 //	@param	pos - new position of this node
 //
-MASHUP.MedialAxis.prototype.updateNode = function(node, pos) {
+FORTE.MedialAxis.prototype.updateNode = function(node, pos) {
 	// update this node
 	var posPrev = node.position.clone();
 	node.position.copy(pos);
@@ -185,7 +185,7 @@ MASHUP.MedialAxis.prototype.updateNode = function(node, pos) {
  *
  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-MASHUP.MedialAxis.prototype._mousedown = function(e) {
+FORTE.MedialAxis.prototype._mousedown = function(e) {
 	//
 	//	clean up previously selected edge
 	//
@@ -284,7 +284,7 @@ MASHUP.MedialAxis.prototype._mousedown = function(e) {
 	return this._infSelInfo;
 }
 
-MASHUP.MedialAxis.prototype._mousemove = function(e) {
+FORTE.MedialAxis.prototype._mousemove = function(e) {
 	// if (this._listening == false) return;
 
 	if (this._maniplane != undefined) {
@@ -324,7 +324,7 @@ MASHUP.MedialAxis.prototype._mousemove = function(e) {
 	}
 }
 
-MASHUP.MedialAxis.prototype._mouseup = function(e) {
+FORTE.MedialAxis.prototype._mouseup = function(e) {
 	if (this._maniplane != undefined) {
 		this._maniplane.destruct();
 		this._maniplane = undefined;
@@ -346,7 +346,7 @@ MASHUP.MedialAxis.prototype._mouseup = function(e) {
 	this._infSelected = undefined;
 }
 
-MASHUP.MedialAxis.prototype._keydown = function(e) {
+FORTE.MedialAxis.prototype._keydown = function(e) {
 	switch (e.keyCode) {
 		case 46: // DEL
 			if (this._nodeSelected != undefined) return this._removeNode(this._nodeSelected);
@@ -364,7 +364,7 @@ MASHUP.MedialAxis.prototype._keydown = function(e) {
 //
 //	add a node at pos
 //
-MASHUP.MedialAxis.prototype._addNode = function(pos, autoSplit) {
+FORTE.MedialAxis.prototype._addNode = function(pos, autoSplit) {
 	var edgeIntersected;
 
 	if (autoSplit == true) {
@@ -382,7 +382,7 @@ MASHUP.MedialAxis.prototype._addNode = function(pos, autoSplit) {
 
 	if (edgeIntersected == undefined) {
 		this._nodes.push({
-			type: MASHUP.MedialAxis.NODE,
+			type: FORTE.MedialAxis.NODE,
 			deleted: false,
 			position: pos,
 			edges: [], // info of the edges connected to this node
@@ -402,7 +402,7 @@ MASHUP.MedialAxis.prototype._addNode = function(pos, autoSplit) {
 //
 //	remove a node
 //
-MASHUP.MedialAxis.prototype._removeNode = function(node) {
+FORTE.MedialAxis.prototype._removeNode = function(node) {
 	this._scene.remove(node);
 
 	// find this node from all nodes
@@ -425,7 +425,7 @@ MASHUP.MedialAxis.prototype._removeNode = function(node) {
 //	find a node and maybe bring it to the top of the stack
 //	return the index of the node stored
 //
-MASHUP.MedialAxis.prototype._findNode = function(pos, bringToTop) {
+FORTE.MedialAxis.prototype._findNode = function(pos, bringToTop) {
 	for (var i = this._nodes.length - 1; i >= 0; i--) {
 		if (this._nodes[i].deleted) continue;
 
@@ -442,7 +442,7 @@ MASHUP.MedialAxis.prototype._findNode = function(pos, bringToTop) {
 //
 //	copy from an existing node
 //
-MASHUP.MedialAxis.prototype._copyNode = function(node) {
+FORTE.MedialAxis.prototype._copyNode = function(node) {
 	this._findNode(node.position, true);
 
 	this._addNode(node.position);
@@ -458,7 +458,7 @@ MASHUP.MedialAxis.prototype._copyNode = function(node) {
 //
 //	remove an edge
 //
-MASHUP.MedialAxis.prototype._removeEdge = function(edge) {
+FORTE.MedialAxis.prototype._removeEdge = function(edge) {
 	var isNodeEdgeless = function(node) {
 		for (var i = 0; i < node.edges.length; i++) {
 			if (node.edges[i].deleted != true) {
@@ -484,7 +484,7 @@ MASHUP.MedialAxis.prototype._removeEdge = function(edge) {
 //	split an edge at pos
 //	@param	edge - can be a mesh representing an edge, or its info
 //
-MASHUP.MedialAxis.prototype._splitEdge = function(edge, pos) {
+FORTE.MedialAxis.prototype._splitEdge = function(edge, pos) {
 	// remove the edge, add a node in between and reconnect it with new edges
 	var dmin = Number.MAX_VALUE;
 	var idxSplit = -1;
@@ -540,7 +540,7 @@ MASHUP.MedialAxis.prototype._splitEdge = function(edge, pos) {
 //
 //	connect two nodes with an edge
 //
-MASHUP.MedialAxis.prototype._addEdge = function(node1, node2, points) {
+FORTE.MedialAxis.prototype._addEdge = function(node1, node2, points) {
 	// check it's already connected, or used to be connected
 	var edge;
 
@@ -560,7 +560,7 @@ MASHUP.MedialAxis.prototype._addEdge = function(node1, node2, points) {
 	// connect nodes (that have never been connected)
 	if (edge == undefined) {
 		var edge = {
-			type: MASHUP.MedialAxis.EDGE,
+			type: FORTE.MedialAxis.EDGE,
 			deleted: false,
 			node1: node1,
 			node2: node2,
@@ -597,7 +597,7 @@ MASHUP.MedialAxis.prototype._addEdge = function(node1, node2, points) {
 //
 //	inflate the medial axis with thicknesses
 //
-MASHUP.MedialAxis.prototype._inflate = function() {
+FORTE.MedialAxis.prototype._inflate = function() {
 	// inflate the nodes
 	for (var h = this._nodes.length - 1; h >= 0; h--) {
 		if (this._nodes[h].deleted) continue;
@@ -614,7 +614,7 @@ MASHUP.MedialAxis.prototype._inflate = function() {
 //
 //	inflate a node
 //
-MASHUP.MedialAxis.prototype._inflateNode = function(nodeInfo, nodeOnly) {
+FORTE.MedialAxis.prototype._inflateNode = function(nodeInfo, nodeOnly) {
 	var ctr = nodeInfo.position;
 	var r = nodeInfo.radius;
 
@@ -644,7 +644,7 @@ MASHUP.MedialAxis.prototype._inflateNode = function(nodeInfo, nodeOnly) {
 //
 //	inflate an edge
 //
-MASHUP.MedialAxis.prototype._inflateEdge = function(edge) {
+FORTE.MedialAxis.prototype._inflateEdge = function(edge) {
 	var p1 = edge.node1.position;
 	var p2 = edge.node2.position;
 	var thickness = edge.thickness.concat([edge.node2.radius]);

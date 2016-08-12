@@ -5,7 +5,7 @@
  *
  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-var MASHUP = MASHUP || {};
+var FORTE = FORTE || {};
 
 // check dependencies
 if (XAC.Thing == undefined || XAC.Utilities == undefined || XAC.Const ==
@@ -13,7 +13,7 @@ if (XAC.Thing == undefined || XAC.Utilities == undefined || XAC.Const ==
 	err('missing dependency!');
 }
 
-MASHUP.Visualizer = function(scene) {
+FORTE.Visualizer = function(scene) {
 	this._scene = scene;
 	this._arrows = [];
 	this._visualElements = [];
@@ -22,14 +22,14 @@ MASHUP.Visualizer = function(scene) {
 	this._yieldStrength = Math.pow(40.0, 1.5);
 };
 
-MASHUP.Visualizer.prototype = {
-	constructor: MASHUP.Visualizer
+FORTE.Visualizer.prototype = {
+	constructor: FORTE.Visualizer
 };
 
 //
 //	compute displacement for each element of a voxel grid
 //
-MASHUP.Visualizer.prototype._computeDisplacement = function(listDisp, vxg) {
+FORTE.Visualizer.prototype._computeDisplacement = function(listDisp, vxg) {
 	var nelx = vxg.nx;
 	var nely = vxg.ny;
 	var nelz = vxg.nz;
@@ -54,7 +54,7 @@ MASHUP.Visualizer.prototype._computeDisplacement = function(listDisp, vxg) {
 	for (var i = 0; i + 2 < arrDisp.length; i += 3) {
 		var dispNode = new THREE.Vector3(Number(arrDisp[i]), Number(arrDisp[i + 1]),
 			Number(arrDisp[i + 2]));
-		elmsOfNode = MASHUP.Optimization.node2elms(nelx, nely, nelz, i / 3);
+		elmsOfNode = FORTE.Optimization.node2elms(nelx, nely, nelz, i / 3);
 		for (var j = elmsOfNode.length - 1; j >= 0; j--) {
 			var idxElm = elmsOfNode[j];
 			var disps = dispElms[idxElm[0]][idxElm[1]][idxElm[2]];
@@ -74,7 +74,7 @@ MASHUP.Visualizer.prototype._computeDisplacement = function(listDisp, vxg) {
 
 				// take into account the penalty
 				var xe = vxg.gridRaw[k][j][i]; // density at this voxel
-				vdisp.multiplyScalar(Math.pow(xe, MASHUP.Optimization.p)); // multiplied by penalty
+				vdisp.multiplyScalar(Math.pow(xe, FORTE.Optimization.p)); // multiplied by penalty
 
 				dispElms[i][j][k] = []; // release the original array
 				dispElms[i][j][k] = vdisp; // assign the displacement vector
@@ -90,7 +90,7 @@ MASHUP.Visualizer.prototype._computeDisplacement = function(listDisp, vxg) {
 //	@param 	listDisp - a list of displacement values (raw)
 //	@param 	vxg - the corresponding voxel grid
 //
-MASHUP.Visualizer.prototype.visualizeDisplacement = function(listDisp, vxg) {
+FORTE.Visualizer.prototype.visualizeDisplacement = function(listDisp, vxg) {
 	var nelx = vxg.nx;
 	var nely = vxg.ny;
 	var nelz = vxg.nz;
@@ -127,7 +127,7 @@ MASHUP.Visualizer.prototype.visualizeDisplacement = function(listDisp, vxg) {
 //
 //	compute stress for each voxel element, which is divided into 6 tetrahedrons
 //
-MASHUP.Visualizer.prototype._computeStress = function(listDisp, vxg) {
+FORTE.Visualizer.prototype._computeStress = function(listDisp, vxg) {
 	var nelx = vxg.nx;
 	var nely = vxg.ny;
 	var nelz = vxg.nz;
@@ -141,7 +141,7 @@ MASHUP.Visualizer.prototype._computeStress = function(listDisp, vxg) {
 		for (var j = 0; j < nely; j++) {
 			var line = [];
 			for (var k = 0; k < nelz; k++) {
-				var ns = MASHUP.Optimization.elm2nodes(nelx, nely, nelz, i + 1, j + 1, k +
+				var ns = FORTE.Optimization.elm2nodes(nelx, nely, nelz, i + 1, j + 1, k +
 					1);
 				var tetras = [];
 
@@ -177,7 +177,7 @@ MASHUP.Visualizer.prototype._computeStress = function(listDisp, vxg) {
 					}
 
 					var xe = vxg.gridRaw[k][j][i];
-					var stress = this._computeTetraStress(positions, displacements); // * Math.pow(xe, MASHUP.Optimization.p);
+					var stress = this._computeTetraStress(positions, displacements); // * Math.pow(xe, FORTE.Optimization.p);
 
 					tetras.push({
 						idxNodes: idxNodes,
@@ -212,7 +212,7 @@ MASHUP.Visualizer.prototype._computeStress = function(listDisp, vxg) {
 //
 //	compute stress for a given tetrahedron
 //
-MASHUP.Visualizer.prototype._computeTetraStress = function(positions,
+FORTE.Visualizer.prototype._computeTetraStress = function(positions,
 	displacements) {
 	var node = positions[0].clone();
 	var node1 = positions[1].clone();
@@ -239,7 +239,7 @@ MASHUP.Visualizer.prototype._computeTetraStress = function(positions,
 //
 //	visualize stress based on a voxel grid
 //
-MASHUP.Visualizer.prototype.visualizeStress = function(listDisp, vxg) {
+FORTE.Visualizer.prototype.visualizeStress = function(listDisp, vxg) {
 	var stressInfo = this._computeStress(listDisp, vxg);
 	var tetraGrid = stressInfo.tetraGrid;
 	var maxStress = stressInfo.maxStress;
@@ -248,7 +248,7 @@ MASHUP.Visualizer.prototype.visualizeStress = function(listDisp, vxg) {
 	var nely = vxg.ny;
 	var nelz = vxg.nz;
 	var diag = Math.sqrt(nelx * nelx + nely * nely + nelz * nelz);
-	var normalizeFactor = this._yieldStrength; // * diag / (MASHUP.MedialAxis.DEFAULTEDGERADIUS * 2);
+	var normalizeFactor = this._yieldStrength; // * diag / (FORTE.MedialAxis.DEFAULTEDGERADIUS * 2);
 
 	// vxg.hide();
 
@@ -287,7 +287,7 @@ MASHUP.Visualizer.prototype.visualizeStress = function(listDisp, vxg) {
 	} // x
 }
 
-MASHUP.Visualizer.prototype.visualizeStressInVivo = function(listDisp, vxg,
+FORTE.Visualizer.prototype.visualizeStressInVivo = function(listDisp, vxg,
 	meshes) {
 	var stressInfo = this._computeStress(listDisp, vxg);
 	var tetraGrid = stressInfo.tetraGrid;
@@ -350,7 +350,7 @@ MASHUP.Visualizer.prototype.visualizeStressInVivo = function(listDisp, vxg,
 //
 //	compute green strain
 //
-MASHUP.Visualizer.prototype._computeGreenStrain = function(v1, v2, v3, V1, V2,
+FORTE.Visualizer.prototype._computeGreenStrain = function(v1, v2, v3, V1, V2,
 	V3) {
 	var U = [v1.toArray(), v2.toArray(), v3.toArray()];
 	var W = [V1.toArray(), V2.toArray(), V3.toArray()];
@@ -366,7 +366,7 @@ MASHUP.Visualizer.prototype._computeGreenStrain = function(v1, v2, v3, V1, V2,
 //	@param	score
 //	@param	maxScore
 //
-MASHUP.Visualizer.prototype._getHeatmapColor = function(score, maxScore) {
+FORTE.Visualizer.prototype._getHeatmapColor = function(score, maxScore) {
 	// ceiling the score by maxScore
 	score = Math.min(score, maxScore);
 
@@ -388,7 +388,7 @@ MASHUP.Visualizer.prototype._getHeatmapColor = function(score, maxScore) {
 	return color;
 }
 
-MASHUP.Visualizer.prototype.clear = function() {
+FORTE.Visualizer.prototype.clear = function() {
 	for (var i = 0; i < this._visualElements.length; i++) {
 		this._scene.remove(this._visualElements[i]);
 	}

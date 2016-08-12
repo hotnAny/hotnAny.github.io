@@ -1,5 +1,5 @@
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- *	a mashup design, consisting of
+ *	a forte design, consisting of
  *		- a user-created low-fi model (the geometry)
  *		- a series of functional requirments (the functions)
  *
@@ -7,14 +7,14 @@
  *
  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-var MASHUP = MASHUP || {};
+var FORTE = FORTE || {};
 
-MASHUP.Design = function(scene, camera) {
+FORTE.Design = function(scene, camera) {
 	this._scene = scene;
 	this._camera = camera;
 
-	this._mode = MASHUP.Design.SKETCH;
-	$(MASHUP.renderer.domElement).css('cursor', 'crosshair');
+	this._mode = FORTE.Design.SKETCH;
+	$(FORTE.renderer.domElement).css('cursor', 'crosshair');
 
 	this._opacityFull = 1.0;
 	this._opacityHalf = 0.5;
@@ -42,7 +42,7 @@ MASHUP.Design = function(scene, camera) {
 	});
 
 	// using a medial axis to represent design
-	this._medialAxis = new MASHUP.MedialAxis(this._scene, this._camera);
+	this._medialAxis = new FORTE.MedialAxis(this._scene, this._camera);
 	this._medialAxis._matNode = this._matDesign;
 	this._medialAxis._matInflation = this._matDesign;
 	this._medialAxis._matHighlight.opacity = 1;
@@ -78,17 +78,17 @@ MASHUP.Design = function(scene, camera) {
 }
 
 // editing modes
-MASHUP.Design.POINTER = 0;
-MASHUP.Design.SKETCH = 1;
-MASHUP.Design.EDIT = 2;
-MASHUP.Design.LOADPOINT = 3.1;
-MASHUP.Design.LOADVECTOR = 3.2;
-MASHUP.Design.CLEARANCEAREA = 3.3;
-MASHUP.Design.CLEARANCEORIENTATION = 3.4;
-MASHUP.Design.BOUNDARYPOINT = 4;
+FORTE.Design.POINTER = 0;
+FORTE.Design.SKETCH = 1;
+FORTE.Design.EDIT = 2;
+FORTE.Design.LOADPOINT = 3.1;
+FORTE.Design.LOADVECTOR = 3.2;
+FORTE.Design.CLEARANCEAREA = 3.3;
+FORTE.Design.CLEARANCEORIENTATION = 3.4;
+FORTE.Design.BOUNDARYPOINT = 4;
 
-MASHUP.Design.prototype = {
-	constructor: MASHUP.Design
+FORTE.Design.prototype = {
+	constructor: FORTE.Design
 };
 
 //
@@ -96,7 +96,7 @@ MASHUP.Design.prototype = {
 //	event handler for mouse down
 //
 //
-MASHUP.Design.prototype._mousedown = function(e) {
+FORTE.Design.prototype._mousedown = function(e) {
 	if (e.which != XAC.LEFTMOUSE) {
 		return;
 	}
@@ -112,14 +112,14 @@ MASHUP.Design.prototype._mousedown = function(e) {
 	};
 
 	switch (this._mode) {
-		case MASHUP.Design.SKETCH:
+		case FORTE.Design.SKETCH:
 			if (hitInfo != undefined) {
 				this._maniPlane.setPosition(hitInfo.object.position);
 				this._dropInk(hitInfo.point);
 			}
 			break;
 
-		case MASHUP.Design.EDIT:
+		case FORTE.Design.EDIT:
 			// restoring previously selected items
 			if (this._selected != undefined) {
 				for (var i = this._selected.length - 1; i >= 0; i--) {
@@ -158,7 +158,7 @@ MASHUP.Design.prototype._mousedown = function(e) {
 			this._hitPointPrev = this._maniPlane.update(e);
 			break;
 
-		case MASHUP.Design.LOADPOINT:
+		case FORTE.Design.LOADPOINT:
 			if (hitInfo != undefined) {
 				// use the selected point to initialize the load object
 				this._maniPlane.setPosition(hitInfo.object.position);
@@ -173,7 +173,7 @@ MASHUP.Design.prototype._mousedown = function(e) {
 			}
 			break;
 
-		case MASHUP.Design.LOADVECTOR:
+		case FORTE.Design.LOADVECTOR:
 			// finalize the creation of a load and init the clearance object immediately
 			if (this._load != undefined) {
 				this._loads.push(this._load);
@@ -187,16 +187,16 @@ MASHUP.Design.prototype._mousedown = function(e) {
 			}
 			break;
 
-		case MASHUP.Design.CLEARANCEAREA:
+		case FORTE.Design.CLEARANCEAREA:
 			// finalize the selection of a clearance area
 			this._clearances.push(this._clearance);
 			this._funcElements.push(this._clearance.box);
 			break;
 
-		case MASHUP.Design.CLEARANCEORIENTATION:
+		case FORTE.Design.CLEARANCEORIENTATION:
 			break;
 
-		case MASHUP.Design.BOUNDARYPOINT:
+		case FORTE.Design.BOUNDARYPOINT:
 			// init the boundary object
 			if (hitInfo != undefined) {
 				this._maniPlane.setPosition(hitInfo.object.position);
@@ -217,7 +217,7 @@ MASHUP.Design.prototype._mousedown = function(e) {
 //	event handler of mouse move
 //
 //
-MASHUP.Design.prototype._mousemove = function(e) {
+FORTE.Design.prototype._mousemove = function(e) {
 	if (e.which != XAC.LEFTMOUSE && this._glueState != true) {
 		return;
 	}
@@ -228,7 +228,7 @@ MASHUP.Design.prototype._mousemove = function(e) {
 	}
 
 	switch (this._mode) {
-		case MASHUP.Design.SKETCH:
+		case FORTE.Design.SKETCH:
 			// BUG: hard code to fix for now
 			if (hitPoint == undefined || hitPoint.x == 0 && hitPoint.y == 0 && hitPoint
 				.z == 500) {} else {
@@ -236,7 +236,7 @@ MASHUP.Design.prototype._mousemove = function(e) {
 			}
 			break;
 
-		case MASHUP.Design.EDIT:
+		case FORTE.Design.EDIT:
 			// either manipulating a func. elm or the design
 			if (this._funcElm != undefined) {
 				if (hitPoint != undefined && this._hitPointPrev != undefined) {
@@ -248,7 +248,7 @@ MASHUP.Design.prototype._mousemove = function(e) {
 			}
 			break;
 
-		case MASHUP.Design.LOADPOINT:
+		case FORTE.Design.LOADPOINT:
 			// dragging to select load points
 			var hitElm = XAC.hitObject(e, this._designElements, this._camera);
 			if (hitElm != undefined) {
@@ -261,7 +261,7 @@ MASHUP.Design.prototype._mousemove = function(e) {
 			}
 			break;
 
-		case MASHUP.Design.LOADVECTOR:
+		case FORTE.Design.LOADVECTOR:
 			// show an arrow indicating the direction and magnititude of load
 			this._scene.remove(this._load.arrow);
 			this._load.vector = hitPoint.clone().sub(this._load.midPoint);
@@ -272,7 +272,7 @@ MASHUP.Design.prototype._mousemove = function(e) {
 				this._load.vector, this._load.vector.length(), 3, this._matLoad);
 			break;
 
-		case MASHUP.Design.CLEARANCEAREA:
+		case FORTE.Design.CLEARANCEAREA:
 			// moving the mouse to specify the area of clearance
 			this._scene.remove(this._clearance.box);
 
@@ -298,7 +298,7 @@ MASHUP.Design.prototype._mousemove = function(e) {
 			this._scene.add(this._clearance.box);
 			break;
 
-		case MASHUP.Design.CLEARANCEORIENTATION:
+		case FORTE.Design.CLEARANCEORIENTATION:
 			// move the mouse the rotate the clearance area
 			if (this._hitPointPrev != undefined) {
 				var vnow = hitPoint.clone().sub(this._clearance.midPoint);
@@ -319,7 +319,7 @@ MASHUP.Design.prototype._mousemove = function(e) {
 			}
 			break;
 
-		case MASHUP.Design.BOUNDARYPOINT:
+		case FORTE.Design.BOUNDARYPOINT:
 			// BUG: hard code to fix for now
 			if (hitPoint == undefined || hitPoint.x == 0 && hitPoint.y == 0 && hitPoint
 				.z == 500) {} else {
@@ -340,7 +340,7 @@ MASHUP.Design.prototype._mousemove = function(e) {
 //	event handler of mouse up
 //
 //
-MASHUP.Design.prototype._mouseup = function(e) {
+FORTE.Design.prototype._mouseup = function(e) {
 	if (e.which != XAC.LEFTMOUSE) {
 		return;
 	}
@@ -348,10 +348,10 @@ MASHUP.Design.prototype._mouseup = function(e) {
 	this._maniPlane.destruct();
 
 	switch (this._mode) {
-		case MASHUP.Design.POINTER:
+		case FORTE.Design.POINTER:
 			break;
 
-		case MASHUP.Design.SKETCH:
+		case FORTE.Design.SKETCH:
 			if (this._ink.length <= 0) break;
 
 			var mergedPoints = this._postProcessInk();
@@ -388,7 +388,7 @@ MASHUP.Design.prototype._mouseup = function(e) {
 			this._inkPoints = [];
 			break;
 
-		case MASHUP.Design.EDIT:
+		case FORTE.Design.EDIT:
 			// highlight selection or wrap up design manipulation
 			if (this._selectedTemp.length > 0) {
 				for (var i = this._selectedTemp.length - 1; i >= 0; i--) {
@@ -415,7 +415,7 @@ MASHUP.Design.prototype._mouseup = function(e) {
 
 			break;
 
-		case MASHUP.Design.LOADPOINT:
+		case FORTE.Design.LOADPOINT:
 			if (this._load == undefined || this._load.points.length <= 0) break;
 
 			// find the mid point of loading given a series of selected points
@@ -434,26 +434,26 @@ MASHUP.Design.prototype._mouseup = function(e) {
 					}
 				}
 			}
-			this._mode = MASHUP.Design.LOADVECTOR;
+			this._mode = FORTE.Design.LOADVECTOR;
 			this._glueState = true;
 			break;
 
-		case MASHUP.Design.LOADVECTOR:
-			this._mode = MASHUP.Design.CLEARANCEAREA;
+		case FORTE.Design.LOADVECTOR:
+			this._mode = FORTE.Design.CLEARANCEAREA;
 			break;
 
-		case MASHUP.Design.CLEARANCEAREA:
-			this._mode = MASHUP.Design.CLEARANCEORIENTATION;
+		case FORTE.Design.CLEARANCEAREA:
+			this._mode = FORTE.Design.CLEARANCEORIENTATION;
 			break;
 
-		case MASHUP.Design.CLEARANCEORIENTATION:
-			this._mode = MASHUP.Design.LOADPOINT;
+		case FORTE.Design.CLEARANCEORIENTATION:
+			this._mode = FORTE.Design.LOADPOINT;
 			this._load = undefined;
 			this._clearance = undefined;
 			this._glueState = false;
 			break;
 
-		case MASHUP.Design.BOUNDARYPOINT:
+		case FORTE.Design.BOUNDARYPOINT:
 			// remove ink and clean up
 			var mergedPoints = this._postProcessInk();
 			this._boundary.points = mergedPoints;
@@ -502,37 +502,37 @@ MASHUP.Design.prototype._mouseup = function(e) {
 //
 //	event handler of keyboard operation
 //
-MASHUP.Design.prototype._keydown = function(e) {
+FORTE.Design.prototype._keydown = function(e) {
 	if (e.keyCode == 27) { // ESC
 		switch (this._mode) {
-			case MASHUP.Design.SKETCH:
+			case FORTE.Design.SKETCH:
 				break;
 
-			case MASHUP.Design.LOADPOINT:
+			case FORTE.Design.LOADPOINT:
 				break;
 
-			case MASHUP.Design.LOADVECTOR:
+			case FORTE.Design.LOADVECTOR:
 				// cancel the current operation and forfeit the creation of the load
 				this._removeLoad(this._load);
 				this._glueState = false;
-				this._mode = MASHUP.Design.LOADPOINT;
+				this._mode = FORTE.Design.LOADPOINT;
 				this._load = undefined;
 				break;
 
-			case MASHUP.Design.CLEARANCEAREA:
+			case FORTE.Design.CLEARANCEAREA:
 				this._removeClearance(this._clearance);
 				// merging these two cases here
-			case MASHUP.Design.CLEARANCEORIENTATION:
+			case FORTE.Design.CLEARANCEORIENTATION:
 				this._glueState = false;
-				this._mode = MASHUP.Design.LOADPOINT;
+				this._mode = FORTE.Design.LOADPOINT;
 				this._load = undefined;
 				this._clearance = undefined;
 				break;
 
-			case MASHUP.Design.BOUNDARYPOINT:
+			case FORTE.Design.BOUNDARYPOINT:
 				break;
 
-			case MASHUP.Design.BOUNDARYAREA:
+			case FORTE.Design.BOUNDARYAREA:
 				break;
 		}
 	} else if (e.keyCode == 46) { // DEL
@@ -552,7 +552,7 @@ MASHUP.Design.prototype._keydown = function(e) {
 
 		// if an edge is deleted, remove its functional requirments
 		var edge = this._medialAxis._keydown(e);
-		if (edge.type == MASHUP.MedialAxis.EDGE) {
+		if (edge.type == FORTE.MedialAxis.EDGE) {
 			// find corresponding load
 			for (var i = 0; i < this._loads.length; i++) {
 				if (this._loads[i].edge == edge) {
@@ -574,7 +574,7 @@ MASHUP.Design.prototype._keydown = function(e) {
 //
 //	subroutine for drawing (not standalone)
 //
-MASHUP.Design.prototype._dropInk = function(inkPoint, mat) {
+FORTE.Design.prototype._dropInk = function(inkPoint, mat) {
 	var inkJoint = new XAC.Sphere(this._inkSize / 2, this._inkMat).m;
 	inkJoint.position.copy(inkPoint);
 
@@ -596,7 +596,7 @@ MASHUP.Design.prototype._dropInk = function(inkPoint, mat) {
 //
 //	subroutine for updating constraints between visual elements (and the info they represent)
 //
-MASHUP.Design.prototype._updateConstraints = function() {
+FORTE.Design.prototype._updateConstraints = function() {
 	//	loads
 	for (var i = this._loads.length - 1; i >= 0; i--) {
 		var load = this._loads[i];
@@ -646,7 +646,7 @@ MASHUP.Design.prototype._updateConstraints = function() {
 //	@param	ptnow - the current manipulating point
 //	@param	ptprev - the previous manipulating point
 //
-MASHUP.Design.prototype._manipulate = function(elm, ptnow, ptprev) {
+FORTE.Design.prototype._manipulate = function(elm, ptnow, ptprev) {
 	var vdelta = ptnow.clone().sub(ptprev);
 	if (vdelta == undefined) {
 		return;
@@ -697,7 +697,7 @@ MASHUP.Design.prototype._manipulate = function(elm, ptnow, ptprev) {
 //
 //	remove a load
 //
-MASHUP.Design.prototype._removeLoad = function(load) {
+FORTE.Design.prototype._removeLoad = function(load) {
 	for (var i = load.area.length - 1; i >= 0; i--) {
 		load.area[i].material = this._matDesign;
 		load.area[i].material.needsUpdate = true;
@@ -712,7 +712,7 @@ MASHUP.Design.prototype._removeLoad = function(load) {
 //
 //	remove a clearance
 //
-MASHUP.Design.prototype._removeClearance = function(clearance) {
+FORTE.Design.prototype._removeClearance = function(clearance) {
 	this._scene.remove(clearance.box);
 	XAC.removeFromArray(this._funcElements, clearance.box);
 	XAC.removeFromArray(this._clearances, clearance);
@@ -721,7 +721,7 @@ MASHUP.Design.prototype._removeClearance = function(clearance) {
 //
 //	extend medial axis to retrieve edge info from its representatin (mesh)
 //
-MASHUP.MedialAxis.prototype.getEdgeInfo = function(mesh) {
+FORTE.MedialAxis.prototype.getEdgeInfo = function(mesh) {
 	for (var i = this.edges.length - 1; i >= 0; i--) {
 		for (var j = this.edges[i].inflations.length - 1; j >= 0; j--) {
 			if (this.edges[i].inflations[j].m == mesh) {
@@ -734,7 +734,7 @@ MASHUP.MedialAxis.prototype.getEdgeInfo = function(mesh) {
 //
 //	subroutine for post processing drawn ink points
 //
-MASHUP.Design.prototype._postProcessInk = function() {
+FORTE.Design.prototype._postProcessInk = function() {
 	// remove temp ink, compute their circumference
 	var lenTotal = 0;
 	for (var i = this._inkPoints.length - 1; i >= 0; i--) {
@@ -768,31 +768,31 @@ MASHUP.Design.prototype._postProcessInk = function() {
 //
 //	get the data of the design, including func. req.
 //
-MASHUP.Design.prototype.getData = function() {
-	var mashup = {}
+FORTE.Design.prototype.getData = function() {
+	var forte = {}
 
 	// the boundaries
-	mashup.boundaries = [];
+	forte.boundaries = [];
 	var boundaryEdges = [];
 	for (var i = 0; i < this._boundaries.length; i++) {
 		var points = [];
 		for (var j = 0; j < this._boundaries[i].points.length; j++) {
 			points.push(this._boundaries[i].points[j].toArray().trim(2));
 		}
-		mashup.boundaries.push(points);
+		forte.boundaries.push(points);
 		boundaryEdges.push(this._boundaries[i].edge);
 	}
 
 	// the design
-	mashup.design = [];
+	forte.design = [];
 	for (var i = 0; i < this._medialAxis.edges.length; i++) {
 		var edge = this._medialAxis.edges[i];
 		if (boundaryEdges.indexOf(edge) >= 0 || edge.deleted == true) continue;
-		mashup.design.push(this._medialAxis.pack(edge));
+		forte.design.push(this._medialAxis.pack(edge));
 	}
 
 	// the loads
-	mashup.loads = [];
+	forte.loads = [];
 	var sumLoads = 0;
 	for (var i = 0; i < this._loads.length; i++) {
 		sumLoads += this._loads[i].vector.length();
@@ -807,11 +807,11 @@ MASHUP.Design.prototype.getData = function() {
 		}
 		load.vectors = this._distriute(load.points, this._loads[i].vector,
 			this._loads[i].midPoint, sumLoads);
-		mashup.loads.push(load);
+		forte.loads.push(load);
 	}
 
 	// the clearances
-	mashup.clearances = [];
+	forte.clearances = [];
 	for (var i = 0; i < this._clearances.length; i++) {
 		var clearance = [];
 		var vertices = this._clearances[i].box.geometry.vertices;
@@ -820,16 +820,16 @@ MASHUP.Design.prototype.getData = function() {
 				.box);
 			clearance.push(vtransformed.toArray().trim(2));
 		}
-		mashup.clearances.push(clearance);
+		forte.clearances.push(clearance);
 	}
 
-	return JSON.stringify(mashup);
+	return JSON.stringify(forte);
 }
 
 //
 //	subroutine for distributing a load vector across load points
 //
-MASHUP.Design.prototype._distriute = function(points, vector, midPoint,
+FORTE.Design.prototype._distriute = function(points, vector, midPoint,
 	normalizeFactor) {
 	var distrVectors = [];
 
@@ -857,15 +857,15 @@ MASHUP.Design.prototype._distriute = function(points, vector, midPoint,
 	return distrVectors;
 }
 
-MASHUP.Design.prototype.getDesignElements = function() {
+FORTE.Design.prototype.getDesignElements = function() {
 	return this._designElements;
 }
 
 //
 //	pack the elements (edges and/or nodes) into JSONable format
 //
-MASHUP.MedialAxis.prototype.pack = function(elm) {
-	if (elm.type == MASHUP.MedialAxis.EDGE) {
+FORTE.MedialAxis.prototype.pack = function(elm) {
+	if (elm.type == FORTE.MedialAxis.EDGE) {
 		var edge = {};
 		edge.node1 = elm.node1.position.toArray().trim(2);
 		edge.node2 = elm.node2.position.toArray().trim(2);

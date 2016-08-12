@@ -5,22 +5,22 @@
  *
  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-var MASHUP = MASHUP || {};
+var FORTE = FORTE || {};
 
 // check dependencies
 if (XAC.Thing == undefined || XAC.Utilities == undefined || XAC.Const == undefined) {
 	err('missing dependency!');
 }
 
-MASHUP.Optimization = function(scene) {};
+FORTE.Optimization = function(scene) {};
 
-MASHUP.Optimization.prototype = {
-	constructor: MASHUP.Optimization
+FORTE.Optimization.prototype = {
+	constructor: FORTE.Optimization
 };
 
-MASHUP.Optimization.p = 3; // for now, hard coded
+FORTE.Optimization.p = 3; // for now, hard coded
 
-MASHUP.Optimization.elm2nodes = function(nelx, nely, nelz, mpx, mpy, mpz) {
+FORTE.Optimization.elm2nodes = function(nelx, nely, nelz, mpx, mpy, mpz) {
 	var innback = [0, 1, nely + 1, nely + 2];
 	var enback = nely * (mpx - 1) + mpy;
 
@@ -36,7 +36,7 @@ MASHUP.Optimization.elm2nodes = function(nelx, nely, nelz, mpx, mpy, mpz) {
 //
 //	retrieve all elements that are connected to a given node
 //
-MASHUP.Optimization.node2elms = function(nelx, nely, nelz, idx) {
+FORTE.Optimization.node2elms = function(nelx, nely, nelz, idx) {
 	var noz = XAC.float2int(idx / ((nelx + 1) * (nely + 1)));
 	var nox = XAC.float2int((idx - noz * (nelx + 1) * (nely + 1)) / (nely + 1));
 	var noy = XAC.float2int(idx - noz * (nelx + 1) * (nely + 1) - nox * (nely + 1));
@@ -50,7 +50,7 @@ MASHUP.Optimization.node2elms = function(nelx, nely, nelz, idx) {
 
 					////////////////////////////////////////////////////////////////////////////////
 					// testing
-					var nn = MASHUP.Optimization.elm2nodes(nelx, nely, nelz, i + 1, j + 1, k + 1);
+					var nn = FORTE.Optimization.elm2nodes(nelx, nely, nelz, i + 1, j + 1, k + 1);
 					var nodeNonExisting = true;
 					for (var h = nn.length - 1; h >= 0; h--) {
 						if (nn[h] == idx + 1) {
