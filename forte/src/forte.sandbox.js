@@ -3,7 +3,7 @@ function unitTest() {
 
 	// DEBUG: distance fields
 	var dfs = [];
-	var intval = 0.5;
+	var intval = 0.05;
 	var step = 0.05;
 
 	document.addEventListener('keydown', function(e) {
@@ -60,7 +60,7 @@ function unitTest() {
 				// }
 				idxt = XAC.clamp(idxt + 1, 0, dfmts.length - 1);
 				log(idxt)
-				mimt._showDistanceField(dfmts[idxt], new THREE.Vector3(0, 30, 0));
+				mimt._showDistanceField(dfmts[idxt], new THREE.Vector3(0, 50, 0));
 				mili._interpolateDistanceFields(df1, df2, idxt * 1.0 / (dfmts.length - 1));
 				break;
 			case 39: // right arrow
@@ -72,7 +72,7 @@ function unitTest() {
 
 				idxt = XAC.clamp(idxt - 1, 0, dfmts.length - 1);
 				log(idxt)
-				mimt._showDistanceField(dfmts[idxt], new THREE.Vector3(0, 30, 0));
+				mimt._showDistanceField(dfmts[idxt], new THREE.Vector3(0, 50, 0));
 				mili._interpolateDistanceFields(df1, df2, idxt * 1.0 / (dfmts.length - 1));
 				break;
 			case 67: // C
@@ -90,7 +90,7 @@ function unitTest() {
 	// err('cannot connect to server')
 	// }
 
-	var dimDebug = 1;
+	var dimDebug = XAC.getParameterByName('dim', window.location);
 	// DEBUG: mass transport 1d
 	if (dimDebug == 1) {
 		var n = 25;
@@ -209,7 +209,7 @@ function unitTest() {
 
 		// log(JSON.stringify(dfmt))
 		mimt = new FORTE.MixedInitiatives(FORTE.scene, FORTE.camera);
-		mimt._showDistanceField(dfmts[idxt], new THREE.Vector3(0, 30, 0));
+		mimt._showDistanceField(dfmts[idxt], new THREE.Vector3(0, 50, 0));
 
 	}
 
@@ -222,6 +222,8 @@ XAC.computeBarycenter = function(pdfs, lambdas, numItrs) {
 	var k = pdfs.length;
 	var m = pdfs[0].length;
 	var n = pdfs[0][0].length;
+
+	// log([k, m, n])
 
 	var geomMean = function(cnvla, result, lambdas, k, m, n) {
 		var safeLog = function(x) {
@@ -244,7 +246,7 @@ XAC.computeBarycenter = function(pdfs, lambdas, numItrs) {
 		}
 	}
 
-	var gaussian = XAC.compute2DGaussianKernel(n / 10, n);
+	var gaussian = XAC.compute2DGaussianKernel(n / 150, n);
 
 	var baryCenter = XAC.initMDArray([m, n], 0.0);
 

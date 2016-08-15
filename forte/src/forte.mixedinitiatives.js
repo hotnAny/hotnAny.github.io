@@ -14,7 +14,7 @@ FORTE.MixedInitiatives.prototype = {
     constructor: FORTE.MixedInitiatives
 };
 
-FORTE.MixedInitiatives.DFVOXELSIZE = 2.5;
+FORTE.MixedInitiatives.DFVOXELSIZE = 2;
 
 FORTE.MixedInitiatives.prototype._mousedown = function(e) {
 
