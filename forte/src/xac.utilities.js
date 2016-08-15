@@ -299,3 +299,15 @@ XAC.clamp = function(val, vmin, vmax) {
 	val = Math.min(val, vmax);
 	return val;
 }
+
+XAC.initMDArray = function(dims, val) {
+	if (dims.length == 1) {
+		return new Array(dims[0]).fill(val);
+	}
+
+	var array = [];
+	for (var i = 0; i < dims[0]; i++) {
+		array.push(XAC.initMDArray(dims.slice(1), val));
+	}
+	return array;
+}
