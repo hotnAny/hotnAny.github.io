@@ -16,15 +16,15 @@ FORTE.MixedInitiatives.prototype = {
 
 FORTE.MixedInitiatives.DFVOXELSIZE = 2.5;
 
-FORTE.MixedInitiatives.prototype.mousedown = function(e) {
+FORTE.MixedInitiatives.prototype._mousedown = function(e) {
 
 };
 
-FORTE.MixedInitiatives.prototype.mousemove = function(e) {
+FORTE.MixedInitiatives.prototype._mousemove = function(e) {
 
 };
 
-FORTE.MixedInitiatives.prototype.mouseup = function(e) {
+FORTE.MixedInitiatives.prototype._mouseup = function(e) {
 
 };
 
@@ -133,6 +133,8 @@ FORTE.MixedInitiatives.prototype._computeDistanceField = function(design) {
     // visualize to debug
     this._showDistanceField(df);
 
+    log(JSON.stringify(df));
+
     return df;
 }
 
@@ -159,9 +161,9 @@ FORTE.MixedInitiatives.prototype._interpolateDistanceFields = function(df1, df2,
 //
 //  show distance fields as a voxel grid
 //
-FORTE.MixedInitiatives.prototype._showDistanceField = function(df) {
+FORTE.MixedInitiatives.prototype._showDistanceField = function(df, offset) {
     var vxg = new FORTE.VoxelGrid(this._scene, new THREE.Vector3(50, -50, 0));
-
+    var offset = offset == undefined ? new THREE.Vector3(0, 0, 0) : offset;
     var counter = 0;
     for (var i = 0; i < df.length; i++) {
         for (var j = 0; j < df[0].length; j++) {
@@ -171,7 +173,9 @@ FORTE.MixedInitiatives.prototype._showDistanceField = function(df) {
                 if (this._dump[counter] == undefined) {
                     var mat = XAC.MATERIALWIRE.clone();
                     mat.opacity = opacity;
-                    var voxel = vxg._makeVoxel(FORTE.MixedInitiatives.DFVOXELSIZE, i, j, k,
+                    var voxel = vxg._makeVoxel(FORTE.MixedInitiatives.DFVOXELSIZE, i - df.length /
+                        2 + offset.x,
+                        j - df[0].length / 2 + offset.y, k + offset.z,
                         mat, true);
                     this._scene.add(voxel);
                     this._dump.push(voxel);

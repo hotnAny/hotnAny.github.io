@@ -53,21 +53,30 @@ function unitTest() {
 				intval = 2 - dfs.length;
 				break;
 			case 37: // left arrow
-				intval += step;
-				intval = Math.min(intval, 1);
-				if (dfs.length == 2) {
-					FORTE.mixedInitiative._interpolateDistanceFields(dfs[0], dfs[1], intval);
-				}
+				// intval += step;
+				// intval = Math.min(intval, 1);
+				// if (dfs.length == 2) {
+				// 	FORTE.mixedInitiative._interpolateDistanceFields(dfs[0], dfs[1], intval);
+				// }
+				idxt = XAC.clamp(idxt + 1, 0, dfmts.length - 1);
+				log(idxt)
+				mimt._showDistanceField(dfmts[idxt], new THREE.Vector3(0, 30, 0));
+				mili._interpolateDistanceFields(df1, df2, idxt * 1.0 / (dfmts.length - 1));
 				break;
 			case 39: // right arrow
-				intval -= step;
-				intval = Math.max(0, intval);
-				if (dfs.length == 2) {
-					FORTE.mixedInitiative._interpolateDistanceFields(dfs[0], dfs[1], intval);
-				}
+				// intval -= step;
+				// intval = Math.max(0, intval);
+				// if (dfs.length == 2) {
+				// 	FORTE.mixedInitiative._interpolateDistanceFields(dfs[0], dfs[1], intval);
+				// }
+
+				idxt = XAC.clamp(idxt - 1, 0, dfmts.length - 1);
+				log(idxt)
+				mimt._showDistanceField(dfmts[idxt], new THREE.Vector3(0, 30, 0));
+				mili._interpolateDistanceFields(df1, df2, idxt * 1.0 / (dfmts.length - 1));
 				break;
 			case 67: // C
-				FORTE.mixedInitiative._clearDump();
+
 				break;
 		}
 	}, false);
@@ -81,73 +90,128 @@ function unitTest() {
 	// err('cannot connect to server')
 	// }
 
-	// DEBUG: mass transport
-	var n = 25;
-	var f1 = [];
-	var f2 = [];
+	var dimDebug = 1;
+	// DEBUG: mass transport 1d
+	if (dimDebug == 1) {
+		var n = 25;
+		var f1 = [];
+		var f2 = [];
 
-	var computePDF = function(f) {
-		var pdf = [];
-		for (var i = 0; i < f1.length; i++) {
-			pdf.push(f[i] + (pdf[i - 1] == undefined ? 0 : pdf[i - 1]));
-		}
-		return pdf;
-	}
-
-	var visualizeDistr = function(f) {
-		var bar = '';
-		for (var i = 0; i < f.length; i++) {
-			bar += (i < 10 ? '0' : '') + i + ' '
-			for (var j = 0; j < f[i]; j++) {
-				bar += '*'
+		var computePDF = function(f) {
+			var pdf = [];
+			for (var i = 0; i < f1.length; i++) {
+				pdf.push(f[i] + (pdf[i - 1] == undefined ? 0 : pdf[i - 1]));
 			}
-			bar += '\n'
-
+			return pdf;
 		}
-		log(bar)
-	}
 
-	var getDistr = function(pdf) {
-		var f = [pdf[0]];
-		for (var i = 0; i < pdf.length - 1; i++) {
-			f.push(pdf[i + 1] - pdf[i])
+		var visualizeDistr = function(f) {
+			var bar = '';
+			for (var i = 0; i < f.length; i++) {
+				bar += (i < 10 ? '0' : '') + i + ' '
+				for (var j = 0; j < f[i]; j++) {
+					bar += '*'
+				}
+				bar += '\n'
+			}
+			log(bar)
 		}
-		return f;
+
+		var getDistr = function(pdf) {
+			var f = [pdf[0]];
+			for (var i = 0; i < pdf.length - 1; i++) {
+				f.push(pdf[i + 1] - pdf[i])
+			}
+			return f;
+		}
+
+		var polarized = true;
+		var seed = n / 3; //XAC.float2int(n / 2 * Math.random())
+		var sumf1 = 0;
+		var sumf2 = 0;
+		for (var i = 0; i < n; i++) {
+			f1[i] = 30 * Math.pow(1 - Math.abs(i - seed) / n, 10);
+			f2[i] = 30 * Math.pow(1 - Math.abs(i - n + seed) / n, 10);
+		}
+
+		visualizeDistr(f1);
+		log('----')
+
+		visualizeDistr(f2);
+		log('----')
+
+		// naive linear interpolation
+		var t = 0.5;
+		var fint1 = [];
+		for (var i = 0; i < f1.length; i++) {
+			fint1[i] = t * f1[i] + (1 - t) * f2[i];
+		}
+		visualizeDistr(fint1);
+		log('----')
+
+		// mass transport
+		var mt = XAC.computeBarycenter([
+			[f1],
+			[f2]
+		], [1 - t, t], 100);
+		visualizeDistr(mt[0]);
 	}
+	// DEBUG mass transport 2d
+	else if (dimDebug == 2) {
+		t = 0.5;
 
-	var polarized = true;
-	var seed = n / 3; //XAC.float2int(n / 2 * Math.random())
-	var sumf1 = 0;
-	var sumf2 = 0;
-	for (var i = 0; i < n; i++) {
-		f1[i] = 30 * Math.pow(1 - Math.abs(i - seed) / n, 10);
-		f2[i] = 30 * Math.pow(1 - Math.abs(i - n + seed) / n, 10);
+		// show distance fields
+		mi1 = new FORTE.MixedInitiatives(FORTE.scene, FORTE.camera);
+		mi1._showDistanceField(df1, new THREE.Vector3(-50, 0, 0));
+		mi2 = new FORTE.MixedInitiatives(FORTE.scene, FORTE.camera);
+		mi2._showDistanceField(df2, new THREE.Vector3(50, 0, 0));
+		mili = new FORTE.MixedInitiatives(FORTE.scene, FORTE.camera);
+		mili._interpolateDistanceFields(df1, df2, t);
+
+		var m = df1.length;
+		var n = df1[0].length;
+		var df2d1 = XAC.initMDArray([m, n], 0);
+		var df2d2 = XAC.initMDArray([m, n], 0);
+		for (var i = 0; i < m; i++) {
+			for (var j = 0; j < n; j++) {
+				df2d1[i][j] = df1[i][j][0];
+				df2d2[i][j] = df2[i][j][0];
+			}
+		}
+
+		log('precomputing')
+		for (var t = 0; t <= 1; t += step) {
+			log('t = ' + t);
+			var df2dt = XAC.computeBarycenter([
+				df2d1,
+				df2d2
+			], [t, 1 - t], 100);
+			var dfmt = XAC.initMDArray([m, n, 1], 0);
+			var mindf = m + n;
+			var maxdf = 0;
+			for (var i = 0; i < m; i++) {
+				for (var j = 0; j < n; j++) {
+					dfmt[i][j][0] = df2dt[i][j];
+					mindf = Math.min(mindf, df2dt[i][j]);
+					maxdf = Math.max(maxdf, df2dt[i][j]);
+				}
+			}
+			for (var i = 0; i < m; i++) {
+				for (var j = 0; j < n; j++) {
+					dfmt[i][j][0] = maxdf * (dfmt[i][j][0] - mindf) / (maxdf - mindf);
+				}
+			}
+			dfmts.push(dfmt);
+		}
+
+		idxt = XAC.float2int(dfmts.length / 2);
+
+
+		// log(JSON.stringify(dfmt))
+		mimt = new FORTE.MixedInitiatives(FORTE.scene, FORTE.camera);
+		mimt._showDistanceField(dfmts[idxt], new THREE.Vector3(0, 30, 0));
+
 	}
-
-	visualizeDistr(f1);
-	// log(f1)
-	log('----')
-
-	// f2 = XAC.copyArray(f1).reverse();
-	visualizeDistr(f2);
-	// log(f2)
-	log('----')
-
-	// naive linear interpolation
-	var t = 0.5;
-	var fint1 = [];
-	for (var i = 0; i < f1.length; i++) {
-		fint1[i] = t * f1[i] + (1 - t) * f2[i];
-	}
-	visualizeDistr(fint1);
-	log('----')
-
-	// mass transport
-	var mt = XAC.computeBarycenter([
-		[f1],
-		[f2]
-	], [1 - t, t], 100);
-	visualizeDistr(mt[0]);
 
 	log('----------------  unit test ends  ----------------');
 }
@@ -239,26 +303,6 @@ XAC.compute2DGaussianKernel = function(sigma, size) {
 	return kernel;
 }
 
-// XAC.convolve = function(input, output, kernel) {
-// 	var m = input.length;
-// 	var n = input[0].length;
-// 	var k = kernel.length;
-//
-// 	var normFactor = 0;
-// 	for (var i = 0; i < m; i++) {
-// 		for (var j = 0; j < n; j++) {
-// 			output[i][j] = input[i][j] * kernel[m - 1 - i][n - 1 - j];
-// 			normFactor += kernel[m - 1 - i][n - 1 - j];
-// 		}
-// 	}
-//
-// 	for (var i = 0; i < m; i++) {
-// 		for (var j = 0; j < n; j++) {
-// 			output[i][j] /= normFactor;
-// 		}
-// 	}
-// }
-
 XAC.convolve2D = function(input, output, kernel) {
 	var m = input.length;
 	var n = input[0].length;
@@ -282,24 +326,3 @@ XAC.convolve2D = function(input, output, kernel) {
 		} // i of output
 	} // j of output
 }
-
-// XAC.convolve = function(input, output, kernel) {
-// 	var m = input.length;
-// 	var n = input[0].length;
-// 	var k = kernel[0].length;
-//
-// 	for (var i = 0; i < m; i++) {
-// 		for (var j = 0; j < n; j++) {
-// 			var cnvl = 0;
-//
-// 			for (var h = 0; h < k; h++) {
-// 				var jj = j - XAC.float2int(k / 2) + h;
-// 				if (0 <= jj && jj < n) {
-// 					cnvl += kernel[0][h] * input[i][jj];
-// 				}
-// 			}
-//
-// 			output[i][j] = cnvl;
-// 		} // i of output
-// 	} // j of output
-// }
