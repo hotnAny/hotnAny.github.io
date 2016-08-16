@@ -33,7 +33,7 @@ FORTE.Design = function(scene, camera) {
 	this._matClearance = new THREE.MeshLambertMaterial({
 		color: XAC.COLORCONTRAST,
 		transparent: true,
-		opacity: this._opacityHalf
+		opacity: this._opacityFull
 	});
 	this._matBoundary = new THREE.MeshBasicMaterial({
 		color: XAC.COLORCONTRAST,
@@ -101,6 +101,16 @@ FORTE.Design.prototype._mousedown = function(e) {
 		return;
 	}
 
+	if (e.ctrlKey == true && this._mode != FORTE.Design.EDIT) {
+		this._modeSaved = this._mode;
+		this._mode = FORTE.Design.EDIT;
+		$(FORTE.renderer.domElement).css('cursor', 'pointer');
+	} else if (e.ctrlKey == false && this._mode == FORTE.Design.EDIT) {
+		this._mode = this._modeSaved;
+		$(FORTE.renderer.domElement).css('cursor', this._mode == FORTE.Design.SKETCH ? 'crosshair' :
+			'context-menu');
+	}
+
 	var hitInfo = XAC.hit(e, this._designElements, this._camera);
 
 	this._maniPlane = new XAC.Maniplane(new THREE.Vector3(), this._scene, this._camera,
@@ -129,16 +139,19 @@ FORTE.Design.prototype._mousedown = function(e) {
 			}
 
 			var selected = [];
+
 			// attempt to select amongst functional elements
-			funcElm = XAC.hitObject(e, this._funcElements, this._camera);
-			if (funcElm != undefined && funcElm.parent != undefined) {
-				// get to the `leaf' elements
-				selected = funcElm.parent instanceof THREE.Scene ? [funcElm] : funcElm.parent
-					.children;
+			if (FORTE.layer == FORTE.FUNCSPECLAYER) {
+				funcElm = XAC.hitObject(e, this._funcElements, this._camera);
+				if (funcElm != undefined && funcElm.parent != undefined) {
+					// get to the `leaf' elements
+					selected = funcElm.parent instanceof THREE.Scene ? [funcElm] : funcElm.parent
+						.children;
+				}
+				this._funcElm = funcElm;
+				// selection temp - will cancel later if func elm is manipulated, not selected
+				this._selectedTemp = selected;
 			}
-			this._funcElm = funcElm;
-			// selection temp - will cancel later if func elm is manipulated, not selected
-			this._selectedTemp = selected;
 
 			// select design only if no func. elms. selected
 			if (this._funcElm == undefined) {
@@ -218,6 +231,16 @@ FORTE.Design.prototype._mousedown = function(e) {
 //
 //
 FORTE.Design.prototype._mousemove = function(e) {
+	if (e.ctrlKey == true && this._mode != FORTE.Design.EDIT) {
+		this._modeSaved = this._mode;
+		this._mode = FORTE.Design.EDIT;
+		$(FORTE.renderer.domElement).css('cursor', 'pointer');
+	} else if (e.ctrlKey == false && this._mode == FORTE.Design.EDIT) {
+		this._mode = this._modeSaved;
+		$(FORTE.renderer.domElement).css('cursor', this._mode == FORTE.Design.SKETCH ? 'crosshair' :
+			'context-menu');
+	}
+
 	if (e.which != XAC.LEFTMOUSE && this._glueState != true) {
 		return;
 	}
@@ -485,6 +508,7 @@ FORTE.Design.prototype._mouseup = function(e) {
 	this._funcElements = [];
 	for (var i = this._loads.length - 1; i >= 0; i--) {
 		this._funcElements = this._funcElements.concat(this._loads[i].arrow.children);
+		this._funcElements = this._funcElements.concat(this._loads[i].area);
 	}
 	for (var i = this._clearances.length - 1; i >= 0; i--) {
 		this._funcElements.push(this._clearances[i].box);

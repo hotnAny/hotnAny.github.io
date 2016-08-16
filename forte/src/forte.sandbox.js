@@ -14,17 +14,18 @@ function unitTest() {
 				$(FORTE.renderer.domElement).css('cursor', 'pointer');
 				break;
 			case 49:
-				FORTE.design._mode = FORTE.Design.SKETCH;
-				$(FORTE.renderer.domElement).css('cursor', 'crosshair');
+				// FORTE.design._mode = FORTE.Design.SKETCH;
+				// $(FORTE.renderer.domElement).css('cursor', 'crosshair');
+				FORTE.switchLayer(FORTE.FORMLAYER);
 				break;
 			case 50:
 				FORTE.design._mode = FORTE.Design.EDIT;
 				$(FORTE.renderer.domElement).css('cursor', 'pointer');
-				// FORTE.design._medialAxis.enableEventListeners();
 				break;
 			case 51:
-				FORTE.design._mode = FORTE.Design.LOADPOINT;
-				$(FORTE.renderer.domElement).css('cursor', 'context-menu');
+				// FORTE.design._mode = FORTE.Design.LOADPOINT;
+				// $(FORTE.renderer.domElement).css('cursor', 'context-menu');
+				FORTE.switchLayer(FORTE.FUNCSPECLAYER);
 				break;
 			case 52:
 				FORTE.design._mode = FORTE.Design.BOUNDARYPOINT;

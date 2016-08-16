@@ -112,9 +112,15 @@ $(document).ready(function() {
 	//
 	FORTE.FORMLAYER = 0;
 	FORTE.FUNCTIONLAYER = 1;
-	FORTE.FUNCTIONALSPECIFICATION = 1.1
-	FORTE.FUNCTIONALFEEDBACK = 1.2;
-	FORTE.FUNCTIONALSUGGESTION = 1.3
+	FORTE.FUNCSPECLAYER = 1.1
+	FORTE.FEEDBACKLAYER = 1.2;
+	FORTE.SUGGESTIONLAYER = 1.3
+	FORTE.FABRICATIONLAYER = 2;
+
+	// document.addEventListener('mousedown', FORTE._mousedown.bind(this), false);
+	// document.addEventListener('mousemove', FORTE._mousemove.bind(this), false);
+	// document.addEventListener('mouseup', FORTE._mouseup.bind(this), false);
+	document.addEventListener('keydown', FORTE._keydown.bind(this), false);
 
 	//
 	//	set up communication
@@ -167,3 +173,73 @@ $(document).ready(function() {
 	// finally do unit test
 	unitTest();
 });
+
+//
+//	switching between different layers
+//
+FORTE.switchLayer = function(layer) {
+	if (FORTE.layer == layer) {
+		return;
+	}
+
+	// clean up mess from the previous layer
+	switch (FORTE.layer) {
+		case FORTE.FORMLAYER:
+			// nothing
+			break;
+		case FORTE.FUNCSPECLAYER:
+			// fade func elms
+			for (var i = 0; i < FORTE.design._funcElements.length; i++) {
+				FORTE.design._funcElements[i].material.opacity = FORTE.design._opacityHalf;
+			}
+			break;
+		case FORTE.FEEDBACKLAYER:
+			// hide the feedback-specific slider
+			// replace heatmap with normal design visual
+			break;
+		case FORTE.SUGGESTIONLAYER:
+			// hide the two suggestion-specific sliders
+			break;
+		case FORTE.FABRICATIONLAYER:
+			// remove the generated profile
+			break;
+	}
+
+	FORTE.layer = layer;
+
+	// set up new layer
+	switch (FORTE.layer) {
+		case FORTE.FORMLAYER:
+			log('form layer')
+			$(FORTE.renderer.domElement).css('cursor', 'crosshair');
+			break;
+		case FORTE.FUNCSPECLAYER:
+			log('functional specification layer')
+			$(FORTE.renderer.domElement).css('cursor', 'context-menu');
+			FORTE.design._mode = FORTE.Design.LOADPOINT;
+			// unfade func elms
+			for (var i = 0; i < FORTE.design._funcElements.length; i++) {
+				FORTE.design._funcElements[i].material.opacity = FORTE.design._opacityFull;
+			}
+			break;
+		case FORTE.FEEDBACKLAYER:
+			log('feedback layer')
+			$(FORTE.renderer.domElement).css('cursor', 'crosshair');
+			break;
+		case FORTE.SUGGESTIONLAYER:
+			log('suggestion layer')
+			$(FORTE.renderer.domElement).css('cursor', 'pointer');
+			// lock design
+			break;
+		case FORTE.FABRICATIONLAYER:
+			log('fabrication layer')
+			$(FORTE.renderer.domElement).css('cursor', 'pointer');
+			// lock design
+			break;
+	}
+}
+
+
+FORTE._keydown = function(e) {
+
+}

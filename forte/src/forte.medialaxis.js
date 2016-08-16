@@ -220,9 +220,10 @@ FORTE.MedialAxis.prototype._mousedown = function(e) {
 	}
 
 	if (hitOnNode != undefined) {
-		if (e.ctrlKey) {
-			this._nodeSelected = this._copyNode(this._nodeSelected);
-		}
+		// TODO: disable to avoid global conflict
+		// if (e.ctrlKey) {
+		// 	this._nodeSelected = this._copyNode(this._nodeSelected);
+		// }
 		// this._maniplane = new XAC.Maniplane(this._nodeSelected.position, this._scene, this._camera, true);
 		this._maniplane = new XAC.Maniplane(new THREE.Vector3(), this._scene, this._camera,
 			true);
@@ -256,10 +257,11 @@ FORTE.MedialAxis.prototype._mousedown = function(e) {
 
 	if (hitOnEdge != undefined) {
 		var point = hitOnEdge.point;
-		if (e.ctrlKey) {
-			this._nodeSelected = this._splitEdge(edge, point);
-			this._nodeSelected.material = this._matHighlight;
-		}
+		// TODO: disable to avoid global conflict
+		// if (e.ctrlKey) {
+		// 	this._nodeSelected = this._splitEdge(edge, point);
+		// 	this._nodeSelected.material = this._matHighlight;
+		// }
 
 	}
 
