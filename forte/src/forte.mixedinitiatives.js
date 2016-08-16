@@ -32,43 +32,47 @@ FORTE.MixedInitiatives.prototype._mouseup = function(e) {
 //  compute distance field of a forte design
 //
 FORTE.MixedInitiatives.prototype._computeDistanceField = function(design) {
-    var assign = function(v, dfval) {
-        var idx = vxg.getIndex(v);
-        if (df[idx[0]][idx[1]][idx[2]] == XAC.INFINITY) {
-            df[idx[0]][idx[1]][idx[2]] = dfval;
-            counter++;
-            return idx;
+    var assign = function(v, dfval, dx, dy, dz) {
+            var idx = vxg.getIndex(v, dx, dy, dz);
+            var dfx = idx[0];
+            var dfy = idx[1];
+            var dfz = idx[2];
+            if (df[dfx][dfy][dfz] == XAC.INFINITY) {
+                df[dfx][dfy][dfz] = dfval;
+                counter++;
+                return idx;
+            }
+            return undefined;
         }
-        return undefined;
-    }
-    var df = [];
+        // var df = [];
 
     // make a voxel grid
     var medialAxis = design._medialAxis;
     var bbox = medialAxis.boundingBox();
+    var inflation = 0; //.4;
     var vxg = new FORTE.VoxelGrid(this._scene, bbox.min);
 
     vxg._dim = FORTE.MixedInitiatives.DFVOXELSIZE;
-    vxg._nx = XAC.float2int((bbox.max.x - bbox.min.x) / vxg._dim) + 1;
-    vxg._ny = XAC.float2int((bbox.max.y - bbox.min.y) / vxg._dim) + 1;
+    var nx = XAC.float2int((bbox.max.x - bbox.min.x) / vxg._dim) + 1;
+    var ny = XAC.float2int((bbox.max.y - bbox.min.y) / vxg._dim) + 1;
     // suppress it to 1 just for the 2d case
-    vxg._nz = 1; //XAC.float2int((bbox.max.z - bbox.min.z) / vxg._dim) + 1;
-
-    log('distance field: ' + vxg._nx + ' x ' + vxg._ny + ' x ' + vxg._nz)
+    var nz = 1; //XAC.float2int((bbox.max.z - bbox.min.z) / vxg._dim) + 1;
 
     // initialize distance field
-    for (var i = 0; i < vxg.nx; i++) {
-        var dfyz = []
-        for (var j = 0; j < vxg.ny; j++) {
-            var dfz = []
-            for (var k = 0; k < vxg.nz; k++) {
-                dfz[k] = XAC.INFINITY;
-            }
-            dfyz.push(dfz);
-        }
-        df.push(dfyz)
-    }
+
+    var dfmx = XAC.float2int(nx * inflation * 0.5);
+    var dfmy = XAC.float2int(ny * inflation * 0.5);
+    var dfnx = nx + dfmx * 2; // XAC.float2int(nx * (1 + inflation));
+    var dfny = ny + dfmy * 2; //XAC.float2int(ny * (1 + inflation));
+    var dfnz = 1;
+    var df = XAC.initMDArray([dfnx, dfny, dfnz], XAC.INFINITY);
+    log('distance field: ' + dfnx + ' x ' + dfny + ' x ' + dfnz)
+
     var counter = 0; // goal is nx * ny * nz
+    vxg._nx = dfnx;
+    vxg._ny = dfny;
+    vxg._nz = dfnz
+
     var numVoxels = vxg.nx * vxg.ny * vxg.nz;
 
     // set the zeros
@@ -77,11 +81,11 @@ FORTE.MixedInitiatives.prototype._computeDistanceField = function(design) {
     for (var i = 0; i < edges.length; i++) {
         if (edges[i].deleted) continue;
 
-        bufPrev.push(assign(edges[i].node1.position, 0));
-        bufPrev.push(assign(edges[i].node2.position, 0));
+        bufPrev.push(assign(edges[i].node1.position, 0, dfmx, dfmy, 0));
+        bufPrev.push(assign(edges[i].node2.position, 0, dfmx, dfmy, 0));
         var points = edges[i].points;
         for (var j = 0; j < points.length - 1; j++) {
-            bufPrev.push(assign(points[j], 0));
+            bufPrev.push(assign(points[j], 0, dfmx, dfmy, 0));
 
             var nbtwn = points[j].clone().sub(points[j + 1]).length() / vxg.dim;
             var dx = (points[j + 1].x - points[j].x) / nbtwn;
@@ -90,7 +94,7 @@ FORTE.MixedInitiatives.prototype._computeDistanceField = function(design) {
 
             for (var k = 1; k < nbtwn; k++) {
                 var p = points[j].clone().add(new THREE.Vector3(dx * k, dy * k, 0));
-                bufPrev.push(assign(p, 0));
+                bufPrev.push(assign(p, 0, dfmx, dfmy, 0));
             }
         }
     }
@@ -227,10 +231,10 @@ FORTE.MedialAxis.prototype.boundingBox = function() {
     return bbox;
 }
 
-FORTE.VoxelGrid.prototype.getIndex = function(v) {
+FORTE.VoxelGrid.prototype.getIndex = function(v, dx, dy, dz) {
     var vrel = v.clone().sub(this._origin);
-    var i = XAC.clamp(XAC.float2int(vrel.x / this._dim), 0, this._nx - 1);
-    var j = XAC.clamp(XAC.float2int(vrel.y / this._dim), 0, this._ny - 1);
-    var k = XAC.clamp(XAC.float2int(vrel.z / this._dim), 0, this._nz - 1);
+    var i = XAC.clamp(XAC.float2int(vrel.x / this._dim), dx, this._nx - 1 - dx);
+    var j = XAC.clamp(XAC.float2int(vrel.y / this._dim), dy, this._ny - 1 - dy);
+    var k = XAC.clamp(XAC.float2int(vrel.z / this._dim), dz, this._nz - 1 - dz);
     return [i, j, k]
 }
