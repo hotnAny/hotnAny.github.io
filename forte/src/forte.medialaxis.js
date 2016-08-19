@@ -165,9 +165,9 @@ FORTE.MedialAxis.prototype.updateNode = function(node, pos) {
 			}
 
 			// DEBUG
-			if (points[points.length - 1] == undefined || points[0] == undefined) {
-				log(points)
-			}
+			// if (points[points.length - 1] == undefined || points[0] == undefined) {
+			// 	log(points)
+			// }
 
 			// make sure the end of points stick to the moving node
 			if (node1 == node) {
@@ -192,8 +192,9 @@ FORTE.MedialAxis.prototype._mousedown = function(e) {
 	var edgeSelected = this._edgeSelected;
 	if (this._edgeSelected != undefined) {
 		for (var j = this._edgeSelected.inflations.length - 1; j >= 0; j--) {
-			this._edgeSelected.inflations[j].m.material = this._matInflation;
-			this._edgeSelected.joints[j - 1 < 0 ? 0 : j - 1].m.material = this._matInflation;
+			this._edgeSelected.inflations[j].m.material = this._edgeSelected.inflations[j].m.materialPersistent; //his._matInflation;
+			this._edgeSelected.joints[j - 1 < 0 ? 0 : j - 1].m.material = this._edgeSelected.inflations[j].m
+				.materialPersistent; //his._matInflation;
 		}
 		this._edgeSelected = undefined;
 	}
@@ -701,6 +702,8 @@ FORTE.MedialAxis.prototype._inflateEdge = function(edge) {
 				r1: r,
 				r2: r0
 			});
+
+			edge.inflations[i].m.material = this._matInflation;
 
 			if (i < thickness.length - 1) {
 				edge.joints[i].update(r, ctr); //.m.position.copy(ctr);
