@@ -150,8 +150,9 @@ FORTE.Design.prototype._mousedown = function(e) {
 				}
 				this._funcElm = funcElm;
 				// selection temp - will cancel later if func elm is manipulated, not selected
-				this._selectedTemp = selected;
 			}
+
+			this._selectedTemp = selected;
 
 			// select design only if no func. elms. selected
 			if (this._funcElm == undefined) {
@@ -183,6 +184,12 @@ FORTE.Design.prototype._mousedown = function(e) {
 					area: [], // visual elements showing area of load
 					arrow: undefined // visual element showing vector of load
 				}
+			} else {
+				this._mode = FORTE.Design.BOUNDARYPOINT;
+				this._boundary = {
+					points: [],
+					edge: undefined
+				};
 			}
 			break;
 
@@ -219,7 +226,6 @@ FORTE.Design.prototype._mousedown = function(e) {
 				edge: undefined
 			};
 			break;
-
 	}
 
 	this._posMove = this._posDown;
@@ -477,6 +483,9 @@ FORTE.Design.prototype._mouseup = function(e) {
 			break;
 
 		case FORTE.Design.BOUNDARYPOINT:
+			this._mode = FORTE.Design.LOADPOINT;
+
+			if (this._ink.length <= 0) break;
 			// remove ink and clean up
 			var mergedPoints = this._postProcessInk();
 			this._boundary.points = mergedPoints;
@@ -501,6 +510,7 @@ FORTE.Design.prototype._mouseup = function(e) {
 			this._inkPoints = [];
 
 			this._boundaries.push(this._boundary);
+
 			break;
 	}
 
