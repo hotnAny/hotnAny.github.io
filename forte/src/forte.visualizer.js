@@ -334,9 +334,7 @@ FORTE.Visualizer.prototype.visualizeStressInVivo = function(listDisp, vxg,
 			var stressElm = 0;
 			for (var h = 0; h < tetras.length; h++) {
 				stressElm = Math.max(stressElm, tetras[h].stress);
-				// stressElm += tetras[h].stress;
 			} // tetra
-			// stressElm /= tetras.length;
 
 			var color = this._getHeatmapColor(stressElm, normalizeFactor);
 			// addABall(this._scene, posFace, color, 3, 1)
@@ -344,6 +342,7 @@ FORTE.Visualizer.prototype.visualizeStressInVivo = function(listDisp, vxg,
 		}
 
 		mesh.geometry.colorsNeedUpdate = true;
+		// mesh.materialPersistent = mesh.material;
 	}
 }
 
