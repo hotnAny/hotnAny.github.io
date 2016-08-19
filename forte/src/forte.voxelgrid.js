@@ -13,6 +13,8 @@ FORTE.VoxelGrid = function(scene, origin) {
 
 	this._voxels = [];
 	this._table = [];
+
+	this._dump = [];
 }
 
 FORTE.VoxelGrid.prototype = {
@@ -232,6 +234,8 @@ FORTE.VoxelGrid.prototype._makeVoxel = function(dim, i, j, k, mat, noMargin) {
 		voxel.position.copy(this._origin.clone().add(voxel.position))
 	}
 
+	this._dump.push(voxel);
+
 	return voxel;
 }
 
@@ -257,6 +261,13 @@ FORTE.VoxelGrid.prototype._addSphericalVoxels = function(v, radius) {
 		}
 	}
 };
+
+FORTE.VoxelGrid.prototype.clear = function() {
+	for (var i = 0; i < this._dump.length; i++) {
+		this._scene.remove(this._dump[i]);
+	}
+	this._dump = [];
+}
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  *
