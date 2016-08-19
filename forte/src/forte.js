@@ -142,6 +142,9 @@ $(document).ready(function() {
 			var resultVoxelGrid = name + '_' + postfix + '.vxg';
 			var resultDisp = name + '_' + postfix + '.disp';
 
+			if (FORTE.voxelGrid != undefined) {
+				FORTE.voxelGrid.clear();
+			}
 			FORTE.voxelGrid = new FORTE.VoxelGrid(FORTE.scene, new THREE.Vector3(
 				parseFloat(xmin), parseFloat(ymin), 5));
 
@@ -211,6 +214,7 @@ FORTE.switchLayer = function(layer) {
 	switch (FORTE.layer) {
 		case FORTE.FORMLAYER:
 			log('form layer')
+			FORTE.design._mode = FORTE.Design.SKETCH;
 			$(FORTE.renderer.domElement).css('cursor', 'crosshair');
 			break;
 		case FORTE.FUNCSPECLAYER:
