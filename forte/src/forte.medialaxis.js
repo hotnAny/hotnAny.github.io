@@ -510,8 +510,8 @@ FORTE.MedialAxis.prototype._splitEdge = function(edge, pos) {
 	var edge = this._removeEdge(edge);
 	var node = this._addNode(pos);
 
-	var edge1 = this._addEdge(edge.node1, node, edge.points.slice(0, idxSplit));
-	var edge2 = this._addEdge(node, edge.node2, edge.points.slice(idxSplit + 1));
+	var edge1 = this._addEdge(edge.node1, node, edge.points.slice(0, idxSplit), edge.thickness[0]);
+	var edge2 = this._addEdge(node, edge.node2, edge.points.slice(idxSplit + 1), edge.thickness[0]);
 
 	// redistribute the thickness along the original edge
 	var thickness = edge.thickness;
@@ -543,7 +543,7 @@ FORTE.MedialAxis.prototype._splitEdge = function(edge, pos) {
 //
 //	connect two nodes with an edge
 //
-FORTE.MedialAxis.prototype._addEdge = function(node1, node2, points) {
+FORTE.MedialAxis.prototype._addEdge = function(node1, node2, points, thickness) {
 	// check it's already connected, or used to be connected
 	var edge;
 
@@ -575,7 +575,7 @@ FORTE.MedialAxis.prototype._addEdge = function(node1, node2, points) {
 		};
 
 		for (var i = edge.points.length - 1; i >= 0; i--) {
-			edge.thickness.push(this._radiusEdge);
+			edge.thickness.push(thickness == undefined ? this._radiusEdge : thickness);
 		}
 
 		this._edges.push(edge);

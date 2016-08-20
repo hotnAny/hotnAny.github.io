@@ -630,6 +630,20 @@ FORTE.Design.prototype._keydown = function(e) {
 	}
 }
 
+
+//
+// adjust sketching stroke thickness
+// 0<=t<=1, 0 is the thinnest, t is the thickest
+//
+FORTE.Design.prototype.setInkSize = function(t) {
+	this._minInkSize = 1;
+	this._maxInkSize = 10;
+	this._inkSize = this._minInkSize + t * (this._maxInkSize - this._minInkSize);
+	this._inkSize = XAC.clamp(this._inkSize, this._minInkSize, this._maxInkSize);
+	this._medialAxis._radiusEdge = this._inkSize;
+	this._medialAxis._radiusNode = this._medialAxis._radiusEdge * 1.1;
+}
+
 //
 //	subroutine for drawing (not standalone)
 //
