@@ -183,6 +183,7 @@ FORTE.Design.prototype._mousedown = function(e) {
 					vector: undefined,
 					edge: this._medialAxis.getEdgeInfo(hitInfo.object), // associated edge
 					area: [], // visual elements showing area of load
+					areaIndices: [], // location info of loading area
 					arrow: undefined // visual element showing vector of load
 				}
 			} else {
@@ -448,6 +449,8 @@ FORTE.Design.prototype._mouseup = function(e) {
 				edge.node2.inflation.m.material = this._matBoundary;
 			}
 
+			this._updateConstraints()
+
 			// editing is a one-time thing
 			this._mode = this._modeSaved;
 			$(FORTE.renderer.domElement).css('cursor', this._mode == FORTE.Design.SKETCH ? 'crosshair' :
@@ -471,6 +474,17 @@ FORTE.Design.prototype._mouseup = function(e) {
 					if (distVar < distVarMin) {
 						distVarMin = distVar;
 						this._load.midPoint = this._load.points[i];
+					}
+				}
+
+				for (var i = 0; i < this._load.edge.inflations.length; i++) {
+					var inflation = this._load.edge.inflations[i].m;
+					for (var j = 0; j < this._load.area.length; j++) {
+						var loadArea = this._load.area[j];
+						if (inflation == loadArea) {
+							this._load.areaIndices.push(i);
+							break;
+						}
 					}
 				}
 			}
@@ -657,6 +671,11 @@ FORTE.Design.prototype._updateConstraints = function() {
 		this._scene.remove(load.arrow);
 		load.arrow = XAC.addAnArrow(this._scene, load.midPoint, load.vector, load.vector
 			.length(), 3, this._matLoad);
+
+		for (var j = 0; j < load.areaIndices.length; j++) {
+			var idx = load.areaIndices[j];
+			load.edge.inflations[idx].m.material = this._matLoad;
+		}
 	}
 
 	//	clearances
