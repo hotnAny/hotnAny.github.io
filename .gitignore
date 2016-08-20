@@ -1,5 +1,10 @@
 /playground/recycle/
+/forte/recycle/
+/forte/build/
 *.stl
 *.vxg
 *.disp
 *.tpd
+*.vtk
+*.forte
+*.pyc
