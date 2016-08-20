@@ -4,7 +4,7 @@ function unitTest() {
 	// DEBUG: distance fields
 	var dfs = [];
 	var intval = 0.05;
-	var step = 0.05;
+	var step = 0.1;
 
 	document.addEventListener('keydown', function(e) {
 
@@ -19,32 +19,33 @@ function unitTest() {
 				FORTE.switchLayer(FORTE.FORMLAYER);
 				break;
 			case 50:
-				FORTE.design._mode = FORTE.Design.EDIT;
-				$(FORTE.renderer.domElement).css('cursor', 'pointer');
-				break;
-			case 51:
+				// 	FORTE.design._mode = FORTE.Design.EDIT;
+				// 	$(FORTE.renderer.domElement).css('cursor', 'pointer');
+				// 	break;
+				// case 51:
 				// FORTE.design._mode = FORTE.Design.LOADPOINT;
 				// $(FORTE.renderer.domElement).css('cursor', 'context-menu');
 				FORTE.switchLayer(FORTE.FUNCSPECLAYER);
 				break;
-			case 52:
-				FORTE.design._mode = FORTE.Design.BOUNDARYPOINT;
-				$(FORTE.renderer.domElement).css('cursor', 'auto');
-				break;
+				// case 52:
+				// 	FORTE.design._mode = FORTE.Design.BOUNDARYPOINT;
+				// 	$(FORTE.renderer.domElement).css('cursor', 'auto');
+				// 	break;
 			case 83: //S
 				var strData = FORTE.design.getData();
 				log(strData)
 				XAC.pingServer(FORTE.xmlhttp, 'localhost', '9999', ['forte', 'query',
 					'resolution', 'material', 'originality', 'verbose'
-				], [strData, 0, 64, 0.45, 1.0, 1]);
-				FORTE.design._mode = FORTE.FUNCTIONALFEEDBACK;
-				$(FORTE.renderer.domElement).css('cursor', 'help');
+				], [strData, 0, 64, 0.25, 1.0, 1]);
+				// FORTE.design._mode = FORTE.FUNCTIONALFEEDBACK;
+				// $(FORTE.renderer.domElement).css('cursor', 'help');
+				FORTE.switchLayer(FORTE.FEEDBACKLAYER);
 				break;
 			case 79: //O
 				var strData = FORTE.design.getData();
 				XAC.pingServer(FORTE.xmlhttp, 'localhost', '9999', ['forte', 'query',
 					'resolution', 'material', 'originality', 'verbose'
-				], [strData, 1, 32, 0.45, 1.0, 1]);
+				], [strData, 1, 256, 0.15, 1.0, 1]);
 				log(strData)
 				break;
 			case 68: //D
@@ -59,10 +60,13 @@ function unitTest() {
 				// if (dfs.length == 2) {
 				// 	FORTE.mixedInitiative._interpolateDistanceFields(dfs[0], dfs[1], intval);
 				// }
-				idxt = XAC.clamp(idxt + 1, 0, dfmts.length - 1);
-				log(idxt)
-				mimt._showDistanceField(dfmts[idxt], new THREE.Vector3(0, 50, 0));
-				mili._interpolateDistanceFields(df1, df2, idxt * 1.0 / (dfmts.length - 1));
+
+				// idxt = XAC.clamp(idxt + 1, 0, dfmts.length - 1);
+				// log(idxt)
+				// mimt._showDistanceField(dfmts[idxt], new THREE.Vector3(0, 50, 0));
+				// mili._interpolateDistanceFields(df1, df2, idxt * 1.0 / (dfmts.length - 1));
+				FORTE.tmp -= 0.1;
+				FORTE.design.setInkSize(FORTE.tmp);
 				break;
 			case 39: // right arrow
 				// intval -= step;
@@ -71,17 +75,21 @@ function unitTest() {
 				// 	FORTE.mixedInitiative._interpolateDistanceFields(dfs[0], dfs[1], intval);
 				// }
 
-				idxt = XAC.clamp(idxt - 1, 0, dfmts.length - 1);
-				log(idxt)
-				mimt._showDistanceField(dfmts[idxt], new THREE.Vector3(0, 50, 0));
-				mili._interpolateDistanceFields(df1, df2, idxt * 1.0 / (dfmts.length - 1));
+				// idxt = XAC.clamp(idxt - 1, 0, dfmts.length - 1);
+				// log(idxt)
+				// mimt._showDistanceField(dfmts[idxt], new THREE.Vector3(0, 50, 0));
+				// mili._interpolateDistanceFields(df1, df2, idxt * 1.0 / (dfmts.length - 1));
+				FORTE.tmp += 0.1;
+				FORTE.design.setInkSize(FORTE.tmp);
 				break;
 			case 67: // C
-
+				FORTE.voxelGrid.clear();
 				break;
 		}
 	}, false);
 
+	FORTE.tmp = 0.5;
+	FORTE.design.setInkSize(FORTE.tmp);
 
 	// DEBUG: server communication
 	// try {
@@ -142,7 +150,7 @@ function unitTest() {
 		log('----')
 
 		// naive linear interpolation
-		var t = 0.5;
+		var t = 0.95;
 		var fint1 = [];
 		for (var i = 0; i < f1.length; i++) {
 			fint1[i] = t * f1[i] + (1 - t) * f2[i];
@@ -173,35 +181,48 @@ function unitTest() {
 		var n = df1[0].length;
 		var df2d1 = XAC.initMDArray([m, n], 0);
 		var df2d2 = XAC.initMDArray([m, n], 0);
+		var sumdf1 = 0.0;
+		var sumdf2 = 0.0;
 		for (var i = 0; i < m; i++) {
 			for (var j = 0; j < n; j++) {
-				df2d1[i][j] = df1[i][j][0];
-				df2d2[i][j] = df2[i][j][0];
+				df2d1[i][j] = Math.max(XAC.EPSILON, Math.exp(-df1[i][j][0]));
+				// sumdf1 += df2d1[i][j];
+				df2d2[i][j] = Math.max(XAC.EPSILON, Math.exp(-df2[i][j][0]));
+				// sumdf2 += df2d2[i][j];
 			}
 		}
 
+		// for (var i = 0; i < m; i++) {
+		// 	for (var j = 0; j < n; j++) {
+		// 		df2d1[i][j] = Math.max(XAC.EPSILON, df2d1[i][j] / sumdf1);
+		// 		df2d2[i][j] = Math.max(XAC.EPSILON, df2d2[i][j] / sumdf2);
+		// 	}
+		// }
+
 		log('precomputing')
-		for (var t = 0; t <= 1; t += step) {
+		step = 0.02
+		for (var t = 1; t >= 0.85; t -= step) {
 			log('t = ' + t);
 			var df2dt = XAC.computeBarycenter([
 				df2d1,
 				df2d2
-			], [t, 1 - t], 100);
+			], [t, 1 - t], 50);
 			var dfmt = XAC.initMDArray([m, n, 1], 0);
 			var mindf = m + n;
 			var maxdf = 0;
+			// var summt = sumdf1 * t + sumdf2 * (1 - t);
 			for (var i = 0; i < m; i++) {
 				for (var j = 0; j < n; j++) {
-					dfmt[i][j][0] = df2dt[i][j];
-					mindf = Math.min(mindf, df2dt[i][j]);
-					maxdf = Math.max(maxdf, df2dt[i][j]);
+					dfmt[i][j][0] = -Math.log(Math.max(XAC.EPSILON, df2dt[i][j]));
+					// mindf = Math.min(mindf, dfmt[i][j][0]);
+					// maxdf = Math.max(maxdf, dfmt[i][j][0]);
 				}
 			}
-			for (var i = 0; i < m; i++) {
-				for (var j = 0; j < n; j++) {
-					dfmt[i][j][0] = maxdf * (dfmt[i][j][0] - mindf) / (maxdf - mindf);
-				}
-			}
+			// for (var i = 0; i < m; i++) {
+			// 	for (var j = 0; j < n; j++) {
+			// 		dfmt[i][j][0] = maxdf * (dfmt[i][j][0] - mindf) / (maxdf - mindf);
+			// 	}
+			// }
 			dfmts.push(dfmt);
 		}
 
@@ -247,7 +268,7 @@ XAC.computeBarycenter = function(pdfs, lambdas, numItrs) {
 		}
 	}
 
-	var gaussian = XAC.compute2DGaussianKernel(n / 150, n);
+	var gaussian = XAC.compute2DGaussianKernel(n / 160, n);
 
 	var baryCenter = XAC.initMDArray([m, n], 0.0);
 
