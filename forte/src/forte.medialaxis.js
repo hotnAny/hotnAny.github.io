@@ -583,6 +583,14 @@ FORTE.MedialAxis.prototype._addEdge = function(node1, node2, points) {
 		// storing edge info in nodes
 		node1.edges.push(edge);
 		node2.edges.push(edge);
+
+		if (this._scene.children.indexOf(node1.inflation.m) < 0) {
+			this._scene.add(node1.inflation.m);
+		}
+
+		if (this._scene.children.indexOf(node2.inflation.m) < 0) {
+			this._scene.add(node2.inflation.m);
+		}
 	}
 	// connect nodes (that were connected but deleted)
 	else {
