@@ -134,7 +134,7 @@ FORTE.Design.prototype._mousedown = function(e) {
 			// restoring previously selected items
 			if (this._selected != undefined) {
 				for (var i = this._selected.length - 1; i >= 0; i--) {
-					this._selected[i].material.opacity = this._opacityHalf;
+					this._selected[i].material.opacity = this._opacityFull;
 					this._selected[i].material.needsUpdate = true;
 				}
 			}
@@ -150,6 +150,7 @@ FORTE.Design.prototype._mousedown = function(e) {
 						.children;
 				}
 				this._funcElm = funcElm;
+
 				// selection temp - will cancel later if func elm is manipulated, not selected
 			}
 
@@ -433,13 +434,14 @@ FORTE.Design.prototype._mouseup = function(e) {
 						this._selectedTemp = [];
 						break;
 					}
-					this._selectedTemp[i].material.opacity = this._opacityFull;
-					this._selectedTemp[i].material.needsUpdate = true;
+					this._selectedTemp[i].material.opacity = this._opacityHalf;
+					// this._selectedTemp[i].material.needsUpdate = true;
 
 				}
 				this._selected = this._selectedTemp;
 			} else {
 				this._medialAxis._mouseup(e);
+				this._updateConstraints();
 			}
 
 			// redraw boundary to make it diff from other design elms
@@ -448,8 +450,6 @@ FORTE.Design.prototype._mouseup = function(e) {
 				edge.node1.inflation.m.material = this._matBoundary;
 				edge.node2.inflation.m.material = this._matBoundary;
 			}
-
-			this._updateConstraints()
 
 			// editing is a one-time thing
 			this._mode = this._modeSaved;
@@ -611,7 +611,7 @@ FORTE.Design.prototype._keydown = function(e) {
 
 		// if an edge is deleted, remove its functional requirments
 		var edge = this._medialAxis._keydown(e);
-		if (edge.type == FORTE.MedialAxis.EDGE) {
+		if (edge != undefined && edge.type == FORTE.MedialAxis.EDGE) {
 			// find corresponding load
 			for (var i = 0; i < this._loads.length; i++) {
 				if (this._loads[i].edge == edge) {
@@ -640,7 +640,7 @@ FORTE.Design.prototype.setInkSize = function(t) {
 	this._maxInkSize = 10;
 	this._inkSize = this._minInkSize + t * (this._maxInkSize - this._minInkSize);
 	this._inkSize = XAC.clamp(this._inkSize, this._minInkSize, this._maxInkSize);
-	this._medialAxis._radiusEdge = this._inkSize;
+	this._medialAxis._radiusEdge = this._inkSize / 2;
 	this._medialAxis._radiusNode = this._medialAxis._radiusEdge * 1.1;
 }
 
