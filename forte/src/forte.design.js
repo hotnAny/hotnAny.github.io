@@ -543,7 +543,7 @@ FORTE.Design.prototype._mouseup = function(e) {
 	this._funcElements = [];
 	for (var i = this._loads.length - 1; i >= 0; i--) {
 		this._funcElements = this._funcElements.concat(this._loads[i].arrow.children);
-		this._funcElements = this._funcElements.concat(this._loads[i].area);
+		// this._funcElements = this._funcElements.concat(this._loads[i].area);
 	}
 	for (var i = this._clearances.length - 1; i >= 0; i--) {
 		this._funcElements.push(this._clearances[i].box);

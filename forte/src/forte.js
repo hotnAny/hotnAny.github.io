@@ -198,9 +198,9 @@ FORTE.switchLayer = function(layer) {
 			break;
 		case FORTE.FUNCSPECLAYER:
 			// fade func elms
-			for (var i = 0; i < FORTE.design._funcElements.length; i++) {
-				FORTE.design._funcElements[i].material.opacity = FORTE.design._opacityHalf;
-			}
+			// for (var i = 0; i < FORTE.design._funcElements.length; i++) {
+			// 	FORTE.design._funcElements[i].material.opacity = FORTE.design._opacityHalf;
+			// }
 			break;
 		case FORTE.FEEDBACKLAYER:
 			// hide the feedback-specific slider
@@ -228,9 +228,9 @@ FORTE.switchLayer = function(layer) {
 			$(FORTE.renderer.domElement).css('cursor', 'context-menu');
 			FORTE.design._mode = FORTE.Design.LOADPOINT;
 			// unfade func elms
-			for (var i = 0; i < FORTE.design._funcElements.length; i++) {
-				FORTE.design._funcElements[i].material.opacity = FORTE.design._opacityFull;
-			}
+			// for (var i = 0; i < FORTE.design._funcElements.length; i++) {
+			// 	FORTE.design._funcElements[i].material.opacity = FORTE.design._opacityFull;
+			// }
 			break;
 		case FORTE.FEEDBACKLAYER:
 			log('feedback layer')
