@@ -9,8 +9,9 @@
 
 var XAC = XAC || {};
 
+XAC.IDLE = 0;
 XAC.LEFTMOUSE = 1;
-XAC.RIGHTMOUSE = 2;
+XAC.RIGHTMOUSE = 3;
 XAC.WHEEL = 4;
 
 //
