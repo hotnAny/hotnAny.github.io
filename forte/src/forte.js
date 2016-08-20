@@ -14,7 +14,7 @@ $(document).ready(function() {
 	FORTE.stats = new Stats();
 	FORTE.stats.domElement.style.position = 'absolute';
 	FORTE.stats.domElement.style.top = '0px';
-	FORTE.stats.domElement.style.right = '0px';
+	// FORTE.stats.domElement.style.right = '0px';
 	document.body.appendChild(FORTE.stats.domElement);
 
 	//
@@ -117,10 +117,13 @@ $(document).ready(function() {
 	FORTE.SUGGESTIONLAYER = 1.3
 	FORTE.FABRICATIONLAYER = 2;
 
+	FORTE.USERIGHTKEYFOR3D = false;
+	FORTE.mouesCtrls.noRotate = !FORTE.USERIGHTKEYFOR3D
+
 	// document.addEventListener('mousedown', FORTE._mousedown.bind(this), false);
 	// document.addEventListener('mousemove', FORTE._mousemove.bind(this), false);
 	// document.addEventListener('mouseup', FORTE._mouseup.bind(this), false);
-	document.addEventListener('keydown', FORTE._keydown.bind(this), false);
+	// document.addEventListener('keydown', FORTE._keydown.bind(this), false);
 
 	//
 	//	set up communication
@@ -175,6 +178,9 @@ $(document).ready(function() {
 
 	// finally do unit test
 	unitTest();
+
+	// rendering ui
+	$(document.body).append(FORTE.renderUI());
 });
 
 //
@@ -243,7 +249,7 @@ FORTE.switchLayer = function(layer) {
 	}
 }
 
-
-FORTE._keydown = function(e) {
-
-}
+//
+// FORTE._keydown = function(e) {
+//
+// }

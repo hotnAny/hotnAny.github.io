@@ -97,15 +97,16 @@ FORTE.Design.prototype = {
 //
 //
 FORTE.Design.prototype._mousedown = function(e) {
-	if (e.which != XAC.LEFTMOUSE) {
+	if (e.which != XAC.LEFTMOUSE && FORTE.USERIGHTKEYFOR3D == true) {
 		return;
 	}
 
-	if (e.ctrlKey == true && this._mode != FORTE.Design.EDIT) {
+	var isEditing = FORTE.USERIGHTKEYFOR3D ? e.ctrlKey : (e.which == XAC.RIGHTMOUSE);
+	if (isEditing == true && this._mode != FORTE.Design.EDIT) {
 		this._modeSaved = this._mode;
 		this._mode = FORTE.Design.EDIT;
 		$(FORTE.renderer.domElement).css('cursor', 'pointer');
-	} else if (e.ctrlKey == false && this._mode == FORTE.Design.EDIT) {
+	} else if (isEditing == false && this._mode == FORTE.Design.EDIT) {
 		this._mode = this._modeSaved;
 		$(FORTE.renderer.domElement).css('cursor', this._mode == FORTE.Design.SKETCH ? 'crosshair' :
 			'context-menu');
@@ -237,18 +238,23 @@ FORTE.Design.prototype._mousedown = function(e) {
 //
 //
 FORTE.Design.prototype._mousemove = function(e) {
-	if (e.ctrlKey == true && this._mode != FORTE.Design.EDIT) {
+	if (e.which == XAC.IDLE && this._glueState != true) {
+		return;
+	}
+
+	if (FORTE.USERIGHTKEYFOR3D == true && e.which == XAC.RIGHTMOUSE) {
+		return;
+	}
+
+	var isEditing = FORTE.USERIGHTKEYFOR3D ? e.ctrlKey : (e.which == XAC.RIGHTMOUSE);
+	if (isEditing == true && this._mode != FORTE.Design.EDIT) {
 		this._modeSaved = this._mode;
 		this._mode = FORTE.Design.EDIT;
 		$(FORTE.renderer.domElement).css('cursor', 'pointer');
-	} else if (e.ctrlKey == false && this._mode == FORTE.Design.EDIT) {
+	} else if (isEditing == false && this._mode == FORTE.Design.EDIT) {
 		this._mode = this._modeSaved;
 		$(FORTE.renderer.domElement).css('cursor', this._mode == FORTE.Design.SKETCH ? 'crosshair' :
 			'context-menu');
-	}
-
-	if (e.which != XAC.LEFTMOUSE && this._glueState != true) {
-		return;
 	}
 
 	var hitPoint;
@@ -370,7 +376,7 @@ FORTE.Design.prototype._mousemove = function(e) {
 //
 //
 FORTE.Design.prototype._mouseup = function(e) {
-	if (e.which != XAC.LEFTMOUSE) {
+	if (e.which != XAC.LEFTMOUSE && FORTE.USERIGHTKEYFOR3D == true) {
 		return;
 	}
 
@@ -441,6 +447,11 @@ FORTE.Design.prototype._mouseup = function(e) {
 				edge.node1.inflation.m.material = this._matBoundary;
 				edge.node2.inflation.m.material = this._matBoundary;
 			}
+
+			// editing is a one-time thing
+			this._mode = this._modeSaved;
+			$(FORTE.renderer.domElement).css('cursor', this._mode == FORTE.Design.SKETCH ? 'crosshair' :
+				'context-menu');
 
 			break;
 
