@@ -20,6 +20,8 @@ from matplotlib import pyplot as pp
 
 import topy
 
+import subprocess
+
 # XAC
 import numpy
 
@@ -51,13 +53,15 @@ def optimise(t, query_type):
         t.filter_sens_sigmund()
         t.update_desvars_oc()
         # Below this line we print and create images:
-        print '[xac] NOT creating output images ...'
-        # if t.nelz:
-        #     topy.create_3d_geom(t.desvars, prefix=t.probname, \
-        #     iternum=t.itercount, time='none')
-        # else:
-        #     topy.create_2d_imag(t.desvars, prefix=t.probname, \
-        #     iternum=t.itercount, time='none')
+        # print '[xac] NOT creating output images ...'
+        if t.nelz:
+            # remove previous output
+            subprocess.call('rm ' + t.probname + '*.vtk', shell=True)
+            topy.create_3d_geom(t.desvars, prefix=t.probname, \
+            iternum=t.itercount, time='none')
+        else:
+            topy.create_2d_imag(t.desvars, prefix=t.probname, \
+            iternum=t.itercount, time='none')
         print '%4i  | %3.6e | %3.3f | %3.4e | %3.3f | %3.3f |  %1.3f  |  %3.3f '\
         % (t.itercount, t.objfval, t.desvars.sum()/(t.nelx * t.nely * t.nelz), \
         t.change, t.p, t.q, t.eta.mean(), t.svtfrac)
@@ -73,13 +77,13 @@ def optimise(t, query_type):
 
 # XAC
 def main(argv):
-    # XAC: query type
+    # [xac] query type
     global QUERY_ANALYZE
     QUERY_ANALYZE = 0
     global QUERY_OPTIMIZE
     QUERY_OPTIMIZE = 1
 
-    # XAC: copied & pasted from topy
+    # [xac] copied & pasted from topy
     SOLID, VOID = 1.000, 0.001 #  Upper and lower bound value for design variables
 
     query_type = QUERY_ANALYZE if len(argv) < 3 else int(argv[2])
@@ -94,7 +98,7 @@ def main(argv):
     print '[xac] setting up parameters ...'
     t.set_top_params()
 
-    # XAC: for query, mark non-design elements as void
+    # [xac] for query, mark non-design elements as void
     if query_type == QUERY_ANALYZE:
         t.desvars = zeros((t.nelz, t.nely, t.nelx)) + VOID # reset densities to zeros
 
@@ -114,7 +118,7 @@ def main(argv):
         t.desvars = flatx.reshape(dims)
 
     # custom weight penalty
-    t.WEIGHTEDPENALTY = True
+    t.WEIGHTEDPENALTY = False
 
     print '[xac] finished setup'
 
@@ -142,18 +146,20 @@ def main(argv):
 
     # Try CHG_STOP criteria, if not defined (error), use NUM_ITER for iterations:
     try:
-        while t.change > t.chgstop:
+        # TODO fix the temp threshold
+        while t.change > 0.01: #t.chgstop:
             optimise(t, query_type)
-    except AttributeError:
-        for i in range(t.numiter):
-            optimise(t, query_type)
-
-            # [xac] set print out format
-            # numpy.set_printoptions(threshold=numpy.nan)
-
             # [xac] early exit for analysis
             if query_type == QUERY_ANALYZE:
                 break
+        print '[xac] used CHG_STOP'
+    except AttributeError:
+        for i in range(t.numiter):
+            optimise(t, query_type)
+            # [xac] early exit for analysis
+            if query_type == QUERY_ANALYZE:
+                break
+        print '[xac] used NUM_ITER'
     te = time()
 
     ######################################################
@@ -176,6 +182,8 @@ def main(argv):
         % (array(etas_avg).mean(), 1/array(etas_avg).mean() - 1)
     except:
         print 'logging error'
+
+    return t.probname
 
 if __name__ == "__main__":
     main(argv)
