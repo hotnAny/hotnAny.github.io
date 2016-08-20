@@ -150,10 +150,9 @@ FORTE.Design.prototype._mousedown = function(e) {
 						.children;
 				}
 				this._funcElm = funcElm;
-
-				// selection temp - will cancel later if func elm is manipulated, not selected
 			}
 
+			// selection temp - will cancel later if func elm is manipulated, not selected
 			this._selectedTemp = selected;
 
 			// select design only if no func. elms. selected
@@ -552,6 +551,8 @@ FORTE.Design.prototype._mouseup = function(e) {
 	this._designElements = [];
 	for (var i = this._medialAxis.edges.length - 1; i >= 0; i--) {
 		var edge = this._medialAxis.edges[i];
+		this._designElements.push(edge.node1.inflation.m);
+		this._designElements.push(edge.node2.inflation.m);
 		for (var j = edge.inflations.length - 1; j >= 0; j--) {
 			this._designElements.push(edge.inflations[j].m);
 		}
@@ -801,6 +802,9 @@ FORTE.Design.prototype._removeClearance = function(clearance) {
 //
 FORTE.MedialAxis.prototype.getEdgeInfo = function(mesh) {
 	for (var i = this.edges.length - 1; i >= 0; i--) {
+		if (this.edges[i].node1.inflation.m == mesh || this.edges[i].node2.inflation.m == mesh) {
+			return this.edges[i];
+		}
 		for (var j = this.edges[i].inflations.length - 1; j >= 0; j--) {
 			if (this.edges[i].inflations[j].m == mesh) {
 				return this.edges[i];
