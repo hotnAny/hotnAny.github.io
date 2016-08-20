@@ -259,41 +259,42 @@ NUM_ELEM_Z) = %d x %d x %d' % (self.nelx, self.nely, self.nelz)
             #################### CONSTRUCTION AREA BEGINS ####################
             #
             #
-            self.pw = []  # penalty weights
-            r = math.sqrt(self.nelx**2 + self.nely**2 + self.nelz**2) / 2;
-            # p0 = self.p * 0.5
-            #
-            #   convert elm num to coord/index
-            #
-            self.actv_coords = []
-            for elm_num in self.actv:
-                elm_num -= 1    # original number starts from 1
-                mpz = math.floor(elm_num / (self.nelx * self.nely))
-                mpx = math.floor((elm_num - mpz * (self.nelx * self.nely)) / self.nely)
-                mpy = math.floor(elm_num - mpz * (self.nelx * self.nely) - mpx * self.nely)
-                elm_num += 1    # restore original value
-                self.actv_coords.append([mpx, mpy, mpz]);
-            print '[xac] precomputed weighted penalties'
+            if self.WEIGHTEDPENALTY:
+                self.pw = []  # penalty weights
+                r = math.sqrt(self.nelx**2 + self.nely**2 + self.nelz**2) / 2;
+                # p0 = self.p * 0.5
+                #
+                #   convert elm num to coord/index
+                #
+                self.actv_coords = []
+                for elm_num in self.actv:
+                    elm_num -= 1    # original number starts from 1
+                    mpz = math.floor(elm_num / (self.nelx * self.nely))
+                    mpx = math.floor((elm_num - mpz * (self.nelx * self.nely)) / self.nely)
+                    mpy = math.floor(elm_num - mpz * (self.nelx * self.nely) - mpx * self.nely)
+                    elm_num += 1    # restore original value
+                    self.actv_coords.append([mpx, mpy, mpz]);
+                print '[xac] precomputed weighted penalties'
 
-            #
-            #   weigh penalty based on min dist to actv elms
-            #
-            for i in xrange(self.nelx):
-                slashes = []
-                for j in xrange(self.nely):
-                    dices = []
-                    for k in xrange(self.nelz):
-                        # print [i, j, k]
-                        dmin = r
-                        for elm in self.actv_coords:
-                            d = math.sqrt((i-elm[0])**2 + (j-elm[1])**2 + (k-elm[2])**2)
-                            dmin = min(dmin, d)
-                        # dices.append(round(dmin, 2)) # for testing
-                        # dices.append(1 - dmin/r) # linear
-                        dices.append(math.exp(1 - dmin/r)) # exp
-                    slashes.append(dices)
-                    # print(dices)
-                self.pw.append(slashes)
+                #
+                #   weigh penalty based on min dist to actv elms
+                #
+                for i in xrange(self.nelx):
+                    slashes = []
+                    for j in xrange(self.nely):
+                        dices = []
+                        for k in xrange(self.nelz):
+                            # print [i, j, k]
+                            dmin = r
+                            for elm in self.actv_coords:
+                                d = math.sqrt((i-elm[0])**2 + (j-elm[1])**2 + (k-elm[2])**2)
+                                dmin = min(dmin, d)
+                            # dices.append(round(dmin, 2)) # for testing
+                            # dices.append(1 - dmin/r) # linear
+                            dices.append(math.exp(1 - dmin/r)) # exp
+                        slashes.append(dices)
+                        # print(dices)
+                    self.pw.append(slashes)
             #
             #
             #################### CONSTRUCTION AREA BEGINS ####################
@@ -352,34 +353,36 @@ synthesis!')
         Kfree = self._updateK(self.K.copy())
 
         # if self.dofpn < 3 and self.nelz == 0: #  Direct solver
-        Kfree = Kfree.to_csr() #  Need CSR for SuperLU factorisation
-        lu = superlu.factorize(Kfree)
-        lu.solve(self.rfree, self.dfree)
-        if self.probtype == 'mech':
-            lu.solve(self.rfreeout, self.dfreeout)  # mechanism synthesis
-            print 'debugging matrix solving'
-            print subtract(self.rfreeout, dot(Kfree, self.dfreeout))
-#         else: #  Iterative solver for 3D problems
-#             Kfree = Kfree.to_sss()
-#             preK = precon.ssor(Kfree) #  Preconditioned Kfree
-#             (info, numitr, relerr) = \
-#             itsolvers.pcg(Kfree, self.rfree, self.dfree, 1e-8, 8000, preK)
-#             if info < 0:
-#                 print 'PySparse error: Type:', info,', at', numitr, \
-# 'iterations.'
-#                 raise ToPyError('Solution for FEA did not converge.')
-#             else:
-#                 print 'ToPy: Solution for FEA converged after', numitr, \
-# 'iterations.'
-#             if self.probtype == 'mech':  # mechanism synthesis
-#                 (info, numitr, relerr) = \
-#                 itsolvers.pcg(Kfree, self.rfreeout, self.dfreeout, 1e-8, \
-#                 8000, preK)
-#                 if info < 0:
-#                     print 'PySparse error: Type:', info,', at', numitr, \
-# 'iterations.'
-#                     raise ToPyError('Solution for FEA of adjoint load case \
-#                     did not converge.')
+        thres_dim = 512
+        if self.nelx <= thres_dim and self.nely <= thres_dim and self.nelz <= thres_dim:
+            Kfree = Kfree.to_csr() #  Need CSR for SuperLU factorisation
+            lu = superlu.factorize(Kfree)
+            lu.solve(self.rfree, self.dfree)
+            if self.probtype == 'mech':
+                lu.solve(self.rfreeout, self.dfreeout)  # mechanism synthesis
+                print 'debugging matrix solving'
+                print subtract(self.rfreeout, dot(Kfree, self.dfreeout))
+        else: #  Iterative solver for 3D problems
+            Kfree = Kfree.to_sss()
+            preK = precon.ssor(Kfree) #  Preconditioned Kfree
+            (info, numitr, relerr) = \
+            itsolvers.pcg(Kfree, self.rfree, self.dfree, 1e-8, 8000, preK)
+            if info < 0:
+                print 'PySparse error: Type:', info,', at', numitr, \
+'iterations.'
+                raise ToPyError('Solution for FEA did not converge.')
+            else:
+                print 'ToPy: Solution for FEA converged after', numitr, \
+'iterations.'
+            if self.probtype == 'mech':  # mechanism synthesis
+                (info, numitr, relerr) = \
+                itsolvers.pcg(Kfree, self.rfreeout, self.dfreeout, 1e-8, \
+                8000, preK)
+                if info < 0:
+                    print 'PySparse error: Type:', info,', at', numitr, \
+'iterations.'
+                    raise ToPyError('Solution for FEA of adjoint load case \
+                    did not converge.')
 
         # Update displacement vectors:
         self.d[self.freedof] = self.dfree
