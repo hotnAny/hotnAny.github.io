@@ -1,6 +1,6 @@
 /playground/recycle/
 /forte/recycle/
-/forte/build/
+/forte/build/*
 *.stl
 *.vxg
 *.disp
