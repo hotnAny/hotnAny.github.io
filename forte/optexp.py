@@ -15,8 +15,8 @@ from topy_server import proc_post_data
 # examples x amnt material x resolution
 example_files = ['chair_02.forte', 'bookcase_02.forte', 'stepstool_02.forte']
 example_data = []
-amnts_mats = [0.05 *  x for x in range(1, 8)]
-resolutions = [32 * x for x in range(3, 8)]
+amnts_mats = [0.05 *  x for x in range(1, 6)]
+resolutions = [32 * x for x in range(4, 8)]
 
 for ex_file in example_files:
     example_data.append(open(ex_file, 'r').read())
