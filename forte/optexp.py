@@ -13,7 +13,7 @@ import sys
 from topy_server import proc_post_data
 
 # examples x amnt material x resolution
-example_files = ['chair_01.forte', 'bookcase_01.forte', 'stepstool_01.forte']
+example_files = ['chair_02.forte', 'bookcase_02.forte', 'stepstool_02.forte']
 example_data = []
 amnts_mats = [0.05 *  x for x in range(1, 8)]
 resolutions = [32 * x for x in range(3, 8)]
@@ -38,6 +38,7 @@ for res in resolutions:
             print 'running ' + trial_name + ' ...'
             log_file.write(trial_name + ':\n')
             log_file.write('started at ' + str(datetime.datetime.now()) + '\n')
+            log_file.close()
 
             subprocess.call('mkdir ' + exp_dir + '/' + trial_name, shell=True)
             try:
@@ -48,5 +49,6 @@ for res in resolutions:
                 log_file.write(str(sys.exc_info()))
                 log_file.write('\n')
 
+            log_file = open(exp_dir + '/log.txt', 'a')
             log_file.write('finished at ' + str(datetime.datetime.now()) + '\n')
             log_file.close()

@@ -83,12 +83,14 @@ function unitTest() {
 				FORTE.design.setInkSize(FORTE.tmp);
 				break;
 			case 67: // C
-				FORTE.voxelGrid.clear();
+				// FORTE.voxelGrid.clear();
+				var strData = FORTE.design.getData();
+				log(strData)
 				break;
 		}
 	}, false);
 
-	FORTE.tmp = 0.5;
+	FORTE.tmp = 0.2;
 	FORTE.design.setInkSize(FORTE.tmp);
 
 	// DEBUG: server communication

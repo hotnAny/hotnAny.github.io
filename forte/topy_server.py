@@ -69,7 +69,7 @@ def test():
     # print on_left_side([4, 3], [65.0, 1.0], [65.0, 1.0])
 
     t0 = timestamp()
-    test_data = open('chair_01.forte', 'r')
+    test_data = open('chair_02.forte', 'r')
     # print test_data
     proc_post_data({'forte': [test_data.read()]})
     timestamp(t=t0, msg='total time')
