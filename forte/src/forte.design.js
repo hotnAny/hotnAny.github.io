@@ -637,7 +637,7 @@ FORTE.Design.prototype._keydown = function(e) {
 // 0<=t<=1, 0 is the thinnest, t is the thickest
 //
 FORTE.Design.prototype.setInkSize = function(t) {
-	this._minInkSize = 1;
+	this._minInkSize = 5;
 	this._maxInkSize = 10;
 	this._inkSize = this._minInkSize + t * (this._maxInkSize - this._minInkSize);
 	this._inkSize = XAC.clamp(this._inkSize, this._minInkSize, this._maxInkSize);
@@ -879,7 +879,6 @@ FORTE.Design.prototype.getData = function() {
 	for (var i = 0; i < this._loads.length; i++) {
 		sumLoads += this._loads[i].vector.length();
 	}
-	log('sumLoads: ' + sumLoads)
 
 	for (var i = 0; i < this._loads.length; i++) {
 		var load = {};
@@ -961,6 +960,12 @@ FORTE.MedialAxis.prototype.pack = function(elm) {
 		edge.thickness = XAC.copyArray(elm.thickness);
 		edge.thickness.push(elm.node2.radius);
 		edge.thickness = [elm.node1.radius].concat(edge.thickness);
+
+		var minThickness = 1;
+		for (var i = 0; i < edge.thickness.length; i++) {
+			edge.thickness[i] /= 2;
+			edge.thickness[i] = Math.max(edge.thickness[i], minThickness);
+		}
 
 		return edge;
 	}
