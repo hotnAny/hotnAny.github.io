@@ -14,23 +14,11 @@ function unitTest() {
 				$(FORTE.renderer.domElement).css('cursor', 'pointer');
 				break;
 			case 49:
-				// FORTE.design._mode = FORTE.Design.SKETCH;
-				// $(FORTE.renderer.domElement).css('cursor', 'crosshair');
 				FORTE.switchLayer(FORTE.FORMLAYER);
 				break;
 			case 50:
-				// 	FORTE.design._mode = FORTE.Design.EDIT;
-				// 	$(FORTE.renderer.domElement).css('cursor', 'pointer');
-				// 	break;
-				// case 51:
-				// FORTE.design._mode = FORTE.Design.LOADPOINT;
-				// $(FORTE.renderer.domElement).css('cursor', 'context-menu');
 				FORTE.switchLayer(FORTE.FUNCSPECLAYER);
 				break;
-				// case 52:
-				// 	FORTE.design._mode = FORTE.Design.BOUNDARYPOINT;
-				// 	$(FORTE.renderer.domElement).css('cursor', 'auto');
-				// 	break;
 			case 83: //S
 				var strData = FORTE.design.getData();
 				log(strData)
@@ -45,7 +33,7 @@ function unitTest() {
 				var strData = FORTE.design.getData();
 				XAC.pingServer(FORTE.xmlhttp, 'localhost', '9999', ['forte', 'query',
 					'resolution', 'material', 'originality', 'verbose'
-				], [strData, 1, 256, 0.15, 1.0, 1]);
+				], [strData, 1, 32, 0.15, 1.0, 1]);
 				log(strData)
 				break;
 			case 68: //D
@@ -55,12 +43,6 @@ function unitTest() {
 				intval = 2 - dfs.length;
 				break;
 			case 37: // left arrow
-				// intval += step;
-				// intval = Math.min(intval, 1);
-				// if (dfs.length == 2) {
-				// 	FORTE.mixedInitiative._interpolateDistanceFields(dfs[0], dfs[1], intval);
-				// }
-
 				// idxt = XAC.clamp(idxt + 1, 0, dfmts.length - 1);
 				// log(idxt)
 				// mimt._showDistanceField(dfmts[idxt], new THREE.Vector3(0, 50, 0));
@@ -69,12 +51,6 @@ function unitTest() {
 				FORTE.design.setInkSize(FORTE.tmp);
 				break;
 			case 39: // right arrow
-				// intval -= step;
-				// intval = Math.max(0, intval);
-				// if (dfs.length == 2) {
-				// 	FORTE.mixedInitiative._interpolateDistanceFields(dfs[0], dfs[1], intval);
-				// }
-
 				// idxt = XAC.clamp(idxt - 1, 0, dfmts.length - 1);
 				// log(idxt)
 				// mimt._showDistanceField(dfmts[idxt], new THREE.Vector3(0, 50, 0));
