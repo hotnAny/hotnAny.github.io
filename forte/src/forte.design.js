@@ -97,7 +97,8 @@ FORTE.Design.prototype = {
 //
 //
 FORTE.Design.prototype._mousedown = function(e) {
-	if (e.which != XAC.LEFTMOUSE && FORTE.USERIGHTKEYFOR3D == true) {
+	if (e.which != XAC.LEFTMOUSE && (FORTE.USERIGHTKEYFOR3D == false ? (e.which != XAC.RIGHTMOUSE) :
+			true)) {
 		return;
 	}
 
@@ -127,6 +128,7 @@ FORTE.Design.prototype._mousedown = function(e) {
 			if (hitInfo != undefined) {
 				this._maniPlane.setPosition(hitInfo.object.position);
 				this._dropInk(hitInfo.point);
+				log(this._inkSize)
 			}
 			break;
 
@@ -239,11 +241,11 @@ FORTE.Design.prototype._mousedown = function(e) {
 //
 //
 FORTE.Design.prototype._mousemove = function(e) {
-	if (e.which == XAC.IDLE && this._glueState != true) {
+	if (FORTE.USERIGHTKEYFOR3D == true && e.which == XAC.RIGHTMOUSE) {
 		return;
 	}
 
-	if (FORTE.USERIGHTKEYFOR3D == true && e.which == XAC.RIGHTMOUSE) {
+	if (e.which != XAC.LEFTMOUSE && e.which != XAC.RIGHTMOUSE && this._glueState != true) {
 		return;
 	}
 
@@ -381,7 +383,9 @@ FORTE.Design.prototype._mouseup = function(e) {
 		return;
 	}
 
-	this._maniPlane.destruct();
+	if (this._maniPlane != undefined) {
+		this._maniPlane.destruct();
+	}
 
 	switch (this._mode) {
 		case FORTE.Design.POINTER:
@@ -870,7 +874,8 @@ FORTE.Design.prototype.getData = function() {
 	for (var i = 0; i < this._medialAxis.edges.length; i++) {
 		var edge = this._medialAxis.edges[i];
 		if (boundaryEdges.indexOf(edge) >= 0 || edge.deleted == true) continue;
-		forte.design.push(this._medialAxis.pack(edge));
+		// TODO: do not pack nodes
+		forte.design.push(this._medialAxis.pack(edge, false));
 	}
 
 	// the loads
@@ -948,6 +953,10 @@ FORTE.Design.fromRawData = function(str, scene, camera) {
 		log(designObj)
 		var design = new FORTE.Design(scene, camera);
 		design._medialAxis = FORTE.MedialAxis.fromRawData(designObj.design, scene, camera);
+		design._medialAxis._matNode = design._matDesign;
+		design._medialAxis._matInflation = design._matDesign;
+		design._medialAxis._matHighlight.opacity = 1;
+		design._inkSize = 2 * design._medialAxis._radiusEdge;
 		return design;
 	} catch (e) {
 		err(e.stack);
@@ -956,13 +965,21 @@ FORTE.Design.fromRawData = function(str, scene, camera) {
 
 FORTE.MedialAxis.fromRawData = function(edges, scene, camera) {
 	var medialAxis = new FORTE.MedialAxis(scene, camera);
+	medialAxis.RESTORINGEDGE = false;
 	for (var i = 0; i < edges.length; i++) {
 		var points = [];
 		for (var j = 0; j < edges[i].points.length; j++) {
 			points.push(new THREE.Vector3().fromArray(edges[i].points[j]));
 		}
-		var edge = medialAxis.addEdge(points, true);
-		edge.thickness = edges[i].thickness;
+
+		try {
+			var edge = medialAxis.addEdge(points, false);
+			// if (edge != undefined) {
+			edge.thickness = edges[i].thickness;
+			log(edge.points.length)
+		} catch (e) {
+			err(e.stack)
+		}
 	}
 
 	for (var i = 0; i < medialAxis.nodes.length; i++) {
@@ -975,6 +992,20 @@ FORTE.MedialAxis.fromRawData = function(edges, scene, camera) {
 		node.radius = r * 1.1 / node.edges.length;
 	}
 
+	var rmean = 0;
+	var cnt = 0;
+	for (var i = 0; i < medialAxis.edges.length; i++) {
+		var edge = medialAxis.edges[i];
+		for (var j = 0; j < edge.thickness.length; j++) {
+			rmean += edge.thickness[j];
+			cnt++;
+		}
+	}
+	rmean /= cnt;
+
+	medialAxis._radiusEdge = rmean;
+	medialAxis._radiusNode = medialAxis._radiusEdge * 1.1;
+
 	medialAxis._inflate();
 	return medialAxis;
 }
@@ -982,21 +1013,24 @@ FORTE.MedialAxis.fromRawData = function(edges, scene, camera) {
 //
 //	pack the elements (edges and/or nodes) into JSONable format
 //
-FORTE.MedialAxis.prototype.pack = function(elm) {
+FORTE.MedialAxis.prototype.pack = function(elm, addNodes) {
 	if (elm.type == FORTE.MedialAxis.EDGE) {
 		var edge = {};
 		edge.node1 = elm.node1.position.toArray().trim(2);
 		edge.node2 = elm.node2.position.toArray().trim(2);
 
-		edge.points = [edge.node1];
+		edge.points = []
+		if (addNodes) edge.points.push(edge.node1);
 		for (var i = 0; i < elm.points.length; i++) {
 			edge.points.push(elm.points[i].toArray().trim(2));
 		}
-		edge.points.push(edge.node2);
+		if (addNodes) edge.points.push(edge.node2);
 
 		edge.thickness = XAC.copyArray(elm.thickness);
-		edge.thickness.push(elm.node2.radius);
-		edge.thickness = [elm.node1.radius].concat(edge.thickness);
+		if (addNodes) {
+			edge.thickness.push(elm.node2.radius);
+			edge.thickness = [elm.node1.radius].concat(edge.thickness);
+		}
 
 		var minThickness = 1;
 		for (var i = 0; i < edge.thickness.length; i++) {

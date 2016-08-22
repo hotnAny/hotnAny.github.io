@@ -7,7 +7,6 @@ function unitTest() {
 	var step = 0.1;
 
 	document.addEventListener('keydown', function(e) {
-
 		switch (e.keyCode) {
 			case 48:
 				FORTE.design._mode = FORTE.Design.POINTER;
@@ -47,27 +46,37 @@ function unitTest() {
 				// log(idxt)
 				// mimt._showDistanceField(dfmts[idxt], new THREE.Vector3(0, 50, 0));
 				// mili._interpolateDistanceFields(df1, df2, idxt * 1.0 / (dfmts.length - 1));
-				FORTE.tmp -= 0.1;
-				FORTE.design.setInkSize(FORTE.tmp);
+				// FORTE.tmp -= 0.1;
+				// FORTE.design.setInkSize(FORTE.tmp);
+				FORTE.t = XAC.clamp(FORTE.t - 0.1, 0, 1);
+				FORTE.design.interpolate(FORTE.designs, [FORTE.t, 1 - FORTE.t]);
 				break;
 			case 39: // right arrow
 				// idxt = XAC.clamp(idxt - 1, 0, dfmts.length - 1);
 				// log(idxt)
 				// mimt._showDistanceField(dfmts[idxt], new THREE.Vector3(0, 50, 0));
 				// mili._interpolateDistanceFields(df1, df2, idxt * 1.0 / (dfmts.length - 1));
-				FORTE.tmp += 0.1;
-				FORTE.design.setInkSize(FORTE.tmp);
+				// FORTE.tmp += 0.1;
+				// FORTE.design.setInkSize(FORTE.tmp);
+				FORTE.t = XAC.clamp(FORTE.t + 0.1, 0, 1);
+				FORTE.design.interpolate(FORTE.designs, [FORTE.t, 1 - FORTE.t]);
 				break;
 			case 67: // C
 				// FORTE.voxelGrid.clear();
 				var strData = FORTE.design.getData();
 				log(strData)
 				break;
+			case 80:
+				FORTE.paused = (FORTE.paused != true);
+				if (FORTE.paused == false) {
+					FORTE.render();
+				}
+				break;
 		}
 	}, false);
 
 	FORTE.tmp = 0.2;
-	FORTE.design.setInkSize(FORTE.tmp);
+	// FORTE.design.setInkSize(FORTE.tmp);
 
 	// DEBUG: server communication
 	// try {
@@ -206,12 +215,12 @@ function unitTest() {
 
 		idxt = XAC.float2int(dfmts.length / 2);
 
-
 		// log(JSON.stringify(dfmt))
 		mimt = new FORTE.MixedInitiatives(FORTE.scene, FORTE.camera);
 		mimt._showDistanceField(dfmts[idxt], new THREE.Vector3(0, 50, 0));
-
 	}
+
+	FORTE.t = 0.5;
 
 	log('----------------  unit test ends  ----------------');
 }
@@ -327,4 +336,117 @@ XAC.convolve2D = function(input, output, kernel) {
 			output[i][j] = cnvl;
 		} // i of output
 	} // j of output
+}
+
+// drag & drop forte files
+$(document).on('dragover', function(e) {
+	e.stopPropagation();
+	e.preventDefault();
+	e.dataTransfer = e.originalEvent.dataTransfer;
+	e.dataTransfer.dropEffect = 'copy';
+});
+
+$(document).on('drop', function(e) {
+	e.stopPropagation();
+	e.preventDefault();
+	e.dataTransfer = e.originalEvent.dataTransfer;
+	var files = e.dataTransfer.files;
+
+	for (var i = files.length - 1; i >= 0; i--) {
+		var reader = new FileReader();
+		reader.onload = (function(e) {
+			// log(e.target.result);
+			FORTE.designs = FORTE.designs == undefined ? [] : FORTE.designs;
+			// FORTE.design = FORTE.Design.fromRawData(e.target.result, FORTE.scene, FORTE.camera);
+			// FORTE.designs.push(FORTE.design);
+			FORTE.designs.push(JSON.parse(e.target.result));
+
+			if (FORTE.designs.length >= 2) {
+				FORTE.design = FORTE.Design.fromRawData(FORTE.designs[0], FORTE.scene, FORTE.camera);
+				FORTE.design.interpolate(FORTE.designs, [FORTE.t, 1 - FORTE.t]);
+			}
+		});
+		reader.readAsBinaryString(files[i]);
+	}
+
+	// FORTE.design = FORTE.Design.fromRawData(FORTE.designs[0], FORTE.scene, FORTE.camera);
+	// FORTE.design.interpolate(FORTE.designs, FORTE.t);
+});
+
+FORTE.Design.prototype.interpolate = function(designs, weights) {
+	for (var i = 0; i < this._medialAxis.edges.length; i++) {
+		var edge = this._medialAxis.edges[i];
+		for (var j = 0; j < edge.points.length; j++) {
+			var centroid = new THREE.Vector3();
+			for (var k = 0; k < designs.length; k++) {
+				var point = new THREE.Vector3().fromArray(designs[k].design[i].points[j]);
+				centroid.add(point.multiplyScalar(weights[k]));
+			}
+			edge.points[j].copy(centroid);
+		}
+	}
+	this._medialAxis._inflate();
+}
+
+FORTE.Design.fromRawData = function(designObj, scene, camera) {
+	try {
+		// var designObj = JSON.parse(str);
+		log(designObj)
+		var design = new FORTE.Design(scene, camera);
+		design._medialAxis = FORTE.MedialAxis.fromRawData(designObj.design, scene, camera);
+		design._medialAxis._matNode = design._matDesign;
+		design._medialAxis._matInflation = design._matDesign;
+		design._medialAxis._matHighlight.opacity = 1;
+		design._inkSize = 2 * design._medialAxis._radiusEdge;
+		return design;
+	} catch (e) {
+		err(e.stack);
+	}
+}
+
+FORTE.MedialAxis.fromRawData = function(edges, scene, camera) {
+	var medialAxis = new FORTE.MedialAxis(scene, camera);
+	medialAxis.RESTORINGEDGE = false;
+	for (var i = 0; i < edges.length; i++) {
+		var points = [];
+		for (var j = 0; j < edges[i].points.length; j++) {
+			points.push(new THREE.Vector3().fromArray(edges[i].points[j]));
+		}
+
+		try {
+			var edge = medialAxis.addEdge(points, false);
+			// if (edge != undefined) {
+			edge.thickness = edges[i].thickness;
+			log(edge.points.length)
+		} catch (e) {
+			err(e.stack)
+		}
+	}
+
+	for (var i = 0; i < medialAxis.nodes.length; i++) {
+		var node = medialAxis.nodes[i];
+		var r = 0;
+		for (var j = 0; j < node.edges.length; j++) {
+			var edge = node.edges[j];
+			r += node == edge.node1 ? edge.thickness[0] : edge.thickness.slice(-1)[0]
+		}
+		node.radius = r * 1.1 / node.edges.length;
+	}
+
+	var rmean = 0;
+	var cnt = 0;
+	for (var i = 0; i < medialAxis.edges.length; i++) {
+		var edge = medialAxis.edges[i];
+		for (var j = 0; j < edge.thickness.length; j++) {
+			rmean += edge.thickness[j];
+			cnt++;
+		}
+	}
+	rmean /= cnt;
+
+	medialAxis._radiusEdge = rmean;
+	medialAxis._radiusNode = medialAxis._radiusEdge * 1.1;
+
+	medialAxis._inflate();
+	return medialAxis;
 }

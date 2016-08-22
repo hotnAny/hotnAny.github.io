@@ -346,6 +346,11 @@ FORTE.MedialAxis.prototype._mouseup = function(e) {
 		}
 	}
 
+	log('---')
+	for (var i = 0; i < this._edges.length; i++) {
+		log(this._edges[i].points.length);
+	}
+
 	this._infSelected = undefined;
 }
 
@@ -536,6 +541,8 @@ FORTE.MedialAxis.prototype._splitEdge = function(edge, pos) {
 			}
 		}
 	}
+
+	log('edge split!')
 
 	return node;
 }

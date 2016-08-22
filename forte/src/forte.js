@@ -49,6 +49,10 @@ $(document).ready(function() {
 	FORTE.scene.add(FORTE.lights[0]);
 
 	FORTE.render = function() {
+		if (FORTE.paused) {
+			return;
+		}
+
 		requestAnimationFrame(FORTE.render);
 		FORTE.mouesCtrls.update();
 		FORTE.stats.update();
@@ -175,7 +179,8 @@ $(document).ready(function() {
 	}
 
 	//	init an empty design
-	FORTE.design = new FORTE.Design(FORTE.scene, FORTE.camera);
+	//	TODO: temp removed for testing
+	// FORTE.design = new FORTE.Design(FORTE.scene, FORTE.camera);
 
 	// finally do unit test
 	unitTest();
