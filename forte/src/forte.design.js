@@ -942,6 +942,43 @@ FORTE.Design.prototype.getDesignElements = function() {
 	return this._designElements;
 }
 
+FORTE.Design.fromRawData = function(str, scene, camera) {
+	try {
+		var designObj = JSON.parse(str);
+		log(designObj)
+		var design = new FORTE.Design(scene, camera);
+		design._medialAxis = FORTE.MedialAxis.fromRawData(designObj.design, scene, camera);
+		return design;
+	} catch (e) {
+		err(e.stack);
+	}
+}
+
+FORTE.MedialAxis.fromRawData = function(edges, scene, camera) {
+	var medialAxis = new FORTE.MedialAxis(scene, camera);
+	for (var i = 0; i < edges.length; i++) {
+		var points = [];
+		for (var j = 0; j < edges[i].points.length; j++) {
+			points.push(new THREE.Vector3().fromArray(edges[i].points[j]));
+		}
+		var edge = medialAxis.addEdge(points, true);
+		edge.thickness = edges[i].thickness;
+	}
+
+	for (var i = 0; i < medialAxis.nodes.length; i++) {
+		var node = medialAxis.nodes[i];
+		var r = 0;
+		for (var j = 0; j < node.edges.length; j++) {
+			var edge = node.edges[j];
+			r += node == edge.node1 ? edge.thickness[0] : edge.thickness.slice(-1)[0]
+		}
+		node.radius = r * 1.1 / node.edges.length;
+	}
+
+	medialAxis._inflate();
+	return medialAxis;
+}
+
 //
 //	pack the elements (edges and/or nodes) into JSONable format
 //
