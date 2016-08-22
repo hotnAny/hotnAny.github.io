@@ -27,7 +27,7 @@ EPSILON = 1e-9
 ANALYSIS = 0
 OPTIMIZATION = 1
 
-tpd_template = '{"PROB_TYPE":"comp", "PROB_NAME":"NONAME", "ETA": "0.4", "DOF_PN": "3", "VOL_FRAC": "0.3", "FILT_RAD": "1.5", "ELEM_K": "H8", "NUM_ELEM_X":"10", "NUM_ELEM_Y":"10", "NUM_ELEM_Z":"10", "CHG_STOP":"0.01", "NUM_ITER":"50", "FXTR_NODE_X":"", "FXTR_NODE_Y":"", "FXTR_NODE_Z":"", "LOAD_NODE_X":"", "LOAD_VALU_X":"", "LOAD_NODE_Y":"", "LOAD_VALU_Y":"", "LOAD_NODE_Z":"", "LOAD_VALU_Z":"", "P_FAC":"1", "P_HOLD":"15", "P_INCR":"0.2", "P_CON":"1", "P_MAX":"3", "Q_FAC":"1", "Q_HOLD":"15", "Q_INCR":"0.05", "Q_CON":"1", "Q_MAX":"5"}';
+tpd_template = '{"PROB_TYPE":"comp", "PROB_NAME":"NONAME", "ETA": "0.4", "DOF_PN": "3", "VOL_FRAC": "0.3", "FILT_RAD": "2.9", "ELEM_K": "H8", "NUM_ELEM_X":"10", "NUM_ELEM_Y":"10", "NUM_ELEM_Z":"10", "CHG_STOP":"0.01", "NUM_ITER":"50", "FXTR_NODE_X":"", "FXTR_NODE_Y":"", "FXTR_NODE_Z":"", "LOAD_NODE_X":"", "LOAD_VALU_X":"", "LOAD_NODE_Y":"", "LOAD_VALU_Y":"", "LOAD_NODE_Z":"", "LOAD_VALU_Z":"", "P_FAC":"1", "P_HOLD":"15", "P_INCR":"0.2", "P_CON":"1", "P_MAX":"3", "Q_FAC":"1", "Q_HOLD":"15", "Q_INCR":"0.05", "Q_CON":"1", "Q_MAX":"5"}';
 
 # TODO: fix hard coding
 # path to topy's optimization code
@@ -35,6 +35,7 @@ rel_topy_path = './scripts/optimise.py'
 # rel_topy_path = '~/Dropbox/Projects/ProjectForte/libs/topy-master/scripts/optimise.py'
 
 offline = True
+session_dir = ''
 
 #
 #   for logging timestamp
@@ -144,7 +145,7 @@ def safe_retrieve_all(buffer, key, alt):
 #
 def proc_post_data(post_data, res=192, amnt=0.15, dir=None):
     if offline == False:
-        subprocess.call('rm forte_*', shell=True)
+        subprocess.call('rm ' + dir + '/forte_*', shell=True)
 
     if 'forte' not in post_data:
         # self.wfile.write('no design information')
@@ -380,7 +381,7 @@ def proc_post_data(post_data, res=192, amnt=0.15, dir=None):
 
     timestamp(msg='compute boundaries')
 
-    show_debug = False
+    show_debug = (offline == False)
 
     # DEBUG: print out the design and specs
     if show_debug:
@@ -452,7 +453,7 @@ def proc_post_data(post_data, res=192, amnt=0.15, dir=None):
             str_boundary += ';'
 
     tpd = json.loads(tpd_template)
-    tpd['PROB_NAME'] = 'forte_' + str(long(time.time()))
+    tpd['PROB_NAME'] = 'forte_' + str(long(time.time())) + '_' + str(amnt) + '_' + str(res)
     tpd['VOL_FRAC'] = material
     tpd['NUM_ELEM_X'] = nelx
     tpd['NUM_ELEM_Y'] = nely
@@ -496,7 +497,8 @@ def proc_post_data(post_data, res=192, amnt=0.15, dir=None):
     str_result += 'query=' + str(query) + '&'
     str_result += 'dim_voxel=' + str(dim_voxel) + '&'
     str_result += 'xmin=' + str(vmin[0]) + '&'
-    str_result += 'ymin=' + str(vmin[1])
+    str_result += 'ymin=' + str(vmin[1]) + '&'
+    str_result += 'dir=' + dir
 
     return str_result
 
@@ -530,7 +532,7 @@ class S(BaseHTTPRequestHandler):
 
         t0 = timestamp()
         try:
-            result_msg = proc_post_data(post_data)
+            result_msg = proc_post_data(post_data, dir=session_dir)
         except:
             traceback.print_exc()
             # print sys.exc_info()
@@ -561,5 +563,8 @@ if __name__ == "__main__":
     	# print 'usage: ./topy_server.py [port num] [abs path to topy optimize.py]'
     	exit()
 
-    run(port=int(argv[1]))
+    subprocess.call('rm -rf server_session*', shell=True)
+    session_dir = 'server_session_' + str(long(time.time()))
+    subprocess.call('mkdir ' + session_dir, shell=True)
     offline = False
+    run(port=int(argv[1]))
