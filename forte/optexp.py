@@ -10,12 +10,13 @@ import time
 import datetime
 import subprocess
 import sys
+import gc
 from topy_server import proc_post_data
 
 # examples x amnt material x resolution
 example_files = ['chair_02.forte', 'bookcase_02.forte', 'stepstool_02.forte']
 example_data = []
-amnts_mats = [0.05 *  x for x in range(1, 6)]
+amnts_mats = [0.05 *  x for x in range(2, 6)]
 resolutions = [32 * x for x in range(4, 8)]
 
 for ex_file in example_files:
@@ -41,6 +42,7 @@ for res in resolutions:
             log_file.close()
 
             subprocess.call('mkdir ' + exp_dir + '/' + trial_name, shell=True)
+            log_file = open(exp_dir + '/log.txt', 'a')
             try:
                 proc_post_data({'forte': [ex]}, res, amnt, exp_dir + '/' + trial_name)
                 log_file.write('success!' + '\n')
@@ -49,6 +51,7 @@ for res in resolutions:
                 log_file.write(str(sys.exc_info()))
                 log_file.write('\n')
 
-            log_file = open(exp_dir + '/log.txt', 'a')
             log_file.write('finished at ' + str(datetime.datetime.now()) + '\n')
             log_file.close()
+
+            gc.collect()
