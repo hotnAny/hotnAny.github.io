@@ -140,10 +140,11 @@ $(document).ready(function() {
 			var dimVoxel = XAC.getParameterByName('dim_voxel', FORTE.xmlhttp.responseText);
 			var xmin = XAC.getParameterByName('xmin', FORTE.xmlhttp.responseText);
 			var ymin = XAC.getParameterByName('ymin', FORTE.xmlhttp.responseText);
+			var dir = XAC.getParameterByName('dir', FORTE.xmlhttp.responseText);
 
 			var postfix = FORTE.thisQuery == FORTE.QUERYANALYZE ? 'analyzed' : 'optimized';
-			var resultVoxelGrid = name + '_' + postfix + '.vxg';
-			var resultDisp = name + '_' + postfix + '.disp';
+			var resultVoxelGrid = dir + '/' + name + '_' + postfix + '.vxg';
+			var resultDisp = dir + '/' + name + '_' + postfix + '.disp';
 
 			if (FORTE.voxelGrid != undefined) {
 				FORTE.voxelGrid.clear();
