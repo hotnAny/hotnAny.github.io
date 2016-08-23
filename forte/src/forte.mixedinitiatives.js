@@ -177,9 +177,10 @@ FORTE.MixedInitiatives.prototype._showDistanceField = function(df, offset) {
                 if (this._dump[counter] == undefined) {
                     var mat = XAC.MATERIALWIRE.clone();
                     mat.opacity = opacity;
-                    var voxel = vxg._makeVoxel(FORTE.MixedInitiatives.DFVOXELSIZE, i - df.length /
-                        2 + offset.x,
-                        j - df[0].length / 2 + offset.y, k + offset.z,
+                    var voxel = vxg._makeVoxel(FORTE.MixedInitiatives.DFVOXELSIZE,
+                        i - df.length / 2 + offset.x,
+                        j - df[0].length / 2 + offset.y,
+                        k + offset.z,
                         mat, true);
                     this._scene.add(voxel);
                     this._dump.push(voxel);
