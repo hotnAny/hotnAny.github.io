@@ -304,9 +304,9 @@ FORTE.MedialAxis.prototype._mousemove = function(e) {
 		var ratio = -yOffset / Math.pow(2, this._inflateRate);
 
 		// this._scene.remove(this._infSelected);
-		if (this._infSelInfo.nodeInfo != undefined) {
-			this._infSelInfo.nodeInfo.radius *= (1 + ratio);
-			this._inflateNode(this._infSelInfo.nodeInfo);
+		if (this._infSelInfo.node != undefined) {
+			this._infSelInfo.node.radius *= (1 + ratio);
+			this._inflateNode(this._infSelInfo.node);
 			this._nodeSelected = undefined;
 		} else if (this._infSelInfo.edge.thickness != undefined) {
 			var wind = 3;
@@ -331,7 +331,8 @@ FORTE.MedialAxis.prototype._mouseup = function(e) {
 	if (this._maniplane != undefined) {
 		this._maniplane.destruct();
 		this._maniplane = undefined;
-		this._inflate();
+		// TODO:
+		// this._inflate();
 	}
 
 	if (this._nodeSelected != undefined) {
@@ -346,10 +347,10 @@ FORTE.MedialAxis.prototype._mouseup = function(e) {
 		}
 	}
 
-	log('---')
-	for (var i = 0; i < this._edges.length; i++) {
-		log(this._edges[i].points.length);
-	}
+	// log('---')
+	// for (var i = 0; i < this._edges.length; i++) {
+	// 	log(this._edges[i].points.length);
+	// }
 
 	this._infSelected = undefined;
 }
@@ -632,29 +633,29 @@ FORTE.MedialAxis.prototype._inflate = function() {
 //
 //	inflate a node
 //
-FORTE.MedialAxis.prototype._inflateNode = function(nodeInfo, nodeOnly) {
-	var ctr = nodeInfo.position;
-	var r = nodeInfo.radius;
+FORTE.MedialAxis.prototype._inflateNode = function(node, nodeOnly) {
+	var ctr = node.position;
+	var r = node.radius;
 
 	if (r > 0) {
-		if (nodeInfo.inflation == undefined) {
-			nodeInfo.inflation = new XAC.Sphere(r, this._matInflation, false);
-			this._inflations.push(nodeInfo.inflation.m);
-			this._inflationsNode.push(nodeInfo.inflation.m);
+		if (node.inflation == undefined) {
+			node.inflation = new XAC.Sphere(r, this._matInflation, false);
+			this._inflations.push(node.inflation.m);
+			this._inflationsNode.push(node.inflation.m);
 			this._inflationsInfo.push({
-				nodeInfo: nodeInfo
+				node: node
 			});
-			this._scene.add(nodeInfo.inflation.m);
+			this._scene.add(node.inflation.m);
 		} else {
-			nodeInfo.inflation.update(r);
+			node.inflation.update(r);
+			node.inflation.m.material = this._matInflation;
 		}
-		nodeInfo.inflation.m.position.copy(ctr);
-
+		node.inflation.m.position.copy(ctr);
 	}
 
 	if (nodeOnly) {} else {
-		for (var i = nodeInfo.edges.length - 1; i >= 0; i--) {
-			this._inflateEdge(nodeInfo.edges[i]);
+		for (var i = node.edges.length - 1; i >= 0; i--) {
+			this._inflateEdge(node.edges[i]);
 		}
 	}
 }
@@ -691,7 +692,7 @@ FORTE.MedialAxis.prototype._inflateEdge = function(edge) {
 			r = (thickness[i - 1] + thickness[i] + thickness[i + 1]) / 3;
 		}
 
-		// TODO: experimental
+		// TODO: experimental, to show a larger sketch
 		r *= 1.5;
 
 		if (edge.inflations[i] == undefined) {

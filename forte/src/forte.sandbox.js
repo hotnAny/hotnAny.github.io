@@ -48,8 +48,13 @@ function unitTest() {
 				// mili._interpolateDistanceFields(df1, df2, idxt * 1.0 / (dfmts.length - 1));
 				// FORTE.tmp -= 0.1;
 				// FORTE.design.setInkSize(FORTE.tmp);
-				FORTE.t = XAC.clamp(FORTE.t - 0.1, 0, 1);
-				FORTE.design.interpolate(FORTE.designVariations, [FORTE.t, 1 - FORTE.t]);
+				var t = XAC.clamp(FORTE.t - 0.1, 0, 1);
+				// log([t, FORTE.t])
+				if (FORTE.t != t) {
+					FORTE.design.interpolate(FORTE.designVariations, [FORTE.t, 1 - FORTE.t]);
+					FORTE.t = t;
+				}
+				// log(FORTE.scene.children.length)
 				break;
 			case 39: // right arrow
 				// idxt = XAC.clamp(idxt - 1, 0, dfmts.length - 1);
@@ -58,8 +63,13 @@ function unitTest() {
 				// mili._interpolateDistanceFields(df1, df2, idxt * 1.0 / (dfmts.length - 1));
 				// FORTE.tmp += 0.1;
 				// FORTE.design.setInkSize(FORTE.tmp);
-				FORTE.t = XAC.clamp(FORTE.t + 0.1, 0, 1);
-				FORTE.design.interpolate(FORTE.designVariations, [FORTE.t, 1 - FORTE.t]);
+				var t = XAC.clamp(FORTE.t + 0.1, 0, 1);
+				// log([t, FORTE.t])
+				if (FORTE.t != t) {
+					FORTE.design.interpolate(FORTE.designVariations, [FORTE.t, 1 - FORTE.t]);
+					FORTE.t = t;
+				}
+				// log(FORTE.scene.children.length)
 				break;
 			case 67: // C
 				// FORTE.voxelGrid.clear();
@@ -171,9 +181,9 @@ FORTE.Design.fromRawData = function(designObj, scene, camera) {
 		// design
 		var design = new FORTE.Design(scene, camera);
 		design._medialAxis = FORTE.MedialAxis.fromRawData(designObj.design, scene, camera);
-		design._medialAxis._matNode = design._matDesign;
-		design._medialAxis._matInflation = design._matDesign;
-		design._medialAxis._matHighlight.opacity = 1;
+		// design._medialAxis._matNode = design._matDesign;
+		// design._medialAxis._matInflation = design._matDesign;
+		// design._medialAxis._matHighlight.opacity = 1;
 		design._inkSize = 2 * design._medialAxis._radiusEdge;
 
 		// update design elements
