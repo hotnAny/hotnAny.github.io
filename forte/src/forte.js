@@ -31,7 +31,7 @@ $(document).ready(function() {
 
 	FORTE.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight,
 		1, 10000);
-	FORTE.camera.position.copy(new THREE.Vector3(0, 0, 150));
+	FORTE.camera.position.copy(new THREE.Vector3(0, 0, 200));
 
 	FORTE.mouesCtrls = new THREE.TrackballControls(FORTE.camera, undefined,
 		undefined);
