@@ -398,7 +398,9 @@ FORTE.Design.prototype._mouseup = function(e) {
 
 			// add to the medial axis with auto-added nodes
 			var anglePrev;
-			var autoSplit = true;
+
+			// TODO: don't split for now
+			var autoSplit = false;
 
 			// i starting at 2 to avoid corner cases at the starting point
 			for (var i = 2; i < mergedPoints.length - 2; i++) {
@@ -412,9 +414,8 @@ FORTE.Design.prototype._mouseup = function(e) {
 
 				if (anglePrev != undefined) {
 					if (Math.abs(angle - anglePrev) > Math.PI / 4) {
-						// log([i, anglePrev, angle])
 						this._medialAxis.addEdge(mergedPoints.slice(0, i + 1), autoSplit);
-						autoSplit = false;
+
 						mergedPoints = mergedPoints.slice(i);
 						i = 0;
 						anglePrev = undefined;
@@ -542,6 +543,7 @@ FORTE.Design.prototype._mouseup = function(e) {
 			break;
 	}
 
+	// TODO: highly experimental
 	// updating the storage of all functional and design elements
 	this._funcElements = [];
 	for (var i = this._loads.length - 1; i >= 0; i--) {
@@ -858,55 +860,71 @@ FORTE.Design.prototype.getData = function() {
 	var forte = {}
 
 	// the boundaries
-	forte.boundaries = [];
 	var boundaryEdges = [];
-	for (var i = 0; i < this._boundaries.length; i++) {
-		var points = [];
-		for (var j = 0; j < this._boundaries[i].points.length; j++) {
-			points.push(this._boundaries[i].points[j].toArray().trim(2));
+	if (this._boundariesRaw == undefined) {
+		forte.boundaries = [];
+		for (var i = 0; i < this._boundaries.length; i++) {
+			var points = [];
+			for (var j = 0; j < this._boundaries[i].points.length; j++) {
+				points.push(this._boundaries[i].points[j].toArray().trim(2));
+			}
+			forte.boundaries.push(points);
+			boundaryEdges.push(this._boundaries[i].edge);
 		}
-		forte.boundaries.push(points);
-		boundaryEdges.push(this._boundaries[i].edge);
+	} else {
+		forte.boundaries = this._boundariesRaw;
 	}
 
 	// the design
-	forte.design = [];
-	for (var i = 0; i < this._medialAxis.edges.length; i++) {
-		var edge = this._medialAxis.edges[i];
-		if (boundaryEdges.indexOf(edge) >= 0 || edge.deleted == true) continue;
-		// TODO: do not pack nodes
-		forte.design.push(this._medialAxis.pack(edge, false));
+	if (this._designRaw == undefined) {
+		forte.design = [];
+		for (var i = 0; i < this._medialAxis.edges.length; i++) {
+			var edge = this._medialAxis.edges[i];
+			if (boundaryEdges.indexOf(edge) >= 0 || edge.deleted == true) continue;
+			// TODO: do not pack nodes
+			forte.design.push(this._medialAxis.pack(edge, true));
+		}
+	} else {
+		forte.design = this._designRaw;
 	}
 
 	// the loads
-	forte.loads = [];
-	var sumLoads = 0;
-	for (var i = 0; i < this._loads.length; i++) {
-		sumLoads += this._loads[i].vector.length();
-	}
-
-	for (var i = 0; i < this._loads.length; i++) {
-		var load = {};
-		load.points = [];
-		for (var j = 0; j < this._loads[i].points.length; j++) {
-			load.points.push(this._loads[i].points[j].toArray().trim(2));
+	if (this._loadsRaw == undefined) {
+		forte.loads = [];
+		var sumLoads = 0;
+		for (var i = 0; i < this._loads.length; i++) {
+			sumLoads += this._loads[i].vector.length();
 		}
-		load.vectors = this._distriute(load.points, this._loads[i].vector,
-			this._loads[i].midPoint, sumLoads);
-		forte.loads.push(load);
+
+		for (var i = 0; i < this._loads.length; i++) {
+			var load = {};
+			load.points = [];
+			for (var j = 0; j < this._loads[i].points.length; j++) {
+				load.points.push(this._loads[i].points[j].toArray().trim(2));
+			}
+			load.vectors = this._distriute(load.points, this._loads[i].vector,
+				this._loads[i].midPoint, sumLoads);
+			forte.loads.push(load);
+		}
+	} else {
+		forte.loads = this._loadsRaw;
 	}
 
 	// the clearances
-	forte.clearances = [];
-	for (var i = 0; i < this._clearances.length; i++) {
-		var clearance = [];
-		var vertices = this._clearances[i].box.geometry.vertices;
-		for (var j = 0; j < vertices.length; j++) {
-			var vtransformed = XAC.getTransformedVector(vertices[j], this._clearances[i]
-				.box);
-			clearance.push(vtransformed.toArray().trim(2));
+	if (this._clearancesRaw == undefined) {
+		forte.clearances = [];
+		for (var i = 0; i < this._clearances.length; i++) {
+			var clearance = [];
+			var vertices = this._clearances[i].box.geometry.vertices;
+			for (var j = 0; j < vertices.length; j++) {
+				var vtransformed = XAC.getTransformedVector(vertices[j], this._clearances[i]
+					.box);
+				clearance.push(vtransformed.toArray().trim(2));
+			}
+			forte.clearances.push(clearance);
 		}
-		forte.clearances.push(clearance);
+	} else {
+		forte.clearances = this._clearancesRaw;
 	}
 
 	return JSON.stringify(forte);
@@ -969,11 +987,11 @@ FORTE.MedialAxis.prototype.pack = function(elm, addNodes) {
 			edge.thickness = [elm.node1.radius].concat(edge.thickness);
 		}
 
-		// var minThickness = 1;
-		// for (var i = 0; i < edge.thickness.length; i++) {
-		// 	edge.thickness[i] /= 2;
-		// 	edge.thickness[i] = Math.max(edge.thickness[i], minThickness);
-		// }
+		// TODO: impose a min thickness
+		var minThickness = 2;
+		for (var i = 0; i < edge.thickness.length; i++) {
+			edge.thickness[i] = Math.max(edge.thickness[i], minThickness);
+		}
 
 		return edge;
 	}
