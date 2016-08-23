@@ -638,7 +638,7 @@ FORTE.MedialAxis.prototype._inflateNode = function(nodeInfo, nodeOnly) {
 
 	if (r > 0) {
 		if (nodeInfo.inflation == undefined) {
-			nodeInfo.inflation = new XAC.Sphere(r, this._matInflation, true);
+			nodeInfo.inflation = new XAC.Sphere(r, this._matInflation, false);
 			this._inflations.push(nodeInfo.inflation.m);
 			this._inflationsNode.push(nodeInfo.inflation.m);
 			this._inflationsInfo.push({
@@ -705,7 +705,7 @@ FORTE.MedialAxis.prototype._inflateEdge = function(edge) {
 			edge.inflations.push(inflation);
 
 			if (i < thickness.length - 1) {
-				var joint = new XAC.Sphere(r, this._matInflation);
+				var joint = new XAC.Sphere(r, this._matInflation, false);
 				joint.m.position.copy(ctr);
 				edge.joints.push(joint);
 				this._scene.add(joint.m);

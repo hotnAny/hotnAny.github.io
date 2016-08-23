@@ -947,69 +947,6 @@ FORTE.Design.prototype.getDesignElements = function() {
 	return this._designElements;
 }
 
-FORTE.Design.fromRawData = function(str, scene, camera) {
-	try {
-		var designObj = JSON.parse(str);
-		log(designObj)
-		var design = new FORTE.Design(scene, camera);
-		design._medialAxis = FORTE.MedialAxis.fromRawData(designObj.design, scene, camera);
-		design._medialAxis._matNode = design._matDesign;
-		design._medialAxis._matInflation = design._matDesign;
-		design._medialAxis._matHighlight.opacity = 1;
-		design._inkSize = 2 * design._medialAxis._radiusEdge;
-		return design;
-	} catch (e) {
-		err(e.stack);
-	}
-}
-
-FORTE.MedialAxis.fromRawData = function(edges, scene, camera) {
-	var medialAxis = new FORTE.MedialAxis(scene, camera);
-	medialAxis.RESTORINGEDGE = false;
-	for (var i = 0; i < edges.length; i++) {
-		var points = [];
-		for (var j = 0; j < edges[i].points.length; j++) {
-			points.push(new THREE.Vector3().fromArray(edges[i].points[j]));
-		}
-
-		try {
-			var edge = medialAxis.addEdge(points, false);
-			// if (edge != undefined) {
-			edge.thickness = edges[i].thickness;
-			log(edge.points.length)
-		} catch (e) {
-			err(e.stack)
-		}
-	}
-
-	for (var i = 0; i < medialAxis.nodes.length; i++) {
-		var node = medialAxis.nodes[i];
-		var r = 0;
-		for (var j = 0; j < node.edges.length; j++) {
-			var edge = node.edges[j];
-			r += node == edge.node1 ? edge.thickness[0] : edge.thickness.slice(-1)[0]
-		}
-		node.radius = r * 1.1 / node.edges.length;
-	}
-
-	var rmean = 0;
-	var cnt = 0;
-	for (var i = 0; i < medialAxis.edges.length; i++) {
-		var edge = medialAxis.edges[i];
-		for (var j = 0; j < edge.thickness.length; j++) {
-			rmean += edge.thickness[j];
-			cnt++;
-		}
-	}
-	rmean /= cnt;
-
-	medialAxis._radiusEdge = rmean;
-	medialAxis._radiusNode = medialAxis._radiusEdge * 1.1;
-
-	medialAxis._inflate();
-	return medialAxis;
-}
-
 //
 //	pack the elements (edges and/or nodes) into JSONable format
 //
@@ -1032,11 +969,11 @@ FORTE.MedialAxis.prototype.pack = function(elm, addNodes) {
 			edge.thickness = [elm.node1.radius].concat(edge.thickness);
 		}
 
-		var minThickness = 1;
-		for (var i = 0; i < edge.thickness.length; i++) {
-			edge.thickness[i] /= 2;
-			edge.thickness[i] = Math.max(edge.thickness[i], minThickness);
-		}
+		// var minThickness = 1;
+		// for (var i = 0; i < edge.thickness.length; i++) {
+		// 	edge.thickness[i] /= 2;
+		// 	edge.thickness[i] = Math.max(edge.thickness[i], minThickness);
+		// }
 
 		return edge;
 	}

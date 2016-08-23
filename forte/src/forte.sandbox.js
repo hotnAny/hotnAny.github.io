@@ -32,7 +32,7 @@ function unitTest() {
 				var strData = FORTE.design.getData();
 				XAC.pingServer(FORTE.xmlhttp, 'localhost', '9999', ['forte', 'query',
 					'resolution', 'material', 'originality', 'verbose'
-				], [strData, 1, 32, 0.15, 1.0, 1]);
+				], [strData, 1, 64, 0.3, 1.0, 1]);
 				log(strData)
 				break;
 			case 68: //D
@@ -225,119 +225,6 @@ function unitTest() {
 	log('----------------  unit test ends  ----------------');
 }
 
-XAC.computeBarycenter = function(pdfs, lambdas, numItrs) {
-	if (pdfs == undefined || pdfs[0] == undefined || pdfs[0][0] == undefined) return undefined;
-
-	var k = pdfs.length;
-	var m = pdfs[0].length;
-	var n = pdfs[0][0].length;
-
-	// log([k, m, n])
-
-	var geomMean = function(cnvla, result, lambdas, k, m, n) {
-		var safeLog = function(x) {
-			var eps = XAC.EPSILON == undefined ? 1e-9 : XAC.EPSILON;
-			return Math.log(Math.max(eps, x));
-		};
-
-		for (var i = 0; i < k; i++) {
-			for (var j = 0; j < m; j++) {
-				for (var h = 0; h < n; h++) {
-					result[j][h] += safeLog(cnvla[i][j][h]) * lambdas[i];
-				}
-			}
-		}
-
-		for (var j = 0; j < m; j++) {
-			for (var h = 0; h < n; h++) {
-				result[j][h] = Math.exp(result[j][h]);
-			}
-		}
-	}
-
-	var gaussian = XAC.compute2DGaussianKernel(n / 160, n);
-
-	var baryCenter = XAC.initMDArray([m, n], 0.0);
-
-	var a = XAC.initMDArray([k, m, n], 1.0);
-	var b = XAC.initMDArray([k, m, n], 1.0);
-	var convolution = XAC.initMDArray([k, m, n], 0.0);
-
-	for (var itr = 0; itr < numItrs; itr++) {
-		for (var i = 0; i < k; i++) {
-			XAC.convolve2D(b[i], convolution[i], gaussian);
-
-			for (var j = 0; j < m; j++) {
-				for (var h = 0; h < n; h++) {
-					a[i][j][h] = pdfs[i][j][h] / convolution[i][j][h];
-				}
-			}
-			XAC.convolve2D(a[i], convolution[i], gaussian);
-		}
-
-		baryCenter = XAC.initMDArray([m, n], 0.0);
-		geomMean(convolution, baryCenter, lambdas, k, m, n);
-
-		for (var i = 0; i < k; i++) {
-			for (var j = 0; j < m; j++) {
-				for (var h = 0; h < n; h++) {
-					b[i][j][h] = baryCenter[j][h] / convolution[i][j][h]
-				}
-			}
-		}
-	}
-
-	return baryCenter;
-}
-
-XAC.compute2DGaussianKernel = function(sigma, size) {
-	var kernel = XAC.initMDArray([size, size], 0);
-	var sumVal = 0;
-	for (var i = 0; i < size; i++) {
-		x = XAC.float2int(-size / 2) + i;
-		for (var j = 0; j < size; j++) {
-			y = XAC.float2int(-size / 2) + j;
-			kernel[i][j] = Math.exp(-(x * x + y * y) * 1.0 / (2.0 * sigma * sigma));
-			sumVal += kernel[i][j];
-		}
-	}
-
-	for (var i = 0; i < size; i++) {
-		for (var j = 0; j < size; j++) {
-			kernel[i][j] /= sumVal;
-		}
-	}
-
-	// for (var i = 0; i < size; i++) {
-	// 	log(kernel[i])
-	// }
-	return kernel;
-}
-
-XAC.convolve2D = function(input, output, kernel) {
-	var m = input.length;
-	var n = input[0].length;
-	var k = kernel.length;
-
-	for (var i = 0; i < m; i++) {
-		for (var j = 0; j < n; j++) {
-			var cnvl = 0;
-			for (var ki = 0; ki < k; ki++) {
-				for (var kj = 0; kj < k; kj++) {
-					var ii = i - XAC.float2int(k / 2.0) + ki;
-					var jj = j - XAC.float2int(k / 2.0) + kj;
-					if (ii < 0 || ii >= m || jj < 0 || jj >= n) {
-						continue;
-					}
-					cnvl += input[ii][jj] * kernel[ki][kj];
-				} // ki of kernel
-			} // kj of kernel
-
-			output[i][j] = cnvl;
-		} // i of output
-	} // j of output
-}
-
 // drag & drop forte files
 $(document).on('dragover', function(e) {
 	e.stopPropagation();
@@ -357,11 +244,11 @@ $(document).on('drop', function(e) {
 		reader.onload = (function(e) {
 			// log(e.target.result);
 			FORTE.designs = FORTE.designs == undefined ? [] : FORTE.designs;
-			// FORTE.design = FORTE.Design.fromRawData(e.target.result, FORTE.scene, FORTE.camera);
-			// FORTE.designs.push(FORTE.design);
+			// FORTE.design = FORTE.Design.fromRawData(JSON.parse(e.target.result), FORTE.scene, FORTE.camera);
 			FORTE.designs.push(JSON.parse(e.target.result));
 
 			if (FORTE.designs.length >= 2) {
+				FORTE.Design.cleanup(FORTE.designs);
 				FORTE.design = FORTE.Design.fromRawData(FORTE.designs[0], FORTE.scene, FORTE.camera);
 				FORTE.design.interpolate(FORTE.designs, [FORTE.t, 1 - FORTE.t]);
 			}
@@ -373,13 +260,42 @@ $(document).on('drop', function(e) {
 	// FORTE.design.interpolate(FORTE.designs, FORTE.t);
 });
 
+FORTE.Design.cleanup = function(designs) {
+	for (var k = 0; k < designs.length; k++) {
+		var edges = designs[k].design;
+		for (var i = 0; i < edges.length; i++) {
+			if (edges[i].points.length <= 2) {
+				edges[i].points = [edges[i].node1].concat(edges[i].points);
+				edges[i].points.push(edges[i].node2);
+				edges[i].thickness = [edges[i].thickness[0]].concat(edges[i].thickness);
+				edges[i].thickness.push(edges[i].thickness[0]);
+			}
+		}
+	}
+}
+
 FORTE.Design.prototype.interpolate = function(designs, weights) {
 	for (var i = 0; i < this._medialAxis.edges.length; i++) {
 		var edge = this._medialAxis.edges[i];
+
+		// interpolating the nodes
+		var nodes = [edge.node1, edge.node2];
+		for (var j = 0; j < nodes.length; j++) {
+			var centroid = new THREE.Vector3();
+			for (var k = 0; k < designs.length; k++) {
+				var nodePosArray = j == 0 ? designs[k].design[i].node1 : designs[k].design[i].node2;
+				var nodePos = new THREE.Vector3().fromArray(nodePosArray);
+				centroid.add(nodePos.multiplyScalar(weights[k]));
+			}
+			nodes[j].position.copy(centroid);
+		}
+
+		// interpolating the points on the edge
 		for (var j = 0; j < edge.points.length; j++) {
 			var centroid = new THREE.Vector3();
 			for (var k = 0; k < designs.length; k++) {
-				var point = new THREE.Vector3().fromArray(designs[k].design[i].points[j]);
+				var pointArray = designs[k].design[i].points[j];
+				var point = new THREE.Vector3().fromArray(pointArray);
 				centroid.add(point.multiplyScalar(weights[k]));
 			}
 			edge.points[j].copy(centroid);
@@ -390,7 +306,6 @@ FORTE.Design.prototype.interpolate = function(designs, weights) {
 
 FORTE.Design.fromRawData = function(designObj, scene, camera) {
 	try {
-		// var designObj = JSON.parse(str);
 		log(designObj)
 		var design = new FORTE.Design(scene, camera);
 		design._medialAxis = FORTE.MedialAxis.fromRawData(designObj.design, scene, camera);
@@ -409,16 +324,17 @@ FORTE.MedialAxis.fromRawData = function(edges, scene, camera) {
 	medialAxis.RESTORINGEDGE = false;
 	for (var i = 0; i < edges.length; i++) {
 		var points = [];
+
 		for (var j = 0; j < edges[i].points.length; j++) {
 			points.push(new THREE.Vector3().fromArray(edges[i].points[j]));
 		}
 
 		try {
 			var edge = medialAxis.addEdge(points, false);
-			// if (edge != undefined) {
 			edge.thickness = edges[i].thickness;
 			log(edge.points.length)
 		} catch (e) {
+			edges[i].deleted = true;
 			err(e.stack)
 		}
 	}
