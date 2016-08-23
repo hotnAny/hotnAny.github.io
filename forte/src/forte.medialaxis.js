@@ -691,6 +691,9 @@ FORTE.MedialAxis.prototype._inflateEdge = function(edge) {
 			r = (thickness[i - 1] + thickness[i] + thickness[i + 1]) / 3;
 		}
 
+		// TODO: experimental
+		r *= 1.5;
+
 		if (edge.inflations[i] == undefined) {
 			var inflation = new XAC.ThickLine(ctr0, ctr, {
 				r1: r,
