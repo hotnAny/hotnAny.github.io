@@ -49,10 +49,11 @@ function unitTest() {
 				// FORTE.tmp -= 0.1;
 				// FORTE.design.setInkSize(FORTE.tmp);
 				var t = XAC.clamp(FORTE.t - 0.1, 0, 1);
-				// log([t, FORTE.t])
+				log([t, FORTE.t])
 				if (FORTE.t != t) {
-					FORTE.design.interpolate(FORTE.designVariations, [FORTE.t, 1 - FORTE.t]);
 					FORTE.t = t;
+					FORTE.design.interpolate(FORTE.designVariations, [FORTE.t, 1 - FORTE.t]);
+
 				}
 				// log(FORTE.scene.children.length)
 				break;
@@ -64,10 +65,11 @@ function unitTest() {
 				// FORTE.tmp += 0.1;
 				// FORTE.design.setInkSize(FORTE.tmp);
 				var t = XAC.clamp(FORTE.t + 0.1, 0, 1);
-				// log([t, FORTE.t])
+				log([t, FORTE.t])
 				if (FORTE.t != t) {
-					FORTE.design.interpolate(FORTE.designVariations, [FORTE.t, 1 - FORTE.t]);
 					FORTE.t = t;
+					FORTE.design.interpolate(FORTE.designVariations, [FORTE.t, 1 - FORTE.t]);
+
 				}
 				// log(FORTE.scene.children.length)
 				break;
