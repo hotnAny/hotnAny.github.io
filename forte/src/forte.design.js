@@ -400,7 +400,7 @@ FORTE.Design.prototype._mouseup = function(e) {
 			var anglePrev;
 
 			// TODO: don't split for now
-			var autoSplit = false;
+			var autoSplit = true;
 
 			// i starting at 2 to avoid corner cases at the starting point
 			for (var i = 2; i < mergedPoints.length - 2; i++) {
@@ -643,7 +643,7 @@ FORTE.Design.prototype._keydown = function(e) {
 // 0<=t<=1, 0 is the thinnest, t is the thickest
 //
 FORTE.Design.prototype.setInkSize = function(t) {
-	this._minInkSize = 5;
+	this._minInkSize = 2.5;
 	this._maxInkSize = 10;
 	this._inkSize = this._minInkSize + t * (this._maxInkSize - this._minInkSize);
 	this._inkSize = XAC.clamp(this._inkSize, this._minInkSize, this._maxInkSize);
@@ -840,9 +840,15 @@ FORTE.Design.prototype._postProcessInk = function() {
 	mergedPoints.push(this._inkPoints[0]);
 	for (var i = 1; i < this._inkPoints.length - 2; i++) {
 		var mergedPoint = this._inkPoints[i].clone();
-		while (i < this._inkPoints.length - 1 && this._inkPoints[i + 1].distanceTo(
+		while (i < this._inkPoints.length - 2 && this._inkPoints[i + 1].distanceTo(
 				mergedPoint) < minSpacing) {
-			mergedPoint.add(this._inkPoints[++i]).multiplyScalar(0.5);
+			v1 = this._inkPoints[i].clone().sub(this._inkPoints[i + 1]);
+			v2 = this._inkPoints[i + 2].clone().sub(this._inkPoints[i + 1]);
+			i++;
+			if (v1.angleTo(v2) < Math.PI) {
+				continue;
+			}
+			mergedPoint.add(this._inkPoints[i]).multiplyScalar(0.5);
 		}
 		mergedPoints.push(mergedPoint);
 	}

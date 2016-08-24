@@ -50,7 +50,7 @@ XAC.hitPoint = function(e, objs, camera) {
 */
 function scaleAroundCenter(obj, factor) {
 	// find true center point
-	var ctr0 = getCenter(gettg(obj).vertices);
+	var ctr0 = getCenter(XAC.getTransformedGeometry(obj).vertices);
 
 	// naive scaling
 	if (factor.length == 3) {
@@ -60,7 +60,7 @@ function scaleAroundCenter(obj, factor) {
 	}
 
 	// re-position
-	var ctr1 = getCenter(gettg(obj).vertices, factor);
+	var ctr1 = getCenter(XAC.getTransformedGeometry(obj).vertices, factor);
 	obj.position.add(ctr0.clone().sub(ctr1));
 }
 
@@ -94,7 +94,7 @@ function scaleAlongVector(obj, factor, dir) {
 */
 function scaleWithVector(obj, factors, dir) {
 	// var ctr0 = obj.geometry.center();
-	var ctr0 = gettg(obj).center();
+	var ctr0 = XAC.getTransformedGeometry(obj).center();
 
 	rotateGeoTo(obj.geometry, dir, true);
 
@@ -105,7 +105,7 @@ function scaleWithVector(obj, factors, dir) {
 	rotateGeoTo(obj.geometry, dir);
 
 	// var ctr1 = obj.geometry.center();
-	var ctr1 = gettg(obj).center();
+	var ctr1 = XAC.getTransformedGeometry(obj).center();
 
 	var offset = ctr1.clone().sub(ctr0);
 	obj.geometry.translate(offset.x, offset.y, offset.z);
@@ -151,7 +151,7 @@ function markVertexNeighbors(obj) {
 	removeBalls();
 
 	obj.vneighbors = [];
-	var g = gettg(obj);
+	var g = XAC.getTransformedGeometry(obj);
 	var addNeighbors = function(list, idx, idxNeighbors) {
 		if (list[idx] == undefined) list[idx] = [];
 		for (var i = idxNeighbors.length - 1; i >= 0; i--) {
@@ -207,7 +207,7 @@ function getBoundingCylinder(obj, dir) {
 	var c = dir.z;
 	var d = -a * ctr.x - b * ctr.y - c * ctr.z;
 
-	var gt = gettg(obj);
+	var gt = XAC.getTransformedGeometry(obj);
 	// ctr = getProjection(ctr, a, b, c, d);
 	var r = 0;
 	var vMax;
@@ -244,7 +244,7 @@ function getBoundingBoxMesh(obj, material) {
 }
 
 XAC.getBoundingBoxEverything = function(obj) {
-	var gt = gettg(obj);
+	var gt = XAC.getTransformedGeometry(obj);
 	gt.computeBoundingBox();
 	var cmax = gt.boundingBox.max;
 	var cmin = gt.boundingBox.min;
@@ -285,7 +285,7 @@ function getBoundingBoxHelperCenter(obj) {
 }
 
 function getBoundingBoxDimensions(obj) {
-	var g = gettg(obj); // obj.geometry;
+	var g = XAC.getTransformedGeometry(obj); // obj.geometry;
 	g.computeBoundingBox();
 
 	var lx = (g.boundingBox.max.x - g.boundingBox.min.x);
@@ -301,13 +301,13 @@ function getBoundingBoxVolume(obj) {
 }
 
 function getBoundingSphereRadius(obj) {
-	var gt = gettg(obj);
+	var gt = XAC.getTransformedGeometry(obj);
 	gt.computeBoundingSphere();
 	return gt.boundingSphere.radius;
 }
 
 function getDimAlong(obj, dir) {
-	var gt = gettg(obj);
+	var gt = XAC.getTransformedGeometry(obj);
 	var range = project(gt.vertices, dir);
 	return range[1] - range[0];
 }
@@ -315,7 +315,7 @@ function getDimAlong(obj, dir) {
 function getEndPointsAlong(obj, dir) {
 	var ctr = getBoundingBoxHelperCenter(obj);
 	var ctrVal = dir.dot(ctr);
-	var gt = gettg(obj);
+	var gt = XAC.getTransformedGeometry(obj);
 	var range = project(gt.vertices, dir);
 
 	var endMin = ctr.clone().add(dir.clone().normalize().multiplyScalar(range[0] -

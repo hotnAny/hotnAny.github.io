@@ -331,8 +331,8 @@ FORTE.MedialAxis.prototype._mouseup = function(e) {
 	if (this._maniplane != undefined) {
 		this._maniplane.destruct();
 		this._maniplane = undefined;
-		// TODO:
-		// this._inflate();
+		// TODO: verify whether this is needed
+		this._inflate();
 	}
 
 	if (this._nodeSelected != undefined) {
@@ -346,11 +346,6 @@ FORTE.MedialAxis.prototype._mouseup = function(e) {
 			this._edgeSelected.joints[j - 1 < 0 ? 0 : j - 1].m.material = this._matHighlight;
 		}
 	}
-
-	// log('---')
-	// for (var i = 0; i < this._edges.length; i++) {
-	// 	log(this._edges[i].points.length);
-	// }
 
 	this._infSelected = undefined;
 }
@@ -708,25 +703,25 @@ FORTE.MedialAxis.prototype._inflateEdge = function(edge) {
 			});
 			edge.inflations.push(inflation);
 
-			if (i < thickness.length - 1) {
-				var joint = new XAC.Sphere(r, this._matInflation, false);
-				joint.m.position.copy(ctr);
-				edge.joints.push(joint);
-				this._scene.add(joint.m);
-			}
+			// if (i < thickness.length - 1) {
+			// 	var joint = new XAC.Sphere(r, this._matInflation, false);
+			// 	joint.m.position.copy(ctr);
+			// 	edge.joints.push(joint);
+			// 	this._scene.add(joint.m);
+			// }
 
 			this._scene.add(edge.inflations[i].m);
 		} else {
-			edge.inflations[i].update(ctr0, ctr, {
+			edge.inflations[i].updateEfficiently(ctr0, ctr, {
 				r1: r,
 				r2: r0
 			});
 
 			edge.inflations[i].m.material = this._matInflation;
 
-			if (i < thickness.length - 1) {
-				edge.joints[i].update(r, ctr); //.m.position.copy(ctr);
-			}
+			// if (i < thickness.length - 1) {
+			// 	edge.joints[i].update(r, ctr); //.m.position.copy(ctr);
+			// }
 		}
 
 		ctr0 = ctr;

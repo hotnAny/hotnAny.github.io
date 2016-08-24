@@ -58,6 +58,8 @@ XAC.ThickLine = function(p1, p2, r, mat) {
 	XAC.rotateObjTo(this._m, this._dir);
 	var ctr = p1.clone().add(p2).multiplyScalar(0.5);
 	this._m.position.copy(ctr);
+
+	this._r = r;
 }
 XAC.ThickLine.prototype = Object.create(XAC.Thing.prototype);
 XAC.ThickLine.prototype.update = function(p1, p2, r) {
@@ -68,6 +70,29 @@ XAC.ThickLine.prototype.update = function(p1, p2, r) {
 	this._dir = p2.clone().sub(p1);
 	XAC.rotateObjTo(this._m, this._dir);
 
+	var ctr = p1.clone().add(p2).multiplyScalar(0.5);
+	this._m.position.copy(ctr);
+}
+XAC.ThickLine.prototype.updateEfficiently = function(p1, p2, r) {
+	var dir = p2.clone().sub(p1);
+	if (dir.length() > XAC.EPSILON && this._dir.length() > XAC.EPSILON) {
+		// rotate
+		XAC.rotateObjTo(this._m, this._dir, true);
+
+		// scale the geometry
+		var yScale = dir.length() / this._dir.length();
+		var xzScale = (r.r1 + r.r2) / (this._r.r1 + this._r.r2);
+		// log([xyScale, zScale]);
+		// this._g.scale(xyScale, xyScale, zScale);
+		scaleAroundVector(this._m, xzScale, new THREE.Vector3(0, 1, 0));
+		scaleAlongVector(this._m, yScale, new THREE.Vector3(0, 1, 0));
+
+		XAC.rotateObjTo(this._m, dir);
+		this._r = r;
+		this._dir = dir;
+	}
+
+	// reposition
 	var ctr = p1.clone().add(p2).multiplyScalar(0.5);
 	this._m.position.copy(ctr);
 }
@@ -88,16 +113,16 @@ XAC.Plane.prototype = Object.create(XAC.Thing.prototype);
 XAC.Sphere = function(r, mat, highFi) {
 	this._r = r;
 	this._highFi = highFi;
-	this._g = this._highFi == true ? new THREE.SphereGeometry(r, 32, 32) : new THREE
-		.SphereGeometry(r, 8, 8);
+	this._g = this._highFi == true ? new THREE.SphereBufferGeometry(r, 32, 32) : new THREE
+		.SphereBufferGeometry(r, 8, 8);
 	this._m = new THREE.Mesh(this._g, mat == undefined ? XAC.MATERIALNORMAL.clone() :
 		mat.clone());
 };
 XAC.Sphere.prototype = Object.create(XAC.Thing.prototype);
 XAC.Sphere.prototype.update = function(r, ctr) {
 	if (r != undefined)
-		this._m.geometry = this._highFi == true ? new THREE.SphereGeometry(r, 32, 32) :
-		new THREE.SphereGeometry(r, 8, 8);
+		this._m.geometry = this._highFi == true ? new THREE.SphereBufferGeometry(r, 32, 32) :
+		new THREE.SphereBufferGeometry(r, 8, 8);
 	if (ctr != undefined)
 		this._m.position.copy(ctr);
 }
@@ -119,7 +144,7 @@ XAC.Cylinder.prototype.update = function(r, h, mat, openEnded) {
 	}
 
 	// TODO: make sure the radius segment is enough for visualization
-	this._g = new THREE.CylinderGeometry(this._r1, this._r2, this._h, 8, 1,
+	this._g = new THREE.CylinderBufferGeometry(this._r1, this._r2, this._h, 8, 1,
 		openEnded);
 	if (this._m == undefined) {
 		this._m = new THREE.Mesh(this._g, mat == undefined ? XAC.MATERIALNORMAL.clone() :

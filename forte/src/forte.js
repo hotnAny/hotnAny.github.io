@@ -180,7 +180,8 @@ $(document).ready(function() {
 
 	//	init an empty design
 	//	TODO: temp removed for testing
-	// FORTE.design = new FORTE.Design(FORTE.scene, FORTE.camera);
+	FORTE.design = new FORTE.Design(FORTE.scene, FORTE.camera);
+	// FORTE.design.setInkSize(0.1);
 
 	// finally do unit test
 	unitTest();
