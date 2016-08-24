@@ -192,9 +192,9 @@ FORTE.MedialAxis.prototype._mousedown = function(e) {
 	var edgeSelected = this._edgeSelected;
 	if (this._edgeSelected != undefined) {
 		for (var j = this._edgeSelected.inflations.length - 1; j >= 0; j--) {
-			this._edgeSelected.inflations[j].m.material = this._edgeSelected.inflations[j].m.materialPersistent; //his._matInflation;
-			this._edgeSelected.joints[j - 1 < 0 ? 0 : j - 1].m.material = this._edgeSelected.inflations[j].m
-				.materialPersistent; //his._matInflation;
+			this._edgeSelected.inflations[j].m.material = this._matInflation; // this._edgeSelected.inflations[j].m.materialPersistent; //
+			// this._edgeSelected.joints[j - 1 < 0 ? 0 : j - 1].m.material = this._edgeSelected.inflations[j].m
+			// 	.materialPersistent; //his._matInflation;
 		}
 		this._edgeSelected = undefined;
 	}
@@ -343,8 +343,9 @@ FORTE.MedialAxis.prototype._mouseup = function(e) {
 	if (this._edgeSelected != undefined) {
 		for (var j = this._edgeSelected.inflations.length - 1; j >= 0; j--) {
 			this._edgeSelected.inflations[j].m.material = this._matHighlight;
-			this._edgeSelected.joints[j - 1 < 0 ? 0 : j - 1].m.material = this._matHighlight;
+			// this._edgeSelected.joints[j - 1 < 0 ? 0 : j - 1].m.material = this._matHighlight;
 		}
+		log(this._edges.indexOf(this._edgeSelected));
 	}
 
 	this._infSelected = undefined;
@@ -475,7 +476,7 @@ FORTE.MedialAxis.prototype._removeEdge = function(edge) {
 	edge.deleted = true;
 	for (var j = edge.inflations.length - 1; j >= 0; j--) {
 		this._scene.remove(edge.inflations[j].m);
-		this._scene.remove(edge.joints[j - 1 < 0 ? 0 : j - 1].m);
+		// this._scene.remove(edge.joints[j - 1 < 0 ? 0 : j - 1].m);
 	}
 
 	if (isNodeEdgeless(edge.node1)) this._removeNode(edge.node1);
@@ -538,7 +539,7 @@ FORTE.MedialAxis.prototype._splitEdge = function(edge, pos) {
 		}
 	}
 
-	log('edge split!')
+	// log('edge split!')
 
 	return node;
 }

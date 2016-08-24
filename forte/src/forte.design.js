@@ -167,7 +167,7 @@ FORTE.Design.prototype._mousedown = function(e) {
 				// redraw the boundary, diff from other design
 				for (var j = edge.inflations.length - 1; j >= 0; j--) {
 					edge.inflations[j].m.material = this._matBoundary;
-					edge.joints[j < 1 ? 0 : j - 1].m.material = this._matBoundary;
+					// edge.joints[j < 1 ? 0 : j - 1].m.material = this._matBoundary;
 				}
 			}
 
@@ -400,7 +400,7 @@ FORTE.Design.prototype._mouseup = function(e) {
 			var anglePrev;
 
 			// TODO: don't split for now
-			var autoSplit = true;
+			var autoSplit = false;
 
 			// i starting at 2 to avoid corner cases at the starting point
 			for (var i = 2; i < mergedPoints.length - 2; i++) {
@@ -526,7 +526,7 @@ FORTE.Design.prototype._mouseup = function(e) {
 			// redraw the boundary
 			for (var i = edge.inflations.length - 1; i >= 0; i--) {
 				edge.inflations[i].m.material = this._matBoundary;
-				edge.joints[i < 1 ? 0 : i - 1].m.material = this._matBoundary;
+				// edge.joints[i < 1 ? 0 : i - 1].m.material = this._matBoundary;
 				this._funcElements.push(edge.inflations[i].m);
 			}
 
