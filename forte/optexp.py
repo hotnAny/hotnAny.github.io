@@ -14,7 +14,8 @@ import gc
 from topy_server import proc_post_data
 
 # examples x amnt material x resolution
-example_files = ['chair_02.forte', 'bookcase_02.forte', 'stepstool_02.forte']
+# example_files = ['chair_02.forte', 'bookcase_02.forte', 'stepstool_02.forte']
+example_files = ['trophy_base_01.forte', 'phone_stand_01.forte', 'hook_01.forte']
 example_data = []
 amnts_mats = [0.05 *  x for x in range(2, 6)]
 resolutions = [32 * x for x in range(4, 8)]
