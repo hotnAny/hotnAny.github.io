@@ -234,6 +234,10 @@ FORTE.MixedInitiatives.prototype.buildDependencyGraph = function(designOriginal,
         return intEdgesInfo;
     };
 
+    var computeProjection = function() {
+
+    }
+
     this._graph = [];
 
     // initialization & find connectivity between edges
@@ -250,15 +254,17 @@ FORTE.MixedInitiatives.prototype.buildDependencyGraph = function(designOriginal,
             },
 
             // connectivity, storing indices of neighbors
-            _neighboars1: [],
-            _neighboars2: [],
+            _neighbors1: [],
+            _neighbors2: [],
 
             // corresponded stuff
             _dp1: {
+                idxElm: -1, // index of the elm in the graph (mostly for debug use)
                 elm: undefined, // elm to depend upon
                 idx: -1 // which point on the dependUpon is the closest
             },
             _dp2: {
+                idxElm: -1,
                 elm: undefined,
                 idx: -1
             },
@@ -276,17 +282,20 @@ FORTE.MixedInitiatives.prototype.buildDependencyGraph = function(designOriginal,
         };
 
         var nodes = [elm._node1, elm._node2];
-        var neighbors = [elm._neighboars1, elm._neighboars2];
+        var neighbors = [elm._neighbors1, elm._neighbors2];
         for (var j = 0; j < nodes.length; j++) {
             var edgesInfo = getIntersectingEdge(nodes[j], designNew);
             for (var k = 0; k < edgesInfo.length; k++) {
-                if (edgesInfo[k].idxEdge != idx) neighbors[j].push(edgesInfo[k].idxEdge);
+                if (edgesInfo[k].idxEdge != idx) neighbors[j].push({
+                    idxElm: edgesInfo[k].idxEdge,
+                    idxIntPnt: edgesInfo[k].idxIntPnt
+                });
             }
         }
 
         // log(idx)
-        // log(elm._neighboars1)
-        // log(elm._neighboars2)
+        // log(elm._neighbors1)
+        // log(elm._neighbors2)
 
         this._graph.push(elm);
     }
@@ -297,7 +306,7 @@ FORTE.MixedInitiatives.prototype.buildDependencyGraph = function(designOriginal,
         var dps = [elm._dp1, elm._dp2];
         var posNodes = [elm._node1, elm._node2];
         var projNodes = [elm._projNode1, elm._projNode2];
-        var neighbors = [elm._neighboars1, elm._neighboars2];
+        var neighbors = [elm._neighbors1, elm._neighbors2];
 
         //
         //
@@ -310,9 +319,10 @@ FORTE.MixedInitiatives.prototype.buildDependencyGraph = function(designOriginal,
                 var thickness = edge.thickness;
                 for (var j = points.length - 1; j >= 0; j--) {
                     if (XAC.getDist(pos, points[j]) < thickness[j] * 2) {
-                        dps[k].id = 'o' + i; // HACK
+                        dps[k].type = 0; // original
                         dps[k].elm = edge
-                        dps[k].idx = j;
+                        dps[k].idxIntPnt = j;
+                        dps[k].idxElm = i;
                         // addABall(this._scene, new THREE.Vector3().fromArray(pos), 0xff0000, 5,
                         //     1);
                         break;
@@ -356,33 +366,49 @@ FORTE.MixedInitiatives.prototype.buildDependencyGraph = function(designOriginal,
                     //     5,
                     //     1);
                 }
-
-                // var pos = posNodes[k];
-                // for (var i = 0; i < boundaries.length; i++) {
-                //     for (var j = boundaries[i].length - 1; j >= 0; j--) {
-                //         // addABall(this._scene, new THREE.Vector3().fromArray(boundaries[i][j]),
-                //         //     0x000000,
-                //         //     3,
-                //         //     1);
-                //         log(XAC.getDist(pos, boundaries[i][j]))
-                //         if (XAC.getDist(pos, boundaries[i][j]) < 5) {
-                //             dps[k].id = 'b'; // HACK
-                //             // TODO: find the edge that intersects with the boundary
-                //             // dps[k].elm =
-                //             // TODO: on that edge find the proj
-                //             // dps[k].idx =
-
-                // }
-                // } // for the poitns on the boundary
-                // } // for each boundary
             } // for each dependency
         }
     }
 
     // find inter-correspondence in new design
-    for (var i = 0; i < this._graph.length; i++) {
-        this._graph[i]
-    }
+    for (var idx = 0; idx < this._graph.length; idx++) {
+        var elm = this._graph[idx];
+        var dps = [elm._dp1, elm._dp2];
+        var neighbors = [elm._neighbors1, elm._neighbors2];
+        for (var j = 0; j < dps.length; j++) {
+            if (dps[j].elm == undefined) {
+                for (var k = 0; k < neighbors[j].length; k++) {
+                    var idxNeighbor = neighbors[j][k].idxElm;
+                    var idxIntPnt = neighbors[j][k].idxIntPnt;
+                    var elmNeighbor = this._graph[idxNeighbor];
+                    if (elmNeighbor._dp1.elm != undefined && elmNeighbor._dp2.elm != undefined) {
+                        dps[j].type = 1; // new design
+                        dps[j].elm = elmNeighbor;
+                        dps[j].idxElm = idxNeighbor;
+                        dps[j].idxIntPnt = idxIntPnt;
+                        break;
+                    }
+                }
+
+                // if find no dependUpons, depend on itself
+                if (dps[j].elm == undefined) {
+                    dps[j].type = 1;
+                    dps[j].elm = elm;
+                    dps[j].idxElm = idx;
+
+                    // TODO: compute projection
+                }
+            } // looking for neighbor to depend on
+        } // each node (2 in total)
+    } // each graph elm
+
+    // for (var idx = 0; idx < this._graph.length; idx++) {
+    //     log(idx)
+    //     var elm = this._graph[idx];
+    //     log([elm._dp1.type == 1 ? elm._dp1.idxElm + '-' + elm._dp1.idxIntPnt : '',
+    //         elm._dp2.type == 1 ? elm._dp2.idxElm + '-' + elm._dp2.idxIntPnt : ''
+    //     ]);
+    // }
 }
 
 FORTE.MixedInitiatives.prototype.project = function() {
@@ -402,8 +428,55 @@ FORTE.MixedInitiatives.prototype.interpolate = function(t) {
     }
 
     // do node to node simple linear interpolation
-    var _interpolate = function(n1, n2, t) {
-        // TODO
+    // var _interpolate = function(p1, p2, t) {
+    //     var len = Math.min(p1.length, p2.length);
+    //     var arr = [];
+    //     for(var i=0; i<len; i++) {
+    //         arr.push(p1[i] * t + p2[i] * (1))
+    //     }
+    // };
+
+    // recursive update routine
+    var _updateElm = function(elm, t) {
+        var dps = [elm._dp1, elm._dp2];
+        var _nodes = [elm._node1, elm._node2];
+        var nodes = [elm.node1, elm.node2];
+
+        for (var i = 0; i < dps.length; i++) {
+            switch (dps[i].type) {
+                case 0: // depend on original design
+                    // interpolate in geodesic space
+                    if (dps[i].path != undefined) {
+                        var idx = XAC.float2int(dps[i].path.length * t);
+                        nodes[i] = dps[i].path[idx];
+                    }
+                    // interpolate in cartesian space
+                    else {
+                        var projection = dps[i].elm.points[dps[i].idxIntPnt];
+                        // nodes[i] = _interpolate(elm._nodes[i], projection, t);
+                        nodes[i] = elm._nodes[i].clone().times(t).add(projection.times(1-t));
+                    }
+                    break;
+                case 1: // depend on new design
+                    if (dps[i].elm.needsUpdate) _updateElm(dps[i].elm, t);
+                    nodes[i] = dps[i].elm.points[dps[i].idxIntPnt];
+                    break;
+            }
+        }
+
+        var len = XAC.getDist(elm._node1, elm._node2);
+        var dnode1 = elm.node1.clone().sub(elm._node1);
+        var dnode2 = elm.node2.clone().sub(elm._node2);
+        for (var i = 0; i < elm._edge.points; i++) {
+            var point = XAC.copyArray(elm._edge.points[i]);
+            var len1 = XAC.getDist(point, elm._node1);
+            point.add(dnode1.clone().times(1 - len1 / len));
+            var len2 = XAC.getDist(point, elm._node2);
+            point.add(dnode2.clone().times(1 - len2 / len));
+            elm.edges.push(point);
+        }
+
+        elm.needsUpdate = false;
     }
 
     // clean up previous values
@@ -415,38 +488,6 @@ FORTE.MixedInitiatives.prototype.interpolate = function(t) {
             thickness: []
         }
         this._graph[i].needsUpdate = true;
-    }
-
-    // recursive update routine
-    var _updateElm = function(elm, t) {
-        // elm is fully projected onto the original design
-        if (elm._projEdge != undefined) {
-            elm.node1 = _interpolate(elm._node1, elm._projNode1, t);
-            elm.node2 = _interpolate(elm._node2, elm._projNode2, t);
-            for (var j = 0; j < elm._projEdge.points.length; j++) {
-                elm.edge.points.push(_interpolate(elm._edge.points[j], elm._projEdge.points[
-                    j], t));
-                elm.edge.thickness[j].push(_interpolate(elm._edge.thickness[j], elm._projEdge
-                    .thickness[j], t));
-            }
-        }
-        // elm is partially projected or dependent on other elms
-        else {
-            var nodes = [elm.node1, elm.node2];
-            var dps = [elm._dp1, elm._dp2];
-            var projNodes = [elm._projNode1, elm._projNode2];
-            for (var i = 0; i < dps.length; i++) {
-                if (dps[i] != undefined) {
-                    _updateElm(dps[i].elm, t);
-                    nodes[i] = dps[i].elm.edge.points[dps[i].idx];
-                } else if (projNodes[i] != undefined) {
-                    nodes[i] = _interpolate(nodes[i], projNodes[i], t);
-                } else {
-                    err('we have a problem ...')
-                }
-            }
-        }
-        elm.needsUpdate = false;
     }
 
     var designInterpolated = [];
