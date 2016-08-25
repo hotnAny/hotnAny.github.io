@@ -1,3 +1,11 @@
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ *	Mixed Initiatives
+ *  - a collection of mixed initiative methods
+ *
+ *	@author Xiang 'Anthony' Chen http://xiangchen.me
+ *
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
 var FORTE = FORTE || {};
 
 FORTE.MixedInitiatives = function(scene, camera) {
@@ -33,18 +41,18 @@ FORTE.MixedInitiatives.prototype._mouseup = function(e) {
 //
 FORTE.MixedInitiatives.prototype._computeDistanceField = function(design) {
     var assign = function(v, dfval, dx, dy, dz) {
-            var idx = vxg.getIndex(v, dx, dy, dz);
-            var dfx = idx[0];
-            var dfy = idx[1];
-            var dfz = idx[2];
-            if (df[dfx][dfy][dfz] == XAC.INFINITY) {
-                df[dfx][dfy][dfz] = dfval;
-                counter++;
-                return idx;
-            }
-            return undefined;
+        var idx = vxg.getIndex(v, dx, dy, dz);
+        var dfx = idx[0];
+        var dfy = idx[1];
+        var dfz = idx[2];
+        if (df[dfx][dfy][dfz] == XAC.INFINITY) {
+            df[dfx][dfy][dfz] = dfval;
+            counter++;
+            return idx;
         }
-        // var df = [];
+        return undefined;
+    };
+    // var df = [];
 
     // make a voxel grid
     var medialAxis = design._medialAxis;
@@ -195,6 +203,265 @@ FORTE.MixedInitiatives.prototype._showDistanceField = function(df, offset) {
         } // j
     } // i
 }
+
+FORTE.MixedInitiatives.prototype.buildDependencyGraph = function(designOriginal, designNew,
+    boundaries) {
+    var getIntersectingEdge = function(pos, edges, oneHit) {
+        var intEdgesInfo = [];
+        var rndnum = Math.random() * 10;
+        for (var i = edges.length - 1; i >= 0; i--) {
+            var edge = edges[i];
+            var points = edge.points;
+            var thickness = edge.thickness;
+            for (var j = points.length - 1; j >= 0; j--) {
+                if (XAC.getDist(pos, points[j]) < thickness[j] * 2) {
+                    var edgeInfo = {
+                        idxEdge: i,
+                        idxIntPnt: j
+                    };
+                    if (oneHit == true) {
+                        return edgeInfo;
+                    }
+                    intEdgesInfo.push(edgeInfo);
+                    // addABall(FORTE.scene, new THREE.Vector3().fromArray(pos), 0xff0000 +
+                    //     rndnum *
+                    //     0x008800, 2,
+                    //     1);
+                    break;
+                }
+            } // for the poitns on each edge
+        } // for each edge
+        return intEdgesInfo;
+    };
+
+    this._graph = [];
+
+    // initialization & find connectivity between edges
+    for (var idx = 0; idx < designNew.length; idx++) {
+        var edge = designNew[idx];
+
+        var elm = {
+            // original stuff
+            _node1: edge.node1,
+            _node2: edge.node2,
+            _edge: {
+                points: XAC.copyArray(edge.points),
+                thickness: XAC.copyArray(edge.thickness)
+            },
+
+            // connectivity, storing indices of neighbors
+            _neighboars1: [],
+            _neighboars2: [],
+
+            // corresponded stuff
+            _dp1: {
+                elm: undefined, // elm to depend upon
+                idx: -1 // which point on the dependUpon is the closest
+            },
+            _dp2: {
+                elm: undefined,
+                idx: -1
+            },
+            _projNode1: undefined,
+            _projNode2: undefined,
+            _projEdge: undefined,
+
+            // interpolated stuff
+            node1: undefined,
+            node2: undefined,
+            edge: {
+                points: [],
+                thickness: []
+            }
+        };
+
+        var nodes = [elm._node1, elm._node2];
+        var neighbors = [elm._neighboars1, elm._neighboars2];
+        for (var j = 0; j < nodes.length; j++) {
+            var edgesInfo = getIntersectingEdge(nodes[j], designNew);
+            for (var k = 0; k < edgesInfo.length; k++) {
+                if (edgesInfo[k].idxEdge != idx) neighbors[j].push(edgesInfo[k].idxEdge);
+            }
+        }
+
+        // log(idx)
+        // log(elm._neighboars1)
+        // log(elm._neighboars2)
+
+        this._graph.push(elm);
+    }
+
+    //find correspondence to original design and boundary
+    for (var idx = 0; idx < this._graph.length; idx++) {
+        var elm = this._graph[idx];
+        var dps = [elm._dp1, elm._dp2];
+        var posNodes = [elm._node1, elm._node2];
+        var projNodes = [elm._projNode1, elm._projNode2];
+        var neighbors = [elm._neighboars1, elm._neighboars2];
+
+        //
+        //
+        // find incident edge from the original design, if there is any
+        for (var k = 0; k < dps.length; k++) {
+            var pos = posNodes[k];
+            for (var i = designOriginal.length - 1; i >= 0 && dps[k].elm == undefined; i--) {
+                var edge = designOriginal[i];
+                var points = edge.points;
+                var thickness = edge.thickness;
+                for (var j = points.length - 1; j >= 0; j--) {
+                    if (XAC.getDist(pos, points[j]) < thickness[j] * 2) {
+                        dps[k].id = 'o' + i; // HACK
+                        dps[k].elm = edge
+                        dps[k].idx = j;
+                        // addABall(this._scene, new THREE.Vector3().fromArray(pos), 0xff0000, 5,
+                        //     1);
+                        break;
+                    }
+                } // for the poitns on each edge
+            } // for each edge
+        } // for each dependency
+
+        //
+        //
+        // TODO: compute projections
+        // both ends on original design
+        if (elm._dp1.elm != undefined && elm._dp2.elm != undefined) {
+            elm._projEdge = {
+                points: [],
+                thickness: []
+            };
+        }
+        // one end on original design
+        else {
+            var edge = elm._dp1.elm || elm._dp2.elm;
+            if (edge != undefined) {
+                elm._projEdge = {
+                    points: edge.points,
+                    thickness: edge.thickness
+                };
+            }
+        }
+
+        //
+        //
+        // find if incident to boundary
+        if (elm._projEdge == undefined) {
+            for (var k = 0; k < dps.length; k++) {
+                if (neighbors[k].length == 0) {
+                    // TODO: find the edge that intersects with the boundary
+                    // dps[k].elm =
+                    // TODO: on that edge find the proj
+                    // dps[k].idx =
+                    // addABall(this._scene, new THREE.Vector3().fromArray(pos), 0xff0000,
+                    //     5,
+                    //     1);
+                }
+
+                // var pos = posNodes[k];
+                // for (var i = 0; i < boundaries.length; i++) {
+                //     for (var j = boundaries[i].length - 1; j >= 0; j--) {
+                //         // addABall(this._scene, new THREE.Vector3().fromArray(boundaries[i][j]),
+                //         //     0x000000,
+                //         //     3,
+                //         //     1);
+                //         log(XAC.getDist(pos, boundaries[i][j]))
+                //         if (XAC.getDist(pos, boundaries[i][j]) < 5) {
+                //             dps[k].id = 'b'; // HACK
+                //             // TODO: find the edge that intersects with the boundary
+                //             // dps[k].elm =
+                //             // TODO: on that edge find the proj
+                //             // dps[k].idx =
+
+                // }
+                // } // for the poitns on the boundary
+                // } // for each boundary
+            } // for each dependency
+        }
+    }
+
+    // find inter-correspondence in new design
+    for (var i = 0; i < this._graph.length; i++) {
+        this._graph[i]
+    }
+}
+
+FORTE.MixedInitiatives.prototype.project = function() {
+    // project to design
+
+    // project to ground
+
+}
+
+//
+//
+//  return the interpolated new design (not including the original one)
+//
+FORTE.MixedInitiatives.prototype.interpolate = function(t) {
+    if (this._graph == undefined) {
+        return;
+    }
+
+    // do node to node simple linear interpolation
+    var _interpolate = function(n1, n2, t) {
+        // TODO
+    }
+
+    // clean up previous values
+    for (var i = 0; i < this._graph.length; i++) {
+        this._graph[i].node1 = undefined;
+        this._graph[i].node2 = undefined;
+        this._graph[i].edge = {
+            points: [],
+            thickness: []
+        }
+        this._graph[i].needsUpdate = true;
+    }
+
+    // recursive update routine
+    var _updateElm = function(elm, t) {
+        // elm is fully projected onto the original design
+        if (elm._projEdge != undefined) {
+            elm.node1 = _interpolate(elm._node1, elm._projNode1, t);
+            elm.node2 = _interpolate(elm._node2, elm._projNode2, t);
+            for (var j = 0; j < elm._projEdge.points.length; j++) {
+                elm.edge.points.push(_interpolate(elm._edge.points[j], elm._projEdge.points[
+                    j], t));
+                elm.edge.thickness[j].push(_interpolate(elm._edge.thickness[j], elm._projEdge
+                    .thickness[j], t));
+            }
+        }
+        // elm is partially projected or dependent on other elms
+        else {
+            var nodes = [elm.node1, elm.node2];
+            var dps = [elm._dp1, elm._dp2];
+            var projNodes = [elm._projNode1, elm._projNode2];
+            for (var i = 0; i < dps.length; i++) {
+                if (dps[i] != undefined) {
+                    _updateElm(dps[i].elm, t);
+                    nodes[i] = dps[i].elm.edge.points[dps[i].idx];
+                } else if (projNodes[i] != undefined) {
+                    nodes[i] = _interpolate(nodes[i], projNodes[i], t);
+                } else {
+                    err('we have a problem ...')
+                }
+            }
+        }
+        elm.needsUpdate = false;
+    }
+
+    var designInterpolated = [];
+    for (var i = 0; i < this._graph.length; i++) {
+        var elm = this._graph[i];
+        if (elm.needsUpdate == true) {
+            _udpate(elm, t);
+        }
+        designInterpolated.push(elm.edge);
+    }
+
+    return designInterpolated;
+
+}
+
 
 //
 //

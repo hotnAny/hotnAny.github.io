@@ -76,18 +76,18 @@ XAC.ThickLine.prototype.update = function(p1, p2, r) {
 XAC.ThickLine.prototype.updateEfficiently = function(p1, p2, r) {
 	var dir = p2.clone().sub(p1);
 	if (dir.length() > XAC.EPSILON && this._dir.length() > XAC.EPSILON) {
-		// rotate
+		// rotate back
 		XAC.rotateObjTo(this._m, this._dir, true);
 
-		// scale the geometry
+		// scale
 		var yScale = dir.length() / this._dir.length();
 		var xzScale = (r.r1 + r.r2) / (this._r.r1 + this._r.r2);
-		// log([xyScale, zScale]);
-		// this._g.scale(xyScale, xyScale, zScale);
 		scaleAroundVector(this._m, xzScale, new THREE.Vector3(0, 1, 0));
 		scaleAlongVector(this._m, yScale, new THREE.Vector3(0, 1, 0));
 
+		// rotate
 		XAC.rotateObjTo(this._m, dir);
+
 		this._r = r;
 		this._dir = dir;
 	}

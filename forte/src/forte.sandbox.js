@@ -49,11 +49,9 @@ function unitTest() {
 				// FORTE.tmp -= 0.1;
 				// FORTE.design.setInkSize(FORTE.tmp);
 				var t = XAC.clamp(FORTE.t - 0.1, 0, 1);
-				log([t, FORTE.t])
 				if (FORTE.t != t) {
 					FORTE.t = t;
 					FORTE.design.interpolate(FORTE.designVariations, [FORTE.t, 1 - FORTE.t]);
-
 				}
 				// log(FORTE.scene.children.length)
 				break;
@@ -65,11 +63,9 @@ function unitTest() {
 				// FORTE.tmp += 0.1;
 				// FORTE.design.setInkSize(FORTE.tmp);
 				var t = XAC.clamp(FORTE.t + 0.1, 0, 1);
-				log([t, FORTE.t])
 				if (FORTE.t != t) {
 					FORTE.t = t;
 					FORTE.design.interpolate(FORTE.designVariations, [FORTE.t, 1 - FORTE.t]);
-
 				}
 				// log(FORTE.scene.children.length)
 				break;
@@ -203,6 +199,21 @@ FORTE.Design.fromRawData = function(designObj, scene, camera) {
 		design._loadsRaw = designObj.loads;
 		design._boundariesRaw = designObj.boundaries;
 		design._clearancesRaw = designObj.clearances;
+
+		// HACK
+		var designOriginal = [];
+		var designNew = [];
+		for (var i = 0; i < designObj.design.length; i++) {
+			if (designObj.isNew == undefined || designObj.isNew[i] == true) {
+				designNew.push(designObj.design[i]);
+			} else if (designObj.isNew[i] == false) {
+				designOriginal.push(designObj.design[i]);
+			}
+		}
+
+
+		FORTE.mixedInitiative = FORTE.mixedInitiative || new FORTE.MixedInitiatives(FORTE.scene, FORTE.camera);
+		FORTE.mixedInitiative.buildDependencyGraph(designOriginal, designNew, designObj.boundaries);
 
 		return design;
 	} catch (e) {
