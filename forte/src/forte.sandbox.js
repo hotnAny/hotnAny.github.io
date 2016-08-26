@@ -4,7 +4,7 @@ function unitTest() {
 	// DEBUG: distance fields
 	var dfs = [];
 	var intval = 0.05;
-	var step = 0.1;
+	var step = 0.02;
 
 	document.addEventListener('keydown', function(e) {
 		switch (e.keyCode) {
@@ -48,10 +48,12 @@ function unitTest() {
 				// mili._interpolateDistanceFields(df1, df2, idxt * 1.0 / (dfmts.length - 1));
 				// FORTE.tmp -= 0.1;
 				// FORTE.design.setInkSize(FORTE.tmp);
-				var t = XAC.clamp(FORTE.t - 0.1, 0, 1);
+				var t = XAC.clamp(FORTE.t - step, 0, 1);
 				if (FORTE.t != t) {
 					FORTE.t = t;
-					FORTE.design.interpolate(FORTE.designVariations, [FORTE.t, 1 - FORTE.t]);
+					// FORTE.design.interpolate(FORTE.designVariations, [FORTE.t, 1 - FORTE.t]);
+					FORTE.design._medialAxis.updateFromRawData(FORTE.designOriginal.clone().concat(FORTE.mixedInitiative
+						.interpolate(FORTE.t)));
 				}
 				// log(FORTE.scene.children.length)
 				break;
@@ -62,10 +64,12 @@ function unitTest() {
 				// mili._interpolateDistanceFields(df1, df2, idxt * 1.0 / (dfmts.length - 1));
 				// FORTE.tmp += 0.1;
 				// FORTE.design.setInkSize(FORTE.tmp);
-				var t = XAC.clamp(FORTE.t + 0.1, 0, 1);
+				var t = XAC.clamp(FORTE.t + step, 0, 1);
 				if (FORTE.t != t) {
 					FORTE.t = t;
-					FORTE.design.interpolate(FORTE.designVariations, [FORTE.t, 1 - FORTE.t]);
+					// FORTE.design.interpolate(FORTE.designVariations, [FORTE.t, 1 - FORTE.t]);
+					FORTE.design._medialAxis.updateFromRawData(FORTE.designOriginal.clone().concat(FORTE.mixedInitiative
+						.interpolate(FORTE.t)));
 				}
 				// log(FORTE.scene.children.length)
 				break;
@@ -86,7 +90,11 @@ function unitTest() {
 	FORTE.tmp = 0.2;
 	// FORTE.design.setInkSize(FORTE.tmp);
 
-	FORTE.t = 0;
+	FORTE.t = 1;
+
+	var arr1 = [3, 2, 4];
+	var arr2 = [10, 0, -8];
+	log(arr1.times(5));;
 
 	log('----------------  unit test ends  ----------------');
 }
@@ -201,19 +209,19 @@ FORTE.Design.fromRawData = function(designObj, scene, camera) {
 		design._clearancesRaw = designObj.clearances;
 
 		// HACK
-		var designOriginal = [];
-		var designNew = [];
+		FORTE.designOriginal = [];
+		FORTE.designNew = [];
 		for (var i = 0; i < designObj.design.length; i++) {
-			if (designObj.isNew == undefined || designObj.isNew[i] == true) {
-				designNew.push(designObj.design[i]);
-			} else if (designObj.isNew[i] == false) {
-				designOriginal.push(designObj.design[i]);
+			if (designObj.isNew != undefined && designObj.isNew[i] == true) {
+				FORTE.designNew.push(designObj.design[i]);
+			} else {
+				FORTE.designOriginal.push(designObj.design[i]);
 			}
 		}
 
-
 		FORTE.mixedInitiative = FORTE.mixedInitiative || new FORTE.MixedInitiatives(FORTE.scene, FORTE.camera);
-		FORTE.mixedInitiative.buildDependencyGraph(designOriginal, designNew, designObj.boundaries);
+		if (FORTE.designNew.length > 0)
+			FORTE.mixedInitiative.buildDependencyGraph(FORTE.designOriginal, FORTE.designNew, designObj.boundaries);
 
 		return design;
 	} catch (e) {
@@ -224,47 +232,64 @@ FORTE.Design.fromRawData = function(designObj, scene, camera) {
 FORTE.MedialAxis.fromRawData = function(edges, scene, camera) {
 	var medialAxis = new FORTE.MedialAxis(scene, camera);
 	medialAxis.RESTORINGEDGE = false;
-	for (var i = 0; i < edges.length; i++) {
-		var points = [];
-
-		for (var j = 0; j < edges[i].points.length; j++) {
-			points.push(new THREE.Vector3().fromArray(edges[i].points[j]));
-		}
-
-		try {
-			var edge = medialAxis.addEdge(points, false);
-			edge.thickness = edges[i].thickness;
-			// log(edge.points.length)
-		} catch (e) {
-			edges[i].deleted = true;
-			err(e.stack)
-		}
-	}
-
-	for (var i = 0; i < medialAxis.nodes.length; i++) {
-		var node = medialAxis.nodes[i];
-		var r = 0;
-		for (var j = 0; j < node.edges.length; j++) {
-			var edge = node.edges[j];
-			r += node == edge.node1 ? edge.thickness[0] : edge.thickness.slice(-1)[0]
-		}
-		node.radius = r * 1.1 / node.edges.length;
-	}
-
-	var rmean = 0;
-	var cnt = 0;
-	for (var i = 0; i < medialAxis.edges.length; i++) {
-		var edge = medialAxis.edges[i];
-		for (var j = 0; j < edge.thickness.length; j++) {
-			rmean += edge.thickness[j];
-			cnt++;
-		}
-	}
-	rmean /= cnt;
-
-	medialAxis._radiusEdge = rmean;
-	medialAxis._radiusNode = medialAxis._radiusEdge * 1.1;
-
-	medialAxis._inflate();
+	medialAxis.updateFromRawData(edges);
 	return medialAxis;
+}
+
+FORTE.MedialAxis.prototype.updateFromRawData = function(edges) {
+	if (this._edges.length == 0) {
+		for (var i = 0; i < edges.length; i++) {
+			var points = [];
+
+			for (var j = 0; j < edges[i].points.length; j++) {
+				points.push(new THREE.Vector3().fromArray(edges[i].points[j]));
+			}
+
+			try {
+				var edge = this.addEdge(points, false);
+				edge.thickness = edges[i].thickness;
+				// log(edge.points.length)
+			} catch (e) {
+				edges[i].deleted = true;
+				err(e.stack)
+			}
+		}
+
+		for (var i = 0; i < this._nodes.length; i++) {
+			var node = this._nodes[i];
+			var r = 0;
+			for (var j = 0; j < node.edges.length; j++) {
+				var edge = node.edges[j];
+				r += node == edge.node1 ? edge.thickness[0] : edge.thickness.slice(-1)[0]
+			}
+			node.radius = r * 1.1 / node.edges.length;
+		}
+
+		var rmean = 0;
+		var cnt = 0;
+		for (var i = 0; i < this._edges.length; i++) {
+			var edge = this._edges[i];
+			for (var j = 0; j < edge.thickness.length; j++) {
+				rmean += edge.thickness[j];
+				cnt++;
+			}
+		}
+		rmean /= cnt;
+
+		this._radiusEdge = rmean;
+		this._radiusNode = this._radiusEdge * 1.1;
+	} else {
+		for (var i = 0; i < this._edges.length; i++) {
+			var edge = this._edges[i];
+			edge.node1.position.copy(new THREE.Vector3().fromArray(edges[i].node1));
+			edge.node2.position.copy(new THREE.Vector3().fromArray(edges[i].node2));
+
+			for (var j = 0; j < edge.points.length; j++) {
+				edge.points[j] = new THREE.Vector3().fromArray(edges[i].points[j]);
+				edge.thickness[j] = edges[i].thickness[j];
+			}
+		}
+	}
+
+	this._inflate();
 }

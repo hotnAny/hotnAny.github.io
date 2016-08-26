@@ -401,6 +401,7 @@ FORTE.Design.prototype._mouseup = function(e) {
 
 			// TODO: don't split for now
 			var autoSplit = false;
+			var autoJoin = false;
 
 			// i starting at 2 to avoid corner cases at the starting point
 			for (var i = 2; i < mergedPoints.length - 2; i++) {
@@ -414,7 +415,7 @@ FORTE.Design.prototype._mouseup = function(e) {
 
 				if (anglePrev != undefined) {
 					if (Math.abs(angle - anglePrev) > Math.PI / 4) {
-						this._medialAxis.addEdge(mergedPoints.slice(0, i + 1), autoSplit);
+						this._medialAxis.addEdge(mergedPoints.slice(0, i + 1), autoSplit, autoJoin);
 
 						mergedPoints = mergedPoints.slice(i);
 						i = 0;

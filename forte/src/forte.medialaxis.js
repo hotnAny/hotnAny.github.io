@@ -104,16 +104,16 @@ FORTE.MedialAxis.prototype.addNode = function(pos, toConnect) {
 //	@param	points - input points corresponding to an edge
 //	@param	autoSplit - whether to split it when the edge starts on another edge
 //
-FORTE.MedialAxis.prototype.addEdge = function(points, autoSplit) {
+FORTE.MedialAxis.prototype.addEdge = function(points, autoSplit, autoJoin) {
 	if (points == undefined || points.length < 2) {
 		return;
 	}
 
 	// check if starting from existing nodes
-	var idx1 = this._findNode(points[0], false);
+	var idx1 = autoJoin ? this._findNode(points[0], false) : -1;
 	var node1 = idx1 >= 0 ? this._nodes[idx1] : this._addNode(points[0].clone(),
 		autoSplit);
-	var idx2 = this._findNode(points[points.length - 1], false);
+	var idx2 = autoJoin ? this._findNode(points[points.length - 1], false) : -1;
 	var node2 = idx2 >= 0 ? this._nodes[idx2] : this._addNode(points.slice(-1)[0]
 		.clone(), autoSplit);
 
@@ -688,8 +688,8 @@ FORTE.MedialAxis.prototype._inflateEdge = function(edge) {
 			r = (thickness[i - 1] + thickness[i] + thickness[i + 1]) / 3;
 		}
 
-		// TODO: experimental, to show a larger sketch
-		r *= 1.5;
+		// HACK: experimental, to show a larger sketch
+		// r *= 1.5;
 
 		if (edge.inflations[i] == undefined) {
 			var inflation = new XAC.ThickLine(ctr0, ctr, {

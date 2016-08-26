@@ -49,7 +49,7 @@ function loadStl(data) {
 
 }
 
-function addALine(v1, v2, clr) {
+function addALine(scene, v1, v2, clr) {
 	clr = clr == undefined ? 0xff0000 : clr;
 
 	var geometry = new THREE.Geometry();
@@ -310,4 +310,40 @@ XAC.initMDArray = function(dims, val) {
 		array.push(XAC.initMDArray(dims.slice(1), val));
 	}
 	return array;
+}
+
+Array.prototype.clone = function() {
+	var arr = [];
+	for (var i = 0; i < this.length; i++) {
+		arr.push(this[i]);
+	}
+	return arr;
+}
+
+Array.prototype.add = function(arr, sign) {
+	if(arr == undefined) return;
+	sign = sign || 1;
+	var len = Math.min(this.length, arr.length);
+	for(var i=0; i<len; i++) {
+		this[i] += sign * arr[i];
+	}
+	return this;
+}
+
+Array.prototype.sub = function(arr) {
+	return this.add(arr, -1);
+}
+
+Array.prototype.times = function(s) {
+	for(var i=0; i<this.length; i++) {
+		this[i] *= s
+	}
+	return this;
+}
+
+Array.prototype.copy = function(arr) {
+	this.splice(0, this.length);
+	for (var i = 0; i < arr.length; i++) {
+		this.push(arr[i]);
+	}
 }
