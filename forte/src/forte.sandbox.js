@@ -52,7 +52,7 @@ function unitTest() {
 				if (FORTE.t != t) {
 					FORTE.t = t;
 					// FORTE.design.interpolate(FORTE.designVariations, [FORTE.t, 1 - FORTE.t]);
-					FORTE.design._medialAxis.updateFromRawData(FORTE.designOriginal.clone().concat(FORTE.mixedInitiative
+					FORTE.design._medialAxis.updateFromRawData(FORTE.designOriginal.clone().concat(FORTE.interpolation
 						.interpolate(FORTE.t)));
 				}
 				// log(FORTE.scene.children.length)
@@ -68,7 +68,7 @@ function unitTest() {
 				if (FORTE.t != t) {
 					FORTE.t = t;
 					// FORTE.design.interpolate(FORTE.designVariations, [FORTE.t, 1 - FORTE.t]);
-					FORTE.design._medialAxis.updateFromRawData(FORTE.designOriginal.clone().concat(FORTE.mixedInitiative
+					FORTE.design._medialAxis.updateFromRawData(FORTE.designOriginal.clone().concat(FORTE.interpolation
 						.interpolate(FORTE.t)));
 				}
 				// log(FORTE.scene.children.length)
@@ -219,9 +219,10 @@ FORTE.Design.fromRawData = function(designObj, scene, camera) {
 			}
 		}
 
-		FORTE.mixedInitiative = FORTE.mixedInitiative || new FORTE.MixedInitiatives(FORTE.scene, FORTE.camera);
-		if (FORTE.designNew.length > 0)
-			FORTE.mixedInitiative.buildDependencyGraph(FORTE.designOriginal, FORTE.designNew, designObj.boundaries);
+
+		if (FORTE.designNew.length > 0){
+			FORTE.interpolation = FORTE.interpolation || new FORTE.Interpolation(FORTE.designOriginal, FORTE.designNew, FORTE.scene, FORTE.camera);
+		}
 
 		return design;
 	} catch (e) {
