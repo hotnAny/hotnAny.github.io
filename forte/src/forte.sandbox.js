@@ -4,13 +4,30 @@ function unitTest() {
 	// DEBUG: distance fields
 	var dfs = [];
 	var intval = 0.05;
-	var step = 0.02;
+	var step = 0.05;
+
+	// HACK
+	var keepPinging = function(interval) {
+		var strData = FORTE.design.getData();
+		log('request sent for t = ' + FORTE.t)
+		XAC.pingServer(FORTE.xmlhttp, 'localhost', '9999', ['forte', 'query',
+			'resolution', 'material', 'originality', 'verbose'
+		], [strData, 0, 64, 0.25, 1.0, 1]);
+		FORTE.t -= step;
+		if (FORTE.t >= 0 && interval != undefined) {
+			FORTE.design._medialAxis.updateFromRawData(FORTE.designOriginal.clone().concat(FORTE.interpolation
+				.interpolate(FORTE.t)));
+			setTimeout(function() {
+				keepPinging(interval);
+			}, interval);
+		}
+	}
 
 	document.addEventListener('keydown', function(e) {
 		switch (e.keyCode) {
 			case 48:
 				FORTE.design._mode = FORTE.Design.POINTER;
-				$(FORTE.renderer.domElement).css('cursor', 'pointer');
+				$(FORTE.canvasRenderer.domElement).css('cursor', 'pointer');
 				break;
 			case 49:
 				FORTE.switchLayer(FORTE.FORMLAYER);
@@ -19,13 +36,12 @@ function unitTest() {
 				FORTE.switchLayer(FORTE.FUNCSPECLAYER);
 				break;
 			case 83: //S
-				var strData = FORTE.design.getData();
-				// log(strData)
-				XAC.pingServer(FORTE.xmlhttp, 'localhost', '9999', ['forte', 'query',
-					'resolution', 'material', 'originality', 'verbose'
-				], [strData, 0, 64, 0.25, 1.0, 1]);
-				// FORTE.design._mode = FORTE.FUNCTIONALFEEDBACK;
-				// $(FORTE.renderer.domElement).css('cursor', 'help');
+				// var strData = FORTE.design.getData();
+				// // log(strData)
+				// XAC.pingServer(FORTE.xmlhttp, 'localhost', '9999', ['forte', 'query',
+				// 	'resolution', 'material', 'originality', 'verbose'
+				// ], [strData, 0, 64, 0.25, 1.0, 1]);
+				keepPinging(6000);
 				FORTE.switchLayer(FORTE.FEEDBACKLAYER);
 				break;
 			case 79: //O
@@ -54,6 +70,7 @@ function unitTest() {
 					// FORTE.design.interpolate(FORTE.designVariations, [FORTE.t, 1 - FORTE.t]);
 					FORTE.design._medialAxis.updateFromRawData(FORTE.designOriginal.clone().concat(FORTE.interpolation
 						.interpolate(FORTE.t)));
+					log(FORTE.t)
 				}
 				// log(FORTE.scene.children.length)
 				break;
@@ -70,6 +87,7 @@ function unitTest() {
 					// FORTE.design.interpolate(FORTE.designVariations, [FORTE.t, 1 - FORTE.t]);
 					FORTE.design._medialAxis.updateFromRawData(FORTE.designOriginal.clone().concat(FORTE.interpolation
 						.interpolate(FORTE.t)));
+					log(FORTE.t)
 				}
 				// log(FORTE.scene.children.length)
 				break;
@@ -116,18 +134,20 @@ $(document).on('drop', function(e) {
 	for (var i = files.length - 1; i >= 0; i--) {
 		var reader = new FileReader();
 		reader.onload = (function(e) {
-			FORTE.designVariations = FORTE.designVariations == undefined ? [] : FORTE.designVariations;
-			var designObject = JSON.parse(e.target.result);
-			FORTE.Design.cleanup(designObject);
-			if (designObject.original == true) {
-				FORTE.design = FORTE.Design.fromRawData(designObject, FORTE.scene, FORTE.camera);
+			FORTE.designSpace = JSON.parse(e.target.result);
+			for (var i = 0; i < FORTE.designSpace.optimizations.length * 10; i++) {
+				var scene = FORTE.tbnScene.clone();
+				FORTE.tbnRenderer.render(scene, FORTE.tbnCamera);
+				var thumbnail = $('<span></div>');
+				thumbnail.append($(FORTE.cloneCanvas(FORTE.tbnRenderer.domElement)));
+				thumbnail.css('width', FORTE.widthThumbnail + 'px');
+				thumbnail.css('height', FORTE.heightThumbnail + 'px');
+				thumbnail.css('margin-right', FORTE.thumbnailMargin + 'px');
+				thumbnail.css('margin-top', FORTE.thumbnailMargin + 'px');
+				thumbnail.css('float', 'left');
+				FORTE.divOptThumbnails.append(thumbnail);
 			}
-
-			FORTE.designVariations.push(designObject);
-
-			if (FORTE.designVariations.length > 1) {
-				FORTE.design.interpolate(FORTE.designVariations, [FORTE.t, 1 - FORTE.t]);
-			}
+			// log(designSpace);
 		});
 		reader.readAsBinaryString(files[i]);
 	}
@@ -219,9 +239,9 @@ FORTE.Design.fromRawData = function(designObj, scene, camera) {
 			}
 		}
 
-
-		if (FORTE.designNew.length > 0){
-			FORTE.interpolation = FORTE.interpolation || new FORTE.Interpolation(FORTE.designOriginal, FORTE.designNew, FORTE.scene, FORTE.camera);
+		if (FORTE.designNew.length > 0) {
+			FORTE.interpolation = FORTE.interpolation || new FORTE.Interpolation(FORTE.designOriginal, FORTE.designNew,
+				FORTE.scene, FORTE.canvasCamera);
 		}
 
 		return design;

@@ -8,6 +8,9 @@
 var FORTE = FORTE || {};
 
 $(document).ready(function() {
+	// rendering ui
+	$(document.body).append(FORTE.renderUI());
+
 	//
 	// visualize stats
 	//
@@ -15,29 +18,29 @@ $(document).ready(function() {
 	FORTE.stats.domElement.style.position = 'absolute';
 	FORTE.stats.domElement.style.top = '0px';
 	// FORTE.stats.domElement.style.right = '0px';
-	document.body.appendChild(FORTE.stats.domElement);
+	// document.body.appendChild(FORTE.stats.domElement);
 
 	//
 	// set the scene
 	//
-	FORTE.renderer = new THREE.WebGLRenderer({
-		antialias: true
-	});
-	FORTE.renderer.setSize(window.innerWidth, window.innerHeight);
-	document.body.appendChild(FORTE.renderer.domElement);
+	// FORTE.canvasRenderer = new THREE.WebGLRenderer({
+	// 	antialias: true
+	// });
+	// FORTE.canvasRenderer.setSize(window.innerWidth, window.innerHeight);
+	// document.body.appendChild(FORTE.canvasRenderer.domElement);
 
 	FORTE.scene = new THREE.Scene();
 	FORTE.objects = new Array();
 
-	FORTE.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight,
-		1, 10000);
-	FORTE.camera.position.copy(new THREE.Vector3(0, 0, 200));
+	// FORTE.canvasCamera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight,
+	// 	1, 10000);
+	// FORTE.canvasCamera.position.copy(new THREE.Vector3(0, 0, 200));
 
-	FORTE.mouesCtrls = new THREE.TrackballControls(FORTE.camera, undefined,
-		undefined);
-	// FORTE.mouesCtrls.wheelDisabled = false;
-
-	FORTE.renderer.setClearColor(XAC.BACKGROUNDCOLOR);
+	// FORTE.mouesCtrls = new THREE.TrackballControls(FORTE.canvasCamera, undefined,
+	// 	undefined);
+	// // FORTE.mouesCtrls.wheelDisabled = false;
+	//
+	// FORTE.canvasRenderer.setClearColor(XAC.BACKGROUNDCOLOR);
 
 	//
 	// add lights
@@ -56,8 +59,8 @@ $(document).ready(function() {
 		requestAnimationFrame(FORTE.render);
 		FORTE.mouesCtrls.update();
 		FORTE.stats.update();
-		FORTE.lights[0].position.copy(FORTE.camera.position);
-		FORTE.renderer.render(FORTE.scene, FORTE.camera);
+		FORTE.lights[0].position.copy(FORTE.canvasCamera.position);
+		FORTE.canvasRenderer.render(FORTE.scene, FORTE.canvasCamera);
 	};
 
 	FORTE.render();
@@ -180,14 +183,11 @@ $(document).ready(function() {
 
 	//	init an empty design
 	//	TODO: temp removed for testing
-	// FORTE.design = new FORTE.Design(FORTE.scene, FORTE.camera);
-	// FORTE.design.setInkSize(0.1);
+	FORTE.design = new FORTE.Design(FORTE.canvasRenderer.domElement, FORTE.scene, FORTE.canvasCamera);
+	FORTE.design.setInkSize(0.1);
 
 	// finally do unit test
 	unitTest();
-
-	// rendering ui
-	$(document.body).append(FORTE.renderUI());
 });
 
 //
@@ -228,11 +228,11 @@ FORTE.switchLayer = function(layer) {
 		case FORTE.FORMLAYER:
 			log('form layer')
 			FORTE.design._mode = FORTE.Design.SKETCH;
-			$(FORTE.renderer.domElement).css('cursor', 'crosshair');
+			$(FORTE.canvasRenderer.domElement).css('cursor', 'crosshair');
 			break;
 		case FORTE.FUNCSPECLAYER:
 			log('functional specification layer')
-			$(FORTE.renderer.domElement).css('cursor', 'context-menu');
+			$(FORTE.canvasRenderer.domElement).css('cursor', 'context-menu');
 			FORTE.design._mode = FORTE.Design.LOADPOINT;
 			// unfade func elms
 			// for (var i = 0; i < FORTE.design._funcElements.length; i++) {
@@ -241,16 +241,16 @@ FORTE.switchLayer = function(layer) {
 			break;
 		case FORTE.FEEDBACKLAYER:
 			log('feedback layer')
-			$(FORTE.renderer.domElement).css('cursor', 'crosshair');
+			$(FORTE.canvasRenderer.domElement).css('cursor', 'crosshair');
 			break;
 		case FORTE.SUGGESTIONLAYER:
 			log('suggestion layer')
-			$(FORTE.renderer.domElement).css('cursor', 'pointer');
+			$(FORTE.canvasRenderer.domElement).css('cursor', 'pointer');
 			// lock design
 			break;
 		case FORTE.FABRICATIONLAYER:
 			log('fabrication layer')
-			$(FORTE.renderer.domElement).css('cursor', 'pointer');
+			$(FORTE.canvasRenderer.domElement).css('cursor', 'pointer');
 			// lock design
 			break;
 	}
