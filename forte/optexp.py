@@ -15,13 +15,15 @@ from topy_server import proc_post_data
 
 # examples x amnt material x resolution
 # example_files = ['chair_02.forte', 'bookcase_02.forte', 'stepstool_02.forte']
-example_files = ['trophy_base_01.forte', 'phone_stand_01.forte', 'hook_01.forte']
+quickie = False
+file_dir = 'example_data'
+example_files = ['bookcase_03.forte', 'bracket_01.forte', 'chair_02.forte', 'stepstool_02.forte', 'hook_01.forte']
 example_data = []
-amnts_mats = [0.05 *  x for x in range(2, 6)]
-resolutions = [32 * x for x in range(4, 8)]
+amnts_mats = [0.1 *  x for x in range(5, 21)]
+resolutions = [32 * x for x in range(5, 6)]
 
 for ex_file in example_files:
-    example_data.append(open(ex_file, 'r').read())
+    example_data.append(open(file_dir + '/' + ex_file, 'r').read())
 
 exp_dir = 'recycle/forte_exp_' + str(long(time.time()))
 subprocess.call('mkdir ' + exp_dir, shell=True)
@@ -56,3 +58,6 @@ for res in resolutions:
             log_file.close()
 
             gc.collect()
+
+            if quickie:
+                break

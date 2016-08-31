@@ -146,9 +146,11 @@ def main(argv):
 
     # Try CHG_STOP criteria, if not defined (error), use NUM_ITER for iterations:
     try:
-        # TODO fix the temp threshold
-        while t.change > t.chgstop:
+        # HACK fix the temp threshold
+        i = 0;
+        while t.change > 0.001 and i < t.numiter: # t.chgstop:
             optimise(t, query_type)
+            i += 1
             # [xac] early exit for analysis
             if query_type == QUERY_ANALYZE:
                 break
