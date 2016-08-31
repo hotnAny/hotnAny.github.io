@@ -9,12 +9,13 @@
 
 var FORTE = FORTE || {};
 
-FORTE.Design = function(scene, camera) {
+FORTE.Design = function(canvas, scene, camera) {
 	this._scene = scene;
 	this._camera = camera;
+	this._canvas = canvas;
 
 	this._mode = FORTE.Design.SKETCH;
-	$(FORTE.renderer.domElement).css('cursor', 'crosshair');
+	$(FORTE.canvasRenderer.domElement).css('cursor', 'crosshair');
 
 	this._opacityFull = 1.0;
 	this._opacityHalf = 0.5;
@@ -42,7 +43,7 @@ FORTE.Design = function(scene, camera) {
 	});
 
 	// using a medial axis to represent design
-	this._medialAxis = new FORTE.MedialAxis(this._scene, this._camera);
+	this._medialAxis = new FORTE.MedialAxis(canvas, this._scene, this._camera);
 	this._medialAxis._matNode = this._matDesign;
 	this._medialAxis._matInflation = this._matDesign;
 	this._medialAxis._matHighlight.opacity = 1;
@@ -60,10 +61,10 @@ FORTE.Design = function(scene, camera) {
 	this._boundary = undefined;
 
 	// input event handlers
-	document.addEventListener('mousedown', this._mousedown.bind(this), false);
-	document.addEventListener('mousemove', this._mousemove.bind(this), false);
-	document.addEventListener('mouseup', this._mouseup.bind(this), false);
-	document.addEventListener('keydown', this._keydown.bind(this), false);
+	this._canvas.addEventListener('mousedown', this._mousedown.bind(this), false);
+	this._canvas.addEventListener('mousemove', this._mousemove.bind(this), false);
+	this._canvas.addEventListener('mouseup', this._mouseup.bind(this), false);
+	this._canvas.addEventListener('keydown', this._keydown.bind(this), false);
 
 	this._posDown = undefined;
 
@@ -106,16 +107,16 @@ FORTE.Design.prototype._mousedown = function(e) {
 	if (isEditing == true && this._mode != FORTE.Design.EDIT) {
 		this._modeSaved = this._mode;
 		this._mode = FORTE.Design.EDIT;
-		$(FORTE.renderer.domElement).css('cursor', 'pointer');
+		$(FORTE.canvasRenderer.domElement).css('cursor', 'pointer');
 	} else if (isEditing == false && this._mode == FORTE.Design.EDIT) {
 		this._mode = this._modeSaved;
-		$(FORTE.renderer.domElement).css('cursor', this._mode == FORTE.Design.SKETCH ? 'crosshair' :
+		$(FORTE.canvasRenderer.domElement).css('cursor', this._mode == FORTE.Design.SKETCH ? 'crosshair' :
 			'context-menu');
 	}
 
-	var hitInfo = XAC.hit(e, this._designElements, this._camera);
+	var hitInfo = XAC.hit(e, this._designElements, this._camera, this._canvas);
 
-	this._maniPlane = new XAC.Maniplane(new THREE.Vector3(), this._scene, this._camera,
+	this._maniPlane = new XAC.Maniplane(new THREE.Vector3(), this._scene, this._camera, this._canvas,
 		false, false);
 
 	this._posDown = {
@@ -145,7 +146,7 @@ FORTE.Design.prototype._mousedown = function(e) {
 
 			// attempt to select amongst functional elements
 			if (FORTE.layer == FORTE.FUNCSPECLAYER) {
-				funcElm = XAC.hitObject(e, this._funcElements, this._camera);
+				funcElm = XAC.hitObject(e, this._funcElements, this._camera, this._canvas);
 				if (funcElm != undefined && funcElm.parent != undefined) {
 					// get to the `leaf' elements
 					selected = funcElm.parent instanceof THREE.Scene ? [funcElm] : funcElm.parent
@@ -253,10 +254,10 @@ FORTE.Design.prototype._mousemove = function(e) {
 	if (isEditing == true && this._mode != FORTE.Design.EDIT) {
 		this._modeSaved = this._mode;
 		this._mode = FORTE.Design.EDIT;
-		$(FORTE.renderer.domElement).css('cursor', 'pointer');
+		$(FORTE.canvasRenderer.domElement).css('cursor', 'pointer');
 	} else if (isEditing == false && this._mode == FORTE.Design.EDIT) {
 		this._mode = this._modeSaved;
-		$(FORTE.renderer.domElement).css('cursor', this._mode == FORTE.Design.SKETCH ? 'crosshair' :
+		$(FORTE.canvasRenderer.domElement).css('cursor', this._mode == FORTE.Design.SKETCH ? 'crosshair' :
 			'context-menu');
 	}
 
@@ -288,7 +289,7 @@ FORTE.Design.prototype._mousemove = function(e) {
 
 		case FORTE.Design.LOADPOINT:
 			// dragging to select load points
-			var hitElm = XAC.hitObject(e, this._designElements, this._camera);
+			var hitElm = XAC.hitObject(e, this._designElements, this._camera, this._canvas);
 			if (hitElm != undefined) {
 				if (this._load.points.length > 0 && hitElm.position.distanceTo(this._load.points
 						.slice(-1)[0]) > 0) {
@@ -458,7 +459,7 @@ FORTE.Design.prototype._mouseup = function(e) {
 
 			// editing is a one-time thing
 			this._mode = this._modeSaved;
-			$(FORTE.renderer.domElement).css('cursor', this._mode == FORTE.Design.SKETCH ? 'crosshair' :
+			$(FORTE.canvasRenderer.domElement).css('cursor', this._mode == FORTE.Design.SKETCH ? 'crosshair' :
 				'context-menu');
 
 			break;

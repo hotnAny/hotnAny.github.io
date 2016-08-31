@@ -20,9 +20,10 @@ XAC.WHEEL = 4;
 //	@param	orthogonal - whether to snap the plane to XZ or Y
 //	@param	showPlane - whether to show the plane visually
 //
-XAC.Maniplane = function(pos, scene, camera, orthogonal, showPlane) {
+XAC.Maniplane = function(pos, scene, camera, canvas, orthogonal, showPlane) {
 	this._camera = camera;
 	this._scene = scene;
+	this._canvas = canvas;
 
 	this._plane = new XAC.Plane(1000, 1000, showPlane == true ? XAC.MATERIALPLAIN :
 		XAC.MATERIALINVISIBLE).m;
@@ -45,7 +46,7 @@ XAC.Maniplane = function(pos, scene, camera, orthogonal, showPlane) {
 
 XAC.Maniplane.prototype = {
 	update: function(e) {
-		return XAC.hitPoint(e, [this._plane], this._camera);
+		return XAC.hitPoint(e, [this._plane], this._camera, this._canvas);
 	},
 
 	setPosition: function(pos) {

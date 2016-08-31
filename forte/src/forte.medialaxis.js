@@ -13,9 +13,10 @@ if (XAC.Thing == undefined || XAC.Utilities == undefined || XAC.Const ==
 	err('missing dependency!');
 }
 
-FORTE.MedialAxis = function(scene, camera) {
+FORTE.MedialAxis = function(canvas, scene, camera) {
 	this._scene = scene;
 	this._camera = camera;
+	this._canvas = canvas;
 
 	this._nodes = [];
 	this._edges = [];
@@ -68,10 +69,10 @@ FORTE.MedialAxis.prototype = {
 //	allow events listeners to be added to the main web app, rather than called
 //
 FORTE.MedialAxis.addEventListeners = function() {
-	document.addEventListener('mousedown', this._mousedown.bind(this), false);
-	document.addEventListener('mousemove', this._mousemove.bind(this), false);
-	document.addEventListener('mouseup', this._mouseup.bind(this), false);
-	document.addEventListener('keydown', this._keydown.bind(this), false);
+	this._canvas.addEventListener('mousedown', this._mousedown.bind(this), false);
+	this._canvas.addEventListener('mousemove', this._mousemove.bind(this), false);
+	this._canvas.addEventListener('mouseup', this._mouseup.bind(this), false);
+	this._canvas.addEventListener('keydown', this._keydown.bind(this), false);
 }
 
 //
@@ -208,7 +209,7 @@ FORTE.MedialAxis.prototype._mousedown = function(e) {
 
 	var hitOnNode;
 	for (var i = this._nodes.length - 1; i >= 0; i--) {
-		hitOnNode = XAC.hit(e, [this._nodes[i].inflation.m], this._camera);
+		hitOnNode = XAC.hit(e, [this._nodes[i].inflation.m], this._camera, this._canvas);
 		if (hitOnNode != undefined) {
 			if (this.__nodeSelected != this._nodes[i]) {
 				this._nodes[i].inflation.m.material = this._matHighlight;
@@ -226,7 +227,7 @@ FORTE.MedialAxis.prototype._mousedown = function(e) {
 		// 	this._nodeSelected = this._copyNode(this._nodeSelected);
 		// }
 		// this._maniplane = new XAC.Maniplane(this._nodeSelected.position, this._scene, this._camera, true);
-		this._maniplane = new XAC.Maniplane(new THREE.Vector3(), this._scene, this._camera,
+		this._maniplane = new XAC.Maniplane(new THREE.Vector3(), this._scene, this._camera, this._canvas,
 			true);
 		this._findNode(this._nodeSelected.position, true); // find the node that's clicked
 		return this._nodeSelected; // stop propagation here
@@ -241,7 +242,7 @@ FORTE.MedialAxis.prototype._mousedown = function(e) {
 		for (var j = this._edges[i].inflations.length - 1; j >= 0; j--) {
 			elmsInf.push(this._edges[i].inflations[j].m);
 		}
-		hitOnEdge = XAC.hit(e, elmsInf, this._camera);
+		hitOnEdge = XAC.hit(e, elmsInf, this._camera, this._canvas);
 		if (hitOnEdge != undefined) {
 			if (edgeSelected != this._edges[i]) {
 				this._edgeSelected = this._edges[i];
@@ -270,9 +271,9 @@ FORTE.MedialAxis.prototype._mousedown = function(e) {
 	//	interacting with inflation
 	//
 	// nodes have higher priority to be interacted with
-	this._infSelected = XAC.hitObject(e, this._inflationsNode, this._camera);
+	this._infSelected = XAC.hitObject(e, this._inflationsNode, this._camera, this._canvas);
 	if (this._infSelected == undefined) {
-		this._infSelected = XAC.hitObject(e, this._inflations, this._camera);
+		this._infSelected = XAC.hitObject(e, this._inflations, this._camera, this._canvas);
 	}
 
 	this._infSelInfo = undefined;
