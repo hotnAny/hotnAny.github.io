@@ -2,10 +2,13 @@
 /forte/recycle/
 /forte/build
 /forte/build/*/
+/forte/*.bmp
+/forte/*.skeleton
+/forte/*data/
 *.stl
 *.vxg
 *.disp
 *.tpd
 *.vtk
 *.forte
-*.pyc
+*/*.pyc
