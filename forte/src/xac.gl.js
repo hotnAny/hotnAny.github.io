@@ -11,39 +11,50 @@ var XAC = XAC || {};
 /*
  *	function for performing raycasting
  */
-XAC.rayCast = function(x, y, objs, camera) {
+XAC.rayCast = function(x, y, objs, camera, w, h) {
 	var rayCaster = new THREE.Raycaster();
 	var vector = new THREE.Vector3();
-	vector.set((x / window.innerWidth) * 2 - 1, -(y / window.innerHeight) * 2 + 1,
-		0.5);
+	vector.set((x / w) * 2 - 1, -(y / h) * 2 + 1, 0.5);
 	var projector = new THREE.Projector();
 	vector.unproject(camera);
 	rayCaster.ray.set(camera.position, vector.sub(camera.position).normalize());
 	return rayCaster.intersectObjects(objs);
 };
 
-XAC.hit = function(e, objs, camera) {
-	var hits = XAC.rayCast(e.clientX, e.clientY, objs, camera);
+XAC.hit = function(e, objs, camera, elm) {
+	var hits = XAC.getHitInfo(e, objs, camera, elm);
 	if (hits.length > 0) {
 		return hits[0];
 	}
 	return undefined;
 }
 
-XAC.hitObject = function(e, objs, camera) {
-	var hits = XAC.rayCast(e.clientX, e.clientY, objs, camera);
+XAC.hitObject = function(e, objs, camera, elm) {
+	var hits = XAC.getHitInfo(e, objs, camera, elm);
 	if (hits.length > 0) {
 		return hits[0].object;
 	}
 	return undefined;
 };
 
-XAC.hitPoint = function(e, objs, camera) {
-	var hits = XAC.rayCast(e.clientX, e.clientY, objs, camera);
+XAC.hitPoint = function(e, objs, camera, elm) {
+	var hits = XAC.getHitInfo(e, objs, camera, elm);
 	if (hits.length > 0) {
 		return hits[0].point;
 	}
 };
+
+XAC.getHitInfo = function(e, objs, camera, elm) {
+	var rect = elm == undefined ? {
+		left: 0,
+		top: 0,
+		right: 0,
+		bottom: 0
+	} : elm.getBoundingClientRect();
+	var hits = XAC.rayCast(e.clientX - rect.left, e.clientY - rect.top, objs, camera,
+		rect.right - rect.left, rect.bottom - rect.top);
+	return hits;
+}
 
 /*
 	scale an object around its center by factor
