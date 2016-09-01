@@ -18,38 +18,7 @@ $(document).ready(function() {
 	FORTE.stats.domElement.style.position = 'absolute';
 	FORTE.stats.domElement.style.top = '0px';
 	// FORTE.stats.domElement.style.right = '0px';
-	// document.body.appendChild(FORTE.stats.domElement);
-
-	//
-	// set the scene
-	//
-	// FORTE.canvasRenderer = new THREE.WebGLRenderer({
-	// 	antialias: true
-	// });
-	// FORTE.canvasRenderer.setSize(window.innerWidth, window.innerHeight);
-	// document.body.appendChild(FORTE.canvasRenderer.domElement);
-
-	FORTE.scene = new THREE.Scene();
-	FORTE.objects = new Array();
-
-	// FORTE.canvasCamera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight,
-	// 	1, 10000);
-	// FORTE.canvasCamera.position.copy(new THREE.Vector3(0, 0, 200));
-
-	// FORTE.mouesCtrls = new THREE.TrackballControls(FORTE.canvasCamera, undefined,
-	// 	undefined);
-	// // FORTE.mouesCtrls.wheelDisabled = false;
-	//
-	// FORTE.canvasRenderer.setClearColor(XAC.BACKGROUNDCOLOR);
-
-	//
-	// add lights
-	//
-	FORTE.lights = [];
-	FORTE.lights[0] = new THREE.PointLight(0xffffff, 1, 0);
-	FORTE.lights[0].position.set(0, 100, -100);
-	FORTE.lights[0].castShadow = true;
-	FORTE.scene.add(FORTE.lights[0]);
+	document.body.appendChild(FORTE.stats.domElement);
 
 	FORTE.render = function() {
 		if (FORTE.paused) {
@@ -57,62 +26,13 @@ $(document).ready(function() {
 		}
 
 		requestAnimationFrame(FORTE.render);
-		FORTE.mouesCtrls.update();
+		FORTE.camCtrl.update();
 		FORTE.stats.update();
-		FORTE.lights[0].position.copy(FORTE.canvasCamera.position);
-		FORTE.canvasRenderer.render(FORTE.scene, FORTE.canvasCamera);
+		// FORTE.lights[0].position.copy(FORTE.canvasCamera.position);
+		FORTE.canvasRenderer.render(FORTE.canvasScene, FORTE.canvasCamera);
 	};
 
 	FORTE.render();
-
-	//
-	// draw ground
-	//
-	var groundMaterial = new THREE.MeshBasicMaterial({
-		color: XAC.GROUNDCOLOR,
-		transparent: true,
-		opacity: 0.5
-	});
-
-	var geometryGround = new THREE.CubeGeometry(window.innerWidth * 1000 /
-		window.innerHeight, 1000, 1);
-	var ground = new THREE.Mesh(
-		geometryGround,
-		groundMaterial
-	);
-
-	ground.position.z -= 1;
-	// FORTE.scene.add(ground);
-
-	//
-	// draw grid
-	//
-	var lineMaterial = new THREE.LineBasicMaterial({
-		color: XAC.GRIDCOLOR
-	});
-	var lineGeometry = new THREE.Geometry();
-	var floor = -0.5;
-	var ylength = 1000;
-	var xlength = XAC.float2int(ylength * window.innerWidth / window.innerHeight);
-	var step = 25;
-	xlength = XAC.float2int(xlength / step) * step;
-
-	for (var i = 0; i <= xlength / step; i++) {
-		lineGeometry.vertices.push(new THREE.Vector3(i * step - xlength / 2, -
-			ylength / 2, floor));
-		lineGeometry.vertices.push(new THREE.Vector3(i * step - xlength / 2,
-			ylength / 2, floor));
-	}
-
-	for (var i = 0; i <= ylength / step; i++) {
-		lineGeometry.vertices.push(new THREE.Vector3(-xlength / 2, i * step -
-			ylength / 2, floor));
-		lineGeometry.vertices.push(new THREE.Vector3(xlength / 2, i * step -
-			ylength / 2, floor));
-	}
-
-	var grid = new THREE.Line(lineGeometry, lineMaterial, THREE.LinePieces);
-	FORTE.scene.add(grid);
 
 	//
 	// set up ui
@@ -125,12 +45,7 @@ $(document).ready(function() {
 	FORTE.FABRICATIONLAYER = 2;
 
 	FORTE.USERIGHTKEYFOR3D = false;
-	FORTE.mouesCtrls.noRotate = !FORTE.USERIGHTKEYFOR3D
-
-	// document.addEventListener('mousedown', FORTE._mousedown.bind(this), false);
-	// document.addEventListener('mousemove', FORTE._mousemove.bind(this), false);
-	// document.addEventListener('mouseup', FORTE._mouseup.bind(this), false);
-	// document.addEventListener('keydown', FORTE._keydown.bind(this), false);
+	FORTE.camCtrl.noRotate = !FORTE.USERIGHTKEYFOR3D
 
 	//
 	//	set up communication
@@ -156,7 +71,7 @@ $(document).ready(function() {
 			if (FORTE.voxelGrid != undefined) {
 				FORTE.voxelGrid.clear();
 			}
-			FORTE.voxelGrid = new FORTE.VoxelGrid(FORTE.scene, new THREE.Vector3(
+			FORTE.voxelGrid = new FORTE.VoxelGrid(FORTE.canvasScene, new THREE.Vector3(
 				parseFloat(xmin), parseFloat(ymin), 5));
 
 			XAC.readTextFile(resultVoxelGrid, function(dataVoxelGrid) {
@@ -165,7 +80,7 @@ $(document).ready(function() {
 				FORTE.voxelGrid.load(dataVoxelGrid, dimVoxel);
 				if (FORTE.thisQuery == FORTE.QUERYANALYZE) {
 					FORTE.visualizer = FORTE.visualizer == undefined ? new FORTE.Visualizer(
-						FORTE.scene) : FORTE.visualizer;
+						FORTE.canvasScene) : FORTE.visualizer;
 					FORTE.visualizer.clear();
 					XAC.readTextFile(resultDisp, function(dataDisp) {
 						if (dataDisp != undefined) {
@@ -183,8 +98,10 @@ $(document).ready(function() {
 
 	//	init an empty design
 	//	TODO: temp removed for testing
-	FORTE.design = new FORTE.Design(FORTE.canvasRenderer.domElement, FORTE.scene, FORTE.canvasCamera);
+	FORTE.design = new FORTE.Design(FORTE.canvasRenderer.domElement, FORTE.canvasScene, FORTE.canvasCamera);
 	FORTE.design.setInkSize(0.1);
+
+	FORTE.dragnDrop();
 
 	// finally do unit test
 	unitTest();

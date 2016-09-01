@@ -51,7 +51,7 @@ FORTE.renderUI = function() {
     FORTE.divOptThumbnails.css('height', (heightWindow - heightOptView) + 'px');
     FORTE.divOptThumbnails.css('overflow', 'scroll');
     FORTE.thumbnailMargin = 8;
-    FORTE.widthThumbnail = widthOptView / 4 - FORTE.thumbnailMargin - 1;
+    FORTE.widthThumbnail = widthOptView / 3 - FORTE.thumbnailMargin - 1;
     FORTE.heightThumbnail = aspectRatio * FORTE.widthThumbnail;
     tdThumbnails.append(FORTE.divOptThumbnails);
     trThumbnails.append(tdThumbnails);
@@ -70,9 +70,11 @@ FORTE.renderUI = function() {
     var heightCanvas = heightWindow;
     canvasRenderSet = FORTE.createRenderableScene(widthCanvas, heightCanvas);
     FORTE.canvasRenderer = canvasRenderSet.renderer;
+    FORTE.canvasScene = canvasRenderSet.scene;
     FORTE.canvasCamera = canvasRenderSet.camera;
-    FORTE.mouesCtrls = new THREE.TrackballControls(FORTE.canvasCamera, undefined,
+    FORTE.camCtrl = new THREE.TrackballControls(FORTE.canvasCamera, undefined,
         undefined);
+    FORTE.camCtrl.noZoom = true;
 
     tdCanvas.append(FORTE.canvasRenderer.domElement);
     trLayout.append(tdCanvas);
@@ -89,7 +91,6 @@ FORTE.createRenderableScene = function(w, h) {
 
     var camera = new THREE.PerspectiveCamera(60, w / h, 1, 10000);
     camera.position.copy(new THREE.Vector3(0, 0, 200));
-
     var scene = new THREE.Scene();
 
     var lights = [];
@@ -149,4 +150,103 @@ FORTE.cloneCanvas = function(oldCanvas) {
 
     //return the new canvas
     return newCanvas;
+}
+
+FORTE.dragnDrop = function() {
+    // drag & drop forte files
+    $(document).on('dragover', function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+        e.dataTransfer = e.originalEvent.dataTransfer;
+        e.dataTransfer.dropEffect = 'copy';
+    });
+
+    $(document).on('drop', function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+        e.dataTransfer = e.originalEvent.dataTransfer;
+        var files = e.dataTransfer.files;
+
+        for (var i = files.length - 1; i >= 0; i--) {
+            var reader = new FileReader();
+            reader.onload = (function(e) {
+                FORTE.designSpace = JSON.parse(e.target.result);
+
+                //  load original design
+                FORTE.design._medialAxis.updateFromRawData(FORTE.designSpace.design);
+                FORTE.centerCamera(FORTE.camCtrl, FORTE.designSpace.design, new THREE.Vector3(
+                    0, 25, 0));
+
+                //  load optimizations and show them as thumbnails
+                for (var i = 0; i < FORTE.designSpace.optimizations.length; i++) {
+                    var design = FORTE.designSpace.optimizations[i].concat(FORTE.designSpace
+                        .design);
+                    var scene = FORTE.tbnScene.clone();
+                    var camera = FORTE.tbnCamera.clone();
+                    var camCtrl = new THREE.TrackballControls(camera, undefined,
+                        undefined);
+                    var medialAxis = FORTE.MedialAxis.fromRawData(design,
+                        FORTE.tbnRenderer.domElement, scene, camera);
+                    FORTE.centerCamera(camCtrl, FORTE.designSpace.design, new THREE.Vector3(
+                        0, 25, 0));
+                    FORTE.tbnRenderer.render(scene, camera);
+
+                    // format and add thumbnail
+                    var thumbnail = $('<div></div>');
+                    thumbnail.append($(FORTE.cloneCanvas(FORTE.tbnRenderer.domElement)));
+                    thumbnail.css('width', FORTE.widthThumbnail + 'px');
+                    thumbnail.css('height', FORTE.heightThumbnail + 'px');
+                    thumbnail.css('margin-right', FORTE.thumbnailMargin + 'px');
+                    thumbnail.css('margin-top', FORTE.thumbnailMargin + 'px');
+                    thumbnail.css('float', 'left');
+                    FORTE.divOptThumbnails.append(thumbnail);
+                }
+            });
+            reader.readAsBinaryString(files[i]);
+        }
+    });
+}
+
+//
+//  center the camera (using TrackballControls object) to a design consisting of a bunch of edges
+//      * optional: adding a manual offset
+//
+FORTE.centerCamera = function(camCtrl, edges, offset) {
+    var cnt = 0;
+    var xmin = Number.MAX_VALUE,
+        ymin = Number.MAX_VALUE,
+        zmin = Number.MAX_VALUE;
+    var xmax = -Number.MAX_VALUE,
+        ymax = -Number.MAX_VALUE,
+        zmax = -Number.MAX_VALUE;
+    var centroidish = new THREE.Vector3();
+    for (var i = 0; i < edges.length; i++) {
+        var points = edges[i].points;
+        for (var j = 0; j < points.length; j++) {
+            var p = points[j];
+            centroidish.add(new THREE.Vector3().fromArray(p));
+            cnt++;
+
+            xmax = Math.max(p[0], xmax);
+            ymax = Math.max(p[1], ymax);
+            zmax = Math.max(p[2], zmax);
+
+            xmin = Math.min(p[0], xmin);
+            ymin = Math.min(p[1], ymin);
+            zmin = Math.min(p[2], zmin);
+        }
+
+    }
+    centroidish.divideScalar(cnt + XAC.EPSILON);
+
+    var vmin = new THREE.Vector3(xmin, ymin, zmin);
+    var vmax = new THREE.Vector3(xmax, ymax, zmax);
+
+    var r = vmax.distanceTo(vmin) * 0.5;
+    var d = 4 * r * Math.sin(camCtrl.object.fov * 0.5 * Math.PI / 180);
+    centroidish.z = d - camCtrl.object.position.z;
+
+    if (offset != undefined) centroidish.add(offset);
+    camCtrl.object.position.add(centroidish);
+    camCtrl.target.add(centroidish);
 }
