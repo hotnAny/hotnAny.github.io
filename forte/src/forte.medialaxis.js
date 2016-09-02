@@ -24,10 +24,12 @@ FORTE.MedialAxis = function(canvas, scene, camera) {
 	this._visualsNode = [];
 	this._visuals = [];
 	this._visualsInfo = [];
-	this._renderRate = 7; // larger value smaller rate
+	this._inflationRate = 7; // larger value smaller rate
 
 	// if set true, deleted edges will be used to reconnect its nodes
 	this.RESTORINGEDGE = true;
+	this.SHOWJOINTS = false;
+	this.EDITINGTHICKNESS = false;
 
 	// visual properties
 	this._opacityNormal = 0.75;
@@ -194,7 +196,7 @@ FORTE.MedialAxis.prototype._mousedown = function(e) {
 	if (this._edgeSelected != undefined) {
 		for (var j = this._edgeSelected.visuals.length - 1; j >= 0; j--) {
 			this._edgeSelected.visuals[j].m.material = this._matvisual;
-			// this._edgeSelected.joints[j - 1 < 0 ? 0 : j - 1].m.material = this._matvisual;
+			if (this.SHOWJOINTS) this._edgeSelected.joints[j - 1 < 0 ? 0 : j - 1].m.material = this._matvisual;
 		}
 		this._edgeSelected = undefined;
 	}
@@ -299,9 +301,9 @@ FORTE.MedialAxis.prototype._mousemove = function(e) {
 		return this._nodeSelected;
 	}
 
-	if (this._infSelected != undefined) {
+	if (this.EDITINGTHICKNESS && this._infSelected != undefined) {
 		var yOffset = e.clientY - this._eDown.clientY;
-		var ratio = -yOffset / Math.pow(2, this._renderRate);
+		var ratio = -yOffset / Math.pow(2, this._inflationRate);
 
 		// this._scene.remove(this._infSelected);
 		if (this._infSelInfo.node != undefined) {
@@ -343,7 +345,7 @@ FORTE.MedialAxis.prototype._mouseup = function(e) {
 	if (this._edgeSelected != undefined) {
 		for (var j = this._edgeSelected.visuals.length - 1; j >= 0; j--) {
 			this._edgeSelected.visuals[j].m.material = this._matHighlight;
-			// this._edgeSelected.joints[j - 1 < 0 ? 0 : j - 1].m.material = this._matHighlight;
+			if (this.SHOWJOINTS) this._edgeSelected.joints[j - 1 < 0 ? 0 : j - 1].m.material = this._matHighlight;
 		}
 		log(this._edges.indexOf(this._edgeSelected));
 	}
@@ -476,7 +478,7 @@ FORTE.MedialAxis.prototype._removeEdge = function(edge) {
 	edge.deleted = true;
 	for (var j = edge.visuals.length - 1; j >= 0; j--) {
 		this._scene.remove(edge.visuals[j].m);
-		// this._scene.remove(edge.joints[j - 1 < 0 ? 0 : j - 1].m);
+		if (this.SHOWJOINTS) this._scene.remove(edge.joints[j - 1 < 0 ? 0 : j - 1].m);
 	}
 
 	if (isNodeEdgeless(edge.node1)) this._removeNode(edge.node1);
@@ -701,12 +703,13 @@ FORTE.MedialAxis.prototype._renderEdge = function(edge) {
 			});
 			edge.visuals.push(visual);
 
-			// if (i < thickness.length - 1) {
-			// 	var joint = new XAC.Sphere(r, this._matvisual, false);
-			// 	joint.m.position.copy(ctr);
-			// 	edge.joints.push(joint);
-			// 	this._scene.add(joint.m);
-			// }
+			if (this.SHOWJOINTS)
+				if (i < thickness.length - 1) {
+					var joint = new XAC.Sphere(r, this._matvisual, false);
+					joint.m.position.copy(ctr);
+					edge.joints.push(joint);
+					this._scene.add(joint.m);
+				}
 
 			this._scene.add(edge.visuals[i].m);
 		} else {
@@ -717,12 +720,97 @@ FORTE.MedialAxis.prototype._renderEdge = function(edge) {
 
 			edge.visuals[i].m.material = this._matvisual;
 
-			// if (i < edge.thickness.length - 1) {
-			// 	edge.joints[i].update(r, ctr); //.m.position.copy(ctr);
-			// }
+			if (this.SHOWJOINTS)
+				if (i < edge.thickness.length - 1) {
+					edge.joints[i].update(r, ctr); //.m.position.copy(ctr);
+				}
 		}
 
 		ctr0 = ctr;
 		r0 = r;
 	}
+}
+
+FORTE.MedialAxis.fromRawData = function(edges, canvas, scene, camera) {
+	var medialAxis = new FORTE.MedialAxis(canvas, scene, camera);
+	medialAxis.RESTORINGEDGE = false;
+	medialAxis.updateFromRawData(edges);
+	return medialAxis;
+}
+
+FORTE.MedialAxis.prototype.updateFromRawData = function(edges, toRefresh) {
+	// log('---')
+	if (this._edges.length == 0 || toRefresh) {
+		this._edges = [];
+		this._nodes = [];
+		for (var i = 0; i < this._visuals.length; i++) {
+			this._scene.remove(this._visuals[i]);
+		}
+
+		for (var i = 0; i < edges.length; i++) {
+			var points = [];
+
+			for (var j = 0; j < edges[i].points.length; j++) {
+
+				for (var k = 0; k < edges[i].points[j].length; k++) {
+					if (isNaN(edges[i].points[j][k]) == true) {
+						err([i, j, edges[i].points[j][k]])
+					}
+				}
+				points.push(new THREE.Vector3().fromArray(edges[i].points[j]));
+			}
+
+			try {
+				var edge = this.addEdge(points, false, false);
+				edge.thickness = edges[i].thickness.clone();
+			} catch (e) {
+				edges[i].deleted = true;
+				err(e.stack)
+			}
+
+			// log(this._edges[i].points.length + ', ' + edges[i].points.length)
+		}
+
+		for (var i = 0; i < this._nodes.length; i++) {
+			var node = this._nodes[i];
+			var r = 0;
+			for (var j = 0; j < node.edges.length; j++) {
+				var edge = node.edges[j];
+				if (edge.thickness.length > 1)
+					r += node == edge.node1 ? edge.thickness[1] : edge.thickness.slice(-2)[0]
+			}
+			node.radius = r == 0 ? 1 : r * 1.1 / node.edges.length;
+			// log(node.radius)
+		}
+
+		var rmean = 0;
+		var cnt = 0;
+		for (var i = 0; i < this._edges.length; i++) {
+			var edge = this._edges[i];
+			for (var j = 0; j < edge.thickness.length; j++) {
+				rmean += edge.thickness[j];
+				cnt++;
+			}
+		}
+		rmean /= cnt;
+
+		this._radiusEdge = rmean;
+		this._radiusNode = this._radiusEdge * 1.1;
+	} else {
+		for (var i = 0; i < this._edges.length; i++) {
+			var edge = this._edges[i];
+			edge.node1.position.copy(new THREE.Vector3().fromArray(edges[i].node1));
+			edge.node2.position.copy(new THREE.Vector3().fromArray(edges[i].node2));
+
+			// log(edge.points.length + ', ' + edge.thickness.length)
+			for (var j = 0; j < edge.points.length; j++) {
+				edge.points[j] = new THREE.Vector3().fromArray(edges[i].points[j]);
+				edge.thickness[j] = edges[i].thickness[j];
+			}
+
+			// log(this._edges[i].thickness)
+		}
+	}
+
+	this._render();
 }

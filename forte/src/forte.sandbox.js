@@ -222,7 +222,7 @@ FORTE.MedialAxis.fromRawData = function(edges, canvas, scene, camera) {
 }
 
 FORTE.MedialAxis.prototype.updateFromRawData = function(edges, toRefresh) {
-	log('---')
+	// log('---')
 	if (this._edges.length == 0 || toRefresh) {
 		this._edges = [];
 		this._nodes = [];
@@ -234,6 +234,12 @@ FORTE.MedialAxis.prototype.updateFromRawData = function(edges, toRefresh) {
 			var points = [];
 
 			for (var j = 0; j < edges[i].points.length; j++) {
+
+				for (var k = 0; k < edges[i].points[j].length; k++) {
+					if (isNaN(edges[i].points[j][k]) == true) {
+						err([i, j, edges[i].points[j][k]])
+					}
+				}
 				points.push(new THREE.Vector3().fromArray(edges[i].points[j]));
 			}
 
@@ -253,11 +259,11 @@ FORTE.MedialAxis.prototype.updateFromRawData = function(edges, toRefresh) {
 			var r = 0;
 			for (var j = 0; j < node.edges.length; j++) {
 				var edge = node.edges[j];
-				if(edge.thickness.length > 1)
+				if (edge.thickness.length > 1)
 					r += node == edge.node1 ? edge.thickness[1] : edge.thickness.slice(-2)[0]
 			}
 			node.radius = r == 0 ? 1 : r * 1.1 / node.edges.length;
-			log(node.radius)
+			// log(node.radius)
 		}
 
 		var rmean = 0;
@@ -327,7 +333,7 @@ FORTE.updateDeltas = function(toRefresh) {
 	// if (toRefresh) {
 	// 	FORTE.design._medialAxis.refreshFromRawData(design);
 	// } else {
-		FORTE.design._medialAxis.updateFromRawData(design, toRefresh);
+	FORTE.design._medialAxis.updateFromRawData(design, toRefresh);
 	// }
 
 	// log('--')
