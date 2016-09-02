@@ -11,7 +11,7 @@ FORTE.Interpolation = function(designOriginal, designNew, scene, camera) {
     this._scene = scene;
     this._dump = [];
 
-    this.SNAPTONODES = true;
+    this.SNAPTONODES = false;
 
     this._designOriginal = designOriginal;
     this._designNew = designNew;
@@ -123,6 +123,7 @@ FORTE.Interpolation.prototype._updateElm = function(elm, t) {
 
     // TODO: interpolate thickness
     elm.edge.thickness.copy(elm._edge.thickness);
+    // log(elm._edge.thickness)
 
     elm.needsUpdate = false;
 }
@@ -320,7 +321,7 @@ FORTE.Interpolation.prototype._buildDependencyGraph = function(designOriginal, d
             // otherwise they will converge to each other's projection on original
             else {
                 var nodeToProj = elm._dp1.type == 0 ? elm._node2 : elm._node1;
-                var projInfo = this._project(designOriginal, nodeToProj, true);
+                var projInfo = this._project(designOriginal, nodeToProj, false);
                 this._projectOneEnd(designOriginal, dp1, projInfo.idxEdge, projInfo.idxIntPnt, elm._id ==
                     -1);
                 if (dp2.isIndependent == true) dp2.projection = projInfo.proj;
@@ -390,7 +391,7 @@ FORTE.Interpolation.prototype._project = function(design, node, showLine) {
         }
     }
 
-    if (showLine == true) addALine(FORTE.scene, new THREE.Vector3().fromArray(node), new THREE.Vector3()
+    if (showLine == true) addALine(FORTE.canvasScene, new THREE.Vector3().fromArray(node), new THREE.Vector3()
         .fromArray(projection), 0xff0000);
     return {
         idxEdge: idxProjEdge,

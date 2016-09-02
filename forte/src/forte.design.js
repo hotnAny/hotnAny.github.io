@@ -45,7 +45,7 @@ FORTE.Design = function(canvas, scene, camera) {
 	// using a medial axis to represent design
 	this._medialAxis = new FORTE.MedialAxis(canvas, this._scene, this._camera);
 	this._medialAxis._matNode = this._matDesign;
-	this._medialAxis._matInflation = this._matDesign;
+	this._medialAxis._matvisual = this._matDesign;
 	this._medialAxis._matHighlight.opacity = 1;
 	this._medialAxis.RESTORINGEDGE = false;
 
@@ -166,8 +166,8 @@ FORTE.Design.prototype._mousedown = function(e) {
 			for (var i = 0; i < this._boundaries.length; i++) {
 				var edge = this._boundaries[i].edge;
 				// redraw the boundary, diff from other design
-				for (var j = edge.inflations.length - 1; j >= 0; j--) {
-					edge.inflations[j].m.material = this._matBoundary;
+				for (var j = edge.visuals.length - 1; j >= 0; j--) {
+					edge.visuals[j].m.material = this._matBoundary;
 					// edge.joints[j < 1 ? 0 : j - 1].m.material = this._matBoundary;
 				}
 			}
@@ -453,8 +453,8 @@ FORTE.Design.prototype._mouseup = function(e) {
 			// redraw boundary to make it diff from other design elms
 			for (var i = 0; i < this._boundaries.length; i++) {
 				var edge = this._boundaries[i].edge;
-				edge.node1.inflation.m.material = this._matBoundary;
-				edge.node2.inflation.m.material = this._matBoundary;
+				edge.node1.visual.m.material = this._matBoundary;
+				edge.node2.visual.m.material = this._matBoundary;
 			}
 
 			// editing is a one-time thing
@@ -483,11 +483,11 @@ FORTE.Design.prototype._mouseup = function(e) {
 					}
 				}
 
-				for (var i = 0; i < this._load.edge.inflations.length; i++) {
-					var inflation = this._load.edge.inflations[i].m;
+				for (var i = 0; i < this._load.edge.visuals.length; i++) {
+					var visual = this._load.edge.visuals[i].m;
 					for (var j = 0; j < this._load.area.length; j++) {
 						var loadArea = this._load.area[j];
-						if (inflation == loadArea) {
+						if (visual == loadArea) {
 							this._load.areaIndices.push(i);
 							break;
 						}
@@ -526,17 +526,17 @@ FORTE.Design.prototype._mouseup = function(e) {
 			this._boundary.edge = edge;
 
 			// redraw the boundary
-			for (var i = edge.inflations.length - 1; i >= 0; i--) {
-				edge.inflations[i].m.material = this._matBoundary;
+			for (var i = edge.visuals.length - 1; i >= 0; i--) {
+				edge.visuals[i].m.material = this._matBoundary;
 				// edge.joints[i < 1 ? 0 : i - 1].m.material = this._matBoundary;
-				this._funcElements.push(edge.inflations[i].m);
+				this._funcElements.push(edge.visuals[i].m);
 			}
 
-			edge.node1.inflation.m.material = this._matBoundary;
-			this._funcElements.push(edge.node1.inflation.m);
+			edge.node1.visual.m.material = this._matBoundary;
+			this._funcElements.push(edge.node1.visual.m);
 
-			edge.node2.inflation.m.material = this._matBoundary;
-			this._funcElements.push(edge.node2.inflation.m);
+			edge.node2.visual.m.material = this._matBoundary;
+			this._funcElements.push(edge.node2.visual.m);
 
 			this._inkPoints = [];
 
@@ -559,10 +559,10 @@ FORTE.Design.prototype._mouseup = function(e) {
 	this._designElements = [];
 	for (var i = this._medialAxis.edges.length - 1; i >= 0; i--) {
 		var edge = this._medialAxis.edges[i];
-		this._designElements.push(edge.node1.inflation.m);
-		this._designElements.push(edge.node2.inflation.m);
-		for (var j = edge.inflations.length - 1; j >= 0; j--) {
-			this._designElements.push(edge.inflations[j].m);
+		this._designElements.push(edge.node1.visual.m);
+		this._designElements.push(edge.node2.visual.m);
+		for (var j = edge.visuals.length - 1; j >= 0; j--) {
+			this._designElements.push(edge.visuals[j].m);
 		}
 	}
 }
@@ -697,7 +697,7 @@ FORTE.Design.prototype._updateConstraints = function() {
 
 		for (var j = 0; j < load.areaIndices.length; j++) {
 			var idx = load.areaIndices[j];
-			load.edge.inflations[idx].m.material = this._matLoad;
+			load.edge.visuals[idx].m.material = this._matLoad;
 		}
 	}
 
@@ -810,11 +810,11 @@ FORTE.Design.prototype._removeClearance = function(clearance) {
 //
 FORTE.MedialAxis.prototype.getEdgeInfo = function(mesh) {
 	for (var i = this.edges.length - 1; i >= 0; i--) {
-		if (this.edges[i].node1.inflation.m == mesh || this.edges[i].node2.inflation.m == mesh) {
+		if (this.edges[i].node1.visual.m == mesh || this.edges[i].node2.visual.m == mesh) {
 			return this.edges[i];
 		}
-		for (var j = this.edges[i].inflations.length - 1; j >= 0; j--) {
-			if (this.edges[i].inflations[j].m == mesh) {
+		for (var j = this.edges[i].visuals.length - 1; j >= 0; j--) {
+			if (this.edges[i].visuals[j].m == mesh) {
 				return this.edges[i];
 			}
 		}

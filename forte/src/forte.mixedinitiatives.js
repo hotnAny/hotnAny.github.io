@@ -57,7 +57,7 @@ FORTE.MixedInitiatives.prototype._computeDistanceField = function(design) {
     // make a voxel grid
     var medialAxis = design._medialAxis;
     var bbox = medialAxis.boundingBox();
-    var inflation = 0; //.4;
+    var visual = 0; //.4;
     var vxg = new FORTE.VoxelGrid(this._scene, bbox.min);
 
     vxg._dim = FORTE.MixedInitiatives.DFVOXELSIZE;
@@ -67,10 +67,10 @@ FORTE.MixedInitiatives.prototype._computeDistanceField = function(design) {
     var nz = 1; //XAC.float2int((bbox.max.z - bbox.min.z) / vxg._dim) + 1;
 
     // initialize distance field
-    var dfmx = XAC.float2int(nx * inflation * 0.5);
-    var dfmy = XAC.float2int(ny * inflation * 0.5);
-    var dfnx = nx + dfmx * 2; // XAC.float2int(nx * (1 + inflation));
-    var dfny = ny + dfmy * 2; //XAC.float2int(ny * (1 + inflation));
+    var dfmx = XAC.float2int(nx * visual * 0.5);
+    var dfmy = XAC.float2int(ny * visual * 0.5);
+    var dfnx = nx + dfmx * 2; // XAC.float2int(nx * (1 + visual));
+    var dfny = ny + dfmy * 2; //XAC.float2int(ny * (1 + visual));
     var dfnz = 1;
     var df = XAC.initMDArray([dfnx, dfny, dfnz], XAC.INFINITY);
     log('distance field: ' + dfnx + ' x ' + dfny + ' x ' + dfnz)

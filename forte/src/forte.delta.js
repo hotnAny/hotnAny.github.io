@@ -28,11 +28,14 @@ FORTE.Delta = function(designOriginal, designNew, canvas, scene, camera) {
         range: "min",
         min: FORTE.Delta.SLIDERMIN,
         max: FORTE.Delta.SLIDERMAX,
-        // height: FORTE.Delta.SLIERHEIGHT,
-        value: FORTE.Delta.SLIDERMAX,
+        value: FORTE.Delta._transfer(1, true) * (FORTE.Delta.SLIDERMAX - FORTE.Delta.SLIDERMIN) +
+            FORTE.Delta.SLIDERMIN,
         slide: function(event, ui) {
             var t = (ui.value - FORTE.Delta.SLIDERMIN) / (FORTE.Delta.SLIDERMAX - FORTE.Delta
                 .SLIDERMIN);
+            t = FORTE.Delta._transfer(t);
+            // log([t, t1])
+            // t = t1
             var delta = FORTE.deltas[this.id];
             delta._designNew = delta._interpolation.interpolate(t);
             FORTE.updateDeltas();
@@ -50,6 +53,8 @@ FORTE.Delta = function(designOriginal, designNew, canvas, scene, camera) {
     FORTE.tdCanvas.append(this._slider);
 }
 
+FORTE.Delta.SLIDINGBASE = 5;
+FORTE.Delta.OUTSLIDINGRATIO = 1.2;
 FORTE.Delta.SLIDERMAX = 100;
 FORTE.Delta.SLIDERMIN = 0;
 FORTE.Delta.SLIERHEIGHT = 200;
@@ -60,4 +65,12 @@ FORTE.Delta.prototype = {
 
 FORTE.Delta._findBoundingBox = function(design) {
 
+}
+
+FORTE.Delta._transfer = function(t, inverse) {
+    if (inverse) {
+        return (Math.pow(FORTE.Delta.SLIDINGBASE, t / FORTE.Delta.OUTSLIDINGRATIO) - 1) / (FORTE.Delta.SLIDINGBASE - 1);
+    }
+    return FORTE.Delta.OUTSLIDINGRATIO * Math.getBaseLog(FORTE.Delta.SLIDINGBASE, t * (FORTE.Delta.SLIDINGBASE -
+        1) + 1);
 }

@@ -346,7 +346,7 @@ FORTE.MedialAxis.prototype.snapVoxelGrid = function(vxg) {
 	vxg.updateToMedialAxis(this);
 
 	// render the medial axis with thickness
-	this._inflate();
+	this._render();
 }
 
 

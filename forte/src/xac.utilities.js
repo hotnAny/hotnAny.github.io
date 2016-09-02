@@ -330,13 +330,20 @@ Array.prototype.add = function(arr, sign) {
 	return this;
 }
 
+Array.prototype.addScalar = function(s) {
+	for(var i=0; i<this.length; i++) {
+		this[i] += s;
+	}
+	return this;
+}
+
 Array.prototype.sub = function(arr) {
 	return this.add(arr, -1);
 }
 
 Array.prototype.times = function(s) {
 	for(var i=0; i<this.length; i++) {
-		this[i] *= s
+		this[i] *= s;
 	}
 	return this;
 }
@@ -346,4 +353,8 @@ Array.prototype.copy = function(arr) {
 	for (var i = 0; i < arr.length; i++) {
 		this.push(arr[i]);
 	}
+}
+
+Math.getBaseLog = function(x, y) {
+	return Math.log(y) / Math.log(x);
 }

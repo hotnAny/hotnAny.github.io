@@ -20,6 +20,9 @@ $(document).ready(function() {
 	// FORTE.stats.domElement.style.right = '0px';
 	document.body.appendChild(FORTE.stats.domElement);
 
+	//
+	//	main canvas rendering
+	//
 	FORTE.render = function() {
 		if (FORTE.paused) {
 			return;
@@ -97,7 +100,7 @@ $(document).ready(function() {
 	}
 
 	//	init an empty design
-	//	TODO: temp removed for testing
+	//	TODO: might need to be temp removed for testing
 	FORTE.design = new FORTE.Design(FORTE.canvasRenderer.domElement, FORTE.canvasScene, FORTE.canvasCamera);
 	FORTE.design.setInkSize(0.1);
 
@@ -173,7 +176,59 @@ FORTE.switchLayer = function(layer) {
 	}
 }
 
-//
-// FORTE._keydown = function(e) {
-//
-// }
+FORTE.transformOptimization = function(optimization, center, dim, w, h) {
+	var origin = center.clone().sub(new THREE.Vector3(w / 2, h / 2, 0).multiplyScalar(dim)).toArray();
+	// addABall(FORTE.canvasScene, new THREE.Vector3().fromArray(origin), 0xff0000, 5, 1)
+	for (var i = 0; i < optimization.length; i++) {
+		var edge = optimization[i];
+		edge.node1.times(dim).add(origin);
+		edge.node2.times(dim).add(origin);
+		for (var j = 0; j < edge.points.length; j++) {
+			edge.points[j].times(dim).add(origin);
+		}
+		// var len = edge.points.length;
+		// var merged = FORTE.mergePoints(edge.points, edge.thickness);
+		// edge.points = merged.points;
+		// edge.thickness = merged.thicknesses;
+		// log([len, edge.points.length])
+	}
+}
+
+FORTE.mergePoints = function(points, thicknesses) {
+	// remove temp ink, compute their circumference
+	var lenTotal = 0;
+	for (var i = points.length - 1; i >= 0; i--) {
+		if (i > 0)
+			lenTotal += XAC.getDist(points[i], points[i - 1]);
+	}
+
+	// merge points that are too close to each other
+	var mergedPoints = [];
+	var mergedThickness = [];
+	var minSpacing = Math.min(lenTotal / 50, 3);
+
+	mergedPoints.push(points[0]);
+	mergedThickness.push(thicknesses[0]);
+	for (var i = 1; i < points.length - 2; i++) {
+		var p0 = points[i].clone();
+		var p = p0.clone();
+		var t = thicknesses[i];
+		var cnt = 1;
+		while (i < points.length - 2 && XAC.getDist(points[i + 1], p0) < minSpacing) {
+			i++;
+			p.add(points[i]);
+			t += thicknesses[i]
+			cnt++;
+		}
+		mergedPoints.push(p.times(1 / cnt));
+		mergedThickness.push(t / cnt);
+		log(t/cnt)
+	}
+	mergedPoints.push(points.slice(-1)[0]);
+	mergedThickness.push(thicknesses.slice(-1)[0]);
+
+	return {
+		points: mergedPoints,
+		thicknesses: mergedThickness
+	};
+}

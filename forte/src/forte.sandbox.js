@@ -52,7 +52,7 @@ function unitTest() {
 				log(strData)
 				break;
 			case 68: //D
-				FORTE.mixedInitiative = FORTE.mixedInitiative == null ? new FORTE.MixedInitiatives(FORTE.scene) :
+				FORTE.mixedInitiative = FORTE.mixedInitiative == null ? new FORTE.MixedInitiatives(FORTE.canvasScene) :
 					FORTE.mixedInitiative;
 				dfs.push(FORTE.mixedInitiative._computeDistanceField(FORTE.design));
 				intval = 2 - dfs.length;
@@ -72,7 +72,7 @@ function unitTest() {
 						.interpolate(FORTE.t)));
 					log(FORTE.t)
 				}
-				// log(FORTE.scene.children.length)
+				// log(FORTE.canvasScene.children.length)
 				break;
 			case 39: // right arrow
 				// idxt = XAC.clamp(idxt - 1, 0, dfmts.length - 1);
@@ -89,7 +89,7 @@ function unitTest() {
 						.interpolate(FORTE.t)));
 					log(FORTE.t)
 				}
-				// log(FORTE.scene.children.length)
+				// log(FORTE.canvasScene.children.length)
 				break;
 			case 67: // C
 				// FORTE.voxelGrid.clear();
@@ -116,42 +116,6 @@ function unitTest() {
 
 	log('----------------  unit test ends  ----------------');
 }
-
-// drag & drop forte files
-$(document).on('dragover', function(e) {
-	e.stopPropagation();
-	e.preventDefault();
-	e.dataTransfer = e.originalEvent.dataTransfer;
-	e.dataTransfer.dropEffect = 'copy';
-});
-
-$(document).on('drop', function(e) {
-	e.stopPropagation();
-	e.preventDefault();
-	e.dataTransfer = e.originalEvent.dataTransfer;
-	var files = e.dataTransfer.files;
-
-	for (var i = files.length - 1; i >= 0; i--) {
-		var reader = new FileReader();
-		reader.onload = (function(e) {
-			FORTE.designSpace = JSON.parse(e.target.result);
-			for (var i = 0; i < FORTE.designSpace.optimizations.length * 10; i++) {
-				var scene = FORTE.tbnScene.clone();
-				FORTE.tbnRenderer.render(scene, FORTE.tbnCamera);
-				var thumbnail = $('<span></div>');
-				thumbnail.append($(FORTE.cloneCanvas(FORTE.tbnRenderer.domElement)));
-				thumbnail.css('width', FORTE.widthThumbnail + 'px');
-				thumbnail.css('height', FORTE.heightThumbnail + 'px');
-				thumbnail.css('margin-right', FORTE.thumbnailMargin + 'px');
-				thumbnail.css('margin-top', FORTE.thumbnailMargin + 'px');
-				thumbnail.css('float', 'left');
-				FORTE.divOptThumbnails.append(thumbnail);
-			}
-			// log(designSpace);
-		});
-		reader.readAsBinaryString(files[i]);
-	}
-});
 
 FORTE.Design.cleanup = function(design) {
 	var edges = design.design;
@@ -197,18 +161,18 @@ FORTE.Design.prototype.interpolate = function(designs, weights) {
 			edge.points[j].copy(centroid);
 		}
 	}
-	this._medialAxis._inflate();
+	this._medialAxis._render();
 }
 
-FORTE.Design.fromRawData = function(designObj, scene, camera) {
+FORTE.Design.fromRawData = function(designObj, canvas, scene, camera) {
 	try {
 		log(designObj)
 
 		// design
 		var design = new FORTE.Design(scene, camera);
-		design._medialAxis = FORTE.MedialAxis.fromRawData(designObj.design, scene, camera);
+		design._medialAxis = FORTE.MedialAxis.fromRawData(designObj.design, canvas, scene, camera);
 		// design._medialAxis._matNode = design._matDesign;
-		// design._medialAxis._matInflation = design._matDesign;
+		// design._medialAxis._matvisual = design._matDesign;
 		// design._medialAxis._matHighlight.opacity = 1;
 		design._inkSize = 2 * design._medialAxis._radiusEdge;
 
@@ -216,10 +180,10 @@ FORTE.Design.fromRawData = function(designObj, scene, camera) {
 		design._designElements = [];
 		for (var i = design._medialAxis.edges.length - 1; i >= 0; i--) {
 			var edge = design._medialAxis.edges[i];
-			design._designElements.push(edge.node1.inflation.m);
-			design._designElements.push(edge.node2.inflation.m);
-			for (var j = edge.inflations.length - 1; j >= 0; j--) {
-				design._designElements.push(edge.inflations[j].m);
+			design._designElements.push(edge.node1.visual.m);
+			design._designElements.push(edge.node2.visual.m);
+			for (var j = edge.visuals.length - 1; j >= 0; j--) {
+				design._designElements.push(edge.visuals[j].m);
 			}
 		}
 
@@ -241,7 +205,7 @@ FORTE.Design.fromRawData = function(designObj, scene, camera) {
 
 		if (FORTE.designNew.length > 0) {
 			FORTE.interpolation = FORTE.interpolation || new FORTE.Interpolation(FORTE.designOriginal, FORTE.designNew,
-				FORTE.scene, FORTE.canvasCamera);
+				FORTE.canvasScene, FORTE.canvasCamera);
 		}
 
 		return design;
@@ -250,15 +214,22 @@ FORTE.Design.fromRawData = function(designObj, scene, camera) {
 	}
 }
 
-FORTE.MedialAxis.fromRawData = function(edges, scene, camera) {
-	var medialAxis = new FORTE.MedialAxis(scene, camera);
+FORTE.MedialAxis.fromRawData = function(edges, canvas, scene, camera) {
+	var medialAxis = new FORTE.MedialAxis(canvas, scene, camera);
 	medialAxis.RESTORINGEDGE = false;
 	medialAxis.updateFromRawData(edges);
 	return medialAxis;
 }
 
-FORTE.MedialAxis.prototype.updateFromRawData = function(edges) {
-	if (this._edges.length == 0) {
+FORTE.MedialAxis.prototype.updateFromRawData = function(edges, toRefresh) {
+	log('---')
+	if (this._edges.length == 0 || toRefresh) {
+		this._edges = [];
+		this._nodes = [];
+		for (var i = 0; i < this._visuals.length; i++) {
+			this._scene.remove(this._visuals[i]);
+		}
+
 		for (var i = 0; i < edges.length; i++) {
 			var points = [];
 
@@ -267,13 +238,14 @@ FORTE.MedialAxis.prototype.updateFromRawData = function(edges) {
 			}
 
 			try {
-				var edge = this.addEdge(points, false);
-				edge.thickness = edges[i].thickness;
-				// log(edge.points.length)
+				var edge = this.addEdge(points, false, false);
+				edge.thickness = edges[i].thickness.clone();
 			} catch (e) {
 				edges[i].deleted = true;
 				err(e.stack)
 			}
+
+			// log(this._edges[i].points.length + ', ' + edges[i].points.length)
 		}
 
 		for (var i = 0; i < this._nodes.length; i++) {
@@ -281,9 +253,11 @@ FORTE.MedialAxis.prototype.updateFromRawData = function(edges) {
 			var r = 0;
 			for (var j = 0; j < node.edges.length; j++) {
 				var edge = node.edges[j];
-				r += node == edge.node1 ? edge.thickness[0] : edge.thickness.slice(-1)[0]
+				if(edge.thickness.length > 1)
+					r += node == edge.node1 ? edge.thickness[1] : edge.thickness.slice(-2)[0]
 			}
-			node.radius = r * 1.1 / node.edges.length;
+			node.radius = r == 0 ? 1 : r * 1.1 / node.edges.length;
+			log(node.radius)
 		}
 
 		var rmean = 0;
@@ -305,12 +279,56 @@ FORTE.MedialAxis.prototype.updateFromRawData = function(edges) {
 			edge.node1.position.copy(new THREE.Vector3().fromArray(edges[i].node1));
 			edge.node2.position.copy(new THREE.Vector3().fromArray(edges[i].node2));
 
+			// log(edge.points.length + ', ' + edge.thickness.length)
 			for (var j = 0; j < edge.points.length; j++) {
 				edge.points[j] = new THREE.Vector3().fromArray(edges[i].points[j]);
 				edge.thickness[j] = edges[i].thickness[j];
 			}
+
+			// log(this._edges[i].thickness)
 		}
 	}
 
-	this._inflate();
+	this._render();
+}
+
+FORTE.MedialAxis.prototype.refreshFromRawData = function(edges, nodes) {
+	// for (var i = 0; i < this._visuals.length; i++) {
+	// 	this._scene.remove(this._visuals[i]);
+	// }
+
+	if (edges != undefined) {
+		this._edges = [];
+		for (var i = 0; i < edges.length; i++) {
+			var points = [];
+			var node1Pos = new THREE.Vector3().fromArray(edges[i].node1);
+			var node2Pos = new THREE.Vector3().fromArray(edges[i].node2);
+			points.push(node1Pos);
+			for (var j = 0; j < edges[i].points.length; j++) {
+				points.push(new THREE.Vector3().fromArray(edges[i].points[j]));
+			}
+			points.push(node2Pos);
+			this.addEdge(points, false, false);
+		}
+	}
+
+	this._render();
+}
+
+// FORTE.arrays2threes = function()
+
+FORTE.updateDeltas = function(toRefresh) {
+	// log('--')
+	var design = FORTE.designSpace.design.clone();
+	for (var i = 0; i < FORTE.deltas.length; i++) {
+		design = design.concat(FORTE.deltas[i]._designNew);
+	}
+
+	// if (toRefresh) {
+	// 	FORTE.design._medialAxis.refreshFromRawData(design);
+	// } else {
+		FORTE.design._medialAxis.updateFromRawData(design, toRefresh);
+	// }
+
+	// log('--')
 }

@@ -21,10 +21,10 @@ FORTE.MedialAxis = function(canvas, scene, camera) {
 	this._nodes = [];
 	this._edges = [];
 
-	this._inflationsNode = [];
-	this._inflations = [];
-	this._inflationsInfo = [];
-	this._inflateRate = 7; // larger value smaller rate
+	this._visualsNode = [];
+	this._visuals = [];
+	this._visualsInfo = [];
+	this._renderRate = 7; // larger value smaller rate
 
 	// if set true, deleted edges will be used to reconnect its nodes
 	this.RESTORINGEDGE = true;
@@ -34,17 +34,17 @@ FORTE.MedialAxis = function(canvas, scene, camera) {
 	this._radiusNode = FORTE.MedialAxis.DEFAULTEDGERADIUS * 1.1;
 	this._radiusEdge = FORTE.MedialAxis.DEFAULTEDGERADIUS;
 	this._matNode = XAC.MATERIALCONTRAST;
-	this._matEdge = new THREE.MeshPhongMaterial({
+	this._matEdge = new THREE.MeshBasicMaterial({
 		color: 0x888888,
 		transparent: true,
 		opacity: this._opacityNormal
 	});
 	this._matHighlight = XAC.MATERIALHIGHLIGHT;
-	this._matInflation = new THREE.MeshLambertMaterial({
+	this._matvisual = new THREE.MeshBasicMaterial({
 		color: 0xaaaaaa,
 		transparent: true,
-		wireframe: true,
-		opacity: this._opacityNormal / 3
+		// wireframe: true,
+		opacity: this._opacityNormal
 	});
 };
 
@@ -192,10 +192,9 @@ FORTE.MedialAxis.prototype._mousedown = function(e) {
 	//
 	var edgeSelected = this._edgeSelected;
 	if (this._edgeSelected != undefined) {
-		for (var j = this._edgeSelected.inflations.length - 1; j >= 0; j--) {
-			this._edgeSelected.inflations[j].m.material = this._matInflation; // this._edgeSelected.inflations[j].m.materialPersistent; //
-			// this._edgeSelected.joints[j - 1 < 0 ? 0 : j - 1].m.material = this._edgeSelected.inflations[j].m
-			// 	.materialPersistent; //his._matInflation;
+		for (var j = this._edgeSelected.visuals.length - 1; j >= 0; j--) {
+			this._edgeSelected.visuals[j].m.material = this._matvisual;
+			// this._edgeSelected.joints[j - 1 < 0 ? 0 : j - 1].m.material = this._matvisual;
 		}
 		this._edgeSelected = undefined;
 	}
@@ -204,15 +203,15 @@ FORTE.MedialAxis.prototype._mousedown = function(e) {
 	//	interacting with a node
 	//
 	if (this._nodeSelected != undefined) {
-		this._nodeSelected.inflation.m.material = this._matInflation;
+		this._nodeSelected.visual.m.material = this._matvisual;
 	}
 
 	var hitOnNode;
 	for (var i = this._nodes.length - 1; i >= 0; i--) {
-		hitOnNode = XAC.hit(e, [this._nodes[i].inflation.m], this._camera, this._canvas);
+		hitOnNode = XAC.hit(e, [this._nodes[i].visual.m], this._camera, this._canvas);
 		if (hitOnNode != undefined) {
 			if (this.__nodeSelected != this._nodes[i]) {
-				this._nodes[i].inflation.m.material = this._matHighlight;
+				this._nodes[i].visual.m.material = this._matHighlight;
 				this._nodeSelected = this._nodes[i];
 			} else {
 				this._nodeSelected = undefined;
@@ -239,8 +238,8 @@ FORTE.MedialAxis.prototype._mousedown = function(e) {
 	var hitOnEdge;
 	for (var i = this._edges.length - 1; i >= 0; i--) {
 		var elmsInf = [];
-		for (var j = this._edges[i].inflations.length - 1; j >= 0; j--) {
-			elmsInf.push(this._edges[i].inflations[j].m);
+		for (var j = this._edges[i].visuals.length - 1; j >= 0; j--) {
+			elmsInf.push(this._edges[i].visuals[j].m);
 		}
 		hitOnEdge = XAC.hit(e, elmsInf, this._camera, this._canvas);
 		if (hitOnEdge != undefined) {
@@ -268,18 +267,18 @@ FORTE.MedialAxis.prototype._mousedown = function(e) {
 	}
 
 	//
-	//	interacting with inflation
+	//	interacting with visual
 	//
 	// nodes have higher priority to be interacted with
-	this._infSelected = XAC.hitObject(e, this._inflationsNode, this._camera, this._canvas);
+	this._infSelected = XAC.hitObject(e, this._visualsNode, this._camera, this._canvas);
 	if (this._infSelected == undefined) {
-		this._infSelected = XAC.hitObject(e, this._inflations, this._camera, this._canvas);
+		this._infSelected = XAC.hitObject(e, this._visuals, this._camera, this._canvas);
 	}
 
 	this._infSelInfo = undefined;
-	for (var i = this._inflations.length - 1; i >= 0; i--) {
-		if (this._inflations[i] == this._infSelected) {
-			this._infSelInfo = this._inflationsInfo[i];
+	for (var i = this._visuals.length - 1; i >= 0; i--) {
+		if (this._visuals[i] == this._infSelected) {
+			this._infSelInfo = this._visualsInfo[i];
 			break;
 		}
 	}
@@ -295,19 +294,19 @@ FORTE.MedialAxis.prototype._mousemove = function(e) {
 		var pos = this._maniplane.update(e);
 		if (pos != undefined) {
 			this.updateNode(this._nodeSelected, pos);
-			this._inflateNode(this._nodeSelected);
+			this._renderNode(this._nodeSelected);
 		}
 		return this._nodeSelected;
 	}
 
 	if (this._infSelected != undefined) {
 		var yOffset = e.clientY - this._eDown.clientY;
-		var ratio = -yOffset / Math.pow(2, this._inflateRate);
+		var ratio = -yOffset / Math.pow(2, this._renderRate);
 
 		// this._scene.remove(this._infSelected);
 		if (this._infSelInfo.node != undefined) {
 			this._infSelInfo.node.radius *= (1 + ratio);
-			this._inflateNode(this._infSelInfo.node);
+			this._renderNode(this._infSelInfo.node);
 			this._nodeSelected = undefined;
 		} else if (this._infSelInfo.edge.thickness != undefined) {
 			var wind = 3;
@@ -318,7 +317,7 @@ FORTE.MedialAxis.prototype._mousemove = function(e) {
 					wind));
 			}
 
-			this._inflateEdge(this._infSelInfo.edge);
+			this._renderEdge(this._infSelInfo.edge);
 			this._edgeSelected = undefined;
 		}
 
@@ -333,17 +332,17 @@ FORTE.MedialAxis.prototype._mouseup = function(e) {
 		this._maniplane.destruct();
 		this._maniplane = undefined;
 		// TODO: verify whether this is needed
-		this._inflate();
+		this._render();
 	}
 
 	if (this._nodeSelected != undefined) {
-		this._nodeSelected.inflation.m.material = this._matInflation;
+		this._nodeSelected.visual.m.material = this._matvisual;
 		this._nodeSelected = undefined;
 	}
 
 	if (this._edgeSelected != undefined) {
-		for (var j = this._edgeSelected.inflations.length - 1; j >= 0; j--) {
-			this._edgeSelected.inflations[j].m.material = this._matHighlight;
+		for (var j = this._edgeSelected.visuals.length - 1; j >= 0; j--) {
+			this._edgeSelected.visuals[j].m.material = this._matHighlight;
 			// this._edgeSelected.joints[j - 1 < 0 ? 0 : j - 1].m.material = this._matHighlight;
 		}
 		log(this._edges.indexOf(this._edgeSelected));
@@ -394,11 +393,11 @@ FORTE.MedialAxis.prototype._addNode = function(pos, autoSplit) {
 			edges: [], // info of the edges connected to this node
 			radius: this._radiusNode * 1.1, // radius of this node
 			radiusData: [], // store the raw data
-			inflation: undefined
+			visual: undefined
 		});
 
 		var node = this._nodes.slice(-1)[0];
-		this._inflateNode(node);
+		this._renderNode(node);
 		return node;
 	} else {
 		return this._splitEdge(edgeIntersected, pos);
@@ -422,7 +421,7 @@ FORTE.MedialAxis.prototype._removeNode = function(node) {
 			}
 			this._nodes[i].deleted = true;
 
-			this._scene.remove(this._nodes[i].inflation.m);
+			this._scene.remove(this._nodes[i].visual.m);
 		}
 	}
 }
@@ -475,8 +474,8 @@ FORTE.MedialAxis.prototype._removeEdge = function(edge) {
 	}
 	this._scene.remove(edge.mesh);
 	edge.deleted = true;
-	for (var j = edge.inflations.length - 1; j >= 0; j--) {
-		this._scene.remove(edge.inflations[j].m);
+	for (var j = edge.visuals.length - 1; j >= 0; j--) {
+		this._scene.remove(edge.visuals[j].m);
 		// this._scene.remove(edge.joints[j - 1 < 0 ? 0 : j - 1].m);
 	}
 
@@ -575,7 +574,7 @@ FORTE.MedialAxis.prototype._addEdge = function(node1, node2, points, thickness) 
 			points: points,
 			thickness: [],
 			thicknessData: [],
-			inflations: [],
+			visuals: [],
 			joints: []
 		};
 
@@ -589,78 +588,78 @@ FORTE.MedialAxis.prototype._addEdge = function(node1, node2, points, thickness) 
 		node1.edges.push(edge);
 		node2.edges.push(edge);
 
-		if (this._scene.children.indexOf(node1.inflation.m) < 0) {
-			this._scene.add(node1.inflation.m);
+		if (this._scene.children.indexOf(node1.visual.m) < 0) {
+			this._scene.add(node1.visual.m);
 		}
 
-		if (this._scene.children.indexOf(node2.inflation.m) < 0) {
-			this._scene.add(node2.inflation.m);
+		if (this._scene.children.indexOf(node2.visual.m) < 0) {
+			this._scene.add(node2.visual.m);
 		}
 	}
 	// connect nodes (that were connected but deleted)
 	else {
 		edge.deleted = false;
-		for (var i = edge.inflations.length - 1; i >= 0; i--) {
-			this._scene.add(edge.inflations[i].m)
+		for (var i = edge.visuals.length - 1; i >= 0; i--) {
+			this._scene.add(edge.visuals[i].m)
 		}
 	}
 
-	this._inflateEdge(edge);
+	this._renderEdge(edge);
 
 	return edge;
 }
 
 //
-//	inflate the medial axis with thicknesses
+//	render the medial axis with thicknesses
 //
-FORTE.MedialAxis.prototype._inflate = function() {
-	// inflate the nodes
+FORTE.MedialAxis.prototype._render = function() {
+	// render the nodes
 	for (var h = this._nodes.length - 1; h >= 0; h--) {
 		if (this._nodes[h].deleted) continue;
-		this._inflateNode(this._nodes[h], true);
+		this._renderNode(this._nodes[h], true);
 	}
 
-	// inflate the edges
+	// render the edges
 	for (var h = this._edges.length - 1; h >= 0; h--) {
 		if (this._edges[h].deleted) continue;
-		this._inflateEdge(this._edges[h]);
+		this._renderEdge(this._edges[h]);
 	}
 }
 
 //
-//	inflate a node
+//	render a node
 //
-FORTE.MedialAxis.prototype._inflateNode = function(node, nodeOnly) {
+FORTE.MedialAxis.prototype._renderNode = function(node, nodeOnly) {
 	var ctr = node.position;
 	var r = node.radius;
 
 	if (r > 0) {
-		if (node.inflation == undefined) {
-			node.inflation = new XAC.Sphere(r, this._matInflation, false);
-			this._inflations.push(node.inflation.m);
-			this._inflationsNode.push(node.inflation.m);
-			this._inflationsInfo.push({
+		if (node.visual == undefined) {
+			node.visual = new XAC.Sphere(r, this._matvisual, false);
+			this._visuals.push(node.visual.m);
+			this._visualsNode.push(node.visual.m);
+			this._visualsInfo.push({
 				node: node
 			});
-			this._scene.add(node.inflation.m);
+			this._scene.add(node.visual.m);
 		} else {
-			node.inflation.update(r);
-			node.inflation.m.material = this._matInflation;
+			node.visual.update(r);
+			node.visual.m.material = this._matvisual;
 		}
-		node.inflation.m.position.copy(ctr);
+		node.visual.m.position.copy(ctr);
 	}
 
 	if (nodeOnly) {} else {
 		for (var i = node.edges.length - 1; i >= 0; i--) {
-			this._inflateEdge(node.edges[i]);
+			this._renderEdge(node.edges[i]);
 		}
 	}
 }
 
 //
-//	inflate an edge
+//	render an edge
 //
-FORTE.MedialAxis.prototype._inflateEdge = function(edge) {
+FORTE.MedialAxis.prototype._renderEdge = function(edge) {
 	var p1 = edge.node1.position;
 	var p2 = edge.node2.position;
 	var thickness = edge.thickness.concat([edge.node2.radius]);
@@ -689,39 +688,36 @@ FORTE.MedialAxis.prototype._inflateEdge = function(edge) {
 			r = (thickness[i - 1] + thickness[i] + thickness[i + 1]) / 3;
 		}
 
-		// HACK: experimental, to show a larger sketch
-		// r *= 1.5;
-
-		if (edge.inflations[i] == undefined) {
-			var inflation = new XAC.ThickLine(ctr0, ctr, {
+		if (edge.visuals[i] == undefined) {
+			var visual = new XAC.ThickLine(ctr0, ctr, {
 				r1: r,
 				r2: r0
-			}, this._matInflation);
+			}, this._matvisual);
 
-			this._inflations.push(inflation.m);
-			this._inflationsInfo.push({
+			this._visuals.push(visual.m);
+			this._visualsInfo.push({
 				edge: edge,
 				idx: i
 			});
-			edge.inflations.push(inflation);
+			edge.visuals.push(visual);
 
 			// if (i < thickness.length - 1) {
-			// 	var joint = new XAC.Sphere(r, this._matInflation, false);
+			// 	var joint = new XAC.Sphere(r, this._matvisual, false);
 			// 	joint.m.position.copy(ctr);
 			// 	edge.joints.push(joint);
 			// 	this._scene.add(joint.m);
 			// }
 
-			this._scene.add(edge.inflations[i].m);
+			this._scene.add(edge.visuals[i].m);
 		} else {
-			edge.inflations[i].updateEfficiently(ctr0, ctr, {
+			edge.visuals[i].updateEfficiently(ctr0, ctr, {
 				r1: r,
 				r2: r0
 			});
 
-			edge.inflations[i].m.material = this._matInflation;
+			edge.visuals[i].m.material = this._matvisual;
 
-			// if (i < thickness.length - 1) {
+			// if (i < edge.thickness.length - 1) {
 			// 	edge.joints[i].update(r, ctr); //.m.position.copy(ctr);
 			// }
 		}
