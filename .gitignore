@@ -12,3 +12,4 @@
 *.vtk
 *.forte
 */*.pyc
+.DS_Store
