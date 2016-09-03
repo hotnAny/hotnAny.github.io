@@ -11,8 +11,8 @@ var FORTE = FORTE || {};
 
 FORTE.renderUI = function() {
     var aspectRatio = 0.9; // h to w
-    var widthWindow = window.innerWidth * 0.98;
-    var heightWindow = window.innerHeight * 0.98;
+    var widthWindow = window.innerWidth * 0.985;
+    var heightWindow = window.innerHeight * 0.97;
 
     var tblLayout = $('<table></table>');
     tblLayout.css('max-height', heightWindow);
@@ -20,14 +20,12 @@ FORTE.renderUI = function() {
     tblLayout.append(trLayout);
 
     var tdOptimization = $('<td></td>');
-    trLayout.append(tdOptimization);
 
 
     //
     //  set up optimization view
     //
     var tblOptimization = $('<table></table>');
-    // tblOptimization.css('overflow', 'auto');
     tdOptimization.append(tblOptimization);
     var trOptView = $('<tr></tr>');
     var tdOptView = $('<td></td>')
@@ -42,8 +40,19 @@ FORTE.renderUI = function() {
     FORTE.optCamera = optviewRenderSet.camera;
     FORTE.optRenderer.render(FORTE.optScene, FORTE.optCamera);
     tdOptView.append(FORTE.optRenderer.domElement);
+    tdOptView.click(function(e) {
+        // NOTE: refresh for now
+        if (FORTE.deltas != undefined)
+            for (var i = 0; i < FORTE.deltas.length; i++) {
+                FORTE.deltas[i]._slider.hide();
+            }
+        FORTE.deltas = [];
 
-    // FORTE.optRenderer.domElement.click
+        var delta = new FORTE.Delta(FORTE.designSpace.design, FORTE.viewedOptimization, FORTE.canvasRenderer
+            .domElement, FORTE.canvasScene, FORTE.canvasCamera);
+        FORTE.deltas.push(delta);
+        FORTE.updateDeltas(true);
+    });
 
     //
     // set up thumbnails
@@ -54,7 +63,7 @@ FORTE.renderUI = function() {
     FORTE.divOptThumbnails.css('height', (heightWindow - heightOptView) + 'px');
     FORTE.divOptThumbnails.css('overflow', 'scroll');
     FORTE.thumbnailMargin = 8;
-    FORTE.widthThumbnail = widthOptView / 3 - FORTE.thumbnailMargin - 1;
+    FORTE.widthThumbnail = widthOptView / 3 - FORTE.thumbnailMargin * 2;
     FORTE.heightThumbnail = aspectRatio * FORTE.widthThumbnail;
     tdThumbnails.append(FORTE.divOptThumbnails);
     trThumbnails.append(tdThumbnails);
@@ -74,13 +83,13 @@ FORTE.renderUI = function() {
         FORTE.MedialAxis.fromRawData(design, FORTE.optRenderer.domElement, scene, camera);
         FORTE.centerCamera(camCtrl, FORTE.designSpace.design);
         FORTE.optRenderer.render(scene, camera);
+        FORTE.viewedOptimization = optDesign;
 
-        // HACK
         // FORTE.design._medialAxis.updateFromRawData(FORTE.designSpace.design.clone()
-            // .concat(optDesign), true);
+        // .concat(optDesign), true);
         // FORTE.design._medialAxis.updateFromRawData(FORTE.designSpace.design.clone()
-            // .concat(optDesign));
-        var delta = new FORTE.Delta(FORTE.designSpace.design, optDesign, FORTE.canvasRenderer.domElement, FORTE.canvasScene, FORTE.canvasCamera);
+        // .concat(optDesign));
+        // var delta = new FORTE.Delta(FORTE.designSpace.design, optDesign, FORTE.canvasRenderer.domElement, FORTE.canvasScene, FORTE.canvasCamera);
     };
 
 
@@ -96,10 +105,11 @@ FORTE.renderUI = function() {
     FORTE.canvasCamera = canvasRenderSet.camera;
     FORTE.camCtrl = new THREE.TrackballControls(FORTE.canvasCamera, undefined,
         undefined);
-    // FORTE.camCtrl.noZoom = true;
+    FORTE.camCtrl.noZoom = true;
 
     FORTE.tdCanvas.append(FORTE.canvasRenderer.domElement);
     trLayout.append(FORTE.tdCanvas);
+    trLayout.append(tdOptimization);
 
     return tblLayout;
 }
@@ -195,12 +205,13 @@ FORTE.dragnDrop = function() {
             var reader = new FileReader();
             reader.onload = (function(e) {
                 FORTE.designSpace = JSON.parse(e.target.result);
+                // log(e.target.result)
                 log(FORTE.designSpace)
 
                 //  load original design
                 FORTE.design._medialAxis.updateFromRawData(FORTE.designSpace.design);
-                var centroid = FORTE.centerCamera(FORTE.camCtrl, FORTE.designSpace.design);
-                // addABall(FORTE.canvasScene, centroid, 0xff00ff, 5, 1)
+                FORTE.centerCamera(FORTE.camCtrl, FORTE.designSpace.design);
+                var centroid = FORTE.getBoundingBox(FORTE.designSpace.design).centroidish;
 
                 //  load optimizations and show them as thumbnails
                 for (var i = 0; i < FORTE.designSpace.optimizations.length; i++) {
@@ -213,6 +224,7 @@ FORTE.dragnDrop = function() {
                     var camera = FORTE.tbnCamera.clone();
                     var camCtrl = new THREE.TrackballControls(camera, undefined,
                         undefined);
+                    // log('optimization #' + i)
                     FORTE.MedialAxis.fromRawData(design, FORTE.tbnRenderer.domElement,
                         scene, camera);
                     FORTE.centerCamera(camCtrl, FORTE.designSpace.design);
@@ -243,36 +255,11 @@ FORTE.dragnDrop = function() {
 //      * optional: adding a manual offset
 //
 FORTE.centerCamera = function(camCtrl, edges, offset) {
-    var cnt = 0;
-    var xmin = Number.MAX_VALUE,
-        ymin = Number.MAX_VALUE,
-        zmin = Number.MAX_VALUE;
-    var xmax = -Number.MAX_VALUE,
-        ymax = -Number.MAX_VALUE,
-        zmax = -Number.MAX_VALUE;
-    // var centroidish = new THREE.Vector3();
-    for (var i = 0; i < edges.length; i++) {
-        var points = edges[i].points;
-        for (var j = 0; j < points.length; j++) {
-            var p = points[j];
-            // centroidish.add(new THREE.Vector3().fromArray(p));
-            cnt++;
+    var bbox = FORTE.getBoundingBox(edges);
 
-            xmax = Math.max(p[0], xmax);
-            ymax = Math.max(p[1], ymax);
-            zmax = Math.max(p[2], zmax);
-
-            xmin = Math.min(p[0], xmin);
-            ymin = Math.min(p[1], ymin);
-            zmin = Math.min(p[2], zmin);
-        }
-
-    }
-    // centroidish.divideScalar(cnt + XAC.EPSILON);
-
-    var vmin = new THREE.Vector3(xmin, ymin, zmin);
-    var vmax = new THREE.Vector3(xmax, ymax, zmax);
-    var centroidish = vmin.clone().add(vmax).divideScalar(2);
+    var vmin = bbox.vmin;
+    var vmax = bbox.vmax;
+    var centroidish = bbox.centroidish;
 
     var r = vmax.distanceTo(vmin) * 0.5;
     var d = 4 * r * Math.sin(camCtrl.object.fov * 0.5 * Math.PI / 180);
@@ -282,6 +269,40 @@ FORTE.centerCamera = function(camCtrl, edges, offset) {
     if (offset != undefined) ctrCamera.add(offset);
     camCtrl.object.position.add(ctrCamera);
     camCtrl.target.add(ctrCamera);
+    camCtrl.object.lookAt(camCtrl.target);
 
-    return centroidish;
+}
+
+FORTE.getBoundingBox = function(edges) {
+    var cnt = 0;
+    var xmin = Number.MAX_VALUE,
+        ymin = Number.MAX_VALUE,
+        zmin = Number.MAX_VALUE;
+    var xmax = -Number.MAX_VALUE,
+        ymax = -Number.MAX_VALUE,
+        zmax = -Number.MAX_VALUE;
+    for (var i = 0; i < edges.length; i++) {
+        var points = edges[i].points;
+        for (var j = 0; j < points.length; j++) {
+            var p = points[j];
+
+            xmax = Math.max(p[0], xmax);
+            ymax = Math.max(p[1], ymax);
+            zmax = Math.max(p[2], zmax);
+
+            xmin = Math.min(p[0], xmin);
+            ymin = Math.min(p[1], ymin);
+            zmin = Math.min(p[2], zmin);
+        }
+    }
+
+    var vmin = new THREE.Vector3(xmin, ymin, zmin);
+    var vmax = new THREE.Vector3(xmax, ymax, zmax);
+    var centroidish = vmin.clone().add(vmax).divideScalar(2);
+
+    return {
+        centroidish: centroidish,
+        vmin: vmin,
+        vmax: vmax
+    };
 }

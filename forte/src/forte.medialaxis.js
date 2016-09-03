@@ -167,11 +167,6 @@ FORTE.MedialAxis.prototype.updateNode = function(node, pos) {
 				points[j].add(dvj);
 			}
 
-			// DEBUG
-			// if (points[points.length - 1] == undefined || points[0] == undefined) {
-			// 	log(points)
-			// }
-
 			// make sure the end of points stick to the moving node
 			if (node1 == node) {
 				points[0].copy(pos);
@@ -229,7 +224,7 @@ FORTE.MedialAxis.prototype._mousedown = function(e) {
 		// }
 		// this._maniplane = new XAC.Maniplane(this._nodeSelected.position, this._scene, this._camera, true);
 		this._maniplane = new XAC.Maniplane(new THREE.Vector3(), this._scene, this._camera, this._canvas,
-			true);
+			true, false);
 		this._findNode(this._nodeSelected.position, true); // find the node that's clicked
 		return this._nodeSelected; // stop propagation here
 	}
@@ -718,6 +713,8 @@ FORTE.MedialAxis.prototype._renderEdge = function(edge) {
 				r2: r0
 			});
 
+			// log(r)
+
 			edge.visuals[i].m.material = this._matvisual;
 
 			if (this.SHOWJOINTS)
@@ -749,10 +746,9 @@ FORTE.MedialAxis.prototype.updateFromRawData = function(edges, toRefresh) {
 
 		for (var i = 0; i < edges.length; i++) {
 			var points = [];
-
 			for (var j = 0; j < edges[i].points.length; j++) {
-
 				for (var k = 0; k < edges[i].points[j].length; k++) {
+					// NOTE: might be due to a bug
 					if (isNaN(edges[i].points[j][k]) == true) {
 						err([i, j, edges[i].points[j][k]])
 					}
@@ -761,7 +757,7 @@ FORTE.MedialAxis.prototype.updateFromRawData = function(edges, toRefresh) {
 			}
 
 			try {
-				var edge = this.addEdge(points, false, false);
+				var edge = this.addEdge(points, false, true);
 				edge.thickness = edges[i].thickness.clone();
 			} catch (e) {
 				edges[i].deleted = true;
@@ -779,8 +775,8 @@ FORTE.MedialAxis.prototype.updateFromRawData = function(edges, toRefresh) {
 				if (edge.thickness.length > 1)
 					r += node == edge.node1 ? edge.thickness[1] : edge.thickness.slice(-2)[0]
 			}
-			node.radius = r == 0 ? 1 : r * 1.1 / node.edges.length;
-			// log(node.radius)
+			node.radius = r == 0 ? this._radiusNode : r * 1.1 / node.edges.length;
+			log(node.radius)
 		}
 
 		var rmean = 0;
@@ -796,19 +792,17 @@ FORTE.MedialAxis.prototype.updateFromRawData = function(edges, toRefresh) {
 
 		this._radiusEdge = rmean;
 		this._radiusNode = this._radiusEdge * 1.1;
+		log([this._radiusEdge, this._radiusNode])
 	} else {
 		for (var i = 0; i < this._edges.length; i++) {
 			var edge = this._edges[i];
 			edge.node1.position.copy(new THREE.Vector3().fromArray(edges[i].node1));
 			edge.node2.position.copy(new THREE.Vector3().fromArray(edges[i].node2));
 
-			// log(edge.points.length + ', ' + edge.thickness.length)
 			for (var j = 0; j < edge.points.length; j++) {
 				edge.points[j] = new THREE.Vector3().fromArray(edges[i].points[j]);
 				edge.thickness[j] = edges[i].thickness[j];
 			}
-
-			// log(this._edges[i].thickness)
 		}
 	}
 

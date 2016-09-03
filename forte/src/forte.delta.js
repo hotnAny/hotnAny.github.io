@@ -11,7 +11,6 @@ FORTE.Delta = function(designOriginal, designNew, canvas, scene, camera) {
     FORTE.deltas = FORTE.deltas || [];
 
     var id = FORTE.deltas.length;
-    FORTE.deltas.push(this);
     this._interpolation = new FORTE.Interpolation(designOriginal, designNew, scene, camera);
 
     //
@@ -20,6 +19,7 @@ FORTE.Delta = function(designOriginal, designNew, canvas, scene, camera) {
     var bbox = FORTE.Delta._findBoundingBox(designNew);
 
     // unproject it to screen coordinates
+    //  ...
 
     // create a slider
     this._slider = $('<div id=' + id + '></div>');
@@ -34,21 +34,20 @@ FORTE.Delta = function(designOriginal, designNew, canvas, scene, camera) {
             var t = (ui.value - FORTE.Delta.SLIDERMIN) / (FORTE.Delta.SLIDERMAX - FORTE.Delta
                 .SLIDERMIN);
             t = FORTE.Delta._transfer(t);
-            // log([t, t1])
-            // t = t1
             var delta = FORTE.deltas[this.id];
             delta._designNew = delta._interpolation.interpolate(t);
             FORTE.updateDeltas();
+            event.stopPropagation();
         }
     });
 
     this._designNew = this._interpolation.interpolate(1);
-    FORTE.updateDeltas(true);
+    // FORTE.updateDeltas(true);
 
     var rect = canvas.getBoundingClientRect();
     this._slider.css('position', 'absolute');
-    this._slider.css('left', (rect.left + 5) + 'px');
-    this._slider.css('top', (rect.top + 5) + 'px');
+    this._slider.css('left', (rect.left + 15) + 'px');
+    this._slider.css('top', (rect.top + 15) + 'px');
     this._slider.css('height', FORTE.Delta.SLIERHEIGHT + 'px');
     FORTE.tdCanvas.append(this._slider);
 }
@@ -69,7 +68,8 @@ FORTE.Delta._findBoundingBox = function(design) {
 
 FORTE.Delta._transfer = function(t, inverse) {
     if (inverse) {
-        return (Math.pow(FORTE.Delta.SLIDINGBASE, t / FORTE.Delta.OUTSLIDINGRATIO) - 1) / (FORTE.Delta.SLIDINGBASE - 1);
+        return (Math.pow(FORTE.Delta.SLIDINGBASE, t / FORTE.Delta.OUTSLIDINGRATIO) - 1) / (FORTE.Delta.SLIDINGBASE -
+            1);
     }
     return FORTE.Delta.OUTSLIDINGRATIO * Math.getBaseLog(FORTE.Delta.SLIDINGBASE, t * (FORTE.Delta.SLIDINGBASE -
         1) + 1);

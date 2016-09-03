@@ -30,8 +30,12 @@ XAC.Maniplane = function(pos, scene, camera, canvas, orthogonal, showPlane) {
 	this._plane.material.opacity = 0.5;
 	this._plane.position.copy(pos);
 
-	var vecView = new THREE.Vector3().subVectors(this._camera.position, this._plane
-		.position);
+	// var vecView = new THREE.Vector3().subVectors(this._camera.position, this._plane
+		// .position);
+
+	//HACK
+	var vecView = new THREE.Vector3(0, 0, 1);
+
 	if (orthogonal == true) {
 		var angleView = new THREE.Vector3(0, 1, 0).angleTo(vecView);
 		if (angleView > Math.PI / 3) {

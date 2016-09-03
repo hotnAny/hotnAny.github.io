@@ -295,6 +295,11 @@ XAC.copyArray = function(array) {
 
 
 XAC.clamp = function(val, vmin, vmax) {
+	if(vmin > vmax) {
+		var vtmp = vmin;
+		vmin = vmax;
+		vmax = vtmp;
+	}
 	val = Math.max(vmin, val);
 	val = Math.min(val, vmax);
 	return val;

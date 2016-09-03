@@ -17,7 +17,7 @@ $(document).ready(function() {
 	FORTE.stats = new Stats();
 	FORTE.stats.domElement.style.position = 'absolute';
 	FORTE.stats.domElement.style.top = '0px';
-	// FORTE.stats.domElement.style.right = '0px';
+	FORTE.stats.domElement.style.right = '0px';
 	document.body.appendChild(FORTE.stats.domElement);
 
 	//

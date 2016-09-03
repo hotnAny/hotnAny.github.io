@@ -43,7 +43,7 @@ FORTE.Design = function(canvas, scene, camera) {
 	});
 
 	// using a medial axis to represent design
-	this._medialAxis = new FORTE.MedialAxis(canvas, this._scene, this._camera);
+	this._medialAxis = new FORTE.MedialAxis(this._canvas, this._scene, this._camera);
 	this._medialAxis._matNode = this._matDesign;
 	this._medialAxis._matvisual = this._matDesign;
 	this._medialAxis._matHighlight.opacity = 1;
@@ -168,7 +168,7 @@ FORTE.Design.prototype._mousedown = function(e) {
 				// redraw the boundary, diff from other design
 				for (var j = edge.visuals.length - 1; j >= 0; j--) {
 					edge.visuals[j].m.material = this._matBoundary;
-					// edge.joints[j < 1 ? 0 : j - 1].m.material = this._matBoundary;
+					if(this.SHOWJOINTS) edge.joints[j < 1 ? 0 : j - 1].m.material = this._matBoundary;
 				}
 			}
 
@@ -528,7 +528,7 @@ FORTE.Design.prototype._mouseup = function(e) {
 			// redraw the boundary
 			for (var i = edge.visuals.length - 1; i >= 0; i--) {
 				edge.visuals[i].m.material = this._matBoundary;
-				// edge.joints[i < 1 ? 0 : i - 1].m.material = this._matBoundary;
+				if(this.SHOWJOINTS)  edge.joints[i < 1 ? 0 : i - 1].m.material = this._matBoundary;
 				this._funcElements.push(edge.visuals[i].m);
 			}
 
