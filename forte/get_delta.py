@@ -10,20 +10,8 @@ from sys import argv
 import json
 from skeletonize import vxgs_to_edges
 
-if __name__ == "__main__":
-    if len(argv) < 4:
-        print 'usage: ./get_delta.py <path_to_design> <path_to_optimization_data> <problem_name>'
-        quit()
-
-    path_design = argv[1]
-    path_opt = argv[2]
-    probname = argv[3]
-
-    design_file = open(path_design, 'r')
-    design_obj = json.loads(design_file.read())
+def get_delta(path_opt, probname, design_obj, fname):
     edges, thicknesses, w, h = vxgs_to_edges(path_opt, probname, design_obj)
-    design_file.close()
-
     edgeObjs = []
     for edge in edges:
         edgeObj = {}
@@ -41,6 +29,24 @@ if __name__ == "__main__":
 
     print delta
 
-    delta_file = open(path_design + '.delta', 'w')
+    delta_file = open(fname, 'w')
     delta_file.write(json.dumps(delta))
     delta_file.close()
+
+    return path_output
+
+if __name__ == "__main__":
+    if len(argv) < 4:
+        print 'usage: ./get_delta.py <path_to_design> <path_to_optimization_data> <problem_name>'
+        quit()
+
+    path_design = argv[1]
+    path_opt = argv[2]
+    probname = argv[3]
+
+    design_file = open(path_design, 'r')
+    design_obj = json.loads(design_file.read())
+    design_file.close()
+    fname = path_design + '.delta'
+    
+    get_delta(path_opt, probname, design_obj, fname)
