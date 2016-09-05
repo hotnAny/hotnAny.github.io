@@ -52,7 +52,7 @@ FORTE.Interpolation.prototype.interpolate = function(t) {
             if (dps[k].path != undefined) {
                 var idx = XAC.float2int(dps[k].path.length * t + 0.5);
                 idx = XAC.clamp(idx, 0, dps[k].path.length - 1);
-                nodes[k].copy(dps[k].path[idx]);
+                if (idx < dps[k].path.length) nodes[k].copy(dps[k].path[idx]);
             }
             // elm will move in space (cartestian)
             else if (dps[k].projection != undefined) {
@@ -100,15 +100,21 @@ FORTE.Interpolation.prototype._updateElm = function(elm, t) {
             this._updateElm(dps[i].elm, t);
         }
 
+        var edge = dps[i].elm.edge;
+        if (edge == undefined) {
+            edge = dps[i].elm;
+            if (edge == undefined) continue;
+        }
+
         var posSnapTo;
         if (dps[i].idxIntPnt == 0) {
-            posSnapTo = dps[i].elm.node1;
-        } else if (dps[i].idxIntPnt == dps[i].elm.edge.points.length - 1) {
-            posSnapTo = dps[i].elm.node2;
+            posSnapTo = edge.node1;
+        } else if (dps[i].idxIntPnt == edge.points.length - 1) {
+            posSnapTo = edge.node2;
         } else {
-            posSnapTo = dps[i].elm.edge.points[dps[i].idxIntPnt];
+            posSnapTo = edge.points[dps[i].idxIntPnt];
         }
-        nodes[i].copy(posSnapTo);
+        if (posSnapTo != undefined) nodes[i].copy(posSnapTo);
     }
 
     var len = XAC.getDist(elm._node1, elm._node2) + XAC.EPSILON;
