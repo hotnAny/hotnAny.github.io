@@ -5,12 +5,15 @@
 #   useful apis for using topy
 #
 ##########################################################################
+
 import sys
 sys.path.append('./scripts')
 import subprocess
 import json
 import math
 import time
+from numpy import ndarray
+from PIL import Image
 
 from nodenums import node_nums_3d
 from nodenums import elm_num_3d
@@ -23,6 +26,7 @@ EPSILON = 1e-9
 ANALYSIS = 0
 OPTIMIZATION = 1
 TOPYPATH = './scripts/optimise.py'
+SHOW_DEBUG = True
 
 tpd_template = '{"PROB_TYPE":"comp", "PROB_NAME":"NONAME", "ETA": "0.4", "DOF_PN": "3", "VOL_FRAC": "0.3", "FILT_RAD": "2.9", "ELEM_K": "H8", "NUM_ELEM_X":"10", "NUM_ELEM_Y":"10", "NUM_ELEM_Z":"10", "NUM_ITER":"50", "FXTR_NODE_X":"", "FXTR_NODE_Y":"", "FXTR_NODE_Z":"", "LOAD_NODE_X":"", "LOAD_VALU_X":"", "LOAD_NODE_Y":"", "LOAD_VALU_Y":"", "LOAD_NODE_Z":"", "LOAD_VALU_Z":"", "P_FAC":"1", "P_HOLD":"15", "P_INCR":"0.2", "P_CON":"1", "P_MAX":"3", "Q_FAC":"1", "Q_HOLD":"15", "Q_INCR":"0.05", "Q_CON":"1", "Q_MAX":"5"}';
 
@@ -282,6 +286,47 @@ def gen_tpd(original, resolution, material):
                     except:
                         continue
 
+    # DEBUG: print out the design and specs --------------------------------------------------------------
+    if SHOW_DEBUG:
+        str_voxelgrid = ''
+        for j in xrange(0, nely):
+            debug_voxelrow = ''
+            for i in xrange(0, nelx):
+                debug_voxelrow += ('  ')
+            str_voxelgrid += debug_voxelrow + ' \n'
+
+        debug_voxelgrid = list(str_voxelgrid)
+
+        for elm in actv_elms:
+            i = elm[0]
+            j = elm[1]
+            idx = j * (nelx + 1) + nelx - 1 - i
+            debug_voxelgrid[2 * idx + 1] = '.'
+
+        for cp in pasv_elms:
+            i = cp[0]
+            j = cp[1]
+            idx = 2 * (j * (nelx + 1) + nelx - 1 - i) + 1
+            if idx < len(debug_voxelgrid):
+                debug_voxelgrid[idx] = 'x'
+
+        for lp in load_points:
+            i = lp[0]
+            j = lp[1]
+            idx = 2 * (j * (nelx + 1) + nelx - 1 - i) + 1
+            if idx < len(debug_voxelgrid):
+                debug_voxelgrid[idx] = 'O'
+
+        for bp in boundary_elms:
+            i = bp[0]
+            j = bp[1]
+            idx = 2 * (j * (nelx + 1) + nelx - 1 - i) + 1
+            if idx < len(debug_voxelgrid):
+                debug_voxelgrid[idx] = '*'
+
+        # print ''.join(debug_voxelgrid)[::-1]
+    # END DEBUG
+
     # prep for tpd file -----------------------------------------------------------------------------------
     str_load_points = ''
     load_values_x_str = []
@@ -308,6 +353,7 @@ def gen_tpd(original, resolution, material):
 
     material = material * len(actv_elms) / (nelx * nely)
     material = bound([material], [0.05], [0.35])[0]
+    print '[xac] actual amount of material ' + str(material)
 
     # write to tpd file -----------------------------------------------------------------------------------
     tpd = json.loads(tpd_template)
@@ -326,18 +372,25 @@ def gen_tpd(original, resolution, material):
     tpd['ACTV_ELEM'] = ';'.join([str(elm_num_3d(nelx, nely, 1, x[0]+1, x[1]+1, 1)) for x in actv_elms])
     tpd['PASV_ELEM'] = ';'.join([str(elm_num_3d(nelx, nely, 1, x[0]+1, x[1]+1, 1)) for x in pasv_elms])
 
-    return tpd
+    return tpd, debug_voxelgrid
 
 def analyze(tpd):
-    call_topy(tpd, ANALYSIS)
+    call_topy(tpd, ANALYSIS, False)
 
 def optimize(tpd):
-    call_topy(tpd, OPTIMIZATION)
+    call_topy(tpd, OPTIMIZATION, True)
 
 #
 #   run topy given a tpd object (not file)
 #
-def call_topy(tpd, query):
+def call_topy(tpd, query, imagerize):
+    tpd_path = save_tpd(tpd)
+    probname = main([TOPYPATH, tpd_path, str(query)])
+    if imagerize:
+        fname = str(tpd['VOL_FRAC']) + '_' + probname + '.bmp'
+        save_vxg_to_image(probname + '_optimized.vxg', fname)
+
+def save_tpd(tpd):
     str_tpd = '[ToPy Problem Definition File v2007]\n'
     for var in tpd:
         str_tpd += var + ': ' + str(tpd[var]) + '\n'
@@ -346,5 +399,25 @@ def call_topy(tpd, query):
     f = open(tpd_path, 'w')
     f.write(str_tpd)
     f.close()
+    return tpd_path
 
-    main([TOPYPATH, tpd_path, str(query)])
+def save_vxg_to_image(vxg_path, fname):
+    str_vxg = open(vxg_path).read()
+    rows_vxg = str_vxg.split('\n')
+    m = len(rows_vxg)
+    n = len(rows_vxg[0].split(','))
+    vxg = []
+    for i in xrange(0, m):
+        row_vxg = rows_vxg[i].split(',')
+        vxg.append([float(x) for x in row_vxg])
+
+    h = m
+    w = n
+    pixels = []
+    for i in xrange(0, h):
+        for j in xrange(0, w):
+            pixels.append(255 if float(vxg[h - 1 - i][j]) < 0.75 else 0)
+
+    img = Image.new('L', (w, h))
+    img.putdata(pixels)
+    img.save(fname)
