@@ -20,6 +20,7 @@ import math
 from nodenums import node_nums_3d
 from nodenums import elm_num_3d
 from optimise import main
+from skeletonize import skeletonize
 import traceback
 
 INFINITY = 1e9
@@ -70,9 +71,9 @@ def test():
     # print on_left_side([4, 3], [65.0, 1.0], [65.0, 1.0])
 
     t0 = timestamp()
-    test_data = open('chair_02.forte', 'r')
+    test_data = open('example_data/chair_02.forte.itr', 'r')
     # print test_data
-    proc_post_data({'forte': [test_data.read()]})
+    proc_post_data({'forte': [test_data.read()]}, res=64)
     timestamp(t=t0, msg='total time')
     return
 
@@ -143,8 +144,8 @@ def safe_retrieve_all(buffer, key, alt):
 #
 #   processing incoming data
 #
-def proc_post_data(post_data, res=192, amnt=0.15, dir=None):
-    if offline == False:
+def proc_post_data(post_data, res=48, amnt=1.0, dir=None):
+    if offline == False and dir != None:
         subprocess.call('rm ' + dir + '/forte_*', shell=True)
 
     if 'forte' not in post_data:
@@ -194,6 +195,7 @@ def proc_post_data(post_data, res=192, amnt=0.15, dir=None):
         return
 
     dim_voxel = max(dim_voxel, 0.1)   # avoid very tiny voxels
+    print 'dim_voxel: ', dim_voxel
 
     #
     #
@@ -294,11 +296,13 @@ def proc_post_data(post_data, res=192, amnt=0.15, dir=None):
     for clearance in clearances:
         voxels_clearance = []
         for point in clearance:
-            point = bound(point, vmin, vmax)
-            cx = math.floor((point[0]-vmin[0])/dim_voxel)
-            cy = math.floor((point[1]-vmin[1])/dim_voxel)
-            # voxels_clearance.append([min(max(0, cx), nelx), min(max(0, cy), nely)])
-            voxels_clearance.append([cx, cy])
+            if len(point) == 3:     # from user spec
+                point = bound(point, vmin, vmax)
+                cx = math.floor((point[0]-vmin[0])/dim_voxel)
+                cy = math.floor((point[1]-vmin[1])/dim_voxel)
+                voxels_clearance.append([cx, cy])
+            else:                   # from iteration
+                voxels_clearance.append(point)
 
         p0 = voxels_clearance[0]
         p1 = voxels_clearance[2]
@@ -381,7 +385,7 @@ def proc_post_data(post_data, res=192, amnt=0.15, dir=None):
 
     timestamp(msg='compute boundaries')
 
-    show_debug = (offline == False)
+    show_debug = True # (offline == False)
 
     # DEBUG: print out the design and specs
     if show_debug:
@@ -452,6 +456,10 @@ def proc_post_data(post_data, res=192, amnt=0.15, dir=None):
         if i < len(boundary_nodes) - 1:
             str_boundary += ';'
 
+    material = material * len(actv_elms) / (nelx * nely)
+    material = bound([material], [0.05], [0.35])[0]
+    print '--------------------------------------------------------------------------------  ' + str(material)
+
     tpd = json.loads(tpd_template)
     tpd['PROB_NAME'] = 'forte_' + str(long(time.time())) + '_' + str(amnt) + '_' + str(res)
     tpd['VOL_FRAC'] = material
@@ -487,10 +495,16 @@ def proc_post_data(post_data, res=192, amnt=0.15, dir=None):
     out_path = ' '  # timestamped temp output path
 
     # subprocess.call('python ' + rel_topy_path + ' ' + tpd_path + ' ' + str(query), shell=True)
-    probname = main([rel_topy_path, tpd_path, str(query)]);
-    subprocess.call('mv ' + probname + '* ' + tpd_path + ' ' + dir, shell=True)
+    # return
+    probname = main([rel_topy_path, tpd_path, str(query)])
+    if dir != None:
+        subprocess.call('mv ' + probname + '* ' + tpd_path + ' ' + dir, shell=True)
+    skeletonize(dim_voxel, forte, './', probname)
 
     timestamp(msg='topy')
+
+    if offline == True:
+        return
 
     str_result = '?'
     str_result += 'name=' + tpd['PROB_NAME'] + '&'
