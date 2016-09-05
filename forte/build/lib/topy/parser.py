@@ -187,6 +187,18 @@ def _parsev2007file(s):
     except KeyError:
         d['PASV_ELEM'] = _tpd2vec('')
 
+    # [xac] Check for favored elements:
+    try:
+        d['FAVORED'] = _tpd2vec(d['FAVORED']) - 1
+    except KeyError:
+        d['FAVORED'] = _tpd2vec('')
+
+    # [xac] Check for disfavored elements:
+    try:
+        d['DISFAVORED'] = _tpd2vec(d['DISFAVORED']) - 1
+    except KeyError:
+        d['DISFAVORED'] = _tpd2vec('')
+
     # Check if diagonal quadratic approximation is required:
     try:
         d['APPROX'] = lower(d['APPROX'])
