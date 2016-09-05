@@ -109,7 +109,7 @@ def write_to_image(edges, w, h):
 
 if __name__ == "__main__":
     if len(argv) < 3:
-        print 'usage: ./extract_edge <path_to_input_skeleton>'
+        print 'usage: ./extract_edge <path_to_input_skeleton> <path_to_reference_image>'
         edge = [(0, 0), (3, 1), (4, 4)]
         print split(edge)
         exit()

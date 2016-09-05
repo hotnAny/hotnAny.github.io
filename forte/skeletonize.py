@@ -363,10 +363,13 @@ def save_edges_to_image(edges, w, h, fname):
     img.save(fname)
 
 if __name__ == "__main__":
-    if len(argv) > 4:
-        dim_voxel = float(argv[1])
-        # design_obj = open(argv[2], 'r').read()
-        path_design = argv[2]
-        path_opt = argv[3]
-        probname = argv[4]
-        skeletonize(dim_voxel, path_opt, probname, path_design)
+    if len(argv) <= 4:
+        print 'usage: ./skeletonize.py <dim_of_voxel> <path_to_design> <path_to_optimization_data> <problem_name> '
+        quit()
+
+    dim_voxel = float(argv[1])
+    # design_obj = open(argv[2], 'r').read()
+    path_design = argv[2]
+    path_opt = argv[3]
+    probname = argv[4]
+    skeletonize(dim_voxel, path_opt, probname, path_design)
