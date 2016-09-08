@@ -104,7 +104,7 @@ $(document).ready(function() {
 	FORTE.design = new FORTE.Design(FORTE.canvasRenderer.domElement, FORTE.canvasScene, FORTE.canvasCamera);
 	FORTE.design.setInkSize(0.1);
 
-	FORTE.dragnDrop();
+	// FORTE.dragnDrop();
 
 	// finally do unit test
 	unitTest();
@@ -186,6 +186,11 @@ FORTE.transformOptimization = function(optimization, center, dim, w, h) {
 		for (var j = 0; j < edge.points.length; j++) {
 			edge.points[j].times(dim).add(origin);
 		}
+
+		for (var j = 0; j < edge.thickness.length; j++) {
+			edge.thickness[j] *= dim;
+		}
+
 		// var len = edge.points.length;
 		// var merged = FORTE.mergePoints(edge.points, edge.thickness);
 		// edge.points = merged.points;
@@ -222,7 +227,7 @@ FORTE.mergePoints = function(points, thicknesses) {
 		}
 		mergedPoints.push(p.times(1 / cnt));
 		mergedThickness.push(t / cnt);
-		log(t/cnt)
+		log(t / cnt)
 	}
 	mergedPoints.push(points.slice(-1)[0]);
 	mergedThickness.push(thicknesses.slice(-1)[0]);

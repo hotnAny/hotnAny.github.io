@@ -64,7 +64,7 @@ FORTE.Design = function(canvas, scene, camera) {
 	this._canvas.addEventListener('mousedown', this._mousedown.bind(this), false);
 	this._canvas.addEventListener('mousemove', this._mousemove.bind(this), false);
 	this._canvas.addEventListener('mouseup', this._mouseup.bind(this), false);
-	this._canvas.addEventListener('keydown', this._keydown.bind(this), false);
+	document.addEventListener('keydown', this._keydown.bind(this), false);
 
 	this._posDown = undefined;
 
