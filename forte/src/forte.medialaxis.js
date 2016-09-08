@@ -343,6 +343,9 @@ FORTE.MedialAxis.prototype._mouseup = function(e) {
 			if (this.SHOWJOINTS) this._edgeSelected.joints[j - 1 < 0 ? 0 : j - 1].m.material = this._matHighlight;
 		}
 		log(this._edges.indexOf(this._edgeSelected));
+
+		// allowing externally defining what to do when an edge is selected
+		if(this.onEdgeSelected != undefined) this.onEdgeSelected();
 	}
 
 	this._infSelected = undefined;
@@ -776,7 +779,8 @@ FORTE.MedialAxis.prototype.updateFromRawData = function(edges, toRefresh) {
 					r += node == edge.node1 ? edge.thickness[1] : edge.thickness.slice(-2)[0]
 			}
 			node.radius = r == 0 ? this._radiusNode : r * 1.1 / node.edges.length;
-			log(node.radius)
+			node.radius = Math.min(3, node.radius)
+			// log(node.radius)
 		}
 
 		var rmean = 0;
@@ -792,7 +796,7 @@ FORTE.MedialAxis.prototype.updateFromRawData = function(edges, toRefresh) {
 
 		this._radiusEdge = rmean;
 		this._radiusNode = this._radiusEdge * 1.1;
-		log([this._radiusEdge, this._radiusNode])
+		// log([this._radiusEdge, this._radiusNode])
 	} else {
 		for (var i = 0; i < this._edges.length; i++) {
 			var edge = this._edges[i];

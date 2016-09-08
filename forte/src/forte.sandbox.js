@@ -7,21 +7,21 @@ function unitTest() {
 	var step = 0.05;
 
 	// HACK
-	var keepPinging = function(interval) {
-		var strData = FORTE.design.getData();
-		log('request sent for t = ' + FORTE.t)
-		XAC.pingServer(FORTE.xmlhttp, 'localhost', '9999', ['forte', 'query',
-			'resolution', 'material', 'originality', 'verbose'
-		], [strData, 0, 64, 0.25, 1.0, 1]);
-		FORTE.t -= step;
-		if (FORTE.t >= 0 && interval != undefined) {
-			FORTE.design._medialAxis.updateFromRawData(FORTE.designOriginal.clone().concat(FORTE.interpolation
-				.interpolate(FORTE.t)));
-			setTimeout(function() {
-				keepPinging(interval);
-			}, interval);
-		}
-	}
+	// var keepPinging = function(interval) {
+	// 	var strData = FORTE.design.getData();
+	// 	log('request sent for t = ' + FORTE.t)
+	// 	XAC.pingServer(FORTE.xmlhttp, 'localhost', '9999', ['forte', 'query',
+	// 		'resolution', 'material', 'originality', 'verbose'
+	// 	], [strData, 0, 64, 0.25, 1.0, 1]);
+	// 	FORTE.t -= step;
+	// 	if (FORTE.t >= 0 && interval != undefined) {
+	// 		FORTE.design._medialAxis.updateFromRawData(FORTE.designOriginal.clone().concat(FORTE.interpolation
+	// 			.interpolate(FORTE.t)));
+	// 		setTimeout(function() {
+	// 			keepPinging(interval);
+	// 		}, interval);
+	// 	}
+	// }
 
 	document.addEventListener('keydown', function(e) {
 		switch (e.keyCode) {
@@ -36,12 +36,12 @@ function unitTest() {
 				FORTE.switchLayer(FORTE.FUNCSPECLAYER);
 				break;
 			case 83: //S
-				// var strData = FORTE.design.getData();
-				// // log(strData)
+				var strData = FORTE.design.getData();
+				log(strData)
 				// XAC.pingServer(FORTE.xmlhttp, 'localhost', '9999', ['forte', 'query',
 				// 	'resolution', 'material', 'originality', 'verbose'
 				// ], [strData, 0, 64, 0.25, 1.0, 1]);
-				keepPinging(6000);
+				// keepPinging(6000);
 				FORTE.switchLayer(FORTE.FEEDBACKLAYER);
 				break;
 			case 79: //O
