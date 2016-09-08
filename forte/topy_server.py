@@ -20,7 +20,7 @@ import math
 from nodenums import node_nums_3d
 from nodenums import elm_num_3d
 from optimise import main
-from skeletonize import skeletonize
+# from skeletonize import skeletonize
 import traceback
 
 INFINITY = 1e9
@@ -71,9 +71,9 @@ def test():
     # print on_left_side([4, 3], [65.0, 1.0], [65.0, 1.0])
 
     t0 = timestamp()
-    test_data = open('example_data/chair_02.forte.itr', 'r')
+    test_data = open('example_data/chair_02.forte', 'r')
     # print test_data
-    proc_post_data({'forte': [test_data.read()]}, res=64)
+    proc_post_data({'forte': [test_data.read()]}, res=128)
     timestamp(t=t0, msg='total time')
     return
 
@@ -99,7 +99,7 @@ def is_in_segment(p, p0, p1, t0, t1):
     dp1 = (v1[0] * u01[0] + v1[1] * u01[1]) / l
 
     if dp0 > l or dp1 > l:
-        # check if p is close enough to p0 p1
+        # # check if p is close enough to p0 p1
         if abs(v0[0])>t0 or abs(v0[1])>t0 or abs(v1[0])>t1 or abs(v1[1])>t1:
             return False
 
@@ -124,6 +124,9 @@ def is_in_segment(p, p0, p1, t0, t1):
     tp = lp/l * t0 + (1-lp/l) * t1
 
     return dist < tp * tp
+
+def is_boundary_of_expanded_segment(p, p0, p1, r0, r1):
+    return is_in_segment(p, p0, p1, r0-1, r1-1) == False and is_in_segment(p, p0, p1, r0, r1) == True
 
 def on_left_side(p, p0, p1):
     v = [p[0]-p0[0], p[1]-p0[1]]
@@ -250,6 +253,8 @@ def proc_post_data(post_data, res=48, amnt=1.0, dir=None):
 
     # compute the design elements
     actv_elms = []
+    actv_elms_inner = []
+    actv_elms_outer = []
     for edge in design:
         voxels = edge['voxels']
         thickness = edge['thickness']
@@ -260,6 +265,9 @@ def proc_post_data(post_data, res=48, amnt=1.0, dir=None):
             t0 = thickness[k] / dim_voxel
             t1 = thickness[k+1] / dim_voxel
 
+            r0 = 3 * t0
+            r1 = 3 * t1
+
             for j in xrange(0, nely):
                 if j < edge['voxelmin'][1] or j > edge['voxelmax'][1]:
                     continue
@@ -267,12 +275,20 @@ def proc_post_data(post_data, res=48, amnt=1.0, dir=None):
                 for i in xrange(0, nelx):
                     if i < edge['voxelmin'][0] or i > edge['voxelmax'][0]:
                         continue
+
+                    voxel = [i, j, 1]
                     try:
+                        if is_in_segment([i * 1.0, j * 1.0], p0, p1, r0, r1):
+                            actv_elms_outer.append(voxel)
+                        if is_in_segment([i * 1.0, j * 1.0], p0, p1, r0-1, r1-1):
+                            actv_elms_inner.append(voxel)
                         if is_in_segment([i * 1.0, j * 1.0], p0, p1, t0, t1):
-                            actv_elms.append([i, j, 1])
+                            actv_elms.append(voxel)
                     except:
                         continue
 
+    # actv_elms = list(set(actv_elms_outer) - set(actv_elms_inner))
+    # actv_elms = [v for v in actv_elms_outer if v not in actv_elms_inner]
     timestamp(msg='compute design elements')
 
     # compute load points
@@ -293,6 +309,17 @@ def proc_post_data(post_data, res=48, amnt=1.0, dir=None):
 
     # compute clearances
     pasv_elms = []
+
+    # for j in xrange(0, nely):
+    #     for i in xrange(0, nelx):
+    #         already_active = False
+    #         for va in actv_elms_outer:
+    #             if i == va[0] and j == va[1] and 1 == va[2]:
+    #                 already_active = True
+    #                 break
+    #         if already_active == False:
+    #             pasv_elms.append([i, j, 1])
+
     for clearance in clearances:
         voxels_clearance = []
         for point in clearance:
@@ -326,6 +353,18 @@ def proc_post_data(post_data, res=48, amnt=1.0, dir=None):
                     continue
 
                 pasv_elms.append([i, j, 1])
+
+
+    pasv_elms_buf = []
+    for vc in pasv_elms:
+        already_active = False
+        for va in actv_elms_inner:
+            if vc[0] == va[0] and vc[1] == va[1] and vc[2] == va[2]:
+                already_active = True
+                break
+        if already_active == False:
+            pasv_elms_buf.append(vc)
+    pasv_elms = pasv_elms_buf
 
     timestamp(msg='compute clearances')
 
@@ -398,18 +437,18 @@ def proc_post_data(post_data, res=48, amnt=1.0, dir=None):
 
         debug_voxelgrid = list(debug_voxelgrid)
 
-        for elm in actv_elms:
-            i = elm[0]
-            j = elm[1]
-            idx = j * (nelx + 1) + nelx - 1 - i
-            debug_voxelgrid[2 * idx + 1] = '.'
-
         for cp in pasv_elms:
             i = cp[0]
             j = cp[1]
             idx = 2 * (j * (nelx + 1) + nelx - 1 - i) + 1
             if idx < len(debug_voxelgrid):
                 debug_voxelgrid[idx] = 'x'
+
+        for elm in actv_elms:
+            i = elm[0]
+            j = elm[1]
+            idx = j * (nelx + 1) + nelx - 1 - i
+            debug_voxelgrid[2 * idx + 1] = '.'
 
         for lp in load_points:
             i = lp[0]
@@ -473,8 +512,11 @@ def proc_post_data(post_data, res=48, amnt=1.0, dir=None):
     tpd['LOAD_VALU_X'] = ';'.join(load_values_x_str)
     tpd['LOAD_NODE_Y']= str_load_points
     tpd['LOAD_VALU_Y'] = ';'.join(load_values_y_str)
-    tpd['ACTV_ELEM'] = ';'.join([str(elm_num_3d(nelx, nely, 1, x[0]+1, x[1]+1, 1)) for x in actv_elms])
+    # tpd['ACTV_ELEM'] = ';'.join([str(elm_num_3d(nelx, nely, 1, x[0]+1, x[1]+1, 1)) for x in actv_elms])
     tpd['PASV_ELEM'] = ';'.join([str(elm_num_3d(nelx, nely, 1, x[0]+1, x[1]+1, 1)) for x in pasv_elms])
+
+    # HACK
+    tpd['FAVORED'] = ';'.join([str(elm_num_3d(nelx, nely, 1, x[0]+1, x[1]+1, 1)) for x in actv_elms])
 
     if query == ANALYSIS:
         tpd['CHG_STOP'] = ''
@@ -499,7 +541,7 @@ def proc_post_data(post_data, res=48, amnt=1.0, dir=None):
     probname = main([rel_topy_path, tpd_path, str(query)])
     if dir != None:
         subprocess.call('mv ' + probname + '* ' + tpd_path + ' ' + dir, shell=True)
-    skeletonize(dim_voxel, forte, './', probname)
+    # skeletonize(dim_voxel, forte, './', probname)
 
     timestamp(msg='topy')
 

@@ -661,7 +661,12 @@ synthesis!')
                 #
                 #
                 slope = 64
-                cutoff = 0.05
+                cutoff = self.cutoff
+                try:
+                    self.cutoffprinted
+                except:
+                    print '[xac] again, cutoff is', self.cutoff
+                    self.cutoffprinted = True
                 tr_min = self.sigmoid(0, slope, cutoff)
                 tr_max = self.sigmoid(1, slope, cutoff)
                 if len(self.df_disfavored) > 0:
@@ -682,7 +687,8 @@ synthesis!')
                             for i in xrange(0, self.nelx):
                                 df_val = self.df_favored[i][j]
                                 tr_df = self.sigmoid(df_val, slope, cutoff)
-                                tr_df = 1 + 0.1 * (tr_max - tr_df) / (tr_max - tr_min)
+                                # HACK: ignore non-favored elements for now
+                                tr_df = 1.1 * (tr_max - tr_df) / (tr_max - tr_min)
                                 desvars[k, j, i] = min(SOLID, desvars[k, j, i] * tr_df)
                                 desvars[k, j, i] = max(VOID, desvars[k, j, i])
                     flatx = desvars.flatten()

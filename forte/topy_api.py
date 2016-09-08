@@ -6,6 +6,7 @@
 #
 ##########################################################################
 
+from sys import argv
 import sys
 sys.path.append('./scripts')
 import subprocess
@@ -13,12 +14,12 @@ import json
 import math
 import time
 from numpy import ndarray
-from PIL import Image
+# from PIL import Image
 
 from nodenums import node_nums_3d
 from nodenums import elm_num_3d
 from optimise import main
-from skeletonize import skeletonize
+# from skeletonize import skeletonize
 import traceback
 
 INFINITY = 1e9
@@ -159,6 +160,8 @@ def gen_tpd(original, resolution, material):
 
     # compute the design elements ------------------------------------------------------------------------
     actv_elms = []
+    actv_elms_inner = []
+    actv_elms_outer = []
     for edge in design:
         voxels = edge['voxels']
         thickness = edge['thickness']
@@ -169,6 +172,11 @@ def gen_tpd(original, resolution, material):
             t0 = thickness[k] / dim_voxel
             t1 = thickness[k+1] / dim_voxel
 
+            # FIXME: get rid of thickness here
+            # maybe just use 2 or 3 voxels
+            r0 = 3 * t0
+            r1 = 3 * t1
+
             for j in xrange(0, nely):
                 if j < edge['voxelmin'][1] or j > edge['voxelmax'][1]:
                     continue
@@ -176,9 +184,15 @@ def gen_tpd(original, resolution, material):
                 for i in xrange(0, nelx):
                     if i < edge['voxelmin'][0] or i > edge['voxelmax'][0]:
                         continue
+
+                    voxel = [i, j, 1]
                     try:
+                        if is_in_segment([i * 1.0, j * 1.0], p0, p1, r0, r1):
+                            actv_elms_outer.append(voxel)
+                        if is_in_segment([i * 1.0, j * 1.0], p0, p1, r0-1, r1-1):
+                            actv_elms_inner.append(voxel)
                         if is_in_segment([i * 1.0, j * 1.0], p0, p1, t0, t1):
-                            actv_elms.append([i, j, 1])
+                            actv_elms.append(voxel)
                     except:
                         continue
 
@@ -231,6 +245,18 @@ def gen_tpd(original, resolution, material):
                     continue
 
                 pasv_elms.append([i, j, 1])
+
+    # remove pasv_elms close to design
+    pasv_elms_buf = []
+    for vc in pasv_elms:
+        already_active = False
+        for va in actv_elms_inner:
+            if vc[0] == va[0] and vc[1] == va[1] and vc[2] == va[2]:
+                already_active = True
+                break
+        if already_active == False:
+            pasv_elms_buf.append(vc)
+    pasv_elms = pasv_elms_buf
 
     # set extended domain to be passive --------------------------------------------------------------------
     dnelx = int(math.floor((nelx - nelx_old) / 2))
@@ -357,7 +383,7 @@ def gen_tpd(original, resolution, material):
 
     # write to tpd file -----------------------------------------------------------------------------------
     tpd = json.loads(tpd_template)
-    tpd['PROB_NAME'] = 'forte_' + str(long(time.time())) + '_' + str(material) + '_' + str(material)
+    tpd['PROB_NAME'] = 'forte_' + str(long(time.time())) + '_' + str(resolution) + '_' + str(format(material, '1.3f'))
     tpd['VOL_FRAC'] = material
     tpd['NUM_ELEM_X'] = nelx
     tpd['NUM_ELEM_Y'] = nely
@@ -369,26 +395,30 @@ def gen_tpd(original, resolution, material):
     tpd['LOAD_VALU_X'] = ';'.join(load_values_x_str)
     tpd['LOAD_NODE_Y']= str_load_points
     tpd['LOAD_VALU_Y'] = ';'.join(load_values_y_str)
-    tpd['ACTV_ELEM'] = ';'.join([str(elm_num_3d(nelx, nely, 1, x[0]+1, x[1]+1, 1)) for x in actv_elms])
+    # tpd['ACTV_ELEM'] = ';'.join([str(elm_num_3d(nelx, nely, 1, x[0]+1, x[1]+1, 1)) for x in actv_elms])
     tpd['PASV_ELEM'] = ';'.join([str(elm_num_3d(nelx, nely, 1, x[0]+1, x[1]+1, 1)) for x in pasv_elms])
+
+    # HACK
+    tpd['FAVORED'] = ';'.join([str(elm_num_3d(nelx, nely, 1, x[0]+1, x[1]+1, 1)) for x in actv_elms])
 
     return tpd, debug_voxelgrid
 
 def analyze(tpd):
-    call_topy(tpd, ANALYSIS, False)
+    return call_topy(tpd, ANALYSIS, False)
 
-def optimize(tpd):
-    call_topy(tpd, OPTIMIZATION, True)
+def optimize(tpd, margin=0.1):
+    return call_topy(tpd, OPTIMIZATION, margin, False)
 
 #
 #   run topy given a tpd object (not file)
 #
-def call_topy(tpd, query, imagerize):
+def call_topy(tpd, query, margin, imagerize):
     tpd_path = save_tpd(tpd)
-    probname = main([TOPYPATH, tpd_path, str(query)])
+    probname = main([TOPYPATH, tpd_path, str(query), margin])
     if imagerize:
         fname = str(tpd['VOL_FRAC']) + '_' + probname + '.bmp'
         save_vxg_to_image(probname + '_optimized.vxg', fname)
+    return probname
 
 def save_tpd(tpd):
     str_tpd = '[ToPy Problem Definition File v2007]\n'
@@ -421,3 +451,20 @@ def save_vxg_to_image(vxg_path, fname):
     img = Image.new('L', (w, h))
     img.putdata(pixels)
     img.save(fname)
+
+if __name__ == "__main__":
+    num_req_params = 4
+    if len(argv) < num_req_params + 1:
+        print 'usage: ./topy_api.py <path_to_design_file> <reslution> <amount_of_material> <margin> <is_a_dry_run>'
+        quit()
+
+    design = json.loads(open(argv[1], 'r').read())
+    resolution = int(argv[2])
+    material = float(argv[3])
+    margin = float(argv[4])
+    is_dryrun = False if len(argv) == num_req_params + 1 else argv[4] == 'True'
+
+    tpd, debug_voxelgrid = gen_tpd(design, resolution, material)
+    print ''.join(debug_voxelgrid)[::-1]
+    if is_dryrun == False:
+        optimize(tpd, margin)
