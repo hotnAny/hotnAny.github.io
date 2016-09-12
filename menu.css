@@ -14,8 +14,8 @@ body{
 .menu {
 	float: center;
 	margin-top: 2%;
-	margin-left: 8%;
-	margin-right: 8%;
+	margin-left: 5%;
+	margin-right: 5%;
 	-webkit-column-count: 3;
 	column-count: 3;
 }
@@ -27,6 +27,7 @@ img{
 }
 
 .divtitle{
+	margin-left: 10pt;
 	font-size: 15pt;
 }
 
@@ -54,8 +55,8 @@ img{
 }
 
 .tdpubvenue{
-	min-width: 150px;
-  	max-width: 150px;
+	min-width: 150pt;
+  	max-width: 150pt;
   	font-size: 9pt;
 	direction: rtl;
 	overflow: hidden;

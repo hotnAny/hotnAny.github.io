@@ -43,7 +43,7 @@ $(document).ready(function() {
 	}
 
 	$('.menu').append($('<br/><br/>'));
-	$('.menu').append(makeTitle('DISSERRNET OF THINGS'));
+	$('.menu').append(makeTitle('DISSERNET OF THINGS'));
 	for (var i = 0; i < menuObj.internetofthings.length; i++) {
 		$('.menu').append(makeItem(menuObj.internetofthings[i]));
 	}
