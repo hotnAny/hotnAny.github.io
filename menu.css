@@ -68,8 +68,8 @@ img{
 }
 
 .tdpubvenue{
-	min-width: 150pt;
-  	max-width: 150pt;
+	min-width: 120pt;
+  	max-width: 120pt;
   	font-size: 9pt;
 	direction: rtl;
 	overflow: hidden;
