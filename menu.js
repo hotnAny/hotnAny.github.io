@@ -67,7 +67,7 @@ function makeItem(item) {
 	var tdDescp = $('<td></td>');
 
 	var strEllips = " ";
-	var numEllipsDots = 20;
+	var numEllipsDots = 25;
 	for (var i = 0; i < numEllipsDots - item.name.length; i++) {
 		strEllips += '. '
 	}
