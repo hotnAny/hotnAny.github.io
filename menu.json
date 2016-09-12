@@ -134,7 +134,7 @@
 	},
 	{
 		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/vislens_small.jpg",
-		"name": "VisLens",
+		"name": "VizLens",
 		"descp": "A screen reader for physical interfaces based on crowd-labeld information.",
 		"venue": "UIST '16"
 	},
