@@ -1,0 +1,65 @@
+body{
+	font-family: 'Bree Serif', serif;
+	font-size: 10pt;
+}
+
+.intro{
+	float: center;
+	text-align: center;
+	margin-top: 2%;
+	margin-left: 8%;
+	margin-right: 8%;
+}
+
+.menu {
+	float: center;
+	margin-top: 2%;
+	margin-left: 8%;
+	margin-right: 8%;
+	-webkit-column-count: 3;
+	column-count: 3;
+}
+
+img{
+	border-radius: 10px;
+	display: block;
+	width: 100%; 
+}
+
+.divtitle{
+	font-size: 15pt;
+}
+
+.tdimg {
+	width: 72px;
+}
+
+.tdprojname {
+	font-size: 11pt;
+	max-width: 100%;
+    white-space:nowrap;
+}
+
+.divdescp{
+	font-size: 9pt;
+}
+
+.tbresearch{
+	table-layout: fixed;
+	width: 100%;
+	padding: 5px;
+	border-spacing: 5px;
+	/*padding-right: 8px;*/
+}
+
+.tdpubvenue{
+	min-width: 150px;
+  	max-width: 150px;
+  	font-size: 9pt;
+	direction: rtl;
+	overflow: hidden;
+	text-overflow: clip;
+    white-space: nowrap;
+    vertical-align: bottom;
+    color: #888888;
+}

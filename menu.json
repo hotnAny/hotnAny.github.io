@@ -1,0 +1,175 @@
+{
+	"fabrication":[
+	{
+		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/forte_inprogess_small.jpg",
+		"name": "Forte",
+		"descp": "Generative design that combines user sketching and topology optimization.",
+		"venue": "In progress"
+	},	
+	{
+		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/facade_small.jpg",
+		"name": "Fa&ccedil;ade",
+		"descp": "Making appliances accessible with 3D printed Braille buttons.",
+		"venue": "In progress"
+	},  
+	{
+		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/reprise_small.jpg",
+		"name": "Reprise",
+		"descp": "A design tool for specifying, generating, and customizing 3d printable adaptations on everyday objects.",
+		"venue": "UIST '16"
+	},
+	{
+		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/encore_small.jpg",
+		"name": "Encore",
+		"descp": "3D printed augmentation of everyday objects with printed-over, affixed and interlocked attachment.",
+		"venue": "UIST '15"
+	},
+	{
+		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/3dphair_small2.jpg",
+		"name": "3D Printed Hair",
+		"descp": "A technique to print hair-like structures using commodity FDM printer.",
+		"venue": "UIST '15"
+	}
+	],
+
+	"interactiontechniques":[
+	{
+		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/duet_small.jpg",
+		"name": "Duet",
+		"descp": "Joint interaction between a smart phone and a smart watch.",
+		"venue": "★ CHI '14"
+	},
+	{
+		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/air_touch_small.jpg",
+		"name": "Air+Touch",
+		"descp": "Combining in-air gesture and touch input above mobile devices.",
+		"venue": "UIST '14"
+	},
+	{
+		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/swipeboard_small.jpg",
+		"name": "Swipeboard",
+		"descp": "An eyes-free text entry technique for ultra-small interfaces",
+		"venue": "UIST '14"
+	},
+	{
+		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/swipeglass_small.jpg",
+		"name": "Swipeglass",
+		"descp": "Enabling typing on smart eyewear with simple tapping and swiping gestures.",
+		"venue": "MobileHCI '15"
+	},
+	{
+		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/locus_small.jpg",
+		"name": "Locus",
+		"descp": "Bootstrapping user-defined body tapping recognition with offline-learned probabilistic representation.",
+		"venue": "UIST '16"
+	},
+	{
+		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/aroundbody_small.jpg",
+		"name": "Around-Body",
+		"descp": "Tracking a commodity smart phone's position around a user's body.",
+		"venue": "MobileHCI '14"
+	},
+	{
+		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/bci_small.jpg",
+		"name": "Body-Centric",
+		"descp": "A series of exploration of interacting in the space on and around our body.",
+		"venue": "MobileHCI '12"
+	},
+	{
+		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/tabletstylus_small.jpg",
+		"name": "Tablet+Stylus",
+		"descp": "Grip and motion sensing while naturally manipulating tablet and stylus devices.",
+		"venue": "★ UIST '14"
+	},
+	{
+		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/penmotion_small.jpg",
+		"name": "Pen+Motion",
+		"descp": "A pen with embedded IMU that supports various techniques and motion gestures.",
+		"venue": "GI '12"
+	},
+	{
+		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/skinbutton_small.jpg",
+		"name": "Skin Buttons",
+		"descp": "Tiny projectors integrated into a smart watch to render icons on the skin",
+		"venue": "UIST '14"
+	},
+	{
+		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/sweepsense_small.jpg",
+		"name": "SweepSense",
+		"descp": "Sensing techniques that can automatically pause the music as you pull your earplugs out.",
+		"venue": "IUI '16"
+	},
+	{
+		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/twistnknock_small.jpg",
+		"name": "Twist 'n' Knock",
+		"descp": "A one-handed gesture for smart watches.",
+		"venue": "GI '16"
+	},
+	{
+		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/fatthumb_small.jpg",
+		"name": "FatThumb",
+		"descp": "Thumb-based interaction by detecting the contact size.",
+		"venue": "MobileHCI '12"
+	},
+	{
+		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/spalendar_small.jpg",
+		"name": "Spalendar",
+		"descp": "Visualizing calendar data by showing people moving between places.",
+		"venue": "AVI '12"
+	},
+	{
+		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/maestro_small.jpg",
+		"name": "Maestro",
+		"descp": "Instrumenting IMUs on a user's head, wrist, finger and pocket.",
+		"venue": "Unpublished"
+	}
+	],
+
+	"internetofthings": [
+	{
+		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/improv_small.jpg",
+		"name": "Improv",
+		"descp": "An input framework for users to create cross-device gestures.",
+		"venue": "In progress"
+	},
+	{
+		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/vislens_small.jpg",
+		"name": "VisLens",
+		"descp": "A screen reader for physical interfaces based on crowd-labeld information.",
+		"venue": "UIST '16"
+	},
+	{
+		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/snaptoit_small.jpg",
+		"name": "Snap to It",
+		"descp": "Take a picture of an appliance and control it from your smart phone.",
+		"venue": "CHI '16"
+	}
+	],
+
+	"sideprojects": [
+	{
+		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/breader_small.jpg",
+		"name": "b-reader",
+		"descp": "A mobile Braille reader enabled by 3D printed actuation mechanism and OCR on smart phones.",
+		"venue": "HCI 05899"
+	},
+	{
+		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/nudge_small.jpg",
+		"name": "Nudge",
+		"descp": "If you keep checking your phone on social occasions, it will make a scene by causing others' phones to vibrate.",
+		"venue": "DES 51878"
+	},
+	{
+		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/armtouch_small.jpg",
+		"name": "Arm Touch",
+		"descp": "Mounting an accelerometer on your arm to enable simple arm tapping gestures.",
+		"venue": "HCI 05833"
+	},
+	{
+		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/ddr_small.jpg",
+		"name": "DDR on Ardruino",
+		"descp": "An finger Dance Dance Revolution game on an Arduino",
+		"venue": "HCI 05833"
+	}
+	]
+}

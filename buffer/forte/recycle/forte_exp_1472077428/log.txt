@@ -1,0 +1,121 @@
+2016-08-24 18:23:48.226633
+-------------------------------------------------------------------
+trophy_base_01.forte_128_0.1:
+started at 2016-08-24 18:23:48.226754
+success!
+finished at 2016-08-24 18:25:43.037251
+-------------------------------------------------------------------
+phone_stand_01.forte_128_0.1:
+started at 2016-08-24 18:25:43.049330
+success!
+finished at 2016-08-24 19:02:02.161956
+-------------------------------------------------------------------
+hook_01.forte_128_0.1:
+started at 2016-08-24 19:02:02.174054
+success!
+finished at 2016-08-24 19:32:03.649094
+-------------------------------------------------------------------
+bookcase_02.forte_128_0.1:
+started at 2016-08-24 19:32:03.661278
+(<type 'exceptions.RuntimeError'>, RuntimeError('Factor is exactly singular',), <traceback object at 0x10ebc9a70>)
+finished at 2016-08-24 20:02:26.006069
+-------------------------------------------------------------------
+trophy_base_01.forte_128_0.15:
+started at 2016-08-24 20:02:26.022375
+success!
+finished at 2016-08-24 20:04:19.801329
+-------------------------------------------------------------------
+phone_stand_01.forte_128_0.15:
+started at 2016-08-24 20:04:19.815580
+success!
+finished at 2016-08-24 20:38:45.354529
+-------------------------------------------------------------------
+hook_01.forte_128_0.15:
+started at 2016-08-24 20:38:45.370318
+success!
+finished at 2016-08-24 21:09:45.168438
+-------------------------------------------------------------------
+bookcase_02.forte_128_0.15:
+started at 2016-08-24 21:09:45.186278
+(<type 'exceptions.RuntimeError'>, RuntimeError('Factor is exactly singular',), <traceback object at 0x111550c68>)
+finished at 2016-08-24 21:39:33.609206
+-------------------------------------------------------------------
+trophy_base_01.forte_128_0.2:
+started at 2016-08-24 21:39:33.625086
+success!
+finished at 2016-08-24 21:41:34.801831
+-------------------------------------------------------------------
+phone_stand_01.forte_128_0.2:
+started at 2016-08-24 21:41:34.816748
+success!
+finished at 2016-08-24 22:15:53.605445
+-------------------------------------------------------------------
+hook_01.forte_128_0.2:
+started at 2016-08-24 22:15:53.621828
+success!
+finished at 2016-08-24 22:41:30.651573
+-------------------------------------------------------------------
+bookcase_02.forte_128_0.2:
+started at 2016-08-24 22:41:30.668343
+(<type 'exceptions.RuntimeError'>, RuntimeError('Factor is exactly singular',), <traceback object at 0x10d2dbc20>)
+finished at 2016-08-24 23:07:23.331736
+-------------------------------------------------------------------
+trophy_base_01.forte_128_0.25:
+started at 2016-08-24 23:07:23.353604
+success!
+finished at 2016-08-24 23:09:24.398457
+-------------------------------------------------------------------
+phone_stand_01.forte_128_0.25:
+started at 2016-08-24 23:09:24.413044
+(<type 'exceptions.RuntimeError'>, RuntimeError('Factor is exactly singular',), <traceback object at 0x10d2f2440>)
+finished at 2016-08-24 23:27:03.907135
+-------------------------------------------------------------------
+hook_01.forte_128_0.25:
+started at 2016-08-24 23:27:03.925273
+success!
+finished at 2016-08-24 23:50:37.930357
+-------------------------------------------------------------------
+bookcase_02.forte_128_0.25:
+started at 2016-08-24 23:50:37.947622
+(<type 'exceptions.RuntimeError'>, RuntimeError('Factor is exactly singular',), <traceback object at 0x10d2d6ab8>)
+finished at 2016-08-25 00:14:29.344531
+-------------------------------------------------------------------
+trophy_base_01.forte_128_0.3:
+started at 2016-08-25 00:14:29.366570
+success!
+finished at 2016-08-25 00:16:31.192525
+-------------------------------------------------------------------
+phone_stand_01.forte_128_0.3:
+started at 2016-08-25 00:16:31.207322
+(<type 'exceptions.RuntimeError'>, RuntimeError('Factor is exactly singular',), <traceback object at 0x111db2998>)
+finished at 2016-08-25 00:29:23.449119
+-------------------------------------------------------------------
+hook_01.forte_128_0.3:
+started at 2016-08-25 00:29:23.462124
+success!
+finished at 2016-08-25 00:52:20.661760
+-------------------------------------------------------------------
+bookcase_02.forte_128_0.3:
+started at 2016-08-25 00:52:20.679393
+(<type 'exceptions.RuntimeError'>, RuntimeError('Factor is exactly singular',), <traceback object at 0x10d2da6c8>)
+finished at 2016-08-25 01:17:44.943791
+-------------------------------------------------------------------
+trophy_base_01.forte_128_0.35:
+started at 2016-08-25 01:17:44.960875
+success!
+finished at 2016-08-25 01:19:45.856987
+-------------------------------------------------------------------
+phone_stand_01.forte_128_0.35:
+started at 2016-08-25 01:19:45.871917
+(<type 'exceptions.RuntimeError'>, RuntimeError('Factor is exactly singular',), <traceback object at 0x112cf23b0>)
+finished at 2016-08-25 01:32:39.087734
+-------------------------------------------------------------------
+hook_01.forte_128_0.35:
+started at 2016-08-25 01:32:39.100621
+success!
+finished at 2016-08-25 01:55:39.065267
+-------------------------------------------------------------------
+bookcase_02.forte_128_0.35:
+started at 2016-08-25 01:55:39.083082
+success!
+finished at 2016-08-25 02:38:05.449576
