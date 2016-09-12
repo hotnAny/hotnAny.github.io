@@ -1,0 +1,80 @@
+body{
+	/*font-family: 'Bree Serif', serif;*/
+	font-family: 'Lora', serif;
+	font-size: 10pt;
+}
+
+.intro{
+	float: center;
+	text-align: center;
+	margin-top: 2%;
+	margin-left: 8%;
+	margin-right: 8%;
+}
+
+.menu {
+	float: center;
+	margin-top: 2%;
+	margin-left: 5%;
+	margin-right: 5%;
+    -moz-column-count: 3;
+    -webkit-column-count: 3;
+    column-count: 3;
+	column-count: 3;
+}
+
+.copyright{
+	font-size: 9pt;
+	float: center;
+	text-align: center;
+	margin-top: 3%;
+	margin-bottom: 1%;
+	color: #aaaaaa;
+}
+
+img{
+	border-radius: 10px;
+	display: block;
+	width: 100%; 
+}
+
+.divtitle{
+	font-weight: bold;
+	margin-left: 10pt;
+	font-size: 14pt;
+}
+
+.tdimg {
+	width: 72px;
+}
+
+.tdprojname {
+	font-size: 11pt;
+	max-width: 100%;
+    white-space:nowrap;
+}
+
+.divdescp{
+	font-size: 9pt;
+	color: #888888;
+}
+
+.tbresearch{
+	table-layout: fixed;
+	width: 100%;
+	padding: 5px;
+	border-spacing: 5px;
+	/*padding-right: 8px;*/
+}
+
+.tdpubvenue{
+	min-width: 150pt;
+  	max-width: 150pt;
+  	font-size: 9pt;
+	direction: rtl;
+	overflow: hidden;
+	text-overflow: clip;
+    white-space: nowrap;
+    vertical-align: bottom;
+    color: #888888;
+}
