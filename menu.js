@@ -24,7 +24,7 @@ var menuObj;
 
 
 $(document).ready(function() {
-	
+
 	XAC.readTextFile('menu.json', function(text) {
 		menuObj = JSON.parse(text);
 	})
@@ -35,7 +35,7 @@ $(document).ready(function() {
 	for (var i = 0; i < menuObj.fabrication.length; i++) {
 		$('.menu').append(makeItem(menuObj.fabrication[i]));
 	}
-	
+
 	$('.menu').append($('<br/><br/>'));
 	$('.menu').append(makeTitle('ENTR&Eacute;ERACTION TECHNIQUES'));
 	for (var i = 0; i < menuObj.interactiontechniques.length; i++) {
@@ -66,10 +66,16 @@ function makeItem(item) {
 	var tdImage = $('<td class="tdimg"><image src=' + item.imgUrl + '/></td>');
 	var tdDescp = $('<td></td>');
 
-	var tbDescp = $('<table class="tbdescp" border="0"><tr>' 
-		+ '<td class="tdprojname"><b>' + item.name 
-		+ '</b></td>' + '<td class="tdpubvenue">' 
-		+ item.venue + ' . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ' 
+	var strEllips = " ";
+	var numEllipsDots = 20;
+	for (var i = 0; i < numEllipsDots - item.name.length; i++) {
+		strEllips += '. '
+	}
+
+	var tbDescp = $('<table class="tbdescp" border="0"><tr>'
+		+ '<td class="tdprojname"><b>' + item.name
+		+ '</b></td>' + '<td class="tdpubvenue">'
+		+ item.venue + strEllips +
 		+ '</td>' + '</tr><tr><td colspan="2"><div class="divdescp">' + item.descp + '</div></td></tr></table>');
 	// tdDescp.append($('<h4>' + item.name + '</h4>'));
 	// tdDescp.append($('<div>' + item.descp + '</div>'));
