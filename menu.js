@@ -75,7 +75,7 @@ function makeItem(item) {
 	var tbDescp = $('<table class="tbdescp" border="0"><tr>'
 		+ '<td class="tdprojname"><b>' + item.name
 		+ '</b></td>' + '<td class="tdpubvenue">'
-		+ item.venue + strEllips +
+		+ item.venue + strEllips
 		+ '</td>' + '</tr><tr><td colspan="2"><div class="divdescp">' + item.descp + '</div></td></tr></table>');
 	// tdDescp.append($('<h4>' + item.name + '</h4>'));
 	// tdDescp.append($('<div>' + item.descp + '</div>'));
