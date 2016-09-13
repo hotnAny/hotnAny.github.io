@@ -97,13 +97,15 @@
 		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/skinbutton_small.jpg",
 		"name": "Skin Buttons",
 		"descp": "Tiny projectors integrated into a smart watch to render icons on the skin",
-		"venue": "UIST '14"
+		"venue": "UIST '14",
+		"exturl": "http://www.gierad.com/projects/skinbuttons/"
 	},
 	{
 		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/sweepsense_small.jpg",
 		"name": "SweepSense",
 		"descp": "Sensing techniques that can automatically pause the music as you pull your earplugs out.",
-		"venue": "IUI '16"
+		"venue": "IUI '16",
+		"exturl": "http://www.gierad.com/projects/sweepsense/"
 	},
 	{
 		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/twistnknock_small.jpg",
@@ -113,9 +115,10 @@
 	},
 	{
 		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/fatthumb_small.jpg",
-		"name": "FatThumb",
+		"name": "Fat Thumb",
 		"descp": "Thumb-based interaction by detecting the contact size.",
-		"venue": "MobileHCI '12"
+		"venue": "MobileHCI '12",
+		"exturl": "http://www.sebastianboring.com/research/fatthumb"
 	},
 	{
 		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/spalendar_small.jpg",
@@ -163,19 +166,22 @@
 		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/nudge_small.jpg",
 		"name": "Nudge",
 		"descp": "If you keep checking your phone on social occasions, it will make a scene by causing others' phones to vibrate.",
-		"venue": "DES 51878"
+		"venue": "DES 51878",
+		"exturl": "https://vimeo.com/87716737"
 	},
 	{
 		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/armtouch_small.jpg",
 		"name": "Arm Touch",
 		"descp": "Mounting an accelerometer on your arm to enable simple arm tapping gestures.",
-		"venue": "HCI 05833"
+		"venue": "HCI 05833",
+		"exturl": "https://vimeo.com/64470159"
 	},
 	{
 		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/ddr_small.jpg",
 		"name": "DDR on Ardruino",
 		"descp": "An finger Dance Dance Revolution game on an Arduino",
-		"venue": "HCI 05833"
+		"venue": "HCI 05833",
+		"exturl": "https://vimeo.com/59873870"
 	}
 	]
 }
