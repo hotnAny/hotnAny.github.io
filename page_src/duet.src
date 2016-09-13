@@ -1,0 +1,113 @@
+<h2 style="text-align:center">Duet: Exploring Joint Interactions on a Smart Phone and a Smart Watch</h2>
+
+<div style="background:#eee;border:1px solid #ccc;padding:5px 10px;">
+<table align="center" border="0" cellpadding="10" cellspacing="0" style="line-height:20px; width:100%" class="tblcite">
+	<tbody>
+		<tr>
+			<td><a href="https://dl.dropboxusercontent.com/u/11174959/web-docs/chi2014_duet.pdf" target="_blank"><img alt="" src="https://dl.dropboxusercontent.com/u/11174959/web-images/duet/chi2014_duet_thumbnail.jpg" style="height:65px; width:50px" /></a></td>
+			<td style="text-align:justify; vertical-align:top">
+			<div style="text-align: justify;"><strong>Xiang &lsquo;Anthony&rsquo; Chen</strong>, Tovi Grossman, Daniel Wigdor, George Fitzmaurice (2014). Duet: Exploring Joint Interactions on a Smart Phone and a Smart Watch. Proceedings of the 32<span style="font-size:10.8333px">nd</span>&nbsp;SIGCHI Conference on Human Factors in Computing Systems (CHI 2014). <u>Acceptance Rate: 22.8%</u>.&nbsp; <strong>Best Paper Award&nbsp;</strong>🏆</div>
+			</td>
+		</tr>
+	</tbody>
+</table>
+</div>
+
+<p>The idea of Duet emerged when &#39;smart watch&#39; was climbing up the <a href="http://www.gartner.com/newsroom/id/3114217" target="_blank">hype curve</a>. Kind of tired of playing with the phone, I asked the simplest question: what can we do now that we have two mobile devices? I didn&#39;t start a project right away; in fact this&nbsp;idea didn&#39;t get picked up until a few months later when I interned at Autodesk Research. In retrospect, this project was the best experience I have ever had doing research, as I really took time to explore a wide range of things and the project evolved and incorporated cross-disciplinary aspects that, in my opinion, truly distinguished itself from most of my other projects, and most of the projecfs done in the HCI community.</p>
+
+<p style="text-align:center"><iframe frameborder="0" height="422" src="https://player.vimeo.com/video/81358039" width="750"></iframe></p>
+
+<p>&nbsp;</p>
+
+<h3>A Great Idea is a Combination of Two Good Ideas</h3>
+
+<p>I&#39;ve heard multiple versions of this, from&nbsp;<a href="http://scottberkun.com/2011/ideas-are-made-of-other-ideas/" target="_blank">Scott Berkun</a>&nbsp;to&nbsp;<a href="http://www-ui.is.s.u-tokyo.ac.jp/~takeo/" target="_blank">Takeo Igarashi</a>. Project Duet echoes this notion: the combination of smart phone and smart watch yields a set of interaction possibilities much richer than the sum of the two devices alone. My favorite example of this is using the watch to sense which hand part touches the phone: it is finger pad when the watch is facing upwards, side of finger if facing sideways, and knuckle if facing down. There are two things to learn from this: First, the combination of two devices makes this sensing problem magnitudes easier than <a href="http://www.qeexo.com/fingersense/" target="_blank">dealing with either of them alone</a>; Second, it uses the watch in a quite unconventional way - you don&#39;t directly interact with it but it nonetheless serves as a necessary component in realizing the hand part sensing technique, which I will discuss below.</p>
+
+<table align="center" border="0" cellpadding="1" cellspacing="1" style="line-height:1.6; width:750px">
+	<tbody>
+		<tr>
+			<td style="text-align:center"><a href="https://dl.dropboxusercontent.com/u/11174959/web-images/duet/duet-tool-pallet.jpg" style="line-height: 20.8px;" target="_blank"><img alt="" src="https://dl.dropboxusercontent.com/u/11174959/web-images/duet/duet-tool-pallet-medium.jpg" style="height:211px; width:375px" /></a></td>
+			<td style="text-align:center"><a href="https://dl.dropboxusercontent.com/u/11174959/web-images/duet/duet-pad-write.jpg" style="line-height: 20.8px;" target="_blank"><img alt="" src="https://dl.dropboxusercontent.com/u/11174959/web-images/duet/duet-pad-write-medium.jpg" style="height:211px; width:375px" /></a></td>
+		</tr>
+		<tr>
+			<td style="text-align:center">
+			<address>A tool pallet on the watch maximizes the phone screen for reading.</address>
+
+			<address>&nbsp;</address>
+			</td>
+			<td style="text-align:center">
+			<address>Duet can sense the finger pad touch, which writes to annotate the text</address>
+
+			<address>&nbsp;</address>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<table align="center" border="0" cellpadding="1" cellspacing="1" style="line-height:1.6; width:750px">
+	<tbody>
+		<tr>
+			<td style="text-align:center"><a href="https://dl.dropboxusercontent.com/u/11174959/web-images/duet/duet-side-scroll.jpg" target="_blank"><img alt="" src="https://dl.dropboxusercontent.com/u/11174959/web-images/duet/duet-side-scroll-medium.jpg" style="height:211px; width:375px" /></a></td>
+			<td style="text-align:center"><a href="https://dl.dropboxusercontent.com/u/11174959/web-images/duet/duet-knuckle-select.jpg" target="_blank"><img alt="" src="https://dl.dropboxusercontent.com/u/11174959/web-images/duet/duet-knuckle-select-medium.jpg" style="height:211px; width:375px" /></a></td>
+		</tr>
+		<tr>
+			<td style="text-align:center">
+			<address>The side of the finger scrolls the page, ...</address>
+
+			<address>&nbsp;</address>
+			</td>
+			<td style="text-align:center">
+			<address>... and the knuckle performs text selection</address>
+
+			<address>&nbsp;</address>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2" style="text-align:center"><a href="https://dl.dropboxusercontent.com/u/11174959/web-images/duet/duet-multi-device-gesture.jpg" target="_blank"><img alt="" src="https://dl.dropboxusercontent.com/u/11174959/web-images/duet/duet-multi-device-gesture-medium.jpg" style="height:167px; width:750px" /></a></td>
+		</tr>
+		<tr>
+			<td colspan="2" style="text-align:center">
+			<address>Duet creates novel &#39;multi-device&#39; gestures, such as directing notification between the phone and the watch</address>
+
+			<address>&nbsp;</address>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<h3>Foreground+Background Design Space</h3>
+
+<p>The pivot of this project, at least in the conceptual level, is the realization that the relationship between the phone and the watch fits in Buxton&#39;s foreground vs. background interaction framework. Because it is impossible for human users to interact with more than one device at a given time, some (or all) of these devices must stay in the background. This gives rise to a nice 2x2 design space that actually makes sense. It explains where our vision is currently narrowed, what and where&nbsp;this project is exploring, and collectively what the big picture of Duet looks like.</p>
+
+<table align="center" border="0" cellpadding="1" cellspacing="1" style="line-height:1.6; width:750px">
+	<tbody>
+		<tr>
+			<td colspan="2" style="text-align:center"><a href="https://dl.dropboxusercontent.com/u/11174959/web-images/duet/duet-design-space.jpg" target="_blank"><img alt="" src="https://dl.dropboxusercontent.com/u/11174959/web-images/duet/duet-design-space-medium.jpg" style="height:305px; width:500px" /></a></td>
+		</tr>
+		<tr>
+			<td colspan="2" style="text-align:center">
+			<address>A design space of phone+watch interaction based on Buxton&#39;s foreground/background framework.</address>
+
+			<address>&nbsp;</address>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2" style="text-align:center"><a href="https://dl.dropboxusercontent.com/u/11174959/web-images/duet/duet-all-techniques.jpg" target="_blank"><img alt="" src="https://dl.dropboxusercontent.com/u/11174959/web-images/duet/duet-all-techniques-medium.jpg" style="height:424px; width:500px" /></a></td>
+		</tr>
+		<tr>
+			<td colspan="2" style="text-align:center">
+			<address>Together, the two devices contribute a vocabulary of techniques that go beyond their individual interaction capabilities.</address>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<h3>The Cross-Disciplinary Perspectives</h3>
+
+<p>Thanks to Autodesk Research&#39;s four-month internship program, I had so much time to play with this project that I even dabbled in linguistics and music.</p>
+
+<p>The linguistic perspective is also my favorite part of this project. I accidentally ran into a paper by Jane Falk entitled &#39;<a href="http://journals.linguisticsociety.org/proceedings/index.php/BLS/article/download/2129/1901" target="_blank">The conversational duet</a>&#39; published in 1980. The nice thing about it is it sheds light on my project despite years&#39; and discplinaries&#39; gap. In a nutshell, Falk observed a convesational behavior of two persons (e.g., a couple, two close friends): they would talk to a 3rd person or party by taking over or following each other&#39;s sentences; and from the listeners&#39; perspective it would sound like a story told by one single person. Isn&#39;t this what the phone, the watch and all the smart devices should try to achieve? Offering interactions to the users to make them feel they are interacting with one single device.</p>
+
+<p>The musical perspective is also quite related and interesting. I read that musicians perform&nbsp;Jazz will pick up each other&#39;s riffs and accordingly perform their own. Again the main idea is collectively&nbsp;<em>multiple</em>&nbsp;musicians are trying to put on one <em>single</em>&nbsp;show that is coherently enjoyable to the audience.</p>
+
+<p>I think it&#39;s a beauty that a project in HCI is able to find similar ideas in other disciplinaries, and more importantly, get informed and inspired by all this cross-disciplinary work. I hope all my projects could have this experience; unfortunately this doesn&#39;t always happen. Foremost, cross-disciplinary research is hard; and it takes time, patience, and some romantic belief to go on an expeidition into the &#39;wild&#39; without necessarily an assurance that at the end of the day you will find something.</p>

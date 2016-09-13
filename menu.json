@@ -22,13 +22,15 @@
 		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/encore_small.jpg",
 		"name": "Encore",
 		"descp": "3D printed augmentation of everyday objects with printed-over, affixed and interlocked attachment.",
-		"venue": "UIST '15"
+		"venue": "UIST '15",
+		"pageSrc": "page_src/encore.src"
 	},
 	{
 		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/3dphair_small2.jpg",
 		"name": "3D Printed Hair",
 		"descp": "A technique to print hair-like structures using commodity FDM printer.",
-		"venue": "UIST '15"
+		"venue": "UIST '15",
+		"pageSrc": "page_src/3dph.src"
 	}
 	],
 
@@ -37,13 +39,15 @@
 		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/duet_small.jpg",
 		"name": "Duet",
 		"descp": "Joint interaction between a smart phone and a smart watch.",
-		"venue": "★ CHI '14"
+		"venue": "★ CHI '14",
+		"pageSrc": "page_src/duet.src"
 	},
 	{
 		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/air_touch_small.jpg",
 		"name": "Air+Touch",
 		"descp": "Combining in-air gesture and touch input above mobile devices.",
-		"venue": "UIST '14"
+		"venue": "UIST '14",
+		"pageSrc": "page_src/airtouch.src"
 	},
 	{
 		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/swipeboard_small.jpg",
@@ -73,7 +77,8 @@
 		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/bci_small.jpg",
 		"name": "Body-Centric",
 		"descp": "A series of exploration of interacting in the space on and around our body.",
-		"venue": "MobileHCI '12"
+		"venue": "MobileHCI '12",
+		"pageSrc": "page_src/bci.src"
 	},
 	{
 		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/tabletstylus_small.jpg",
@@ -85,7 +90,8 @@
 		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/penmotion_small.jpg",
 		"name": "Pen+Motion",
 		"descp": "A pen with embedded IMU that supports various techniques and motion gestures.",
-		"venue": "GI '12"
+		"venue": "GI '12",
+		"pageSrc": "page_src/penmotion.src"
 	},
 	{
 		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/skinbutton_small.jpg",

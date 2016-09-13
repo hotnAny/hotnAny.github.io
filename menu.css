@@ -1,3 +1,7 @@
+h1{
+	line-height: 300%;
+}
+
 body{
 	/*font-family: 'Bree Serif', serif;*/
 	font-family: 'Lora', serif;
@@ -32,7 +36,7 @@ body{
 	color: #aaaaaa;
 }
 
-img{
+.imgicon{
 	border-radius: 10px;
 	display: block;
 	width: 100%;
@@ -77,4 +81,28 @@ img{
     white-space: nowrap;
     vertical-align: bottom;
     color: #888888;
+}
+
+.divpage{
+	font-size: 10pt;
+	background-color: #eeeeee;
+	width: 55%;
+	line-height: 250%;
+	margin-left: 15%;
+	margin-right: 15%;
+	padding-left: 6%;
+	padding-right: 6%;
+	padding-top: 2%;
+}
+
+#fadeandscale {
+  transform: scale(0.8);
+}
+
+.popup_visible #fadeandscale {
+  transform: scale(1);
+}
+
+.tblcite{
+	font-size: 8pt;
 }

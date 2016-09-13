@@ -1,0 +1,64 @@
+<h2 style="text-align:center">Air+Touch: Interweaving Touch &amp; In-Air Gestures</h2>
+
+<div style="background:#eee;border:1px solid #ccc;padding:5px 10px;">
+<table align="center" border="0" cellpadding="10" cellspacing="0" style="line-height:20px; width:100%" class='tblcite'>
+	<tbody>
+		<tr>
+			<td><a href="https://dl.dropboxusercontent.com/u/11174959/web-docs/uist2014_airtouch.pdf" target="_blank"><img alt="" src="https://dl.dropboxusercontent.com/u/11174959/web-images/air%2Btouch/uist2014_airtouch_thumbnail.jpg" style="height:65px; width:50px" /></a></td>
+			<td style="text-align:justify; vertical-align:top">
+			<div style="text-align: justify;"><strong>Xiang &lsquo;Anthony&rsquo; Chen</strong>, Julia Schwarz, Chris Harrison, Jennifer Mankoff, Scott Hudson (2014). Air+Touch: Interweaving Touch &amp; In-Air Gestures. Proceedings of the 27<sub><sup>th</sup></sub> Annual ACM Symposium on User Interface Software and Technology (UIST 2014) <u>Acceptance Rate: 22.2%</u>.</div>
+			</td>
+		</tr>
+	</tbody>
+</table>
+</div>
+
+<p>We present Air+Touch, a new class of interactions that interweave touch events with in-air gestures, offering a unified input modality with expressiveness greater than each input modality alone. We demonstrate how air and touch are highly complementary: touch is used to designate targets and segment in-air gestures, while in-air gestures add expressivity to touch events. For example, a user can draw a circle in the air and tap to trigger a context menu, do a finger &#39;high jump&#39; between two touches to select a region of text, or drag and in-air &lsquo;pigtail&rsquo; to copy text to the clipboard. Through an observational study, we devised a basic taxonomy of Air+Touch interactions, based on whether the in-air component occurs before, between or after touches. To illustrate the potential of our approach, we built four applications that showcase seven exemplar Air+Touch interactions we created.</p>
+
+<p style="text-align:center"><iframe frameborder="0" height="422" src="https://player.vimeo.com/video/92972949" width="750"></iframe></p>
+
+<table align="center" border="0" cellpadding="1" cellspacing="1" style="line-height:1.6; width:750px">
+	<tbody>
+		<tr>
+			<td style="text-align:center"><a href="https://dl.dropboxusercontent.com/u/11174959/web-images/air%2Btouch/air-touch.jpg" target="_blank"><img alt="" src="https://dl.dropboxusercontent.com/u/11174959/web-images/air%2Btouch/air-touch-medium.jpg" style="height:211px; width:375px" /></a></td>
+			<td style="text-align:center"><a href="https://dl.dropboxusercontent.com/u/11174959/web-images/air%2Btouch/air-touch-2-medium.jpg" target="_blank"><img alt="" src="https://dl.dropboxusercontent.com/u/11174959/web-images/air%2Btouch/air-touch-2-medium.jpg" style="height:211px; width:375px" /></a></td>
+		</tr>
+		<tr>
+			<td colspan="2" style="text-align:center">
+			<address>Air+Touch uses a depth camera to explore the combination of in-air gestures and touch.</address>
+
+			<address>&nbsp;</address>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2" style="text-align:center"><a href="https://dl.dropboxusercontent.com/u/11174959/web-images/air%2Btouch/air-touch-gestures.jpg" target="_blank"><img alt="" src="https://dl.dropboxusercontent.com/u/11174959/web-images/air%2Btouch/air-touch-gestures-medium.jpg" style="height:329px; width:700px" /></a></td>
+		</tr>
+		<tr>
+			<td colspan="2" style="text-align:center">
+			<address>Air+Touch creates a new vocabulary of gestures on and above a device.</address>
+
+			<address>&nbsp;</address>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2" style="text-align:center"><a href="https://dl.dropboxusercontent.com/u/11174959/web-images/air%2Btouch/air-touch-map-example.jpg" target="_blank"><img alt="" src="https://dl.dropboxusercontent.com/u/11174959/web-images/air%2Btouch/air-touch-map-example-medium.jpg" style="height:216px; width:600px" /></a></td>
+		</tr>
+		<tr>
+			<td colspan="2" style="text-align:center">
+			<address>Tapping at a map then cycling finger in air does continuous zooming.</address>
+
+			<address>&nbsp;</address>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2" style="text-align:center"><a href="https://dl.dropboxusercontent.com/u/11174959/web-images/air%2Btouch/air-touch-text-example.jpg" style="line-height: 20.8px;" target="_blank"><img alt="" src="https://dl.dropboxusercontent.com/u/11174959/web-images/air%2Btouch/air-touch-text-example-medium.jpg" style="height:200px; width:600px" /></a></td>
+		</tr>
+		<tr>
+			<td colspan="2" style="text-align:center">
+			<address>A finger &#39;high-jump&#39; between two touch points selects the text between them.</address>
+
+			<address>&nbsp;</address>
+			</td>
+		</tr>
+	</tbody>
+</table>

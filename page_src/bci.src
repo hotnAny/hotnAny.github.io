@@ -1,0 +1,53 @@
+<h2 style="text-align:center">Body-Centric Interaction with Mobile Devices</h2>
+
+<div style="background:#eee;border:1px solid #ccc;padding:5px 10px;">
+<table align="center" border="0" cellpadding="10" cellspacing="0" style="line-height:20px; width:100%" class="tblcite">
+	<tbody>
+		<tr>
+			<td><a href="https://dl.dropboxusercontent.com/u/11174959/web-docs/mhci2012_bci.pdf" target="_blank"><img alt="" src="https://dl.dropboxusercontent.com/u/11174959/web-images/bci/mhci2012_bci_thumbnail.jpg" style="height:65px; width:50px" /></a></td>
+			<td style="text-align:justify; vertical-align:top">
+			<div style="text-align: justify;"><strong>Xiang &lsquo;Anthony&rsquo; Chen</strong>, Nicolai Marquardt, Anthony Tang, Sebastian Boring, Saul Greenberg (2012). Extending a Mobile Device&rsquo;s Interaction Space through Body-Centric Interaction. Proceedings of the 14<span style="font-size:10px">th</span> international conference on Human-computer interaction with mobile devices and services (MobileHCI 2012) <u>Acceptance Rate: 25%</u>.</div>
+			</td>
+		</tr>
+	</tbody>
+</table>
+</div>
+
+<p>Modern mobile devices rely on the screen as a primary&nbsp;input modality. Yet the small screen real-estate limits&nbsp;interaction possibilities, motivating researchers to explore&nbsp;alternate input techniques. Within this arena, our goal is to&nbsp;develop Body-Centric Interaction with Mobile Devices: a&nbsp;class of input techniques that allow a person to position and&nbsp;orient her mobile device to navigate and manipulate digital&nbsp;content anchored in the space on and around the body. To&nbsp;achieve this goal, we explore such interaction in a bottomup&nbsp;path of prototypes and implementations. From our&nbsp;experiences, as well as by examining related work, we&nbsp;discuss and present three recurring themes that characterize&nbsp;how these interactions can be realized. We illustrate how&nbsp;these themes can inform the design of Body-Centric&nbsp;Interactions by applying them to the design of a novel&nbsp;mobile browser application. Overall, we contribute a class&nbsp;of mobile input techniques where interactions are extended&nbsp;beyond the small screen, and are instead driven by a&nbsp;person&rsquo;s movement of the device on and around the body.&nbsp;</p>
+
+<p style="text-align:center"><iframe frameborder="0" height="422" src="https://player.vimeo.com/video/31172179" width="750"></iframe></p>
+
+<table align="center" border="0" cellpadding="1" cellspacing="1" style="line-height:1.6; width:750px">
+	<tbody>
+		<tr>
+			<td colspan="2" style="text-align:center"><a href="https://dl.dropboxusercontent.com/u/11174959/web-images/bci/bci-body-viewer.jpg" target="_blank"><img alt="" src="https://dl.dropboxusercontent.com/u/11174959/web-images/bci/bci-body-viewer-medium.jpg" style="height:281px; width:500px" /></a></td>
+		</tr>
+		<tr>
+			<td colspan="2" style="text-align:center">
+			<address>A user is placing a photo onto his left forearm as a bookmark.</address>
+
+			<address>&nbsp;</address>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2" style="text-align:center"><a href="https://dl.dropboxusercontent.com/u/11174959/web-images/bci/bci-rotating-watch.jpg" style="line-height: 20.8px; text-align: center;" target="_blank"><img alt="" src="https://dl.dropboxusercontent.com/u/11174959/web-images/bci/bci-rotating-watch-medium.jpg" style="height:281px; width:500px" /></a></td>
+		</tr>
+		<tr>
+			<td colspan="2" style="text-align:center">
+			<address>A watch-like device shows calendar schedules when rotated around the body.</address>
+
+			<address>&nbsp;</address>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2" style="text-align:center"><a href="https://dl.dropboxusercontent.com/u/11174959/web-images/bci/bci-body-toolbar.jpg" style="line-height: 20.8px; text-align: center;" target="_blank"><img alt="" src="https://dl.dropboxusercontent.com/u/11174959/web-images/bci/bci-body-toolbar-medium.jpg" style="height:641px; width:500px" /></a></td>
+		</tr>
+		<tr>
+			<td colspan="2" style="text-align:center">
+			<address>A tool bar on the right arm, and a color pallet on the left arm.</address>
+
+			<address>&nbsp;</address>
+			</td>
+		</tr>
+	</tbody>
+</table>

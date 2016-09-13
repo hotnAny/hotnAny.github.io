@@ -1,0 +1,53 @@
+<h2 style="text-align:center">3D Printed Hair: Fused Deposition Modeling of Soft Strands, Fibers&nbsp;&amp; Bristles</h2>
+
+<div style="background:#eee;border:1px solid #ccc;padding:5px 10px;">
+<table align="center" border="0" cellpadding="10" cellspacing="0" style="line-height:20px; width:100%"class="tblcite">
+	<tbody>
+		<tr>
+			<td><a href="https://dl.dropboxusercontent.com/u/11174959/web-docs/uist2015_3dprintedhair.pdf" target="_blank"><img alt="" src="https://dl.dropboxusercontent.com/u/11174959/web-images/3dphair/uist2015_3dprintedhair_thumbnail.jpg" style="height:65px; width:50px" /></a></td>
+			<td style="text-align:justify; vertical-align:top">
+			<div style="text-align: justify;">Gierad Laput, <strong>Xiang &lsquo;Anthony&rsquo; Chen</strong>, Chris Harrison (2015). 3D Printed Hair: Fused Deposition Modeling of Soft Strands, Fibers, and Bristles. Proceedings of the 28<span style="font-size:10.8333px">th</span>&nbsp;Annual ACM Symposium on User Interface Software and Technology (UIST 2015) <u>Acceptance Rate: 23.6%</u>.</div>
+			</td>
+		</tr>
+	</tbody>
+</table>
+</div>
+
+<p>This project started with&nbsp;<a href="http://gierad.com">Gierad Laput</a>&nbsp;asking me in September 2014: &quot;Maybe we can print hair with these printers?&quot;. I pictured what he meant by &#39;hair&#39;, material dropping from the extruder, dragged to a long and thin string as you try to remove it.</p>
+
+<p>So the principle is super simple: spit out a small amount of material which is then dragged and prolonged as the extruder moves away.</p>
+
+<p>The initial trial was doing it vertically like growing grass. In hindsight this was&nbsp;really unwise: first it&#39;s slow (motion along z axis); second the printed hair had&nbsp;to be sparse due to the extruder&#39;s dimension limit. A much much better solution is to do it horiztonally, printing layers of hair.</p>
+
+<p>Once the printing direction was figured out,&nbsp;the project became very playful. There were so many things to try and play with. We experimented different speeds of the extruder&#39;s movement, different motion patterns, filament temperature, extrusion vs. retraction, and a platform to &#39;cut&#39; the hair. Our best results were almost indistinguishable as human hair.</p>
+
+<p>What&#39;s more exciting is now we can make a new range of quirky things, horse with a soft tail, our favorite troll, actually usable brushes, or a hairy finger. 3D printing does not&nbsp;have to be hard and rigid; our simple technique turns a 3D printer&#39;s defect into one &#39;hair&#39; of a feature.</p>
+
+<p style="text-align:center"><iframe frameborder="0" height="422" src="https://www.youtube.com/embed/FB9YZLO0-AI" width="750"></iframe></p>
+
+<table align="center" border="0" cellpadding="1" cellspacing="1" style="line-height:1.6; width:750px">
+	<tbody>
+		<tr>
+			<td style="text-align:center"><a href="https://dl.dropboxusercontent.com/u/11174959/web-images/3dphair/3dphair_sample.jpg" style="line-height: 20.8px;" target="_blank"><img alt="" src="https://dl.dropboxusercontent.com/u/11174959/web-images/3dphair/3dphair_sample_small.jpg" style="height:251px; width:375px" /></a></td>
+			<td style="text-align:center"><a href="https://dl.dropboxusercontent.com/u/11174959/web-images/3dphair/3dphair_printing.jpg" style="line-height: 20.8px; text-align: center;" target="_blank"><img alt="" src="https://dl.dropboxusercontent.com/u/11174959/web-images/3dphair/3dphair_printing_small.jpg" style="height:250px; width:375px" /></a></td>
+		</tr>
+	</tbody>
+</table>
+
+<table align="center" border="0" cellpadding="1" cellspacing="1" style="line-height:1.6; width:750px">
+	<tbody>
+		<tr>
+			<td style="text-align:center"><a href="https://dl.dropboxusercontent.com/u/11174959/web-images/3dphair/3dphair_horse.jpg" target="_blank"><img alt="" src="https://dl.dropboxusercontent.com/u/11174959/web-images/3dphair/3dphair_horse_small.jpg" style="height:250px; width:375px" /></a></td>
+			<td style="text-align:center"><a href="https://dl.dropboxusercontent.com/u/11174959/web-images/3dphair/3dphair_troll.jpg"><img alt="" src="https://dl.dropboxusercontent.com/u/11174959/web-images/3dphair/3dphair_troll_small.jpg" style="height:250px; width:375px" /></a></td>
+		</tr>
+	</tbody>
+</table>
+
+<table align="center" border="0" cellpadding="1" cellspacing="1" style="line-height:1.6; width:750px">
+	<tbody>
+		<tr>
+			<td style="text-align:center"><a href="https://dl.dropboxusercontent.com/u/11174959/web-images/3dphair/3dphair_brush.jpg"><img alt="" src="https://dl.dropboxusercontent.com/u/11174959/web-images/3dphair/3dphair_brush_small.jpg" style="height:250px; width:375px" /></a></td>
+			<td style="text-align:center"><a href="https://dl.dropboxusercontent.com/u/11174959/web-images/3dphair/3dphair_finger.jpg"><img alt="" src="https://dl.dropboxusercontent.com/u/11174959/web-images/3dphair/3dphair_finger_small.jpg" style="height:250px; width:375px" /></a></td>
+		</tr>
+	</tbody>
+</table>
