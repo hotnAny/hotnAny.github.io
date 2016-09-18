@@ -1,133 +1,162 @@
 {
+	"imgServer": "https://dl.dropboxusercontent.com/u/11174959/web-images/",
+	"docServer": "https://dl.dropboxusercontent.com/u/11174959/web-docs/",
 	"fabrication":[
 	{
-		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/forte_inprogess_small.jpg",
+		"imgUrl": "forte_inprogess_small.jpg",
 		"name": "Fort&eacute;",
 		"descp": "Generative design that combines user sketching and topology optimization.",
 		"venue": "In progress"
 	},	
 	{
-		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/facade_small.jpg",
+		"imgUrl": "facade_small.jpg",
 		"name": "Fa&ccedil;ade",
 		"descp": "Making appliances accessible with 3D printed Braille buttons.",
 		"venue": "In progress"
 	},  
 	{
-		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/reprise_small.jpg",
+		"imgUrl": "reprise_small.jpg",
 		"name": "Reprise",
 		"descp": "A design tool for specifying, generating, and customizing 3D printable adaptations on everyday objects.",
 		"venue": "UIST '16"
 	},
 	{
-		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/encore_small.jpg",
+		"imgUrl": "encore_small.jpg",
 		"name": "Encore",
-		"descp": "3D printed augmentation of everyday objects with printed-over, affixed and interlocked attachment.",
+		"descp": "3D printed augmentation of everyday objects with printed-over, affixed and interlocked attachment",
+		"title": "Encore: 3D Printed Augmentation of Everyday Objects with Printed-Over, Affixed and Interlocked Attachment",
 		"venue": "UIST '15",
-		"pageSrc": "page_src/encore.src"
+		"videoId": "135636261",
+		"videoType": "vimeo",
+		"abstract": "One powerful aspect of 3D printing is its ability to extend, repair, or more generally modify everyday objects. However, nearly all existing work implicitly assumes that whole objects are to be printed from scratch. This paper presents a framework for 3D printing to augment existing objects that covers a wide range of attachment options. We illustrate the framework through three exemplar attachment techniques – print-over, print-toaffix and print-through, implemented in Encore, a design tool that supports a set of analysis metrics relating to viability, durability and usability that are visualized for the user to explore design options and tradeoffs. Encore also generates 3D models for production, addressing issues such as support jigs and contact geometry between the attached part and the original object. Our validation helps to illustrate the strengths and weaknesses of each technique. For example, we characterize how surface curvature and roughness affect print-over’s strength compared to the conventional print-in-one-piece. ",
+		"bibtex": "@inproceedings{chen2015encore,<br>&nbsp; &nbsp;title={Encore: 3D printed augmentation of everyday objects with printed-over, affixed and interlocked attachments},<br>&nbsp; &nbsp;author={Chen, XiangAnthony and Coros, Stelian and Mankoff, Jennifer and Hudson, Scott E},<br>&nbsp; &nbsp;booktitle={Proceedings of the 28th Annual ACM Symposium on User Interface Software &amp; Technology},<br>&nbsp; &nbsp;pages={73--82},<br>&nbsp; &nbsp;year={2015},<br>&nbsp; &nbsp;organization={ACM}<br>}",
+		"flickr": "<a data-flickr-embed='true'  href='https://www.flickr.com/photos/128588570@N06/albums/72157670690945024' title='2015 Encore'><img src='https://c1.staticflickr.com/8/7719/29123408504_e45b311991.jpg' width='500' height='281' alt='2015 Encore'></a><script async src='//embedr.flickr.com/assets/client-code.js' charset='utf-8'></script>",
+		"paperThumbnail": "uist2015_encore_thumbnail.jpg",
+		"paperUrl": "uist2015_encore.pdf",
+		"paperInfo": "Xiang ‘Anthony’ Chen, Stelian Coros, Jennifer Mankoff, Scott Hudson (2015). Encore: 3D Printed Augmentation of Everyday Objects with Printed-Over, Affixed and Interlocked Attachments. Proceedings of the 28th Annual ACM Symposium on User Interface Software and Technology (UIST 2015) Acceptance Rate: 23.6%."
 	},
 	{
-		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/3dphair_small2.jpg",
+		"imgUrl": "3dphair_small2.jpg",
 		"name": "3D Printed Hair",
 		"descp": "A technique to print hair-like structures using commodity FDM printer.",
 		"venue": "UIST '15",
-		"pageSrc": "page_src/3dph.src"
+		"videoId": "FB9YZLO0-AI",
+		"videoType": "youtube",
+		"abstract":""
 	}
 	],
 
 	"interactiontechniques":[
 	{
-		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/duet_small.jpg",
+		"imgUrl": "duet_small.jpg",
 		"name": "Duet",
 		"descp": "Joint interaction between a smart phone and a smart watch.",
+		"title": "Duet: Joint Interaction Between a Smart Phone and a Smart Watch",
 		"venue": "★ CHI '14",
-		"pageSrc": "page_src/duet.src"
+		"abstract": "The emergence of smart devices (e.g., smart watches and smart eyewear) is redefining mobile interaction from the solo performance of a smart phone, to a symphony of multiple devices. In this paper, we present Duet – an interactive system that explores a design space of interactions between a smart phone and a smart watch. Based on the devices’ spatial configurations, Duet coordinates their motion and touch input, and extends their visual and tactile output to one another. This transforms the watch into an active element that enhances a wide range of phone-based interactive tasks, and enables a new class of multi-device gestures and sensing techniques. A technical evaluation shows the accuracy of these gestures and sensing techniques, and a subjective study on Duet provides insights, observations, and guidance for future work. ",
+		"bibtex": "@inproceedings{chen2014duet,<br>&nbsp; &nbsp; &nbsp; &nbsp;title={Duet: exploring joint interactions on a smart phone and a smart watch},<br>&nbsp; &nbsp; &nbsp; &nbsp;author={Chen, XiangAnthony and Grossman, Tovi and Wigdor, Daniel J and Fitzmaurice, George},<br>&nbsp; &nbsp; &nbsp; &nbsp;booktitle={Proceedings of the SIGCHI Conference on Human Factors in Computing Systems},<br>&nbsp; &nbsp; &nbsp; &nbsp;pages={159--168},<br>&nbsp; &nbsp; &nbsp; &nbsp;year={2014},<br>&nbsp; &nbsp; &nbsp; &nbsp;organization={ACM}<br>}",
+		"videoId": "81358039",
+		"videoType": "vimeo",
+		"flickr": "<a data-flickr-embed=true  href=https://www.flickr.com/photos/128588570@N06/albums/72157672834628310 title=2014 Duet><img src=https://c7.staticflickr.com/9/8292/29733093246_d876747ef6.jpg width=500 height=281 alt=2014 Duet></a><script async src=//embedr.flickr.com/assets/client-code.js charset=utf-8></script>",
+		"paperThumbnail": "chi2014_duet_thumbnail.jpg",
+		"paperUrl": "chi2014_duet.pdf",
+		"paperInfo": "Xiang ‘Anthony’ Chen, Tovi Grossman, Daniel Wigdor, George Fitzmaurice (2014). Duet: Exploring Joint Interactions on a Smart Phone and a Smart Watch. Proceedings of the 32nd SIGCHI Conference on Human Factors in Computing Systems (CHI 2014). Acceptance Rate: 22.8%.  Best Paper Award 🏆"
 	},
 	{
-		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/air_touch_small.jpg",
+		"imgUrl": "air_touch_small.jpg",
 		"name": "Air+Touch",
-		"descp": "Combining in-air gesture and touch input above mobile devices.",
+		"descp": "Combining In-Air Gesture and Touch Input Above Mobile Devices.",
+		"title": "Air+ touch: interweaving touch and in-air gestures",
 		"venue": "UIST '14",
-		"pageSrc": "page_src/airtouch.src"
+		"videoId": "92972949",
+		"videoType": "vimeo",
+		"abstract": "We present Air+Touch, a new class of interactions that interweave touch events with in-air gestures, offering a unified input modality with expressiveness greater than each input modality alone. We demonstrate how air and touch are highly complementary: touch is used to designate targets and segment in-air gestures, while in-air gestures add expressivity to touch events. For example, a user can draw a circle in the air and tap to trigger a context menu, do a finger 'high jump' between two touches to select a region of text, or drag and in-air ‘pigtail’ to copy text to the clipboard. Through an observational study, we devised a basic taxonomy of Air+Touch interactions, based on whether the in-air component occurs before, between or after touches. To illustrate the potential of our approach, we built four applications that showcase seven exemplar Air+Touch interactions we created.",
+		"bibtex": "@inproceedings{chen2014air+,<br>&nbsp; &nbsp;title={Air+ touch: interweaving touch &amp; in-air gestures},<br>&nbsp; &nbsp;author={Chen, XiangAnthony and Schwarz, Julia and Harrison, Chris and Mankoff, Jennifer and Hudson, Scott E},<br>&nbsp; &nbsp;booktitle={Proceedings of the 27th annual ACM symposium on User interface software and technology},<br>&nbsp; &nbsp;pages={519--525},<br>&nbsp; &nbsp;year={2014},<br>&nbsp; &nbsp;organization={ACM}<br>}",
+		"flickr": "<a data-flickr-embed=true  href=https://www.flickr.com/photos/128588570@N06/albums/72157670702717043 title=2014 Air+Touch><img src=https://c6.staticflickr.com/9/8137/29669237661_fc86b7af09.jpg width=500 height=281 alt=2014 Air+Touch></a><script async src=//embedr.flickr.com/assets/client-code.js charset=utf-8></script>",
+		"paperThumbnail": "uist2014_airtouch_thumbnail.jpg",
+		"paperUrl": "uist2014_airtouch.pdf",
+		"paperInfo": "Xiang ‘Anthony’ Chen, Julia Schwarz, Chris Harrison, Jennifer Mankoff, Scott Hudson (2014). Air+Touch: Interweaving Touch & In-Air Gestures. Proceedings of the 27th Annual ACM Symposium on User Interface Software and Technology (UIST 2014) Acceptance Rate: 22.2%."
 	},
 	{
-		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/swipeboard_small.jpg",
+		"imgUrl": "swipeboard_small.jpg",
 		"name": "Swipeboard",
 		"descp": "An eyes-free text entry technique for ultra-small interfaces",
 		"venue": "UIST '14"
 	},
 	{
-		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/swipeglass_small.jpg",
+		"imgUrl": "swipeglass_small.jpg",
 		"name": "Swipeglass",
 		"descp": "Enabling typing on smart eyewear with simple tapping and swiping gestures.",
 		"venue": "MobileHCI '15"
 	},
 	{
-		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/locus_small.jpg",
+		"imgUrl": "locus_small.jpg",
 		"name": "Locus",
 		"descp": "Bootstrapping user-defined body tapping recognition with offline-learned probabilistic representation.",
 		"venue": "UIST '16"
 	},
 	{
-		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/aroundbody_small.jpg",
+		"imgUrl": "aroundbody_small.jpg",
 		"name": "Around-Body",
 		"descp": "Tracking a commodity smart phone's position around a user's body.",
 		"venue": "MobileHCI '14"
 	},
 	{
-		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/bci_small.jpg",
+		"imgUrl": "bci_small.jpg",
 		"name": "Body-Centric",
 		"descp": "A series of exploration of interacting in the space on and around our body.",
 		"venue": "MobileHCI '12",
 		"pageSrc": "page_src/bci.src"
 	},
 	{
-		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/tabletstylus_small.jpg",
+		"imgUrl": "tabletstylus_small.jpg",
 		"name": "Tablet+Stylus",
 		"descp": "Grip and motion sensing while naturally manipulating tablet and stylus devices.",
-		"venue": "★ UIST '14"
+		"venue": "★ UIST '14",
+		"exturl": "https://kenhinckley.wordpress.com/2015/10/16/paper-sensing-techniques-for-tabletstylus-interaction-best-paper-award/"
 	},
 	{
-		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/penmotion_small.jpg",
+		"imgUrl": "penmotion_small.jpg",
 		"name": "Pen+Motion",
 		"descp": "A pen with embedded IMU that supports various techniques and motion gestures.",
 		"venue": "GI '12",
 		"pageSrc": "page_src/penmotion.src"
 	},
 	{
-		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/skinbutton_small.jpg",
+		"imgUrl": "skinbutton_small.jpg",
 		"name": "Skin Buttons",
 		"descp": "Tiny projectors integrated into a smart watch to render icons on the skin",
 		"venue": "UIST '14",
 		"exturl": "http://www.gierad.com/projects/skinbuttons/"
 	},
 	{
-		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/sweepsense_small.jpg",
+		"imgUrl": "sweepsense_small.jpg",
 		"name": "SweepSense",
 		"descp": "Sensing techniques that can automatically pause the music as you pull your earplugs out.",
 		"venue": "IUI '16",
 		"exturl": "http://www.gierad.com/projects/sweepsense/"
 	},
 	{
-		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/twistnknock_small.jpg",
+		"imgUrl": "twistnknock_small.jpg",
 		"name": "Twist 'n' Knock",
 		"descp": "A one-handed gesture for smart watches.",
 		"venue": "GI '16"
 	},
 	{
-		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/fatthumb_small.jpg",
+		"imgUrl": "fatthumb_small.jpg",
 		"name": "Fat Thumb",
 		"descp": "Thumb-based interaction by detecting the contact size.",
 		"venue": "MobileHCI '12",
 		"exturl": "http://www.sebastianboring.com/research/fatthumb"
 	},
 	{
-		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/spalendar_small.jpg",
+		"imgUrl": "spalendar_small.jpg",
 		"name": "Spalendar",
 		"descp": "Visualizing calendar data by showing people moving between places.",
 		"venue": "AVI '12"
 	},
 	{
-		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/maestro_small.jpg",
+		"imgUrl": "maestro_small.jpg",
 		"name": "Maestro",
 		"descp": "Instrumenting IMUs on a user's head, wrist, finger and pocket.",
 		"venue": "Unpublished"
@@ -136,52 +165,54 @@
 
 	"internetofthings": [
 	{
-		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/improv_small.jpg",
+		"imgUrl": "improv_small.jpg",
 		"name": "Improv",
 		"descp": "An input framework for users to create cross-device gestures.",
 		"venue": "In progress"
 	},
 	{
-		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/vislens_small.jpg",
+		"imgUrl": "vislens_small.jpg",
 		"name": "VizLens",
 		"descp": "A screen reader for physical interfaces based on crowd-labeld information.",
-		"venue": "UIST '16"
+		"venue": "UIST '16",
+		"youtubeId": "hjCf-G51FWM"
 	},
 	{
-		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/snaptoit_small.jpg",
+		"imgUrl": "snaptoit_small.jpg",
 		"name": "Snap to It",
 		"descp": "Take a picture of an appliance and control it from your smart phone.",
-		"venue": "CHI '16"
+		"venue": "CHI '16",
+		"vimeoId": "154829664"
 	}
 	],
 
 	"sideprojects": [
 	{
-		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/breader_small.jpg",
+		"imgUrl": "breader_small.jpg",
 		"name": "b-reader",
 		"descp": "A mobile Braille reader enabled by 3D printed actuation mechanism and OCR on smart phones.",
 		"venue": "HCI 05899"
 	},
 	{
-		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/nudge_small.jpg",
+		"imgUrl": "nudge_small.jpg",
 		"name": "Nudge",
 		"descp": "If you keep checking your phone on social occasions, it will make a scene by causing others' phones to vibrate.",
 		"venue": "DES 51878",
-		"exturl": "https://vimeo.com/87716737"
+		"vimeoId": "87716737"
 	},
 	{
-		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/armtouch_small.jpg",
+		"imgUrl": "armtouch_small.jpg",
 		"name": "Arm Touch",
 		"descp": "Mounting an accelerometer on your arm to enable simple arm tapping gestures.",
 		"venue": "HCI 05833",
-		"exturl": "https://vimeo.com/64470159"
+		"vimeoId": "64470159"
 	},
 	{
-		"imgUrl": "https://dl.dropboxusercontent.com/u/11174959/web-images/ddr_small.jpg",
+		"imgUrl": "ddr_small.jpg",
 		"name": "DDR on Ardruino",
 		"descp": "An finger Dance Dance Revolution game on an Arduino",
 		"venue": "HCI 05833",
-		"exturl": "https://vimeo.com/59873870"
+		"vimeoId": "59873870"
 	}
 	]
 }

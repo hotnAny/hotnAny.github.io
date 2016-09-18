@@ -1,1 +1,1 @@
-nohup python -mSimpleHTTPServer 8889 > /dev/null 2>&1 &
+nohup python -mSimpleHTTPServer 8888 > /dev/null 2>&1 &
