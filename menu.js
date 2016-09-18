@@ -13,6 +13,12 @@ XAC.readTextFile = function(file, followup) {
 	rawFile.send(null);
 }
 
+function checkResponsiveness() {
+	if ($(window).width() < 750) {
+		$('.menu').css('column-count', '1');
+	}
+}
+
 var divPages = [];
 var divVideos = [];
 var menuObj;
@@ -21,12 +27,12 @@ var imgServer, docServer;
 var thbnServer = 'images/'
 
 $(document).ready(function() {
-	$( window ).resize(function() {
+	$(window).resize(function() {
 		// console.log($(window).width())
-		if($(window).width() < 750) {
-			$('.menu').css('column-count', '1');
-		}
+		checkResponsiveness();
 	});
+
+	checkResponsiveness();
 
 	XAC.readTextFile('menu.json', function(text) {
 		menuObj = JSON.parse(text);
@@ -141,22 +147,15 @@ function makePage(item) {
 	// pub & bib tex
 	//
 	var divPubBib = $('<div class="divpubbib"></div>');
-	divPubBib.append($('<ul>'
-    + '<li><a href="#tabPub">Publication</a></li>'
-    + '<li><a href="#tabBib">Bibtex</a></li>'
-  	+ '</ul>'))
-  	var divPub = $('<div id="tabPub"></div>');
-  	divPub.append($('<table class="tbpubinfo" align="center" border="0" cellspacing="0" cellpadding="10px">'
-		+ '<tr><td><a href="' + docServer +  item.paperUrl + '" target="_blank">'
-		+ '<img class="imgpaper" src="' + thbnServer + item.paperThumbnail + '"/></a></td>'
-		+ '<td class="tdpubinfo">'
-		+ item.paperInfo + '</td></tr></table>'));
+	divPubBib.append($('<ul>' + '<li><a href="#tabPub">Publication</a></li>' + '<li><a href="#tabBib">Bibtex</a></li>' + '</ul>'))
+	var divPub = $('<div id="tabPub"></div>');
+	divPub.append($('<table class="tbpubinfo" align="center" border="0" cellspacing="0" cellpadding="10px">' + '<tr><td><a href="' + docServer + item.paperUrl + '" target="_blank">' + '<img class="imgpaper" src="' + thbnServer + item.paperThumbnail + '"/></a></td>' + '<td class="tdpubinfo">' + item.paperInfo + '</td></tr></table>'));
 
-  	var divBib = $('<div id="tabBib"></div>');
-  	divBib.append(item.bibtex);
-  	divPubBib.append(divPub);
-  	divPubBib.append(divBib);
-  	divPubBib.tabs();
+	var divBib = $('<div id="tabBib"></div>');
+	divBib.append(item.bibtex);
+	divPubBib.append(divPub);
+	divPubBib.append(divBib);
+	divPubBib.tabs();
 
 	divPage.append(divPubBib);
 	divPage.append($('<br>'));
