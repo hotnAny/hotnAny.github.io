@@ -104,8 +104,9 @@ body{
 	font-size: 9pt;
 	background-color: #ffffff;
 	line-height: 150%;
-	margin-left: 18%;
-	margin-right: 18%;
+	width: 55%;
+	/*margin-left: 18%;*/
+	/*margin-right: 18%;*/
 	padding-left: 5%;
 	padding-right: 5%;
 	padding-top: 2%;

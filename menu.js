@@ -21,6 +21,12 @@ var imgServer, docServer;
 var thbnServer = 'images/'
 
 $(document).ready(function() {
+	$( window ).resize(function() {
+		// console.log($(window).width())
+		if($(window).width() < 750) {
+			$('.menu').css('column-count', '1');
+		}
+	});
 
 	XAC.readTextFile('menu.json', function(text) {
 		menuObj = JSON.parse(text);
