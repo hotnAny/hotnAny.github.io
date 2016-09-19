@@ -4,33 +4,37 @@
     <title></title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
       <script type='text/javascript' src='http://code.jquery.com/jquery-latest.min.js'></script>
-      <script type='text/javascript' src='crop.js'></script>
-      <style>
-       canvas { box-shadow: 0 0 10px black; margin: 20px; }​
-          </style>
-          
+      <script type='text/javascript' src='cropper.js'></script>
+      <script type='text/javascript'>
+            var cropper;
+            $(document).ready(function() {
+              var canvasBackground = document.getElementById('canvasBackground');
+              var imageObj = new Image();
+              imageObj.src = "img.jpg";
+              imageObj.onload = function() {
+                  canvasBackground.width = this.width;
+                  canvasBackground.height = this.height;
 
+                  var left = $('#canvasBackground').css('margin-left');
+                  var top = $('#canvasBackground').css('margin-top');
+                  cropper = new XAC.Cropper(left, top, this.width, this.height);
+                  var ctxbg = canvasBackground.getContext('2d');
+                  ctxbg.drawImage(this, 0, 0, this.width, this.height);
+              };
+
+              $(document.body).on('mouseup', function(e){
+                  var coordObjs = cropper.getCoordinates();
+                  var strCoords = "";
+                  for (var i = 0; i < coordObjs.length; i++) {
+                      strCoords += '(' + coordObjs[i].x + ', ' + coordObjs[i].y + ') '
+                  }
+                  $('#divCoordinates').html(strCoords);
+              });
+            });
+      </script>
   </head>
   <body>
-  <table>
-  <tr>
-  <td>
-    <input type="button" id="crop" value="CROP" />
-    <div id="container">
-<canvas width="217" height="275" id="myCanvas" style="position:relative;margin-left:0px;margin-top:0px;"></canvas>
-    </div>
-<div id="png" style="display:block;">Click on the image sequential points forming the shape to be cropped and click on CROP button.<br/> Refresh to restart.</div>
-
- 
-<div id="oldposx" style="display:none;"></div>
-<div id="oldposy" style="display:none;"></div>
-<div id="posx" style="display:none;"></div>
-<div id="posy" style="display:none;"></div>
-</td><td>
-    <i>HERE  APPEARS THE UPLOADED IMAGE</i>
-<div id="myimg"></div><!--preview of image after upload-->
-</td>
-</tr>
-</table>
+      <div id="divCoordinates">&nbsp;</div>
+      <canvas id="canvasBackground" style="margin-left: 25px; margin-top: 15px; position: absolute;"></canvas>
   </body>
 </html>
