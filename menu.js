@@ -25,7 +25,7 @@ function checkResponsiveness() {
 	var col = 3
 	if ($(window).width() < 640 || window.mobilecheck() == true) {
 		col = 1;
-	} else if ($(window).width() < 960) {
+	} else if ($(window).width() < 1150) {
 		col = 2;
 	}
 	$('.menu').css('column-count', col);
