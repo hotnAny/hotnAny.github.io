@@ -188,8 +188,8 @@ function makePage(item) {
 	// video
 	//
 	var divVideo = $('<br><div class="divvideo"></div>');
-	var wvideo = col > 2 ? 640 : '80%';
-	var hvideo = col > 2 ? 360 : '';
+	var wvideo = col > 2 ? 640 : window.innerWidth * 0.5;
+	var hvideo = wvideo * 9 / 16;
 	divVideo.html(getVideoEmbedCode(item.videoType, item.videoId, wvideo, hvideo));
 	divPage.append(divVideo);
 	divPage.append($('<br>'));
@@ -200,13 +200,10 @@ function makePage(item) {
 	// album
 	//
 	var divPhotos = $('<div class="divphotos"><div>');
-	if (col > 2) {
-		item.flickr = item.flickr.replace('500', '640');
-		item.flickr = item.flickr.replace('281', '360');
-	} else {
-		item.flickr = item.flickr.replace('500', '80%');
-		// item.flickr = item.flickr.replace('281', '360');
-	}
+	var walbum = col > 2 ? 640 : window.innerWidth * 0.5;
+	var halbum = walbum * 9 / 16;
+	item.flickr = item.flickr.replace('500', walbum);
+	item.flickr = item.flickr.replace('281', halbum);
 	divPhotos.html(item.flickr);
 	divPage.append(divPhotos);
 
