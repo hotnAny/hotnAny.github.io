@@ -73,6 +73,11 @@ body{
     white-space:nowrap;
 }
 
+.tbdescp{
+	table-layout: fixed;
+	width: 100%;
+}
+
 .divdescp{
 	font-size: 8pt;
 	color: #888888;

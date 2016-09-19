@@ -40,8 +40,6 @@ $(document).ready(function() {
 		checkResponsiveness();
 	});
 
-	checkResponsiveness();
-
 	XAC.readTextFile('menu.json', function(text) {
 		menuObj = JSON.parse(text);
 	})
@@ -73,6 +71,8 @@ $(document).ready(function() {
 	for (var i = 0; i < menuObj.sideprojects.length; i++) {
 		$('.menu').append(makeItem(menuObj.sideprojects[i]));
 	}
+
+	checkResponsiveness();
 });
 
 function makeTitle(title) {
@@ -133,7 +133,10 @@ function makeItem(item) {
 		strEllips += '. '
 	}
 
-	var tbDescp = $('<table class="tbdescp" border="0"><tr>' + '<td class="tdprojname"><b>' + item.name + '</b></td>' + '<td class="tdpubvenue">' + item.venue + strEllips + '</td>' + '</tr><tr><td colspan="2"><div class="divdescp">' + item.descp + '</div></td></tr></table>');
+	var tbDescp = $('<table class="tbdescp" border="0"><tr>' + '<td class="tdprojname"><b>' 
+		+ item.name + '</b></td>' + '<td class="tdpubvenue">' 
+		+ item.venue + strEllips + '</td>' + '</tr><tr><td colspan="2"><div class="divdescp">' 
+		+ item.descp + '</div></td></tr></table>');
 	tdDescp.append(tbDescp);
 
 	tb.append(tr);
