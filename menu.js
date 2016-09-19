@@ -26,7 +26,10 @@ function checkResponsiveness() {
 		col = 1;
 	} else if ($(window).width() < 1150) {
 		col = 2;
+	} else {
+		col = 3;
 	}
+
 	$('.menu').css('column-count', col);
 	$('.menu').css('-moz-column-count', col);
 	$('.menu').css('-webkit-column-count', col);
@@ -105,6 +108,11 @@ function makeItem(item) {
 				transition: 'all 0.3s'
 			});
 			divPage.popup('show');
+			if (col <= 1) {
+				$('.divpage').css('width', '70%');
+			} else {
+				$('.divpage').css('width', '55%');
+			}
 		});
 	} else if (item.exturl != undefined) {
 		tdImage = $('<td class="tdimg"><a href=' + item.exturl + ' target="_blank">' + imgStr + '</a></td>');
@@ -180,7 +188,9 @@ function makePage(item) {
 	// video
 	//
 	var divVideo = $('<br><div class="divvideo"></div>');
-	divVideo.html(getVideoEmbedCode(item.videoType, item.videoId));
+	var wvideo = col > 2 ? 640 : '80%';
+	var hvideo = col > 2 ? 360 : '';
+	divVideo.html(getVideoEmbedCode(item.videoType, item.videoId, wvideo, hvideo));
 	divPage.append(divVideo);
 	divPage.append($('<br>'));
 	divPage.append($('<br>'));
@@ -190,11 +200,11 @@ function makePage(item) {
 	// album
 	//
 	var divPhotos = $('<div class="divphotos"><div>');
-	if (col > 1) {
+	if (col > 2) {
 		item.flickr = item.flickr.replace('500', '640');
 		item.flickr = item.flickr.replace('281', '360');
 	} else {
-		item.flickr = item.flickr.replace('500', '60%');
+		item.flickr = item.flickr.replace('500', '80%');
 		// item.flickr = item.flickr.replace('281', '360');
 	}
 	divPhotos.html(item.flickr);
@@ -203,8 +213,8 @@ function makePage(item) {
 	return divPage;
 }
 
-function getVideoEmbedCode(type, id) {
+function getVideoEmbedCode(type, id, w, h) {
 	var srcCode = type == 'youtube' ? 'https://www.youtube.com/embed/' + id + '?rel=0' :
 		'https://player.vimeo.com/video/' + id;
-	return '<iframe id="ifmVideo" src="' + srcCode + '" width="640" height="360" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>';
+	return '<iframe id="ifmVideo" src="' + srcCode + '" width="' + w + '" height="' + h + '" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>';
 }
