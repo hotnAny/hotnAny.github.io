@@ -110,6 +110,7 @@ body{
 	background-color: #ffffff;
 	line-height: 150%;
 	width: 55%;
+	min-width: 640px;
 	/*margin-left: 18%;*/
 	/*margin-right: 18%;*/
 	padding-left: 5%;

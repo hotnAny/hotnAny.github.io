@@ -22,7 +22,6 @@ window.mobilecheck = function() {
 };
 
 function checkResponsiveness() {
-	var col = 3
 	if ($(window).width() < 640 || window.mobilecheck() == true) {
 		col = 1;
 	} else if ($(window).width() < 1150) {
@@ -36,6 +35,7 @@ function checkResponsiveness() {
 var divPages = [];
 var divVideos = [];
 var menuObj;
+var col = 3;
 
 var imgServer, docServer;
 var thbnServer = 'images/'
@@ -190,8 +190,13 @@ function makePage(item) {
 	// album
 	//
 	var divPhotos = $('<div class="divphotos"><div>');
-	item.flickr = item.flickr.replace('500', '640');
-	item.flickr = item.flickr.replace('281', '360');
+	if (col > 1) {
+		item.flickr = item.flickr.replace('500', '640');
+		item.flickr = item.flickr.replace('281', '360');
+	} else {
+		item.flickr = item.flickr.replace('500', '60%');
+		// item.flickr = item.flickr.replace('281', '360');
+	}
 	divPhotos.html(item.flickr);
 	divPage.append(divPhotos);
 
