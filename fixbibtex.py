@@ -4,7 +4,7 @@
 import os 
 
 if __name__ == "__main__":
-	text = open('bibtex', 'r').read()
+	text = open('.bibtex', 'r').read()
 	text = text.replace('\n', '<br>')
 	text = text.replace('  ', '&nbsp; &nbsp; &nbsp; &nbsp;')
 	text = text.replace('\&', '&amp;')

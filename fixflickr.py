@@ -3,7 +3,7 @@
 import os 
 
 if __name__ == "__main__":
-	text = open('flickr', 'r').read()
+	text = open('.flickr', 'r').read()
 	text = text.replace('\"', '\'')
 	# text = text.replace('500', '450')
 	# text = text.replace('281', '252')
