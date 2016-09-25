@@ -18,7 +18,16 @@
 		"imgUrl": "reprise_small.jpg",
 		"name": "Reprise",
 		"descp": "A design tool for specifying, generating, and customizing 3D printable adaptations on everyday objects.",
-		"venue": "UIST '16"
+		"title": "Reprise: A Design Tool for Specifying, Generating, and Customizing 3D Printable Adaptations on Everyday Objects",
+		"venue": "UIST '16",
+		"videoId": "182221122",
+		"videoType": "vimeo",
+		"abstract": "In this paper, we describe Reprise--a design tool for specifying, generating, customizing and fitting adaptations onto existing household objects. Reprise allows users to express at a high level what type of action is applied to an object.  Based on this high level specification, Reprise automatically generates adaptations. Users can use simple sliders to customize the adaptations to better suit their particular needs and preferences, such as increasing the tightness for gripping, enhancing torque for rotation, or making a larger base for stability. Finally, Reprise provides a toolkit of fastening methods and support structures for fitting the adaptations onto existing objects.",
+		"bibtex": "@inproceedings{chen2016reprise,<br>&nbsp; &nbsp; &nbsp; &nbsp;title={Reprise: A Design Tool for Specifying, Generating, and Customizing 3D Printable Adaptations on Everyday Objects},<br>&nbsp; &nbsp; &nbsp; &nbsp;author={Chen, XiangAnthony and Kim, Jeeeun and Mankoff, Jennifer and Grossman, Tovi and Coros, Stelian and Hudson, Scott E},<br>&nbsp; &nbsp; &nbsp; &nbsp;booktitle={the 29th Annual ACM Symposium on User Interface Software &amp; Technology},<br>&nbsp; &nbsp; &nbsp; &nbsp;year={2016},<br>&nbsp; &nbsp; &nbsp; &nbsp;organization={ACM}<br>}",
+		"flickr": "<a data-flickr-embed=true  href=https://www.flickr.com/photos/128588570@N06/albums/72157674285753686 title=2016 Reprise><img src=https://c8.staticflickr.com/6/5773/29927413495_3f08192229.jpg width=500 height=281 alt=2016 Reprise></a><script async src=//embedr.flickr.com/assets/client-code.js charset=utf-8></script>",
+		"paperThumbnail": "uist2016_reprise_thumbnail.jpg",
+		"paperUrl": "uist2016_reprise.pdf",
+		"paperInfo": "Xiang ‘Anthony’ Chen, Jeeeun Kim, Jennifer Mankoff, Tovi Grossman, Stelian Coros, Scott Hudson (2016). Reprise: A Design Tool for Specifying, Generating, and Customizing 3D Printable Adaptations on Everyday Objects. Proceedings of the 29th Annual ACM Symposium on User Interface Software and Technology (UIST 2016) Acceptance Rate: 20.6%."
 	},
 	{
 		"imgUrl": "encore_small.jpg",
