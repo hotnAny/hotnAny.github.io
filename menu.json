@@ -49,9 +49,7 @@
 		"name": "3D Printed Hair",
 		"descp": "A technique to print hair-like structures using commodity FDM printer.",
 		"venue": "UIST '15",
-		"videoId": "FB9YZLO0-AI",
-		"videoType": "youtube",
-		"abstract":""
+		"exturl": "http://www.gierad.com/projects/furbrication/"
 	}
 	],
 
