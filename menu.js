@@ -1,4 +1,4 @@
-var XAC = XAC || {};
+ var XAC = XAC || {};
 
 XAC.readTextFile = function(file, followup) {
 	var rawFile = new XMLHttpRequest();
