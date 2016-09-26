@@ -88,13 +88,30 @@
 		"imgUrl": "swipeboard_small.jpg",
 		"name": "Swipeboard",
 		"descp": "An eyes-free text entry technique for ultra-small interfaces",
-		"venue": "UIST '14"
+		"title": "Swipeboard: A Text Entry Technique for Ultra-Small Interfaces That Supports Novice to Expert Transitions",
+		"abstract": "Ultra-small smart devices, such as smart watches, have become increasingly popular in recent years. Most of these devices rely on touch as the primary input modality, which makes tasks such as text entry increasingly difficult as the devices continue to shrink. In the sole pursuit of entry speed, the ultimate solution is a shorthand technique (e.g., Morse code) that sequences tokens of input (e.g., key, tap, swipe) into unique representations of each character. However, learning such techniques is hard, as it often resorts to rote memory. Our technique, Swipeboard, leverages our spatial memory of a QWERTY keyboard to learn, and eventually master a shorthand, eyes-free text entry method designed for ultra-small interfaces. Characters are entered with two swipes; the first swipe specifies the region where the character is located, and the second swipe specifies the character within that region. Our study showed that with less than two hours’ training, Tested on a reduced word set, Swipeboard users achieved 19.58 words per minute (WPM), 15% faster than an existing baseline technique.",
+		"bibtex": "@inproceedings{chen2014swipeboard,<br>&nbsp; &nbsp; &nbsp; &nbsp;title={Swipeboard: a text entry technique for ultra-small interfaces that supports novice to expert transitions},<br>&nbsp; &nbsp; &nbsp; &nbsp;author={Chen, XiangAnthony and Grossman, Tovi and Fitzmaurice, George},<br>&nbsp; &nbsp; &nbsp; &nbsp;booktitle={Proceedings of the 27th annual ACM symposium on User interface software and technology},<br>&nbsp; &nbsp; &nbsp; &nbsp;pages={615--620},<br>&nbsp; &nbsp; &nbsp; &nbsp;year={2014},<br>&nbsp; &nbsp; &nbsp; &nbsp;organization={ACM}<br>}",
+		"venue": "UIST '14",
+		"videoId": "143152207",
+		"videoType": "vimeo",
+		"flickr": "<a data-flickr-embed=true  href=https://www.flickr.com/photos/128588570@N06/albums/72157674290832196 title=2014 Swipeboard><img src=https://c4.staticflickr.com/9/8365/29930321315_41a5764c70.jpg width=500 height=281 alt=2014 Swipeboard></a><script async src=//embedr.flickr.com/assets/client-code.js charset=utf-8></script>",
+		"paperThumbnail": "uist2014_swipeboard_thumbnail.jpg",
+		"paperUrl": "uist2014_swipeboard.pdf",
+		"paperInfo": "Xiang ‘Anthony’ Chen, Tovi Grossman, George Fitzmaurice (2014). Swipeboard: A Text Entry Technique for Ultra-Small Interfaces That Supports Novice to Expert Transitions. Proceedings of the 27th Annual ACM Symposium on User Interface Software and Technology (UIST 2014) Acceptance Rate: 22.2%."
 	},
 	{
 		"imgUrl": "swipeglass_small.jpg",
 		"name": "Swipeglass",
 		"descp": "Enabling typing on smart eyewear with simple tapping and swiping gestures.",
-		"venue": "MobileHCI '15"
+		"title": "Typing on Glasses: Adapting Text Entry to Smart Eyewear",
+		"abstract": "Text entry for smart eyewear is generally limited to speech-based input due to constraints of the input channels. However, many smart eyewear devices are now including a side touchpad making gesture-based text entry feasible. The Swipeboard technique, recently proposed for ultra-small touch screens such as smart watches, may be particularly suitable for smart eyewear: unlike other recent text-entry techniques for small devices, it supports eyes-free input. We investigate the limitations and feasibility of implementing Swipeboard on smart eyewear, using the side touch pad for input. Our first study reveals usability and recognition problems of using the side touch pad to perform the required gestures. To address these problems, we propose SwipeZone, which replaces diagonal gestures with zone-specific swipes. In a text entry study, we show that our redesign achieved a WPM rate of 8.73, 15.2% higher than Swipeboard, with a statistically significant improvement in the last half of the study blocks.",
+		"bibtex": "@inproceedings{grossman2015typing,<br>&nbsp; &nbsp; &nbsp; &nbsp;title={Typing on glasses: adapting text entry to smart eyewear},<br>&nbsp; &nbsp; &nbsp; &nbsp;author={Grossman, Tovi and Chen, Xiang Anthony and Fitzmaurice, George},<br>&nbsp; &nbsp; &nbsp; &nbsp;booktitle={Proceedings of the 17th International Conference on Human-Computer Interaction with Mobile Devices and Services},<br>&nbsp; &nbsp; &nbsp; &nbsp;pages={144--152},<br>&nbsp; &nbsp; &nbsp; &nbsp;year={2015},<br>&nbsp; &nbsp; &nbsp; &nbsp;organization={ACM}<br>}",
+		"venue": "MobileHCI '15",
+		"videoId": "hN3zPVXQjTI",
+		"videoType": "youtube",
+		"paperThumbnail": "mhci2015_swipeglass_thumbnail.jpg",
+		"paperUrl": "mhci2015_swipeglass.pdf",
+		"paperInfo": "Tovi Grossman, Xiang ‘Anthony’ Chen, George Fitzmaurice (2015). Typing on Glasses: Adapting Text Entry to Smart Eyewear. Proceedings of the 17th international conference on Human-computer interaction with mobile devices and services (MobileHCI 2015). Acceptance Rate: 25.2%."
 	},
 	{
 		"imgUrl": "locus_small.jpg",
