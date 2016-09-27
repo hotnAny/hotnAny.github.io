@@ -117,7 +117,16 @@
 		"imgUrl": "locus_small.jpg",
 		"name": "Locus",
 		"descp": "Bootstrapping user-defined body tapping recognition with offline-learned probabilistic representation.",
-		"venue": "UIST '16"
+		"title": "Bootstrapping User-Defined Body Tapping Recognition with Offline-Learned Probabilistic Representation",
+		"abstract": "To address the increasing functionality (or information) overload of smartphones, prior research has explored a variety of methods to extend the input vocabulary of mobile devices. In particular, body tapping has been previously proposed as a technique that allows the user to quickly access a target functionality by simply tapping at a specific location of the body with a smartphone. Though compelling, prior work often fell short in enabling users’ unconstrained tapping locations or behaviors. To address this problem, we developed a novel recognition method that combines both offline—before the system sees any user-defined gestures—and online learning to reliably recognize arbitrary, user-defined body tapping gestures, only using a smartphone’s built-in sensors. Our experiment indicates that our method significantly outperforms baseline approaches in several usage conditions. In particular, provided only with a single sample per location, our accuracy is 30.8% over an SVM baseline and 24.8% over a template matching method. Based on these findings, we discuss how our approach can be generalized to other user-defined gesture problems. ",
+		"bibtex": "@inproceedings{chen2016reprise,<br>&nbsp; &nbsp; &nbsp; &nbsp;title={Bootstrapping User-Defined Body Tapping Recognition with Offline-Learned Probabilistic Representation},<br>&nbsp; &nbsp; &nbsp; &nbsp;author={Chen, XiangAnthony and Li, Yang},<br>&nbsp; &nbsp; &nbsp; &nbsp;booktitle={the 29th Annual ACM Symposium on User Interface Software &amp; Technology},<br>&nbsp; &nbsp; &nbsp; &nbsp;year={2016},<br>&nbsp; &nbsp; &nbsp; &nbsp;organization={ACM}<br>}",
+		"venue": "UIST '16",
+		"videoId": "184405883",
+		"videoType": "vimeo",
+		"flickr": "<a data-flickr-embed=true  href=https://www.flickr.com/photos/128588570@N06/albums/72157671061225703 title=2016 Locus><img src=https://c2.staticflickr.com/9/8330/29954827545_be15149c02.jpg width=500 height=281 alt=2016 Locus></a><script async src=//embedr.flickr.com/assets/client-code.js charset=utf-8></script>",
+		"paperThumbnail":"uist2016_locus_thumbnail.jpg",
+		"paperUrl": "uist2016_locus.pdf",
+		"paperInfo": "Xiang 'Anthony' Chen, Yang Li (2016). Bootstrapping User-Defined Body Tapping Recognition with Offline-Learned Probabilistic Representation. Proceedings of the 29th Annual ACM Symposium on User Interface Software and Technology (UIST 2016) Acceptance Rate: 20.6%."
 	},
 	{
 		"imgUrl": "aroundbody_small.jpg",
