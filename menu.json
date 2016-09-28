@@ -132,7 +132,16 @@
 		"imgUrl": "aroundbody_small.jpg",
 		"name": "Around-Body",
 		"descp": "Tracking a commodity smart phone's position around a user's body.",
-		"venue": "MobileHCI '14"
+		"venue": "MobileHCI '14",
+		"title": "Around-Body Interaction: Sensing & Interaction Techniques for Proprioception-Enhanced Input with Mobile Devices",
+		"abstract": "The space around the body provides a large interaction vol-ume that can allow for big interactions on small mobile de-vices. However, interaction techniques making use of this opportunity are underexplored, primarily focusing on dis-tributing information in the space around the body. We demonstrate three types of around-body interaction includ-ing canvas, modal and context-aware interactions in six demonstration applications. We also present a sensing solu-tion using standard smartphone hardware: a phone’s front camera, accelerometer and inertia measurement units. Our solution allows a person to interact with a mobile device by holding and positioning it between a normal field of view and its vicinity around the body. By leveraging a user’s proprioceptive sense, around-body Interaction opens a new input channel that enhances conventional interaction on a mobile device without requiring additional hardware.",
+		"bibtex": "@inproceedings{chen2014around,<br>&nbsp; &nbsp; &nbsp; &nbsp;title={Around-body interaction: sensing &amp; interaction techniques for proprioception-enhanced input with mobile devices},<br>&nbsp; &nbsp; &nbsp; &nbsp;author={Chen, XiangAnthony and Schwarz, Julia and Harrison, Chris and Mankoff, Jennifer and Hudson, Scott},<br>&nbsp; &nbsp; &nbsp; &nbsp;booktitle={Proceedings of the 16th international conference on Human-computer interaction with mobile devices &amp; services},<br>&nbsp; &nbsp; &nbsp; &nbsp;pages={287--290},<br>&nbsp; &nbsp; &nbsp; &nbsp;year={2014},<br>&nbsp; &nbsp; &nbsp; &nbsp;organization={ACM}<br>}",
+		"videoId": "142935370",
+		"videoType": "vimeo",
+		"flickr": "",
+		"paperThumbnail": "mhci2014_aroundbody_thumbnail.jpg",
+		"paperUrl": "mhci2014_aroundbody.pdf",
+		"paperInfo": "Xiang ‘Anthony’ Chen, Julia Schwarz, Chris Harrison, Jennifer Mankoff, Scott Hudson (2014). Around-Body Interaction: Sensing & Interaction Techniques for Proprioception-Enhanced Input with Mobile Devices. Proceedings of the 16th international conference on Human-computer interaction with mobile devices and services (MobileHCI 2014). Acceptance Rate: 21.3%."
 	},
 	{
 		"imgUrl": "bci_small.jpg",
