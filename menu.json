@@ -7,13 +7,13 @@
 		"name": "Fort&eacute;",
 		"descp": "Generative design that combines user sketching and topology optimization.",
 		"venue": "In progress"
-	},	
+	},
 	{
 		"imgUrl": "facade_small.jpg",
 		"name": "Fa&ccedil;ade",
 		"descp": "Making appliances accessible with 3D printed Braille buttons.",
 		"venue": "In progress"
-	},  
+	},
 	{
 		"imgUrl": "reprise_small.jpg",
 		"name": "Reprise",
@@ -138,7 +138,7 @@
 		"bibtex": "@inproceedings{chen2014around,<br>&nbsp; &nbsp; &nbsp; &nbsp;title={Around-body interaction: sensing &amp; interaction techniques for proprioception-enhanced input with mobile devices},<br>&nbsp; &nbsp; &nbsp; &nbsp;author={Chen, XiangAnthony and Schwarz, Julia and Harrison, Chris and Mankoff, Jennifer and Hudson, Scott},<br>&nbsp; &nbsp; &nbsp; &nbsp;booktitle={Proceedings of the 16th international conference on Human-computer interaction with mobile devices &amp; services},<br>&nbsp; &nbsp; &nbsp; &nbsp;pages={287--290},<br>&nbsp; &nbsp; &nbsp; &nbsp;year={2014},<br>&nbsp; &nbsp; &nbsp; &nbsp;organization={ACM}<br>}",
 		"videoId": "142935370",
 		"videoType": "vimeo",
-		"flickr": "",
+		"flickr": "<a data-flickr-embed=true  href=https://www.flickr.com/photos/128588570@N06/albums/72157674813685485 title=2014 Around-Body Interaction><img src=https://c2.staticflickr.com/6/5444/30136577505_54c3234da4.jpg width=500 height=281 alt=2014 Around-Body Interaction></a><script async src=//embedr.flickr.com/assets/client-code.js charset=utf-8></script>",
 		"paperThumbnail": "mhci2014_aroundbody_thumbnail.jpg",
 		"paperUrl": "mhci2014_aroundbody.pdf",
 		"paperInfo": "Xiang ‘Anthony’ Chen, Julia Schwarz, Chris Harrison, Jennifer Mankoff, Scott Hudson (2014). Around-Body Interaction: Sensing & Interaction Techniques for Proprioception-Enhanced Input with Mobile Devices. Proceedings of the 16th international conference on Human-computer interaction with mobile devices and services (MobileHCI 2014). Acceptance Rate: 21.3%."
@@ -148,7 +148,15 @@
 		"name": "Body-Centric",
 		"descp": "A series of exploration of interacting in the space on and around our body.",
 		"venue": "MobileHCI '12",
-		"pageSrc": "page_src/bci.src"
+		"title": "Extending a Mobile Device’s Interaction Space through Body-Centric Interaction",
+		"abstract": "Modern mobile devices rely on the screen as a primary input modality. Yet the small screen real-estate limits interaction possibilities, motivating researchers to explore alternate input techniques. Within this arena, our goal is to develop Body-Centric Interaction with Mobile Devices: a class of input techniques that allow a person to position and orient her mobile device to navigate and manipulate digital content anchored in the space on and around the body. To achieve this goal, we explore such interaction in a bottomup path of prototypes and implementations. From our experiences, as well as by examining related work, we discuss and present three recurring themes that characterize how these interactions can be realized. We illustrate how these themes can inform the design of Body-Centric Interactions by applying them to the design of a novel mobile browser application. Overall, we contribute a class of mobile input techniques where interactions are extended beyond the small screen, and are instead driven by a person’s movement of the device on and around the body.",
+		"bibtex": "@inproceedings{chen2012extending,<br>&nbsp; &nbsp; &nbsp; &nbsp;title={Extending a mobile device's interaction space through body-centric interaction},<br>&nbsp; &nbsp; &nbsp; &nbsp;author={Chen, Xiang'Anthony' and Marquardt, Nicolai and Tang, Anthony and Boring, Sebastian and Greenberg, Saul},<br>&nbsp; &nbsp; &nbsp; &nbsp;booktitle={Proceedings of the 14th international conference on Human-computer interaction with mobile devices and services},<br>&nbsp; &nbsp; &nbsp; &nbsp;pages={151--160},<br>&nbsp; &nbsp; &nbsp; &nbsp;year={2012},<br>&nbsp; &nbsp; &nbsp; &nbsp;organization={ACM}<br>}",
+		"videoId": "31172179",
+		"videoType": "vimeo",
+		"flickr": "<a data-flickr-embed=true  href=https://www.flickr.com/photos/128588570@N06/albums/72157674424983716 title=2012 Body-Centric Interaction><img src=https://c6.staticflickr.com/9/8235/29367841533_707ef50716.jpg width=500 height=281 alt=2012 Body-Centric Interaction></a><script async src=//embedr.flickr.com/assets/client-code.js charset=utf-8></script>",
+		"paperThumbnail": "mhci2012_bci_thumbnail.jpg",
+		"paperUrl": "mhci2012_bci.pdf",
+		"paperInfo": "Xiang ‘Anthony’ Chen, Nicolai Marquardt, Anthony Tang, Sebastian Boring, Saul Greenberg (2012). Extending a Mobile Device’s Interaction Space through Body-Centric Interaction. Proceedings of the 14th international conference on Human-computer interaction with mobile devices and services (MobileHCI 2012) Acceptance Rate: 25%."
 	},
 	{
 		"imgUrl": "tabletstylus_small.jpg",
@@ -162,7 +170,7 @@
 		"name": "Pen+Motion",
 		"descp": "A pen with embedded IMU that supports various techniques and motion gestures.",
 		"venue": "GI '12",
-		"pageSrc": "page_src/penmotion.src"
+		"exturl": "https://kenhinckley.wordpress.com/2013/07/31/paper-motion-and-context-sensing-techniques-for-pen-computing/"
 	},
 	{
 		"imgUrl": "skinbutton_small.jpg",
@@ -182,7 +190,8 @@
 		"imgUrl": "twistnknock_small.jpg",
 		"name": "Twist 'n' Knock",
 		"descp": "A one-handed gesture for smart watches.",
-		"venue": "GI '16"
+		"venue": "GI '16",
+		"exturl": "http://graphicsinterface.org/proceedings/gi2016/gi2016-24/"
 	},
 	{
 		"imgUrl": "fatthumb_small.jpg",
@@ -195,13 +204,31 @@
 		"imgUrl": "spalendar_small.jpg",
 		"name": "Spalendar",
 		"descp": "Visualizing calendar data by showing people moving between places.",
-		"venue": "AVI '12"
+		"venue": "AVI '12",
+		"title": "Spalendar: Visualizing a Group’s Calendar Events over a Geographic Space on a Public Display ",
+		"abstract": "Portable paper calendars (i.e., day planners and organizers) have greatly influenced the design of group electronic calendars. Both use time units (hours/days/weeks/etc.) to organize visuals, with useful information (e.g., event types, locations, attendees) usually presented as - perhaps abbreviated or even hidden - text fields within those time units. The problem is that, for a group, this visual sorting of individual events into time buckets conveys only limited information about the social network of people. For example, people’s whereabouts cannot be read ‘at a glance’ but require examining the text. Our goal is to explore an alternate visualization that can reflect and illustrate group members’ calendar events. Our main idea is to display the group’s calendar events as spatiotemporal activities occurring over a geographic space animated over time, all presented on a highly interactive public display. In particular, our SPALENDAR (SPAtial CALENDAR) design animates peoples’ past, present and forthcoming movements between event locations as well as their static locations. Details of people’s events, their movements and their locations are progressively revealed and controlled by the viewer’s proximity to the display, their identity, and their gestural interactions with it, all of which are tracked by the public display.",
+		"bibtex": "@inproceedings{chen2012spalendar,<br>&nbsp; &nbsp; &nbsp; &nbsp;title={Spalendar: visualizing a group's calendar events over a geographic space on a public display},<br>&nbsp; &nbsp; &nbsp; &nbsp;author={Chen, Xiang'Anthony' and Boring, Sebastian and Carpendale, Sheelagh and Tang, Anthony and Greenberg, Saul},<br>&nbsp; &nbsp; &nbsp; &nbsp;booktitle={Proceedings of the International Working Conference on Advanced Visual Interfaces},<br>&nbsp; &nbsp; &nbsp; &nbsp;pages={689--696},<br>&nbsp; &nbsp; &nbsp; &nbsp;year={2012},<br>&nbsp; &nbsp; &nbsp; &nbsp;organization={ACM}<br>}<br>",
+		"videoId": "31823922",
+		"videoType": "vimeo",
+		"flickr": "",
+		"paperThumbnail": "avi2012_spalendar_thumbnail.jpg",
+		"paperUrl": "avi2012_spalendar.pdf",
+		"paperInfo": "Xiang ‘Anthony’ Chen, Sebastian Boring, Sheelagh Carpendale, Anthony Tang, Saul Greenberg (2012). Spalendar: Spatially Visualizing Group’s Calendar Activities as a Public Interactive Display. Proceedings of the 11th International Working Conference on Advanced Visual Interfaces (AVI 2012)."
 	},
 	{
 		"imgUrl": "maestro_small.jpg",
 		"name": "Maestro",
 		"descp": "Instrumenting IMUs on a user's head, wrist, finger and pocket.",
-		"venue": "Unpublished"
+		"venue": "Unpublished",
+		"title": "Maestro: Sensing Techniques with Multiple Wearables ",
+		"abstract": "We explore techniques that leverage inertial motion sensors in multiple wearable devices distributed over a user’s body, and demonstrate their potential in Maestro, a system for small group co-located presentations. Maestro employs multiple wearables to respond in contextually-appropriate ways to the posture, relative body orientation, and hand gestures of the presenter in relation to a situated touch display. For example, users can knock on the display (sensed by the correspondence of wrist motion and touch events on the screen) to retrieve personal slide decks. Users can stand to the left or right side of the display (inferred from head and body orientation), which automatically summons pen mark-up tools nearby. Users can also gesture at the display to spotlight areas of the slide. Informed by our observations of body language during presentations, these techniques complement existing vision-based approaches, and illuminate new interaction possibilities that uniquely leverage the collective sensing capabilities of multiple wearables. Maestro explores a mobile means of inferring users’ naturally-occurring actions and behaviors—without resorting to environmentally situated modalities—to enhance the flow of co-located presentations.",
+		"bibtex": "@inproceedings{chen2014maestro,<br>&nbsp; &nbsp; &nbsp; &nbsp;title={Maestro: Sensing Techniques with Multiple Wearables},<br>&nbsp; &nbsp; &nbsp; &nbsp;author={Chen, XiangAnthony and Hinkley, Ken and Pahud, Michel and Buxton, Bill},<br>&nbsp; &nbsp; &nbsp; &nbsp;year={2014},<br>&nbsp; &nbsp; &nbsp; &nbsp;organization={Unpublished}<br>}<br>",
+		"videoId": "185710610",
+		"videoType": "vimeo",
+		"flickr": "<a data-flickr-embed=true  href=https://www.flickr.com/photos/128588570@N06/albums/72157671376270794 title=2014 Maestro><img src=https://c6.staticflickr.com/8/7473/29509749493_ba52f51635.jpg width=500 height=143 alt=2014 Maestro></a><script async src=//embedr.flickr.com/assets/client-code.js charset=utf-8></script>",
+		"paperThumbnail": "unpublished_maestro_thumbnail.jpg",
+		"paperUrl": "unpublished_maestro.pdf",
+		"paperInfo": "Xiang 'Anthony' Chen, Ken Hinckley, Michel Pahud, Bill Buxton (2014). Maestro: Sensing Techniques with Multiple Wearables. Unpublished paper."
 	}
 	],
 
@@ -217,14 +244,30 @@
 		"name": "VizLens",
 		"descp": "A screen reader for physical interfaces based on crowd-labeld information.",
 		"venue": "UIST '16",
-		"youtubeId": "hjCf-G51FWM"
+		"title": "VizLens: A Robust and Interactive Screen Reader<br/> for Interfaces in the Real World",
+		"abstract": "The world is full of physical interfaces that are inaccessible to blind people, from microwaves and information kiosks to thermostats and checkout terminals. Blind people cannot in­dependently use such devices without at least ﬁrst learning their layout, and usually only after labeling them with sighted assistance. We introduce VizLens —an accessible mobile ap­plication and supporting backend that can robustly and inter­actively help blind people use nearly any interface they en­counter. VizLens users capture a photo of an inaccessible interface and send it to multiple crowd workers, who work in parallel to quickly label and describe elements of the inter­face to make subsequent computer vision easier. The VizLens application helps users recapture the interface in the ﬁeld of the camera, and uses computer vision to interactively describe the part of the interface beneath their ﬁnger (updating 8 times per second). We show that VizLens provides accurate and usable real-time feedback in a study with 10 blind partici­pants, and our crowdsourcing labeling workﬂow was fast (8 minutes), accurate (99.7%), and cheap ($1.15). We then ex­plore extensions of VizLens that allow it to (i) adapt to state changes in dynamic interfaces, (ii) combine crowd labeling with OCR technology to handle dynamic displays, and (iii) beneﬁt from head-mounted cameras. VizLens robustly solves a long-standing challenge in accessibility by deeply integrat­ing crowdsourcing and computer vision, and foreshadows a future of increasingly powerful interactive applications that would be currently impossible with either alone.",
+		"bibtex": "@inproceedings {vizlens,<br>&nbsp; &nbsp; &nbsp; &nbsp;author={Guo, A., Chen, A., Qi, H., White, S., Ghosh, S., Asakawa, C., and Bigham, J.P.},<br>&nbsp; &nbsp; &nbsp; &nbsp;title={VizLens: A Robust and Interactive Screen Reader for Interfaces in the Real World},<br>&nbsp; &nbsp; &nbsp; &nbsp;booktitle={Proceedings of the ACM Symposium on User Interface Software and Technology (UIST 2016)},<br>&nbsp; &nbsp; &nbsp; &nbsp;year={2016},<br>&nbsp; &nbsp; &nbsp; &nbsp;keywords={non-visual interfaces, visually impaired users, accessibility, crowdsourcing, computer vision, mobile devices, vizwiz},<br>}<br>",
+		"videoId": "hjCf-G51FWM",
+		"videoType": "youtube",
+		"flickr": "",
+		"paperThumbnail": "uist2016_vizlens_thumbnail.jpg",
+		"paperUrl": "uist2016_vizlens.pdf",
+		"paperInfo": "Anhong Guo, Xiang ‘Anthony’ Chen, Haoran Qi, Samuel White, Suman Ghosh, Chieko Asakawa, Jeffrey Bigham (2016). VizLens: A Robust and Interactive Screen Reader for Interfaces in the Real World. To appear at the 29th Annual ACM Symposium on User Interface Software and Technology (UIST 2016) Acceptance Rate: 20.6%."
 	},
 	{
 		"imgUrl": "snaptoit_small.jpg",
 		"name": "Snap to It",
 		"descp": "Take a picture of an appliance and control it from your smart phone.",
 		"venue": "CHI '16",
-		"vimeoId": "154829664"
+		"title": "Snap-To-It: A User-Inspired Platform<br/> for Opportunistic Device Interactions",
+		"abstract": "The ability to quickly interact with any nearby appliance from a mobile device would allow people to perform a wide range of one-time tasks (e.g., printing a document in an unfamiliar ofﬁce location). However, users currently lack this capability, and must instead manually conﬁgure their devices for each appliance they want to use. To address this problem, we cre-ated Snap-To-It, a system that allows users to opportunistically interact with any appliance simply by taking a picture of it. Snap-To-It shares the image of the appliance a user wants to interact with over a local area network. Appliances then analyze this image (along with the user’s location and device orientation) to see if they are being “selected,” and deliver the corresponding control interface to the user’s mobile device. Snap-To-It’s design was informed by two technology probes that explored how users would like to select and interact with appliances using their mobile phone. These studies highlighted the need to be able to select hardware and software via a cam-era, and identiﬁed several novel use cases not supported by existing systems (e.g., interacting with disconnected objects, transferring settings between appliances). In this paper, we show how Snap-To-It’s design is informed by our probes and how developers can utilize our system. We then show that Snap-To-It can identify appliances with over 95.3% accuracy, and demonstrate through a two-month deployment that our approach is robust to gradual changes to the environment.",
+		"bibtex": "@inproceedings{de2016snap,<br>&nbsp; &nbsp; &nbsp; &nbsp;title={Snap-to-it: a user-inspired platform for opportunistic device interactions},<br>&nbsp; &nbsp; &nbsp; &nbsp;author={de Freitas, A and Nebeling, Michael and Chen, XiangAnthony and Yang, Junrui and Ranithangam, ASKK and Dey, Anind K},<br>&nbsp; &nbsp; &nbsp; &nbsp;booktitle={Proceedings of the 34th Annual ACM Conference on Human Factors in Computing Systems (CHI 2016)},<br>&nbsp; &nbsp; &nbsp; &nbsp;year={2016}<br>}<br>",
+		"videoId": "154829664",
+		"videoType": "vimeo",
+		"flickr": "",
+		"paperThumbnail": "chi2016_snaptoit_thumbnail.jpg",
+		"paperUrl": "chi2016_snaptoit.pdf",
+		"paperInfo": "Adrian de Freitas, Michael Nebeling, Xiang ‘Anthony’ Chen, Junrui Yang, Akshaye Shreenithi Kirupa Karthikeyan Ranithangam, Anind Day (2016). Snap-To-It: A User-Inspired Platform for Opportunistic Device Interactions. To appear at the 34th SIGCHI Conference on Human Factors in Computing Systems (CHI 2016). Acceptance Rate: 23.4%."
 	}
 	],
 
