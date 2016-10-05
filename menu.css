@@ -160,9 +160,14 @@ body{
 .imgpaper {
 	width: 50px;
 	border: 1px solid grey;
-} 
+}
 
 .tdpubinfo {
 	text-align: justify;
 	vertical-align: top;
+}
+
+::-webkit-scrollbar {
+    width: 0px;  /* remove scrollbar space */
+    background: transparent;  /* optional: just make scrollbar invisible */
 }
