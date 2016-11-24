@@ -25,6 +25,34 @@ ul {
 	margin: 5px;
 }
 
+/* unvisited link */
+a:link {
+	color: #000000;
+    border-bottom: 1px dotted #000;
+    text-decoration: none;
+}
+
+/* visited link */
+a:visited {
+	color: #000000;
+    border-bottom: 1px dotted #000;
+    text-decoration: none;
+}
+
+/* mouse over link */
+a:hover {
+	color: #888888;
+    border-bottom: 1px dotted #000;
+    text-decoration: none;
+}
+
+/* selected link */
+a:active {
+	color: #000000;
+    border-bottom: 1px dotted #000;
+    text-decoration: none;
+}
+
 /*
 	main page menu
 */
