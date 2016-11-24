@@ -16,8 +16,13 @@ h3 {
 }
 
 body{
-	font-family: 'Lora', serif;
+	/*font-family: 'Lora', serif;*/
+	font-family: 'Alegreya', serif;
 	font-size: 10pt;
+}
+
+ul {
+	margin: 5px;
 }
 
 /*
@@ -25,7 +30,7 @@ body{
 */
 .intro{
 	float: center;
-	text-align: center;
+	text-align: left;
 	margin-top: 2%;
 	margin-left: 8%;
 	margin-right: 8%;
