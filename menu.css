@@ -169,11 +169,13 @@ a:active {
 }
 
 #tabPub {
+	font-family: 'Alegreya', serif;
 	font-size: 9pt;
 	color: #888888;
 }
 
 #tabBib {
+	font-family: 'Alegreya', serif;
 	font-size: 9pt;
 	color: #888888;
 	line-height: 150%;
