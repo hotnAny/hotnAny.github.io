@@ -1,6 +1,6 @@
 {
 	"imgServer": "https://dl.dropboxusercontent.com/u/11174959/web-images/",
-	"docServer": "https://dl.dropboxusercontent.com/u/11174959/web-docs/",
+	"docServer": "",
 	"fabrication":[
 	{
 		"imgUrl": "forte_inprogess_small.jpg",
@@ -12,7 +12,15 @@
 		"imgUrl": "facade_small.jpg",
 		"name": "Fa&ccedil;ade",
 		"descp": "Making appliances accessible with 3D printed Braille buttons.",
-		"venue": "CHI '17"
+		"videoId": "Tz1kt1gf7v4",
+		"videoType": "youtube",
+		"title": "Facade: Auto-generating Tactile Interfaces to Appliances",
+		"abstract": "In this paper, we describe Reprise--a design tool for specifying, generating, customizing and fitting adaptations onto existing household objects. Reprise allows users to express at a high level what type of action is applied to an object.  Based on this high level specification, Reprise automatically generates adaptations. Users can use simple sliders to customize the adaptations to better suit their particular needs and preferences, such as increasing the tightness for gripping, enhancing torque for rotation, or making a larger base for stability. Finally, Reprise provides a toolkit of fastening methods and support structures for fitting the adaptations onto existing objects.",
+		"bibtex": "@inproceedings {vizlens,<br>&nbsp; &nbsp; &nbsp; &nbsp;author={Guo, A., Chen, A., Qi, H., White, S., Ghosh, S., Asakawa, C., and Bigham, J.P.},<br>&nbsp; &nbsp; &nbsp; &nbsp;title={VizLens: A Robust and Interactive Screen Reader for Interfaces in the Real World},<br>&nbsp; &nbsp; &nbsp; &nbsp;booktitle={Proceedings of the ACM Symposium on User Interface Software and Technology (UIST 2016)},<br>&nbsp; &nbsp; &nbsp; &nbsp;year={2016},<br>&nbsp; &nbsp; &nbsp; &nbsp;keywords={non-visual interfaces, visually impaired users, accessibility, crowdsourcing, computer vision, mobile devices, vizwiz},<br>}<br>",
+		"venue": "CHI '17",
+		"paperThumbnail": "chi2017_facade_thumbnail.jpg",
+		"paperUrl": "https://www.dropbox.com/s/xc9mywdkb6c8zvw/chi2017_facade.pdf?dl=0",
+		"paperInfo": "Anhong Guo, Xiang 'Anthony' Chen, Haoran Qi, Samuel White, Suman Ghosh, Chieko Asakawa, Jeffrey Bigham. Facade: Auto-generating Tactile Interfaces to Appliances. Proceedings of the 35th SIGCHI Conference on Human Factors in Computing Systems (CHI 2017)."
 	},
 	{
 		"imgUrl": "reprise_small.jpg",
@@ -26,7 +34,7 @@
 		"bibtex": "@inproceedings{chen2016reprise,<br>&nbsp; &nbsp; &nbsp; &nbsp;title={Reprise: A Design Tool for Specifying, Generating, and Customizing 3D Printable Adaptations on Everyday Objects},<br>&nbsp; &nbsp; &nbsp; &nbsp;author={Chen, XiangAnthony and Kim, Jeeeun and Mankoff, Jennifer and Grossman, Tovi and Coros, Stelian and Hudson, Scott E},<br>&nbsp; &nbsp; &nbsp; &nbsp;booktitle={the 29th Annual ACM Symposium on User Interface Software and Technology},<br>&nbsp; &nbsp; &nbsp; &nbsp;year={2016},<br>&nbsp; &nbsp; &nbsp; &nbsp;organization={ACM}<br>}",
 		"flickr": "<a data-flickr-embed=true  href=https://www.flickr.com/photos/128588570@N06/albums/72157674285753686 title=2016 Reprise><img src=https://c8.staticflickr.com/6/5773/29927413495_3f08192229.jpg width=500 height=281 alt=2016 Reprise></a><script async src=//embedr.flickr.com/assets/client-code.js charset=utf-8></script>",
 		"paperThumbnail": "uist2016_reprise_thumbnail.jpg",
-		"paperUrl": "uist2016_reprise.pdf",
+		"paperUrl": "https://www.dropbox.com/s/on9ltbgpnwo6df8/uist2016_reprise.pdf?dl=0",
 		"paperInfo": "Xiang ‘Anthony’ Chen, Jeeeun Kim, Jennifer Mankoff, Tovi Grossman, Stelian Coros, Scott Hudson (2016). Reprise: A Design Tool for Specifying, Generating, and Customizing 3D Printable Adaptations on Everyday Objects. Proceedings of the 29th Annual ACM Symposium on User Interface Software and Technology (UIST 2016) Acceptance Rate: 20.6%."
 	},
 	{
@@ -41,7 +49,7 @@
 		"bibtex": "@inproceedings{chen2015encore,<br>&nbsp; &nbsp;title={Encore: 3D printed augmentation of everyday objects with printed-over, affixed and interlocked attachments},<br>&nbsp; &nbsp;author={Chen, XiangAnthony and Coros, Stelian and Mankoff, Jennifer and Hudson, Scott E},<br>&nbsp; &nbsp;booktitle={Proceedings of the 28th Annual ACM Symposium on User Interface Software and Technology},<br>&nbsp; &nbsp;pages={73--82},<br>&nbsp; &nbsp;year={2015},<br>&nbsp; &nbsp;organization={ACM}<br>}",
 		"flickr": "<a data-flickr-embed='true'  href='https://www.flickr.com/photos/128588570@N06/albums/72157670690945024' title='2015 Encore'><img src='https://c1.staticflickr.com/8/7719/29123408504_e45b311991.jpg' width='500' height='281' alt='2015 Encore'></a><script async src='//embedr.flickr.com/assets/client-code.js' charset='utf-8'></script>",
 		"paperThumbnail": "uist2015_encore_thumbnail.jpg",
-		"paperUrl": "uist2015_encore.pdf",
+		"paperUrl": "https://www.dropbox.com/s/rggynu7m7ovg4uj/uist2015_encore.pdf?dl=0",
 		"paperInfo": "Xiang ‘Anthony’ Chen, Stelian Coros, Jennifer Mankoff, Scott Hudson (2015). Encore: 3D Printed Augmentation of Everyday Objects with Printed-Over, Affixed and Interlocked Attachments. Proceedings of the 28th Annual ACM Symposium on User Interface Software and Technology (UIST 2015) Acceptance Rate: 23.6%."
 	},
 	{
@@ -66,7 +74,7 @@
 		"videoType": "vimeo",
 		"flickr": "<a data-flickr-embed=true  href=https://www.flickr.com/photos/128588570@N06/albums/72157672834628310 title=2014 Duet><img src=https://c7.staticflickr.com/9/8292/29733093246_d876747ef6.jpg width=500 height=281 alt=2014 Duet></a><script async src=//embedr.flickr.com/assets/client-code.js charset=utf-8></script>",
 		"paperThumbnail": "chi2014_duet_thumbnail.jpg",
-		"paperUrl": "chi2014_duet.pdf",
+		"paperUrl": "https://www.dropbox.com/s/i63ivpl9bqg8leq/chi2014_duet.pdf?dl=0",
 		"paperInfo": "Xiang ‘Anthony’ Chen, Tovi Grossman, Daniel Wigdor, George Fitzmaurice (2014). Duet: Exploring Joint Interactions on a Smart Phone and a Smart Watch. Proceedings of the 32nd SIGCHI Conference on Human Factors in Computing Systems (CHI 2014). Acceptance Rate: 22.8%.  Best Paper Award 🏆"
 	},
 	{
@@ -81,7 +89,7 @@
 		"bibtex": "@inproceedings{chen2014air+,<br>&nbsp; &nbsp;title={Air+ touch: interweaving touch and in-air gestures},<br>&nbsp; &nbsp;author={Chen, XiangAnthony and Schwarz, Julia and Harrison, Chris and Mankoff, Jennifer and Hudson, Scott E},<br>&nbsp; &nbsp;booktitle={Proceedings of the 27th annual ACM symposium on User interface software and technology},<br>&nbsp; &nbsp;pages={519--525},<br>&nbsp; &nbsp;year={2014},<br>&nbsp; &nbsp;organization={ACM}<br>}",
 		"flickr": "<a data-flickr-embed=true  href=https://www.flickr.com/photos/128588570@N06/albums/72157670702717043 title=2014 Air+Touch><img src=https://c6.staticflickr.com/9/8137/29669237661_fc86b7af09.jpg width=500 height=281 alt=2014 Air+Touch></a><script async src=//embedr.flickr.com/assets/client-code.js charset=utf-8></script>",
 		"paperThumbnail": "uist2014_airtouch_thumbnail.jpg",
-		"paperUrl": "uist2014_airtouch.pdf",
+		"paperUrl": "https://www.dropbox.com/s/0tf6l2yhdw9plb2/uist2014_airtouch.pdf?dl=0",
 		"paperInfo": "Xiang ‘Anthony’ Chen, Julia Schwarz, Chris Harrison, Jennifer Mankoff, Scott Hudson (2014). Air+Touch: Interweaving Touch & In-Air Gestures. Proceedings of the 27th Annual ACM Symposium on User Interface Software and Technology (UIST 2014) Acceptance Rate: 22.2%."
 	},
 	{
@@ -96,7 +104,7 @@
 		"videoType": "vimeo",
 		"flickr": "<a data-flickr-embed=true  href=https://www.flickr.com/photos/128588570@N06/albums/72157674290832196 title=2014 Swipeboard><img src=https://c4.staticflickr.com/9/8365/29930321315_41a5764c70.jpg width=500 height=281 alt=2014 Swipeboard></a><script async src=//embedr.flickr.com/assets/client-code.js charset=utf-8></script>",
 		"paperThumbnail": "uist2014_swipeboard_thumbnail.jpg",
-		"paperUrl": "uist2014_swipeboard.pdf",
+		"paperUrl": "https://www.dropbox.com/s/66murnflu0yfp2h/uist2014_swipeboard.pdf?dl=0",
 		"paperInfo": "Xiang ‘Anthony’ Chen, Tovi Grossman, George Fitzmaurice (2014). Swipeboard: A Text Entry Technique for Ultra-Small Interfaces That Supports Novice to Expert Transitions. Proceedings of the 27th Annual ACM Symposium on User Interface Software and Technology (UIST 2014) Acceptance Rate: 22.2%."
 	},
 	{
@@ -110,7 +118,7 @@
 		"videoId": "hN3zPVXQjTI",
 		"videoType": "youtube",
 		"paperThumbnail": "mhci2015_swipeglass_thumbnail.jpg",
-		"paperUrl": "mhci2015_swipeglass.pdf",
+		"paperUrl": "https://www.dropbox.com/s/59o62k9btlirc5s/mhci2015_swipeglass.pdf?dl=0",
 		"paperInfo": "Tovi Grossman, Xiang ‘Anthony’ Chen, George Fitzmaurice (2015). Typing on Glasses: Adapting Text Entry to Smart Eyewear. Proceedings of the 17th international conference on Human-computer interaction with mobile devices and services (MobileHCI 2015). Acceptance Rate: 25.2%."
 	},
 	{
@@ -125,7 +133,7 @@
 		"videoType": "vimeo",
 		"flickr": "<a data-flickr-embed=true  href=https://www.flickr.com/photos/128588570@N06/albums/72157671061225703 title=2016 Locus><img src=https://c2.staticflickr.com/9/8330/29954827545_be15149c02.jpg width=500 height=281 alt=2016 Locus></a><script async src=//embedr.flickr.com/assets/client-code.js charset=utf-8></script>",
 		"paperThumbnail":"uist2016_locus_thumbnail.jpg",
-		"paperUrl": "uist2016_locus.pdf",
+		"paperUrl": "https://www.dropbox.com/s/atguws31wg62s28/uist2016_locus.pdf?dl=0",
 		"paperInfo": "Xiang 'Anthony' Chen, Yang Li (2016). Bootstrapping User-Defined Body Tapping Recognition with Offline-Learned Probabilistic Representation. Proceedings of the 29th Annual ACM Symposium on User Interface Software and Technology (UIST 2016) Acceptance Rate: 20.6%."
 	},
 	{
@@ -140,7 +148,7 @@
 		"videoType": "vimeo",
 		"flickr": "<a data-flickr-embed=true  href=https://www.flickr.com/photos/128588570@N06/albums/72157674813685485 title=2014 Around-Body Interaction><img src=https://c2.staticflickr.com/6/5444/30136577505_54c3234da4.jpg width=500 height=281 alt=2014 Around-Body Interaction></a><script async src=//embedr.flickr.com/assets/client-code.js charset=utf-8></script>",
 		"paperThumbnail": "mhci2014_aroundbody_thumbnail.jpg",
-		"paperUrl": "mhci2014_aroundbody.pdf",
+		"paperUrl": "https://www.dropbox.com/s/s4by7sh9fcp3jlz/mhci2014_aroundbody.pdf?dl=0",
 		"paperInfo": "Xiang ‘Anthony’ Chen, Julia Schwarz, Chris Harrison, Jennifer Mankoff, Scott Hudson (2014). Around-Body Interaction: Sensing & Interaction Techniques for Proprioception-Enhanced Input with Mobile Devices. Proceedings of the 16th international conference on Human-computer interaction with mobile devices and services (MobileHCI 2014). Acceptance Rate: 21.3%."
 	},
 	{
@@ -155,7 +163,7 @@
 		"videoType": "vimeo",
 		"flickr": "<a data-flickr-embed=true  href=https://www.flickr.com/photos/128588570@N06/albums/72157674424983716 title=2012 Body-Centric Interaction><img src=https://c6.staticflickr.com/9/8235/29367841533_707ef50716.jpg width=500 height=281 alt=2012 Body-Centric Interaction></a><script async src=//embedr.flickr.com/assets/client-code.js charset=utf-8></script>",
 		"paperThumbnail": "mhci2012_bci_thumbnail.jpg",
-		"paperUrl": "mhci2012_bci.pdf",
+		"paperUrl": "https://www.dropbox.com/s/qe7btp0v8nxxd41/mhci2012_bci.pdf?dl=0",
 		"paperInfo": "Xiang ‘Anthony’ Chen, Nicolai Marquardt, Anthony Tang, Sebastian Boring, Saul Greenberg (2012). Extending a Mobile Device’s Interaction Space through Body-Centric Interaction. Proceedings of the 14th international conference on Human-computer interaction with mobile devices and services (MobileHCI 2012) Acceptance Rate: 25%."
 	},
 	{
@@ -212,7 +220,7 @@
 		"videoType": "vimeo",
 		"flickr": "",
 		"paperThumbnail": "avi2012_spalendar_thumbnail.jpg",
-		"paperUrl": "avi2012_spalendar.pdf",
+		"paperUrl": "https://www.dropbox.com/s/koypzyl1pdm1782/avi2012_spalendar.pdf?dl=0",
 		"paperInfo": "Xiang ‘Anthony’ Chen, Sebastian Boring, Sheelagh Carpendale, Anthony Tang, Saul Greenberg (2012). Spalendar: Spatially Visualizing Group’s Calendar Activities as a Public Interactive Display. Proceedings of the 11th International Working Conference on Advanced Visual Interfaces (AVI 2012)."
 	},
 	{
@@ -227,7 +235,7 @@
 		"videoType": "vimeo",
 		"flickr": "<a data-flickr-embed=true  href=https://www.flickr.com/photos/128588570@N06/albums/72157671376270794 title=2014 Maestro><img src=https://c5.staticflickr.com/9/8418/29843197740_578844cda6.jpg width=500 height=281 alt=2014 Maestro></a><script async src=//embedr.flickr.com/assets/client-code.js charset=utf-8></script>",
 		"paperThumbnail": "unpublished_maestro_thumbnail.jpg",
-		"paperUrl": "unpublished_maestro.pdf",
+		"paperUrl": "https://www.dropbox.com/s/60et83pzcrqevwd/unpublished_maestro.pdf?dl=0",
 		"paperInfo": "Xiang 'Anthony' Chen, Ken Hinckley, Michel Pahud, Bill Buxton (2014). Maestro: Sensing Techniques with Multiple Wearables. Unpublished paper."
 	}
 	],
@@ -251,7 +259,7 @@
 		"videoType": "youtube",
 		"flickr": "",
 		"paperThumbnail": "uist2016_vizlens_thumbnail.jpg",
-		"paperUrl": "uist2016_vizlens.pdf",
+		"paperUrl": "https://www.dropbox.com/s/qiq9jbpffze125h/uist2016_vizlens.pdf?dl=0",
 		"paperInfo": "Anhong Guo, Xiang ‘Anthony’ Chen, Haoran Qi, Samuel White, Suman Ghosh, Chieko Asakawa, Jeffrey Bigham (2016). VizLens: A Robust and Interactive Screen Reader for Interfaces in the Real World. To appear at the 29th Annual ACM Symposium on User Interface Software and Technology (UIST 2016) Acceptance Rate: 20.6%."
 	},
 	{
@@ -267,7 +275,7 @@
 		"flickr": "",
 		"paperThumbnail": "chi2016_snaptoit_thumbnail.jpg",
 		"paperUrl": "chi2016_snaptoit.pdf",
-		"paperInfo": "Adrian de Freitas, Michael Nebeling, Xiang ‘Anthony’ Chen, Junrui Yang, Akshaye Shreenithi Kirupa Karthikeyan Ranithangam, Anind Day (2016). Snap-To-It: A User-Inspired Platform for Opportunistic Device Interactions. To appear at the 34th SIGCHI Conference on Human Factors in Computing Systems (CHI 2016). Acceptance Rate: 23.4%."
+		"paperInfo": "Adrian de Freitas, Michael Nebeling, Xiang ‘Anthony’ Chen, Junrui Yang, Akshaye Shreenithi Kirupa Karthikeyan Ranithangam, Anind Dey (2016). Snap-To-It: A User-Inspired Platform for Opportunistic Device Interactions. To appear at the 34th SIGCHI Conference on Human Factors in Computing Systems (CHI 2016). Acceptance Rate: 23.4%."
 	}
 	],
 
