@@ -3,9 +3,10 @@
 	"docServer": "",
 	"fabrication":[
 	{
-		"imgUrl": "forte_inprogess_small.jpg",
+		"imgUrl": "forte.jpg",
 		"name": "Fort&eacute;",
 		"descp": "Generative design that combines user sketching and topology optimization.",
+		"exturl": "https://www.dropbox.com/s/4bg2fr4vw5ietba/_in_review_forte.mp4?dl=0",
 		"venue": "In progress"
 	},
 	{
@@ -245,6 +246,15 @@
 		"imgUrl": "improv_small.jpg",
 		"name": "Improv",
 		"descp": "An input framework for users to create cross-device gestures.",
+		"title": "Improv: An Input Framework for Improvising Cross-Device Interaction by Demonstration",
+		"abstract": "As computing devices become increasingly ubiquitous, it is now possible to combine the unique capabilities of different devices or Internet of Things to accomplish a task. However, there is currently a high technical barrier for creating cross-device interaction. This is especially challenging for end users who have limited technical expertise—end users would greatly benefit from custom cross-device interaction that best suits their needs. In this article, we present Improv, a cross-device input framework that allows a user to easily leverage the capability of additional devices to create new input methods for an existing, unmodified application, e.g., creating custom gestures on a smartphone to control a desktop presentation application. Instead of requiring developers to anticipate and program these cross-device behaviors in advance, Improv enables end users to improvise them on the fly by simple demonstration, for their particular needs and devices at hand. We showcase a range of scenarios where Improv is used to create a diverse set of useful cross-device input. Our study with 14 participants indicated that on average it took a participant 10 seconds to create a cross-device input technique. In addition, Improv achieved 93.7% accuracy in interpreting user demonstration of a target UI behavior by looking at the raw input events from a single example.",
+		"bibtex":"@article{chen2017improv,<br>&nbsp; &nbsp; &nbsp; &nbsp;title={Improv: An Input Framework for Improvising Cross-Device Interaction by Demonstration},<br>&nbsp; &nbsp; &nbsp; &nbsp;author={Chen, Xiang‘Anthony’ and Li, Yang},<br>&nbsp; &nbsp; &nbsp; &nbsp;journal={ACM Transactions on Computer-Human Interaction (TOCHI)},<br>&nbsp; &nbsp; &nbsp; &nbsp;volume={24},<br>&nbsp; &nbsp; &nbsp; &nbsp;number={2},<br>&nbsp; &nbsp; &nbsp; &nbsp;pages={15},<br>&nbsp; &nbsp; &nbsp; &nbsp;year={2017},<br>&nbsp; &nbsp; &nbsp; &nbsp;publisher={ACM}<br>}",
+		"videoId": "216769849",
+		"videoType": "vimeo",
+		"flickr": "",
+		"paperThumbnail": "tochi17_improv_thumbnail.jpg",
+		"paperUrl": "https://www.dropbox.com/s/tvv5oldmakue3rh/tochi2017_improv.pdf?dl=0",
+		"paperInfo": "Xiang ‘Anthony’ Chen, Yang Li. Improv: An Input Framework for Improvising Cross-Device InteractionBy Demonstration.ACM TOCHI, 24(2), 15",
 		"venue": "TOCHI '17"
 	},
 	{
