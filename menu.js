@@ -30,9 +30,9 @@
  		col = 3;
  	}
 
- 	$('.menu').css('column-count', col);
- 	$('.menu').css('-moz-column-count', col);
- 	$('.menu').css('-webkit-column-count', col);
+ 	$('#divMenu').css('column-count', col);
+ 	$('#divMenu').css('-moz-column-count', col);
+ 	$('#divMenu').css('-webkit-column-count', col);
  }
 
  var divPages = [];
@@ -42,10 +42,10 @@
 
  var imgServer, docServer;
  var thbnServer = 'images/'
+ var brBreak = $('<br/><br/>');
 
  $(document).ready(function() {
  	$(window).resize(function() {
- 		// console.log($(window).width())
  		checkResponsiveness();
  	});
 
@@ -53,32 +53,36 @@
  		menuObj = JSON.parse(text);
  	})
 
- 	// console.log(menuObj)
-
  	imgServer = menuObj.imgServer;
  	docServer = menuObj.docServer;
 
- 	$('.menu').append(makeTitle('FABITIZERS'));
+ 	$('#divMenu').append(makeTitle('★ HOUSE SPECIALS ★'));
+ 	for (var i = 0; i < menuObj.specials.length; i++) {
+ 		$('#divMenu').append(makeItem(menuObj.specials[i]));
+ 	}
+
+ 	$('#divMenu').append(brBreak.clone());
+ 	$('#divMenu').append(makeTitle('FABITIZERS'));
  	for (var i = 0; i < menuObj.fabrication.length; i++) {
- 		$('.menu').append(makeItem(menuObj.fabrication[i]));
+ 		$('#divMenu').append(makeItem(menuObj.fabrication[i]));
  	}
 
- 	$('.menu').append($('<br/><br/>'));
- 	$('.menu').append(makeTitle('ENTR&Eacute;ERACTION TECHNIQUES'));
+ 	$('#divMenu').append(brBreak.clone());
+ 	$('#divMenu').append(makeTitle('ENTR&Eacute;ERACTION TECHNIQUES'));
  	for (var i = 0; i < menuObj.interactiontechniques.length; i++) {
- 		$('.menu').append(makeItem(menuObj.interactiontechniques[i]));
+ 		$('#divMenu').append(makeItem(menuObj.interactiontechniques[i]));
  	}
 
- 	$('.menu').append($('<br/><br/>'));
- 	$('.menu').append(makeTitle('DISSERNET OF THINGS'));
+ 	$('#divMenu').append(brBreak.clone());
+ 	$('#divMenu').append(makeTitle('DISSERNET OF THINGS'));
  	for (var i = 0; i < menuObj.internetofthings.length; i++) {
- 		$('.menu').append(makeItem(menuObj.internetofthings[i]));
+ 		$('#divMenu').append(makeItem(menuObj.internetofthings[i]));
  	}
 
- 	$('.menu').append($('<br/><br/>'));
- 	$('.menu').append(makeTitle('SIDES'));
+ 	$('#divMenu').append(brBreak.clone());
+ 	$('#divMenu').append(makeTitle('SIDES'));
  	for (var i = 0; i < menuObj.sideprojects.length; i++) {
- 		$('.menu').append(makeItem(menuObj.sideprojects[i]));
+ 		$('#divMenu').append(makeItem(menuObj.sideprojects[i]));
  	}
 
  	checkResponsiveness();

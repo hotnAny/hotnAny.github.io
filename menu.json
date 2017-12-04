@@ -1,6 +1,60 @@
 {
 	"imgServer": "https://dl.dropboxusercontent.com/u/11174959/web-images/",
 	"docServer": "",
+	"specials":[
+	{
+		"imgUrl": "forte.jpg",
+		"name": "Fort&eacute;",
+		"descp": "Generative design that combines user sketching and topology optimization.",
+		"exturl": "https://www.dropbox.com/s/4bg2fr4vw5ietba/_in_review_forte.mp4?dl=0",
+		"venue": "In progress"
+	},
+	{
+		"imgUrl": "duet_small.jpg",
+		"name": "Duet",
+		"descp": "Joint interaction between a smart phone and a smart watch.",
+		"title": "Duet: Joint Interaction Between a Smart Phone and a Smart Watch",
+		"venue": "★ CHI '14",
+		"abstract": "The emergence of smart devices (e.g., smart watches and smart eyewear) is redefining mobile interaction from the solo performance of a smart phone, to a symphony of multiple devices. In this paper, we present Duet – an interactive system that explores a design space of interactions between a smart phone and a smart watch. Based on the devices’ spatial configurations, Duet coordinates their motion and touch input, and extends their visual and tactile output to one another. This transforms the watch into an active element that enhances a wide range of phone-based interactive tasks, and enables a new class of multi-device gestures and sensing techniques. A technical evaluation shows the accuracy of these gestures and sensing techniques, and a subjective study on Duet provides insights, observations, and guidance for future work. ",
+		"bibtex": "@inproceedings{chen2014duet,<br>&nbsp; &nbsp; &nbsp; &nbsp;title={Duet: exploring joint interactions on a smart phone and a smart watch},<br>&nbsp; &nbsp; &nbsp; &nbsp;author={Chen, XiangAnthony and Grossman, Tovi and Wigdor, Daniel J and Fitzmaurice, George},<br>&nbsp; &nbsp; &nbsp; &nbsp;booktitle={Proceedings of the SIGCHI Conference on Human Factors in Computing Systems},<br>&nbsp; &nbsp; &nbsp; &nbsp;pages={159--168},<br>&nbsp; &nbsp; &nbsp; &nbsp;year={2014},<br>&nbsp; &nbsp; &nbsp; &nbsp;organization={ACM}<br>}",
+		"videoId": "81358039",
+		"videoType": "vimeo",
+		"flickr": "<a data-flickr-embed=true  href=https://www.flickr.com/photos/128588570@N06/albums/72157672834628310 title=2014 Duet><img src=https://c7.staticflickr.com/9/8292/29733093246_d876747ef6.jpg width=500 height=281 alt=2014 Duet></a><script async src=//embedr.flickr.com/assets/client-code.js charset=utf-8></script>",
+		"paperThumbnail": "chi2014_duet_thumbnail.jpg",
+		"paperUrl": "https://www.dropbox.com/s/i63ivpl9bqg8leq/chi2014_duet.pdf?dl=0",
+		"paperInfo": "Xiang ‘Anthony’ Chen, Tovi Grossman, Daniel Wigdor, George Fitzmaurice (2014). Duet: Exploring Joint Interactions on a Smart Phone and a Smart Watch. Proceedings of the 32nd SIGCHI Conference on Human Factors in Computing Systems (CHI 2014). Acceptance Rate: 22.8%.  Best Paper Award 🏆"
+	},
+	{
+		"imgUrl": "air_touch_small.jpg",
+		"name": "Air+Touch",
+		"descp": "Combining In-Air Gesture and Touch Input Above Mobile Devices.",
+		"title": "Air+ touch: interweaving touch and in-air gestures",
+		"venue": "UIST '14",
+		"videoId": "92972949",
+		"videoType": "vimeo",
+		"abstract": "We present Air+Touch, a new class of interactions that interweave touch events with in-air gestures, offering a unified input modality with expressiveness greater than each input modality alone. We demonstrate how air and touch are highly complementary: touch is used to designate targets and segment in-air gestures, while in-air gestures add expressivity to touch events. For example, a user can draw a circle in the air and tap to trigger a context menu, do a finger 'high jump' between two touches to select a region of text, or drag and in-air ‘pigtail’ to copy text to the clipboard. Through an observational study, we devised a basic taxonomy of Air+Touch interactions, based on whether the in-air component occurs before, between or after touches. To illustrate the potential of our approach, we built four applications that showcase seven exemplar Air+Touch interactions we created.",
+		"bibtex": "@inproceedings{chen2014air+,<br>&nbsp; &nbsp;title={Air+ touch: interweaving touch and in-air gestures},<br>&nbsp; &nbsp;author={Chen, XiangAnthony and Schwarz, Julia and Harrison, Chris and Mankoff, Jennifer and Hudson, Scott E},<br>&nbsp; &nbsp;booktitle={Proceedings of the 27th annual ACM symposium on User interface software and technology},<br>&nbsp; &nbsp;pages={519--525},<br>&nbsp; &nbsp;year={2014},<br>&nbsp; &nbsp;organization={ACM}<br>}",
+		"flickr": "<a data-flickr-embed=true  href=https://www.flickr.com/photos/128588570@N06/albums/72157670702717043 title=2014 Air+Touch><img src=https://c6.staticflickr.com/9/8137/29669237661_fc86b7af09.jpg width=500 height=281 alt=2014 Air+Touch></a><script async src=//embedr.flickr.com/assets/client-code.js charset=utf-8></script>",
+		"paperThumbnail": "uist2014_airtouch_thumbnail.jpg",
+		"paperUrl": "https://www.dropbox.com/s/0tf6l2yhdw9plb2/uist2014_airtouch.pdf?dl=0",
+		"paperInfo": "Xiang ‘Anthony’ Chen, Julia Schwarz, Chris Harrison, Jennifer Mankoff, Scott Hudson (2014). Air+Touch: Interweaving Touch & In-Air Gestures. Proceedings of the 27th Annual ACM Symposium on User Interface Software and Technology (UIST 2014) Acceptance Rate: 22.2%."
+	},
+	{
+		"imgUrl": "improv_small.jpg",
+		"name": "Improv",
+		"descp": "An input framework for users to create cross-device gestures.",
+		"title": "Improv: An Input Framework for Improvising Cross-Device Interaction by Demonstration",
+		"abstract": "As computing devices become increasingly ubiquitous, it is now possible to combine the unique capabilities of different devices or Internet of Things to accomplish a task. However, there is currently a high technical barrier for creating cross-device interaction. This is especially challenging for end users who have limited technical expertise—end users would greatly benefit from custom cross-device interaction that best suits their needs. In this article, we present Improv, a cross-device input framework that allows a user to easily leverage the capability of additional devices to create new input methods for an existing, unmodified application, e.g., creating custom gestures on a smartphone to control a desktop presentation application. Instead of requiring developers to anticipate and program these cross-device behaviors in advance, Improv enables end users to improvise them on the fly by simple demonstration, for their particular needs and devices at hand. We showcase a range of scenarios where Improv is used to create a diverse set of useful cross-device input. Our study with 14 participants indicated that on average it took a participant 10 seconds to create a cross-device input technique. In addition, Improv achieved 93.7% accuracy in interpreting user demonstration of a target UI behavior by looking at the raw input events from a single example.",
+		"bibtex":"@article{chen2017improv,<br>&nbsp; &nbsp; &nbsp; &nbsp;title={Improv: An Input Framework for Improvising Cross-Device Interaction by Demonstration},<br>&nbsp; &nbsp; &nbsp; &nbsp;author={Chen, Xiang‘Anthony’ and Li, Yang},<br>&nbsp; &nbsp; &nbsp; &nbsp;journal={ACM Transactions on Computer-Human Interaction (TOCHI)},<br>&nbsp; &nbsp; &nbsp; &nbsp;volume={24},<br>&nbsp; &nbsp; &nbsp; &nbsp;number={2},<br>&nbsp; &nbsp; &nbsp; &nbsp;pages={15},<br>&nbsp; &nbsp; &nbsp; &nbsp;year={2017},<br>&nbsp; &nbsp; &nbsp; &nbsp;publisher={ACM}<br>}",
+		"videoId": "216769849",
+		"videoType": "vimeo",
+		"flickr": "",
+		"paperThumbnail": "tochi17_improv_thumbnail.jpg",
+		"paperUrl": "https://www.dropbox.com/s/tvv5oldmakue3rh/tochi2017_improv.pdf?dl=0",
+		"paperInfo": "Xiang ‘Anthony’ Chen, Yang Li. Improv: An Input Framework for Improvising Cross-Device InteractionBy Demonstration.ACM TOCHI, 24(2), 15",
+		"venue": "TOCHI '17"
+	}
+	],
 	"fabrication":[
 	{
 		"imgUrl": "forte.jpg",
@@ -262,7 +316,7 @@
 		"name": "VizLens",
 		"descp": "A screen reader for physical interfaces based on crowd-labeld information.",
 		"venue": "UIST '16",
-		"title": "VizLens: A Robust and Interactive Screen Reader<br/> for Interfaces in the Real World",
+		"title": "VizLens: A Robust and Interactive Screen Reader for Interfaces in the Real World",
 		"abstract": "The world is full of physical interfaces that are inaccessible to blind people, from microwaves and information kiosks to thermostats and checkout terminals. Blind people cannot in­dependently use such devices without at least ﬁrst learning their layout, and usually only after labeling them with sighted assistance. We introduce VizLens —an accessible mobile ap­plication and supporting backend that can robustly and inter­actively help blind people use nearly any interface they en­counter. VizLens users capture a photo of an inaccessible interface and send it to multiple crowd workers, who work in parallel to quickly label and describe elements of the inter­face to make subsequent computer vision easier. The VizLens application helps users recapture the interface in the ﬁeld of the camera, and uses computer vision to interactively describe the part of the interface beneath their ﬁnger (updating 8 times per second). We show that VizLens provides accurate and usable real-time feedback in a study with 10 blind partici­pants, and our crowdsourcing labeling workﬂow was fast (8 minutes), accurate (99.7%), and cheap ($1.15). We then ex­plore extensions of VizLens that allow it to (i) adapt to state changes in dynamic interfaces, (ii) combine crowd labeling with OCR technology to handle dynamic displays, and (iii) beneﬁt from head-mounted cameras. VizLens robustly solves a long-standing challenge in accessibility by deeply integrat­ing crowdsourcing and computer vision, and foreshadows a future of increasingly powerful interactive applications that would be currently impossible with either alone.",
 		"bibtex": "@inproceedings {vizlens,<br>&nbsp; &nbsp; &nbsp; &nbsp;author={Guo, A., Chen, A., Qi, H., White, S., Ghosh, S., Asakawa, C., and Bigham, J.P.},<br>&nbsp; &nbsp; &nbsp; &nbsp;title={VizLens: A Robust and Interactive Screen Reader for Interfaces in the Real World},<br>&nbsp; &nbsp; &nbsp; &nbsp;booktitle={Proceedings of the ACM Symposium on User Interface Software and Technology (UIST 2016)},<br>&nbsp; &nbsp; &nbsp; &nbsp;year={2016},<br>&nbsp; &nbsp; &nbsp; &nbsp;keywords={non-visual interfaces, visually impaired users, accessibility, crowdsourcing, computer vision, mobile devices, vizwiz},<br>}<br>",
 		"videoId": "hjCf-G51FWM",
@@ -277,7 +331,7 @@
 		"name": "Snap to It",
 		"descp": "Take a picture of an appliance and control it from your smart phone.",
 		"venue": "CHI '16",
-		"title": "Snap-To-It: A User-Inspired Platform<br/> for Opportunistic Device Interactions",
+		"title": "Snap-To-It: A User-Inspired Platform for Opportunistic Device Interactions",
 		"abstract": "The ability to quickly interact with any nearby appliance from a mobile device would allow people to perform a wide range of one-time tasks (e.g., printing a document in an unfamiliar ofﬁce location). However, users currently lack this capability, and must instead manually conﬁgure their devices for each appliance they want to use. To address this problem, we cre-ated Snap-To-It, a system that allows users to opportunistically interact with any appliance simply by taking a picture of it. Snap-To-It shares the image of the appliance a user wants to interact with over a local area network. Appliances then analyze this image (along with the user’s location and device orientation) to see if they are being “selected,” and deliver the corresponding control interface to the user’s mobile device. Snap-To-It’s design was informed by two technology probes that explored how users would like to select and interact with appliances using their mobile phone. These studies highlighted the need to be able to select hardware and software via a cam-era, and identiﬁed several novel use cases not supported by existing systems (e.g., interacting with disconnected objects, transferring settings between appliances). In this paper, we show how Snap-To-It’s design is informed by our probes and how developers can utilize our system. We then show that Snap-To-It can identify appliances with over 95.3% accuracy, and demonstrate through a two-month deployment that our approach is robust to gradual changes to the environment.",
 		"bibtex": "@inproceedings{de2016snap,<br>&nbsp; &nbsp; &nbsp; &nbsp;title={Snap-to-it: a user-inspired platform for opportunistic device interactions},<br>&nbsp; &nbsp; &nbsp; &nbsp;author={de Freitas, A and Nebeling, Michael and Chen, XiangAnthony and Yang, Junrui and Ranithangam, ASKK and Dey, Anind K},<br>&nbsp; &nbsp; &nbsp; &nbsp;booktitle={Proceedings of the 34th Annual ACM Conference on Human Factors in Computing Systems (CHI 2016)},<br>&nbsp; &nbsp; &nbsp; &nbsp;year={2016}<br>}<br>",
 		"videoId": "154829664",

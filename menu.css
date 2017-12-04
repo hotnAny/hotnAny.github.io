@@ -16,8 +16,7 @@ h3 {
 }
 
 body{
-	/*font-family: 'Lora', serif;*/
-	font-family: 'Alegreya', serif;
+	font-family: 'Alegreya Sans', sans-serif;
 	font-size: 10pt;
 }
 
@@ -72,7 +71,6 @@ a:active {
     -moz-column-count: 3;
     -webkit-column-count: 3;
     column-count: 3;
-	/*column-gap: 100px;*/
 }
 
 .copyright{
@@ -87,7 +85,7 @@ a:active {
 .imgicon{
 	border-radius: 10px;
 	display: block;
-	width: 100%;
+	width: 95%;
 }
 
 .divtitle{
@@ -142,10 +140,6 @@ a:active {
 	font-size: 9pt;
 	background-color: #ffffff;
 	line-height: 150%;
-	/*width: 55%;*/
-	/*min-width: 640px;*/
-	/*margin-left: 18%;*/
-	/*margin-right: 18%;*/
 	padding-left: 5%;
 	padding-right: 5%;
 	padding-top: 2%;
@@ -169,13 +163,13 @@ a:active {
 }
 
 #tabPub {
-	font-family: 'Alegreya', serif;
+	font-family: 'Alegreya Sans', sans-serif;
 	font-size: 9pt;
 	color: #888888;
 }
 
 #tabBib {
-	font-family: 'Alegreya', serif;
+	font-family: 'Alegreya Sans', sans-serif;
 	font-size: 9pt;
 	color: #888888;
 	line-height: 150%;
@@ -189,6 +183,7 @@ a:active {
 }
 
 .tbpubinfo {
+	font-family: 'Alegreya Sans', sans-serif;
 	line-height: 20px;
 }
 
