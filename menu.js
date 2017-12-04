@@ -56,7 +56,7 @@
  	imgServer = menuObj.imgServer;
  	docServer = menuObj.docServer;
 
- 	$('#divMenu').append(makeTitle('★ HOUSE SPECIALS ★'));
+ 	$('#divMenu').append(makeTitle('⭑ HOUSE SPECIALS ⭑'));
  	for (var i = 0; i < menuObj.specials.length; i++) {
  		$('#divMenu').append(makeItem(menuObj.specials[i]));
  	}
