@@ -56,30 +56,26 @@
  	imgServer = menuObj.imgServer;
  	docServer = menuObj.docServer;
 
- 	$('#divMenu').append(makeTitle('⭑ HOUSE SPECIALS ⭑'));
+ 	$('#divMenu').append(makeTitle('⭑ HOUSE SPECIALS ⭑', true));
  	for (var i = 0; i < menuObj.specials.length; i++) {
  		$('#divMenu').append(makeItem(menuObj.specials[i]));
  	}
 
- 	$('#divMenu').append(brBreak.clone());
  	$('#divMenu').append(makeTitle('FABITIZERS'));
  	for (var i = 0; i < menuObj.fabrication.length; i++) {
  		$('#divMenu').append(makeItem(menuObj.fabrication[i]));
  	}
 
- 	$('#divMenu').append(brBreak.clone());
  	$('#divMenu').append(makeTitle('ENTR&Eacute;ERACTION TECHNIQUES'));
  	for (var i = 0; i < menuObj.interactiontechniques.length; i++) {
  		$('#divMenu').append(makeItem(menuObj.interactiontechniques[i]));
  	}
 
- 	$('#divMenu').append(brBreak.clone());
  	$('#divMenu').append(makeTitle('DISSERNET OF THINGS'));
  	for (var i = 0; i < menuObj.internetofthings.length; i++) {
  		$('#divMenu').append(makeItem(menuObj.internetofthings[i]));
  	}
 
- 	$('#divMenu').append(brBreak.clone());
  	$('#divMenu').append(makeTitle('SIDES'));
  	for (var i = 0; i < menuObj.sideprojects.length; i++) {
  		$('#divMenu').append(makeItem(menuObj.sideprojects[i]));
@@ -88,8 +84,9 @@
  	checkResponsiveness();
  });
 
- function makeTitle(title) {
- 	var hTitle = '<div class="divtitle">' + title + '</div>';
+ function makeTitle(title, isFirst) {
+ 	var hTitle = $('<div class="divtitle">' + title + '</div>');
+ 	if(isFirst) hTitle.css('margin-top', 0);
  	return hTitle;
  }
 

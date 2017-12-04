@@ -85,17 +85,18 @@ a:active {
 .imgicon{
 	border-radius: 10px;
 	display: block;
-	width: 95%;
+	width: 90%;
 }
 
 .divtitle{
 	font-weight: bold;
+	margin-top: 28pt;
 	margin-left: 10pt;
 	font-size: 14pt;
 }
 
 .tdimg {
-	width: 72px;
+	width: 64px;
 }
 
 .tdprojname {
@@ -106,7 +107,7 @@ a:active {
 
 .tbdescp{
 	table-layout: fixed;
-	width: 100%;
+	width: 90%;
 }
 
 .divdescp{
@@ -119,6 +120,7 @@ a:active {
 	width: 100%;
 	padding: 5px;
 	border-spacing: 5px;
+	display:inline-block;
 }
 
 .tdpubvenue{

@@ -25,21 +25,6 @@
 		"paperInfo": "Xiang ‘Anthony’ Chen, Tovi Grossman, Daniel Wigdor, George Fitzmaurice (2014). Duet: Exploring Joint Interactions on a Smart Phone and a Smart Watch. Proceedings of the 32nd SIGCHI Conference on Human Factors in Computing Systems (CHI 2014). Acceptance Rate: 22.8%.  Best Paper Award 🏆"
 	},
 	{
-		"imgUrl": "air_touch_small.jpg",
-		"name": "Air+Touch",
-		"descp": "Combining In-Air Gesture and Touch Input Above Mobile Devices.",
-		"title": "Air+ touch: interweaving touch and in-air gestures",
-		"venue": "UIST '14",
-		"videoId": "92972949",
-		"videoType": "vimeo",
-		"abstract": "We present Air+Touch, a new class of interactions that interweave touch events with in-air gestures, offering a unified input modality with expressiveness greater than each input modality alone. We demonstrate how air and touch are highly complementary: touch is used to designate targets and segment in-air gestures, while in-air gestures add expressivity to touch events. For example, a user can draw a circle in the air and tap to trigger a context menu, do a finger 'high jump' between two touches to select a region of text, or drag and in-air ‘pigtail’ to copy text to the clipboard. Through an observational study, we devised a basic taxonomy of Air+Touch interactions, based on whether the in-air component occurs before, between or after touches. To illustrate the potential of our approach, we built four applications that showcase seven exemplar Air+Touch interactions we created.",
-		"bibtex": "@inproceedings{chen2014air+,<br>&nbsp; &nbsp;title={Air+ touch: interweaving touch and in-air gestures},<br>&nbsp; &nbsp;author={Chen, XiangAnthony and Schwarz, Julia and Harrison, Chris and Mankoff, Jennifer and Hudson, Scott E},<br>&nbsp; &nbsp;booktitle={Proceedings of the 27th annual ACM symposium on User interface software and technology},<br>&nbsp; &nbsp;pages={519--525},<br>&nbsp; &nbsp;year={2014},<br>&nbsp; &nbsp;organization={ACM}<br>}",
-		"flickr": "<a data-flickr-embed=true  href=https://www.flickr.com/photos/128588570@N06/albums/72157670702717043 title=2014 Air+Touch><img src=https://c6.staticflickr.com/9/8137/29669237661_fc86b7af09.jpg width=500 height=281 alt=2014 Air+Touch></a><script async src=//embedr.flickr.com/assets/client-code.js charset=utf-8></script>",
-		"paperThumbnail": "uist2014_airtouch_thumbnail.jpg",
-		"paperUrl": "https://www.dropbox.com/s/0tf6l2yhdw9plb2/uist2014_airtouch.pdf?dl=0",
-		"paperInfo": "Xiang ‘Anthony’ Chen, Julia Schwarz, Chris Harrison, Jennifer Mankoff, Scott Hudson (2014). Air+Touch: Interweaving Touch & In-Air Gestures. Proceedings of the 27th Annual ACM Symposium on User Interface Software and Technology (UIST 2014) Acceptance Rate: 22.2%."
-	},
-	{
 		"imgUrl": "improv_small.jpg",
 		"name": "Improv",
 		"descp": "An input framework for users to create cross-device gestures.",
@@ -117,21 +102,6 @@
 	],
 
 	"interactiontechniques":[
-	{
-		"imgUrl": "duet_small.jpg",
-		"name": "Duet",
-		"descp": "Joint interaction between a smart phone and a smart watch.",
-		"title": "Duet: Joint Interaction Between a Smart Phone and a Smart Watch",
-		"venue": "★ CHI '14",
-		"abstract": "The emergence of smart devices (e.g., smart watches and smart eyewear) is redefining mobile interaction from the solo performance of a smart phone, to a symphony of multiple devices. In this paper, we present Duet – an interactive system that explores a design space of interactions between a smart phone and a smart watch. Based on the devices’ spatial configurations, Duet coordinates their motion and touch input, and extends their visual and tactile output to one another. This transforms the watch into an active element that enhances a wide range of phone-based interactive tasks, and enables a new class of multi-device gestures and sensing techniques. A technical evaluation shows the accuracy of these gestures and sensing techniques, and a subjective study on Duet provides insights, observations, and guidance for future work. ",
-		"bibtex": "@inproceedings{chen2014duet,<br>&nbsp; &nbsp; &nbsp; &nbsp;title={Duet: exploring joint interactions on a smart phone and a smart watch},<br>&nbsp; &nbsp; &nbsp; &nbsp;author={Chen, XiangAnthony and Grossman, Tovi and Wigdor, Daniel J and Fitzmaurice, George},<br>&nbsp; &nbsp; &nbsp; &nbsp;booktitle={Proceedings of the SIGCHI Conference on Human Factors in Computing Systems},<br>&nbsp; &nbsp; &nbsp; &nbsp;pages={159--168},<br>&nbsp; &nbsp; &nbsp; &nbsp;year={2014},<br>&nbsp; &nbsp; &nbsp; &nbsp;organization={ACM}<br>}",
-		"videoId": "81358039",
-		"videoType": "vimeo",
-		"flickr": "<a data-flickr-embed=true  href=https://www.flickr.com/photos/128588570@N06/albums/72157672834628310 title=2014 Duet><img src=https://c7.staticflickr.com/9/8292/29733093246_d876747ef6.jpg width=500 height=281 alt=2014 Duet></a><script async src=//embedr.flickr.com/assets/client-code.js charset=utf-8></script>",
-		"paperThumbnail": "chi2014_duet_thumbnail.jpg",
-		"paperUrl": "https://www.dropbox.com/s/i63ivpl9bqg8leq/chi2014_duet.pdf?dl=0",
-		"paperInfo": "Xiang ‘Anthony’ Chen, Tovi Grossman, Daniel Wigdor, George Fitzmaurice (2014). Duet: Exploring Joint Interactions on a Smart Phone and a Smart Watch. Proceedings of the 32nd SIGCHI Conference on Human Factors in Computing Systems (CHI 2014). Acceptance Rate: 22.8%.  Best Paper Award 🏆"
-	},
 	{
 		"imgUrl": "air_touch_small.jpg",
 		"name": "Air+Touch",
@@ -296,6 +266,21 @@
 	],
 
 	"internetofthings": [
+	{
+		"imgUrl": "duet_small.jpg",
+		"name": "Duet",
+		"descp": "Joint interaction between a smart phone and a smart watch.",
+		"title": "Duet: Joint Interaction Between a Smart Phone and a Smart Watch",
+		"venue": "★ CHI '14",
+		"abstract": "The emergence of smart devices (e.g., smart watches and smart eyewear) is redefining mobile interaction from the solo performance of a smart phone, to a symphony of multiple devices. In this paper, we present Duet – an interactive system that explores a design space of interactions between a smart phone and a smart watch. Based on the devices’ spatial configurations, Duet coordinates their motion and touch input, and extends their visual and tactile output to one another. This transforms the watch into an active element that enhances a wide range of phone-based interactive tasks, and enables a new class of multi-device gestures and sensing techniques. A technical evaluation shows the accuracy of these gestures and sensing techniques, and a subjective study on Duet provides insights, observations, and guidance for future work. ",
+		"bibtex": "@inproceedings{chen2014duet,<br>&nbsp; &nbsp; &nbsp; &nbsp;title={Duet: exploring joint interactions on a smart phone and a smart watch},<br>&nbsp; &nbsp; &nbsp; &nbsp;author={Chen, XiangAnthony and Grossman, Tovi and Wigdor, Daniel J and Fitzmaurice, George},<br>&nbsp; &nbsp; &nbsp; &nbsp;booktitle={Proceedings of the SIGCHI Conference on Human Factors in Computing Systems},<br>&nbsp; &nbsp; &nbsp; &nbsp;pages={159--168},<br>&nbsp; &nbsp; &nbsp; &nbsp;year={2014},<br>&nbsp; &nbsp; &nbsp; &nbsp;organization={ACM}<br>}",
+		"videoId": "81358039",
+		"videoType": "vimeo",
+		"flickr": "<a data-flickr-embed=true  href=https://www.flickr.com/photos/128588570@N06/albums/72157672834628310 title=2014 Duet><img src=https://c7.staticflickr.com/9/8292/29733093246_d876747ef6.jpg width=500 height=281 alt=2014 Duet></a><script async src=//embedr.flickr.com/assets/client-code.js charset=utf-8></script>",
+		"paperThumbnail": "chi2014_duet_thumbnail.jpg",
+		"paperUrl": "https://www.dropbox.com/s/i63ivpl9bqg8leq/chi2014_duet.pdf?dl=0",
+		"paperInfo": "Xiang ‘Anthony’ Chen, Tovi Grossman, Daniel Wigdor, George Fitzmaurice (2014). Duet: Exploring Joint Interactions on a Smart Phone and a Smart Watch. Proceedings of the 32nd SIGCHI Conference on Human Factors in Computing Systems (CHI 2014). Acceptance Rate: 22.8%.  Best Paper Award 🏆"
+	},
 	{
 		"imgUrl": "improv_small.jpg",
 		"name": "Improv",
