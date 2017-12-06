@@ -3,6 +3,7 @@ var XAC = XAC || {}
 var divPages = []
 var divVideos = []
 var dirImages = 'image/'
+var col
 
 window.mobilecheck = function() {
 	var check = false;
@@ -13,7 +14,6 @@ window.mobilecheck = function() {
 };
 
 function checkResponsiveness() {
-	var col
 	if ($(window).width() < 640 || window.mobilecheck() == true) {
 		col = 1
 	} else if ($(window).width() < 1150) {
@@ -158,13 +158,14 @@ function makePage(item) {
 	//
 	divPage.append($('<h1>' + item.title + '</h1>'))
 	divPage.append($('<br>'))
-		//
-		// pub & bib tex
-		//
+
+	//
+	// pub & bib tex
+	//
 	var divPubBib = $('<div class="divpubbib"></div>')
 	divPubBib.append($('<ul>' + '<li><a href="#tabPub">Publication</a></li>' + '<li><a href="#tabBib">Bibtex</a></li>' + '</ul>'))
 	var divPub = $('<div id="tabPub"></div>')
-	divPub.append($('<table class="tbpubinfo" align="center" border="0" cellspacing="0" cellpadding="10px">' + '<tr><td><a href="' + docServer + item.paperUrl + '" target="_blank">' + '<img class="imgpaper" src="' + dirImages + item.paperThumbnail + '"/></a></td>' + '<td class="tdpubinfo">' + item.paperInfo + '</td></tr></table>'));
+	divPub.append($('<table class="tbpubinfo" align="center" border="0" cellspacing="0" cellpadding="10px">' + '<tr><td><a href="' + item.paperUrl + '" target="_blank">' + '<img class="imgpaper" src="' + dirImages + item.paperThumbnail + '"/></a></td>' + '<td class="tdpubinfo">' + item.paperInfo + '</td></tr></table>'));
 
 	var divBib = $('<div id="tabBib"></div>')
 	divBib.append(item.bibtex)
