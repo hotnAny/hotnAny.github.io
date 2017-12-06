@@ -38,7 +38,7 @@ specials:
   paperInfo: "Xiang ‘Anthony’ Chen, Tovi Grossman, Daniel Wigdor, George Fitzmaurice
     (2014). Duet: Exploring Joint Interactions on a Smart Phone and a Smart Watch.
     Proceedings of the 32nd SIGCHI Conference on Human Factors in Computing Systems
-    (CHI 2014). Acceptance Rate: 22.8%.  Best Paper Award \U0001F3C6"
+    (CHI 2014). Acceptance Rate: 22.8%.  Best Paper Award"
 - imgUrl: improv_small.jpg
   name: Improv
   descp: An input framework for users to create cross-device gestures.
@@ -561,7 +561,7 @@ internetofthings:
   paperInfo: "Xiang ‘Anthony’ Chen, Tovi Grossman, Daniel Wigdor, George Fitzmaurice
     (2014). Duet: Exploring Joint Interactions on a Smart Phone and a Smart Watch.
     Proceedings of the 32nd SIGCHI Conference on Human Factors in Computing Systems
-    (CHI 2014). Acceptance Rate: 22.8%.  Best Paper Award \U0001F3C6"
+    (CHI 2014). Acceptance Rate: 22.8%.  Best Paper Award"
 - imgUrl: improv_small.jpg
   name: Improv
   descp: An input framework for users to create cross-device gestures.
