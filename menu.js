@@ -2,7 +2,7 @@ var XAC = XAC || {}
 
 var divPages = []
 var divVideos = []
-var dirImages = 'images/'
+var dirImages = 'image/'
 
 window.mobilecheck = function() {
 	var check = false;
