@@ -25,9 +25,9 @@
  	if ($(window).width() < 640 || window.mobilecheck() == true) {
  		col = 1;
  	} else if ($(window).width() < 1150) {
- 		col = 2;
+ 		col = 1;
  	} else {
- 		col = 3;
+ 		col = 2;
  	}
 
  	$('#divMenu').css('column-count', col);
@@ -56,12 +56,12 @@
  	imgServer = menuObj.imgServer;
  	docServer = menuObj.docServer;
 
- 	$('#divMenu').append(makeTitle('⭑ HOUSE SPECIALS ⭑', true));
+ 	$('#divSpecial').append(makeTitle('HOUSE SPECIALS'));
  	for (var i = 0; i < menuObj.specials.length; i++) {
- 		$('#divMenu').append(makeItem(menuObj.specials[i]));
+ 		$('#divSpecial').append(makeItem(menuObj.specials[i]));
  	}
 
- 	$('#divMenu').append(makeTitle('FABITIZERS'));
+ 	$('#divMenu').append(makeTitle('FABITIZERS', true));
  	for (var i = 0; i < menuObj.fabrication.length; i++) {
  		$('#divMenu').append(makeItem(menuObj.fabrication[i]));
  	}
@@ -94,14 +94,18 @@
  	var tb = $('<table class="tbresearch" border="0"></table>');
  	var tr = $('<tr></tr>');
  	var imgStr = '<image src="' + thbnServer + item.imgUrl + '" id="tdImg_' + item.name + '" class="imgicon"/>';
- 	var tdImage = $('<td class="tdimg">' + imgStr + '</td>');
+ 	var img = $(imgStr);
+ 	// var img = $('#tdImg_' + item.name);
+ 	// var tdImage = $('<td class="tdimg">' + imgStr + '</td>');
+ 	var tdImage = $('<td class="tdimg"></td>');
+ 	tdImage.append(img);
 
  	if (item.title != undefined) {
  		// 	XAC.readTextFile(item.pageSrc, function(text) {
  		// 		divPages['tdImg_' + item.name] = text;
  		// 	});
- 		tdImage.css('cursor', 'pointer');
- 		tdImage.click(function(e) {
+ 		img.css('cursor', 'pointer');
+ 		img.click(function(e) {
  			var htmlText = divPages[$(e.target)[0].id];
  			var divPage = $('<div class="divpage"></div>');
 
@@ -133,8 +137,8 @@
  		var srcCode = item.vimeoId != undefined ? 'https://player.vimeo.com/video/' + item.vimeoId : 'https://www.youtube.com/embed/' + item.youtubeId + '?rel=0';
  		var embedCode = '<iframe id="ifmVideo" src="' + srcCode + '" width="960" height="540" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>'
  		divVideos['tdImg_' + item.name] = embedCode;
- 		tdImage.css('cursor', 'pointer');
- 		tdImage.click(function(e) {
+ 		img.css('cursor', 'pointer');
+ 		img.click(function(e) {
  			// console.log($(e.target)[0].id);
  			var embedCode = divVideos[$(e.target)[0].id];
  			var divVideo = $('<div class="divvideo"></div>');
@@ -152,6 +156,7 @@
  	}
 
  	var tdDescp = $('<td></td>');
+ 	tdDescp.css('margin-right', '5%')
 
  	var strEllips = " ";
  	var numEllipsDots = 50;
