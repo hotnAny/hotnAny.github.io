@@ -25,7 +25,7 @@ a:active{color:#000000;border-bottom:1px dotted #000;text-decoration:none;}
 .popup_visible #fadeandscale{transform:scale(1);}
 #tabPub{font-family:'Alegreya Sans', sans-serif;font-size:9pt;color:#888888;}
 #tabBib{font-family:'Alegreya Sans', sans-serif;font-size:9pt;color:#888888;line-height:150%;margin-left:1%}
-.pabstract{font-size:10pt;line-height:200%;}
+.pabstract{font-size:10pt;line-height:150%;}
 .tbpubinfo{font-family:'Alegreya Sans', sans-serif;line-height:20px;}
 .imgpaper{width:50px;border:1px solid grey;}
 .tdpubinfo{text-align:justify;vertical-align:top;}
