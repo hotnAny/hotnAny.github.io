@@ -1,0 +1,706 @@
+specials:
+- imgUrl: forte.jpg
+  name: Fort&eacute;
+  descp: Generative design that combines user sketching and topology optimization.
+  exturl: https://www.dropbox.com/s/4bg2fr4vw5ietba/_in_review_forte.mp4?dl=0
+  venue: In progress
+- imgUrl: duet_small.jpg
+  name: Duet
+  descp: Joint interaction between a smart phone and a smart watch.
+  title: 'Duet: Joint Interaction Between a Smart Phone and a Smart Watch'
+  venue: "★ CHI '14"
+  abstract: 'The emergence of smart devices (e.g., smart watches and smart eyewear)
+    is redefining mobile interaction from the solo performance of a smart phone, to
+    a symphony of multiple devices. In this paper, we present Duet – an interactive
+    system that explores a design space of interactions between a smart phone and
+    a smart watch. Based on the devices’ spatial configurations, Duet coordinates
+    their motion and touch input, and extends their visual and tactile output to one
+    another. This transforms the watch into an active element that enhances a wide
+    range of phone-based interactive tasks, and enables a new class of multi-device
+    gestures and sensing techniques. A technical evaluation shows the accuracy of
+    these gestures and sensing techniques, and a subjective study on Duet provides
+    insights, observations, and guidance for future work. '
+  bibtex: "@inproceedings{chen2014duet,<br>&nbsp; &nbsp; &nbsp; &nbsp;title={Duet:
+    exploring joint interactions on a smart phone and a smart watch},<br>&nbsp; &nbsp;
+    &nbsp; &nbsp;author={Chen, XiangAnthony and Grossman, Tovi and Wigdor, Daniel
+    J and Fitzmaurice, George},<br>&nbsp; &nbsp; &nbsp; &nbsp;booktitle={Proceedings
+    of the SIGCHI Conference on Human Factors in Computing Systems},<br>&nbsp; &nbsp;
+    &nbsp; &nbsp;pages={159--168},<br>&nbsp; &nbsp; &nbsp; &nbsp;year={2014},<br>&nbsp;
+    &nbsp; &nbsp; &nbsp;organization={ACM}<br>}"
+  videoId: '81358039'
+  videoType: vimeo
+  flickr: "<a data-flickr-embed=true  href=https://www.flickr.com/photos/128588570@N06/albums/72157672834628310
+    title=2014 Duet><img src=https://c7.staticflickr.com/9/8292/29733093246_d876747ef6.jpg
+    width=500 height=281 alt=2014 Duet></a><script async src=//embedr.flickr.com/assets/client-code.js
+    charset=utf-8></script>"
+  paperThumbnail: chi2014_duet_thumbnail.jpg
+  paperUrl: https://www.dropbox.com/s/i63ivpl9bqg8leq/chi2014_duet.pdf?dl=0
+  paperInfo: "Xiang ‘Anthony’ Chen, Tovi Grossman, Daniel Wigdor, George Fitzmaurice
+    (2014). Duet: Exploring Joint Interactions on a Smart Phone and a Smart Watch.
+    Proceedings of the 32nd SIGCHI Conference on Human Factors in Computing Systems
+    (CHI 2014). Acceptance Rate: 22.8%.  Best Paper Award \U0001F3C6"
+- imgUrl: improv_small.jpg
+  name: Improv
+  descp: An input framework for users to create cross-device gestures.
+  title: 'Improv: An Input Framework for Improvising Cross-Device Interaction by Demonstration'
+  abstract: As computing devices become increasingly ubiquitous, it is now possible
+    to combine the unique capabilities of different devices or Internet of Things
+    to accomplish a task. However, there is currently a high technical barrier for
+    creating cross-device interaction. This is especially challenging for end users
+    who have limited technical expertise—end users would greatly benefit from custom
+    cross-device interaction that best suits their needs. In this article, we present
+    Improv, a cross-device input framework that allows a user to easily leverage the
+    capability of additional devices to create new input methods for an existing,
+    unmodified application, e.g., creating custom gestures on a smartphone to control
+    a desktop presentation application. Instead of requiring developers to anticipate
+    and program these cross-device behaviors in advance, Improv enables end users
+    to improvise them on the fly by simple demonstration, for their particular needs
+    and devices at hand. We showcase a range of scenarios where Improv is used to
+    create a diverse set of useful cross-device input. Our study with 14 participants
+    indicated that on average it took a participant 10 seconds to create a cross-device
+    input technique. In addition, Improv achieved 93.7% accuracy in interpreting user
+    demonstration of a target UI behavior by looking at the raw input events from
+    a single example.
+  bibtex: "@article{chen2017improv,<br>&nbsp; &nbsp; &nbsp; &nbsp;title={Improv: An
+    Input Framework for Improvising Cross-Device Interaction by Demonstration},<br>&nbsp;
+    &nbsp; &nbsp; &nbsp;author={Chen, Xiang‘Anthony’ and Li, Yang},<br>&nbsp; &nbsp;
+    &nbsp; &nbsp;journal={ACM Transactions on Computer-Human Interaction (TOCHI)},<br>&nbsp;
+    &nbsp; &nbsp; &nbsp;volume={24},<br>&nbsp; &nbsp; &nbsp; &nbsp;number={2},<br>&nbsp;
+    &nbsp; &nbsp; &nbsp;pages={15},<br>&nbsp; &nbsp; &nbsp; &nbsp;year={2017},<br>&nbsp;
+    &nbsp; &nbsp; &nbsp;publisher={ACM}<br>}"
+  videoId: '216769849'
+  videoType: vimeo
+  flickr: ''
+  paperThumbnail: tochi17_improv_thumbnail.jpg
+  paperUrl: https://www.dropbox.com/s/tvv5oldmakue3rh/tochi2017_improv.pdf?dl=0
+  paperInfo: 'Xiang ‘Anthony’ Chen, Yang Li. Improv: An Input Framework for Improvising
+    Cross-Device InteractionBy Demonstration.ACM TOCHI, 24(2), 15'
+  venue: TOCHI '17
+fabrication:
+- imgUrl: forte.jpg
+  name: Fort&eacute;
+  descp: Generative design that combines user sketching and topology optimization.
+  exturl: https://www.dropbox.com/s/4bg2fr4vw5ietba/_in_review_forte.mp4?dl=0
+  venue: In progress
+- imgUrl: facade_small.jpg
+  name: Fa&ccedil;ade
+  descp: Making appliances accessible with 3D printed Braille buttons.
+  videoId: Tz1kt1gf7v4
+  videoType: youtube
+  title: 'Facade: Auto-generating Tactile Interfaces to Appliances'
+  abstract: Common appliances have shifted toward flat interface panels, making them
+    inaccessible to blind people. Although blind people can label appliances with
+    Braille stickers, doing so generally requires sighted assistance to identify the
+    original functions and apply the labels. We introduce Facade—a crowdsourced fabrication
+    pipeline to help blind people independently make physical interfaces accessible
+    by adding a 3D printed augmentation of tactile buttons overlaying the original
+    panel. Facade users capture a photo of the appliance with a readily available
+    fiducial marker (a dollar bill) for recovering size information. This image is
+    sent to multiple crowd workers, who work in parallel to quickly label and describe
+    elements of the interface. Facade then generates a 3D model for a layer of tactile
+    and pressable buttons that fits over the original controls. Finally, a home 3D
+    printer or commercial service fabricates the layer, which is then aligned and
+    attached to the interface by the blind person. We demonstrate the viability of
+    Facade in a study with 11 blind participants.
+  bibtex: "@inproceedings {vizlens,<br>&nbsp; &nbsp; &nbsp; &nbsp;author={Guo, A.,
+    Chen, A., Qi, H., White, S., Ghosh, S., Asakawa, C., and Bigham, J.P.},<br>&nbsp;
+    &nbsp; &nbsp; &nbsp;title={VizLens: A Robust and Interactive Screen Reader for
+    Interfaces in the Real World},<br>&nbsp; &nbsp; &nbsp; &nbsp;booktitle={Proceedings
+    of the ACM Symposium on User Interface Software and Technology (UIST 2016)},<br>&nbsp;
+    &nbsp; &nbsp; &nbsp;year={2016},<br>&nbsp; &nbsp; &nbsp; &nbsp;keywords={non-visual
+    interfaces, visually impaired users, accessibility, crowdsourcing, computer vision,
+    mobile devices, vizwiz},<br>}<br>"
+  venue: CHI '17
+  paperThumbnail: chi2017_facade_thumbnail.jpg
+  paperUrl: https://www.dropbox.com/s/xc9mywdkb6c8zvw/chi2017_facade.pdf?dl=0
+  paperInfo: "Anhong Guo, Xiang 'Anthony' Chen, Haoran Qi, Samuel White, Suman Ghosh,
+    Chieko Asakawa, Jeffrey Bigham. Facade: Auto-generating Tactile Interfaces to
+    Appliances. Proceedings of the 35th SIGCHI Conference on Human Factors in Computing
+    Systems (CHI 2017)."
+- imgUrl: reprise_small.jpg
+  name: Reprise
+  descp: A design tool for specifying, generating, and customizing 3D printable adaptations
+    on everyday objects.
+  title: 'Reprise: A Design Tool for Specifying, Generating, and Customizing 3D Printable
+    Adaptations on Everyday Objects'
+  venue: UIST '16
+  videoId: '182221122'
+  videoType: vimeo
+  abstract: In this paper, we describe Reprise--a design tool for specifying, generating,
+    customizing and fitting adaptations onto existing household objects. Reprise allows
+    users to express at a high level what type of action is applied to an object.  Based
+    on this high level specification, Reprise automatically generates adaptations.
+    Users can use simple sliders to customize the adaptations to better suit their
+    particular needs and preferences, such as increasing the tightness for gripping,
+    enhancing torque for rotation, or making a larger base for stability. Finally,
+    Reprise provides a toolkit of fastening methods and support structures for fitting
+    the adaptations onto existing objects.
+  bibtex: "@inproceedings{chen2016reprise,<br>&nbsp; &nbsp; &nbsp; &nbsp;title={Reprise:
+    A Design Tool for Specifying, Generating, and Customizing 3D Printable Adaptations
+    on Everyday Objects},<br>&nbsp; &nbsp; &nbsp; &nbsp;author={Chen, XiangAnthony
+    and Kim, Jeeeun and Mankoff, Jennifer and Grossman, Tovi and Coros, Stelian and
+    Hudson, Scott E},<br>&nbsp; &nbsp; &nbsp; &nbsp;booktitle={the 29th Annual ACM
+    Symposium on User Interface Software and Technology},<br>&nbsp; &nbsp; &nbsp;
+    &nbsp;year={2016},<br>&nbsp; &nbsp; &nbsp; &nbsp;organization={ACM}<br>}"
+  flickr: "<a data-flickr-embed=true  href=https://www.flickr.com/photos/128588570@N06/albums/72157674285753686
+    title=2016 Reprise><img src=https://c8.staticflickr.com/6/5773/29927413495_3f08192229.jpg
+    width=500 height=281 alt=2016 Reprise></a><script async src=//embedr.flickr.com/assets/client-code.js
+    charset=utf-8></script>"
+  paperThumbnail: uist2016_reprise_thumbnail.jpg
+  paperUrl: https://www.dropbox.com/s/on9ltbgpnwo6df8/uist2016_reprise.pdf?dl=0
+  paperInfo: 'Xiang ‘Anthony’ Chen, Jeeeun Kim, Jennifer Mankoff, Tovi Grossman, Stelian
+    Coros, Scott Hudson (2016). Reprise: A Design Tool for Specifying, Generating,
+    and Customizing 3D Printable Adaptations on Everyday Objects. Proceedings of the
+    29th Annual ACM Symposium on User Interface Software and Technology (UIST 2016)
+    Acceptance Rate: 20.6%.'
+- imgUrl: encore_small.jpg
+  name: Encore
+  descp: 3D printed augmentation of everyday objects with printed-over, affixed and
+    interlocked attachment
+  title: 'Encore: 3D Printed Augmentation of Everyday Objects with Printed-Over, Affixed
+    and Interlocked Attachment'
+  venue: UIST '15
+  videoId: '135636261'
+  videoType: vimeo
+  abstract: 'One powerful aspect of 3D printing is its ability to extend, repair,
+    or more generally modify everyday objects. However, nearly all existing work implicitly
+    assumes that whole objects are to be printed from scratch. This paper presents
+    a framework for 3D printing to augment existing objects that covers a wide range
+    of attachment options. We illustrate the framework through three exemplar attachment
+    techniques – print-over, print-toaffix and print-through, implemented in Encore,
+    a design tool that supports a set of analysis metrics relating to viability, durability
+    and usability that are visualized for the user to explore design options and tradeoffs.
+    Encore also generates 3D models for production, addressing issues such as support
+    jigs and contact geometry between the attached part and the original object. Our
+    validation helps to illustrate the strengths and weaknesses of each technique.
+    For example, we characterize how surface curvature and roughness affect print-over’s
+    strength compared to the conventional print-in-one-piece. '
+  bibtex: "@inproceedings{chen2015encore,<br>&nbsp; &nbsp;title={Encore: 3D printed
+    augmentation of everyday objects with printed-over, affixed and interlocked attachments},<br>&nbsp;
+    &nbsp;author={Chen, XiangAnthony and Coros, Stelian and Mankoff, Jennifer and
+    Hudson, Scott E},<br>&nbsp; &nbsp;booktitle={Proceedings of the 28th Annual ACM
+    Symposium on User Interface Software and Technology},<br>&nbsp; &nbsp;pages={73--82},<br>&nbsp;
+    &nbsp;year={2015},<br>&nbsp; &nbsp;organization={ACM}<br>}"
+  flickr: "<a data-flickr-embed='true'  href='https://www.flickr.com/photos/128588570@N06/albums/72157670690945024'
+    title='2015 Encore'><img src='https://c1.staticflickr.com/8/7719/29123408504_e45b311991.jpg'
+    width='500' height='281' alt='2015 Encore'></a><script async src='//embedr.flickr.com/assets/client-code.js'
+    charset='utf-8'></script>"
+  paperThumbnail: uist2015_encore_thumbnail.jpg
+  paperUrl: https://www.dropbox.com/s/rggynu7m7ovg4uj/uist2015_encore.pdf?dl=0
+  paperInfo: 'Xiang ‘Anthony’ Chen, Stelian Coros, Jennifer Mankoff, Scott Hudson
+    (2015). Encore: 3D Printed Augmentation of Everyday Objects with Printed-Over,
+    Affixed and Interlocked Attachments. Proceedings of the 28th Annual ACM Symposium
+    on User Interface Software and Technology (UIST 2015) Acceptance Rate: 23.6%.'
+- imgUrl: 3dphair_small2.jpg
+  name: 3D Printed Hair
+  descp: A technique to print hair-like structures using commodity FDM printer.
+  venue: UIST '15
+  exturl: http://www.gierad.com/projects/furbrication/
+interactiontechniques:
+- imgUrl: air_touch_small.jpg
+  name: Air+Touch
+  descp: Combining In-Air Gesture and Touch Input Above Mobile Devices.
+  title: 'Air+ touch: interweaving touch and in-air gestures'
+  venue: UIST '14
+  videoId: '92972949'
+  videoType: vimeo
+  abstract: "We present Air+Touch, a new class of interactions that interweave touch
+    events with in-air gestures, offering a unified input modality with expressiveness
+    greater than each input modality alone. We demonstrate how air and touch are highly
+    complementary: touch is used to designate targets and segment in-air gestures,
+    while in-air gestures add expressivity to touch events. For example, a user can
+    draw a circle in the air and tap to trigger a context menu, do a finger 'high
+    jump' between two touches to select a region of text, or drag and in-air ‘pigtail’
+    to copy text to the clipboard. Through an observational study, we devised a basic
+    taxonomy of Air+Touch interactions, based on whether the in-air component occurs
+    before, between or after touches. To illustrate the potential of our approach,
+    we built four applications that showcase seven exemplar Air+Touch interactions
+    we created."
+  bibtex: "@inproceedings{chen2014air+,<br>&nbsp; &nbsp;title={Air+ touch: interweaving
+    touch and in-air gestures},<br>&nbsp; &nbsp;author={Chen, XiangAnthony and Schwarz,
+    Julia and Harrison, Chris and Mankoff, Jennifer and Hudson, Scott E},<br>&nbsp;
+    &nbsp;booktitle={Proceedings of the 27th annual ACM symposium on User interface
+    software and technology},<br>&nbsp; &nbsp;pages={519--525},<br>&nbsp; &nbsp;year={2014},<br>&nbsp;
+    &nbsp;organization={ACM}<br>}"
+  flickr: "<a data-flickr-embed=true  href=https://www.flickr.com/photos/128588570@N06/albums/72157670702717043
+    title=2014 Air+Touch><img src=https://c6.staticflickr.com/9/8137/29669237661_fc86b7af09.jpg
+    width=500 height=281 alt=2014 Air+Touch></a><script async src=//embedr.flickr.com/assets/client-code.js
+    charset=utf-8></script>"
+  paperThumbnail: uist2014_airtouch_thumbnail.jpg
+  paperUrl: https://www.dropbox.com/s/0tf6l2yhdw9plb2/uist2014_airtouch.pdf?dl=0
+  paperInfo: 'Xiang ‘Anthony’ Chen, Julia Schwarz, Chris Harrison, Jennifer Mankoff,
+    Scott Hudson (2014). Air+Touch: Interweaving Touch & In-Air Gestures. Proceedings
+    of the 27th Annual ACM Symposium on User Interface Software and Technology (UIST
+    2014) Acceptance Rate: 22.2%.'
+- imgUrl: swipeboard_small.jpg
+  name: Swipeboard
+  descp: An eyes-free text entry technique for ultra-small interfaces
+  title: 'Swipeboard: A Text Entry Technique for Ultra-Small Interfaces That Supports
+    Novice to Expert Transitions'
+  abstract: Ultra-small smart devices, such as smart watches, have become increasingly
+    popular in recent years. Most of these devices rely on touch as the primary input
+    modality, which makes tasks such as text entry increasingly difficult as the devices
+    continue to shrink. In the sole pursuit of entry speed, the ultimate solution
+    is a shorthand technique (e.g., Morse code) that sequences tokens of input (e.g.,
+    key, tap, swipe) into unique representations of each character. However, learning
+    such techniques is hard, as it often resorts to rote memory. Our technique, Swipeboard,
+    leverages our spatial memory of a QWERTY keyboard to learn, and eventually master
+    a shorthand, eyes-free text entry method designed for ultra-small interfaces.
+    Characters are entered with two swipes; the first swipe specifies the region where
+    the character is located, and the second swipe specifies the character within
+    that region. Our study showed that with less than two hours’ training, Tested
+    on a reduced word set, Swipeboard users achieved 19.58 words per minute (WPM),
+    15% faster than an existing baseline technique.
+  bibtex: "@inproceedings{chen2014swipeboard,<br>&nbsp; &nbsp; &nbsp; &nbsp;title={Swipeboard:
+    a text entry technique for ultra-small interfaces that supports novice to expert
+    transitions},<br>&nbsp; &nbsp; &nbsp; &nbsp;author={Chen, XiangAnthony and Grossman,
+    Tovi and Fitzmaurice, George},<br>&nbsp; &nbsp; &nbsp; &nbsp;booktitle={Proceedings
+    of the 27th annual ACM symposium on User interface software and technology},<br>&nbsp;
+    &nbsp; &nbsp; &nbsp;pages={615--620},<br>&nbsp; &nbsp; &nbsp; &nbsp;year={2014},<br>&nbsp;
+    &nbsp; &nbsp; &nbsp;organization={ACM}<br>}"
+  venue: UIST '14
+  videoId: '143152207'
+  videoType: vimeo
+  flickr: "<a data-flickr-embed=true  href=https://www.flickr.com/photos/128588570@N06/albums/72157674290832196
+    title=2014 Swipeboard><img src=https://c4.staticflickr.com/9/8365/29930321315_41a5764c70.jpg
+    width=500 height=281 alt=2014 Swipeboard></a><script async src=//embedr.flickr.com/assets/client-code.js
+    charset=utf-8></script>"
+  paperThumbnail: uist2014_swipeboard_thumbnail.jpg
+  paperUrl: https://www.dropbox.com/s/66murnflu0yfp2h/uist2014_swipeboard.pdf?dl=0
+  paperInfo: 'Xiang ‘Anthony’ Chen, Tovi Grossman, George Fitzmaurice (2014). Swipeboard:
+    A Text Entry Technique for Ultra-Small Interfaces That Supports Novice to Expert
+    Transitions. Proceedings of the 27th Annual ACM Symposium on User Interface Software
+    and Technology (UIST 2014) Acceptance Rate: 22.2%.'
+- imgUrl: swipeglass_small.jpg
+  name: Swipeglass
+  descp: Enabling typing on smart eyewear with simple tapping and swiping gestures.
+  title: 'Typing on Glasses: Adapting Text Entry to Smart Eyewear'
+  abstract: 'Text entry for smart eyewear is generally limited to speech-based input
+    due to constraints of the input channels. However, many smart eyewear devices
+    are now including a side touchpad making gesture-based text entry feasible. The
+    Swipeboard technique, recently proposed for ultra-small touch screens such as
+    smart watches, may be particularly suitable for smart eyewear: unlike other recent
+    text-entry techniques for small devices, it supports eyes-free input. We investigate
+    the limitations and feasibility of implementing Swipeboard on smart eyewear, using
+    the side touch pad for input. Our first study reveals usability and recognition
+    problems of using the side touch pad to perform the required gestures. To address
+    these problems, we propose SwipeZone, which replaces diagonal gestures with zone-specific
+    swipes. In a text entry study, we show that our redesign achieved a WPM rate of
+    8.73, 15.2% higher than Swipeboard, with a statistically significant improvement
+    in the last half of the study blocks.'
+  bibtex: "@inproceedings{grossman2015typing,<br>&nbsp; &nbsp; &nbsp; &nbsp;title={Typing
+    on glasses: adapting text entry to smart eyewear},<br>&nbsp; &nbsp; &nbsp; &nbsp;author={Grossman,
+    Tovi and Chen, Xiang Anthony and Fitzmaurice, George},<br>&nbsp; &nbsp; &nbsp;
+    &nbsp;booktitle={Proceedings of the 17th International Conference on Human-Computer
+    Interaction with Mobile Devices and Services},<br>&nbsp; &nbsp; &nbsp; &nbsp;pages={144--152},<br>&nbsp;
+    &nbsp; &nbsp; &nbsp;year={2015},<br>&nbsp; &nbsp; &nbsp; &nbsp;organization={ACM}<br>}"
+  venue: MobileHCI '15
+  videoId: hN3zPVXQjTI
+  videoType: youtube
+  paperThumbnail: mhci2015_swipeglass_thumbnail.jpg
+  paperUrl: https://www.dropbox.com/s/59o62k9btlirc5s/mhci2015_swipeglass.pdf?dl=0
+  paperInfo: 'Tovi Grossman, Xiang ‘Anthony’ Chen, George Fitzmaurice (2015). Typing
+    on Glasses: Adapting Text Entry to Smart Eyewear. Proceedings of the 17th international
+    conference on Human-computer interaction with mobile devices and services (MobileHCI
+    2015). Acceptance Rate: 25.2%.'
+- imgUrl: locus_small.jpg
+  name: Locus
+  descp: Bootstrapping user-defined body tapping recognition with offline-learned
+    probabilistic representation.
+  title: Bootstrapping User-Defined Body Tapping Recognition with Offline-Learned
+    Probabilistic Representation
+  abstract: 'To address the increasing functionality (or information) overload of
+    smartphones, prior research has explored a variety of methods to extend the input
+    vocabulary of mobile devices. In particular, body tapping has been previously
+    proposed as a technique that allows the user to quickly access a target functionality
+    by simply tapping at a specific location of the body with a smartphone. Though
+    compelling, prior work often fell short in enabling users’ unconstrained tapping
+    locations or behaviors. To address this problem, we developed a novel recognition
+    method that combines both offline—before the system sees any user-defined gestures—and
+    online learning to reliably recognize arbitrary, user-defined body tapping gestures,
+    only using a smartphone’s built-in sensors. Our experiment indicates that our
+    method significantly outperforms baseline approaches in several usage conditions.
+    In particular, provided only with a single sample per location, our accuracy is
+    30.8% over an SVM baseline and 24.8% over a template matching method. Based on
+    these findings, we discuss how our approach can be generalized to other user-defined
+    gesture problems. '
+  bibtex: "@inproceedings{chen2016reprise,<br>&nbsp; &nbsp; &nbsp; &nbsp;title={Bootstrapping
+    User-Defined Body Tapping Recognition with Offline-Learned Probabilistic Representation},<br>&nbsp;
+    &nbsp; &nbsp; &nbsp;author={Chen, XiangAnthony and Li, Yang},<br>&nbsp; &nbsp;
+    &nbsp; &nbsp;booktitle={the 29th Annual ACM Symposium on User Interface Software
+    and Technology},<br>&nbsp; &nbsp; &nbsp; &nbsp;year={2016},<br>&nbsp; &nbsp; &nbsp;
+    &nbsp;organization={ACM}<br>}"
+  venue: UIST '16
+  videoId: '184405883'
+  videoType: vimeo
+  flickr: "<a data-flickr-embed=true  href=https://www.flickr.com/photos/128588570@N06/albums/72157671061225703
+    title=2016 Locus><img src=https://c2.staticflickr.com/9/8330/29954827545_be15149c02.jpg
+    width=500 height=281 alt=2016 Locus></a><script async src=//embedr.flickr.com/assets/client-code.js
+    charset=utf-8></script>"
+  paperThumbnail: uist2016_locus_thumbnail.jpg
+  paperUrl: https://www.dropbox.com/s/atguws31wg62s28/uist2016_locus.pdf?dl=0
+  paperInfo: "Xiang 'Anthony' Chen, Yang Li (2016). Bootstrapping User-Defined Body
+    Tapping Recognition with Offline-Learned Probabilistic Representation. Proceedings
+    of the 29th Annual ACM Symposium on User Interface Software and Technology (UIST
+    2016) Acceptance Rate: 20.6%."
+- imgUrl: aroundbody_small.jpg
+  name: Around-Body
+  descp: Tracking a commodity smart phone's position around a user's body.
+  venue: MobileHCI '14
+  title: 'Around-Body Interaction: Sensing & Interaction Techniques for Proprioception-Enhanced
+    Input with Mobile Devices'
+  abstract: 'The space around the body provides a large interaction vol-ume that can
+    allow for big interactions on small mobile de-vices. However, interaction techniques
+    making use of this opportunity are underexplored, primarily focusing on dis-tributing
+    information in the space around the body. We demonstrate three types of around-body
+    interaction includ-ing canvas, modal and context-aware interactions in six demonstration
+    applications. We also present a sensing solu-tion using standard smartphone hardware:
+    a phone’s front camera, accelerometer and inertia measurement units. Our solution
+    allows a person to interact with a mobile device by holding and positioning it
+    between a normal field of view and its vicinity around the body. By leveraging
+    a user’s proprioceptive sense, around-body Interaction opens a new input channel
+    that enhances conventional interaction on a mobile device without requiring additional
+    hardware.'
+  bibtex: "@inproceedings{chen2014around,<br>&nbsp; &nbsp; &nbsp; &nbsp;title={Around-body
+    interaction: sensing and interaction techniques for proprioception-enhanced input
+    with mobile devices},<br>&nbsp; &nbsp; &nbsp; &nbsp;author={Chen, XiangAnthony
+    and Schwarz, Julia and Harrison, Chris and Mankoff, Jennifer and Hudson, Scott},<br>&nbsp;
+    &nbsp; &nbsp; &nbsp;booktitle={Proceedings of the 16th international conference
+    on Human-computer interaction with mobile devices and services},<br>&nbsp; &nbsp;
+    &nbsp; &nbsp;pages={287--290},<br>&nbsp; &nbsp; &nbsp; &nbsp;year={2014},<br>&nbsp;
+    &nbsp; &nbsp; &nbsp;organization={ACM}<br>}"
+  videoId: '142935370'
+  videoType: vimeo
+  flickr: "<a data-flickr-embed=true  href=https://www.flickr.com/photos/128588570@N06/albums/72157674813685485
+    title=2014 Around-Body Interaction><img src=https://c2.staticflickr.com/6/5444/30136577505_54c3234da4.jpg
+    width=500 height=281 alt=2014 Around-Body Interaction></a><script async src=//embedr.flickr.com/assets/client-code.js
+    charset=utf-8></script>"
+  paperThumbnail: mhci2014_aroundbody_thumbnail.jpg
+  paperUrl: https://www.dropbox.com/s/s4by7sh9fcp3jlz/mhci2014_aroundbody.pdf?dl=0
+  paperInfo: 'Xiang ‘Anthony’ Chen, Julia Schwarz, Chris Harrison, Jennifer Mankoff,
+    Scott Hudson (2014). Around-Body Interaction: Sensing & Interaction Techniques
+    for Proprioception-Enhanced Input with Mobile Devices. Proceedings of the 16th
+    international conference on Human-computer interaction with mobile devices and
+    services (MobileHCI 2014). Acceptance Rate: 21.3%.'
+- imgUrl: bci_small.jpg
+  name: Body-Centric
+  descp: A series of exploration of interacting in the space on and around our body.
+  venue: MobileHCI '12
+  title: Extending a Mobile Device’s Interaction Space through Body-Centric Interaction
+  abstract: 'Modern mobile devices rely on the screen as a primary input modality.
+    Yet the small screen real-estate limits interaction possibilities, motivating
+    researchers to explore alternate input techniques. Within this arena, our goal
+    is to develop Body-Centric Interaction with Mobile Devices: a class of input techniques
+    that allow a person to position and orient her mobile device to navigate and manipulate
+    digital content anchored in the space on and around the body. To achieve this
+    goal, we explore such interaction in a bottomup path of prototypes and implementations.
+    From our experiences, as well as by examining related work, we discuss and present
+    three recurring themes that characterize how these interactions can be realized.
+    We illustrate how these themes can inform the design of Body-Centric Interactions
+    by applying them to the design of a novel mobile browser application. Overall,
+    we contribute a class of mobile input techniques where interactions are extended
+    beyond the small screen, and are instead driven by a person’s movement of the
+    device on and around the body.'
+  bibtex: "@inproceedings{chen2012extending,<br>&nbsp; &nbsp; &nbsp; &nbsp;title={Extending
+    a mobile device's interaction space through body-centric interaction},<br>&nbsp;
+    &nbsp; &nbsp; &nbsp;author={Chen, Xiang'Anthony' and Marquardt, Nicolai and Tang,
+    Anthony and Boring, Sebastian and Greenberg, Saul},<br>&nbsp; &nbsp; &nbsp; &nbsp;booktitle={Proceedings
+    of the 14th international conference on Human-computer interaction with mobile
+    devices and services},<br>&nbsp; &nbsp; &nbsp; &nbsp;pages={151--160},<br>&nbsp;
+    &nbsp; &nbsp; &nbsp;year={2012},<br>&nbsp; &nbsp; &nbsp; &nbsp;organization={ACM}<br>}"
+  videoId: '31172179'
+  videoType: vimeo
+  flickr: "<a data-flickr-embed=true  href=https://www.flickr.com/photos/128588570@N06/albums/72157674424983716
+    title=2012 Body-Centric Interaction><img src=https://c6.staticflickr.com/9/8235/29367841533_707ef50716.jpg
+    width=500 height=281 alt=2012 Body-Centric Interaction></a><script async src=//embedr.flickr.com/assets/client-code.js
+    charset=utf-8></script>"
+  paperThumbnail: mhci2012_bci_thumbnail.jpg
+  paperUrl: https://www.dropbox.com/s/qe7btp0v8nxxd41/mhci2012_bci.pdf?dl=0
+  paperInfo: 'Xiang ‘Anthony’ Chen, Nicolai Marquardt, Anthony Tang, Sebastian Boring,
+    Saul Greenberg (2012). Extending a Mobile Device’s Interaction Space through Body-Centric
+    Interaction. Proceedings of the 14th international conference on Human-computer
+    interaction with mobile devices and services (MobileHCI 2012) Acceptance Rate:
+    25%.'
+- imgUrl: tabletstylus_small.jpg
+  name: Tablet+Stylus
+  descp: Grip and motion sensing while naturally manipulating tablet and stylus devices.
+  venue: "★ UIST '14"
+  exturl: https://kenhinckley.wordpress.com/2015/10/16/paper-sensing-techniques-for-tabletstylus-interaction-best-paper-award/
+- imgUrl: penmotion_small.jpg
+  name: Pen+Motion
+  descp: A pen with embedded IMU that supports various techniques and motion gestures.
+  venue: GI '12
+  exturl: https://kenhinckley.wordpress.com/2013/07/31/paper-motion-and-context-sensing-techniques-for-pen-computing/
+- imgUrl: skinbutton_small.jpg
+  name: Skin Buttons
+  descp: Tiny projectors integrated into a smart watch to render icons on the skin
+  venue: UIST '14
+  exturl: http://www.gierad.com/projects/skinbuttons/
+- imgUrl: sweepsense_small.jpg
+  name: SweepSense
+  descp: Sensing techniques that can automatically pause the music as you pull your
+    earplugs out.
+  venue: IUI '16
+  exturl: http://www.gierad.com/projects/sweepsense/
+- imgUrl: twistnknock_small.jpg
+  name: Twist 'n' Knock
+  descp: A one-handed gesture for smart watches.
+  venue: GI '16
+  exturl: http://graphicsinterface.org/proceedings/gi2016/gi2016-24/
+- imgUrl: fatthumb_small.jpg
+  name: Fat Thumb
+  descp: Thumb-based interaction by detecting the contact size.
+  venue: MobileHCI '12
+  exturl: http://www.sebastianboring.com/research/fatthumb
+- imgUrl: spalendar_small.jpg
+  name: Spalendar
+  descp: Visualizing calendar data by showing people moving between places.
+  venue: AVI '12
+  title: 'Spalendar: Visualizing a Group’s Calendar Events over a Geographic Space
+    on a Public Display '
+  abstract: Portable paper calendars (i.e., day planners and organizers) have greatly
+    influenced the design of group electronic calendars. Both use time units (hours/days/weeks/etc.)
+    to organize visuals, with useful information (e.g., event types, locations, attendees)
+    usually presented as - perhaps abbreviated or even hidden - text fields within
+    those time units. The problem is that, for a group, this visual sorting of individual
+    events into time buckets conveys only limited information about the social network
+    of people. For example, people’s whereabouts cannot be read ‘at a glance’ but
+    require examining the text. Our goal is to explore an alternate visualization
+    that can reflect and illustrate group members’ calendar events. Our main idea
+    is to display the group’s calendar events as spatiotemporal activities occurring
+    over a geographic space animated over time, all presented on a highly interactive
+    public display. In particular, our SPALENDAR (SPAtial CALENDAR) design animates
+    peoples’ past, present and forthcoming movements between event locations as well
+    as their static locations. Details of people’s events, their movements and their
+    locations are progressively revealed and controlled by the viewer’s proximity
+    to the display, their identity, and their gestural interactions with it, all of
+    which are tracked by the public display.
+  bibtex: "@inproceedings{chen2012spalendar,<br>&nbsp; &nbsp; &nbsp; &nbsp;title={Spalendar:
+    visualizing a group's calendar events over a geographic space on a public display},<br>&nbsp;
+    &nbsp; &nbsp; &nbsp;author={Chen, Xiang'Anthony' and Boring, Sebastian and Carpendale,
+    Sheelagh and Tang, Anthony and Greenberg, Saul},<br>&nbsp; &nbsp; &nbsp; &nbsp;booktitle={Proceedings
+    of the International Working Conference on Advanced Visual Interfaces},<br>&nbsp;
+    &nbsp; &nbsp; &nbsp;pages={689--696},<br>&nbsp; &nbsp; &nbsp; &nbsp;year={2012},<br>&nbsp;
+    &nbsp; &nbsp; &nbsp;organization={ACM}<br>}<br>"
+  videoId: '31823922'
+  videoType: vimeo
+  flickr: ''
+  paperThumbnail: avi2012_spalendar_thumbnail.jpg
+  paperUrl: https://www.dropbox.com/s/koypzyl1pdm1782/avi2012_spalendar.pdf?dl=0
+  paperInfo: 'Xiang ‘Anthony’ Chen, Sebastian Boring, Sheelagh Carpendale, Anthony
+    Tang, Saul Greenberg (2012). Spalendar: Spatially Visualizing Group’s Calendar
+    Activities as a Public Interactive Display. Proceedings of the 11th International
+    Working Conference on Advanced Visual Interfaces (AVI 2012).'
+- imgUrl: maestro_small.jpg
+  name: Maestro
+  descp: Instrumenting IMUs on a user's head, wrist, finger and pocket.
+  venue: Unpublished
+  title: 'Maestro: Sensing Techniques with Multiple Wearables '
+  abstract: We explore techniques that leverage inertial motion sensors in multiple
+    wearable devices distributed over a user’s body, and demonstrate their potential
+    in Maestro, a system for small group co-located presentations. Maestro employs
+    multiple wearables to respond in contextually-appropriate ways to the posture,
+    relative body orientation, and hand gestures of the presenter in relation to a
+    situated touch display. For example, users can knock on the display (sensed by
+    the correspondence of wrist motion and touch events on the screen) to retrieve
+    personal slide decks. Users can stand to the left or right side of the display
+    (inferred from head and body orientation), which automatically summons pen mark-up
+    tools nearby. Users can also gesture at the display to spotlight areas of the
+    slide. Informed by our observations of body language during presentations, these
+    techniques complement existing vision-based approaches, and illuminate new interaction
+    possibilities that uniquely leverage the collective sensing capabilities of multiple
+    wearables. Maestro explores a mobile means of inferring users’ naturally-occurring
+    actions and behaviors—without resorting to environmentally situated modalities—to
+    enhance the flow of co-located presentations.
+  bibtex: "@inproceedings{chen2014maestro,<br>&nbsp; &nbsp; &nbsp; &nbsp;title={Maestro:
+    Sensing Techniques with Multiple Wearables},<br>&nbsp; &nbsp; &nbsp; &nbsp;author={Chen,
+    XiangAnthony and Hinkley, Ken and Pahud, Michel and Buxton, Bill},<br>&nbsp; &nbsp;
+    &nbsp; &nbsp;year={2014},<br>&nbsp; &nbsp; &nbsp; &nbsp;organization={Unpublished}<br>}<br>"
+  videoId: '185710610'
+  videoType: vimeo
+  flickr: "<a data-flickr-embed=true  href=https://www.flickr.com/photos/128588570@N06/albums/72157671376270794
+    title=2014 Maestro><img src=https://c5.staticflickr.com/9/8418/29843197740_578844cda6.jpg
+    width=500 height=281 alt=2014 Maestro></a><script async src=//embedr.flickr.com/assets/client-code.js
+    charset=utf-8></script>"
+  paperThumbnail: unpublished_maestro_thumbnail.jpg
+  paperUrl: https://www.dropbox.com/s/60et83pzcrqevwd/unpublished_maestro.pdf?dl=0
+  paperInfo: "Xiang 'Anthony' Chen, Ken Hinckley, Michel Pahud, Bill Buxton (2014).
+    Maestro: Sensing Techniques with Multiple Wearables. Unpublished paper."
+internetofthings:
+- imgUrl: duet_small.jpg
+  name: Duet
+  descp: Joint interaction between a smart phone and a smart watch.
+  title: 'Duet: Joint Interaction Between a Smart Phone and a Smart Watch'
+  venue: "★ CHI '14"
+  abstract: 'The emergence of smart devices (e.g., smart watches and smart eyewear)
+    is redefining mobile interaction from the solo performance of a smart phone, to
+    a symphony of multiple devices. In this paper, we present Duet – an interactive
+    system that explores a design space of interactions between a smart phone and
+    a smart watch. Based on the devices’ spatial configurations, Duet coordinates
+    their motion and touch input, and extends their visual and tactile output to one
+    another. This transforms the watch into an active element that enhances a wide
+    range of phone-based interactive tasks, and enables a new class of multi-device
+    gestures and sensing techniques. A technical evaluation shows the accuracy of
+    these gestures and sensing techniques, and a subjective study on Duet provides
+    insights, observations, and guidance for future work. '
+  bibtex: "@inproceedings{chen2014duet,<br>&nbsp; &nbsp; &nbsp; &nbsp;title={Duet:
+    exploring joint interactions on a smart phone and a smart watch},<br>&nbsp; &nbsp;
+    &nbsp; &nbsp;author={Chen, XiangAnthony and Grossman, Tovi and Wigdor, Daniel
+    J and Fitzmaurice, George},<br>&nbsp; &nbsp; &nbsp; &nbsp;booktitle={Proceedings
+    of the SIGCHI Conference on Human Factors in Computing Systems},<br>&nbsp; &nbsp;
+    &nbsp; &nbsp;pages={159--168},<br>&nbsp; &nbsp; &nbsp; &nbsp;year={2014},<br>&nbsp;
+    &nbsp; &nbsp; &nbsp;organization={ACM}<br>}"
+  videoId: '81358039'
+  videoType: vimeo
+  flickr: "<a data-flickr-embed=true  href=https://www.flickr.com/photos/128588570@N06/albums/72157672834628310
+    title=2014 Duet><img src=https://c7.staticflickr.com/9/8292/29733093246_d876747ef6.jpg
+    width=500 height=281 alt=2014 Duet></a><script async src=//embedr.flickr.com/assets/client-code.js
+    charset=utf-8></script>"
+  paperThumbnail: chi2014_duet_thumbnail.jpg
+  paperUrl: https://www.dropbox.com/s/i63ivpl9bqg8leq/chi2014_duet.pdf?dl=0
+  paperInfo: "Xiang ‘Anthony’ Chen, Tovi Grossman, Daniel Wigdor, George Fitzmaurice
+    (2014). Duet: Exploring Joint Interactions on a Smart Phone and a Smart Watch.
+    Proceedings of the 32nd SIGCHI Conference on Human Factors in Computing Systems
+    (CHI 2014). Acceptance Rate: 22.8%.  Best Paper Award \U0001F3C6"
+- imgUrl: improv_small.jpg
+  name: Improv
+  descp: An input framework for users to create cross-device gestures.
+  title: 'Improv: An Input Framework for Improvising Cross-Device Interaction by Demonstration'
+  abstract: As computing devices become increasingly ubiquitous, it is now possible
+    to combine the unique capabilities of different devices or Internet of Things
+    to accomplish a task. However, there is currently a high technical barrier for
+    creating cross-device interaction. This is especially challenging for end users
+    who have limited technical expertise—end users would greatly benefit from custom
+    cross-device interaction that best suits their needs. In this article, we present
+    Improv, a cross-device input framework that allows a user to easily leverage the
+    capability of additional devices to create new input methods for an existing,
+    unmodified application, e.g., creating custom gestures on a smartphone to control
+    a desktop presentation application. Instead of requiring developers to anticipate
+    and program these cross-device behaviors in advance, Improv enables end users
+    to improvise them on the fly by simple demonstration, for their particular needs
+    and devices at hand. We showcase a range of scenarios where Improv is used to
+    create a diverse set of useful cross-device input. Our study with 14 participants
+    indicated that on average it took a participant 10 seconds to create a cross-device
+    input technique. In addition, Improv achieved 93.7% accuracy in interpreting user
+    demonstration of a target UI behavior by looking at the raw input events from
+    a single example.
+  bibtex: "@article{chen2017improv,<br>&nbsp; &nbsp; &nbsp; &nbsp;title={Improv: An
+    Input Framework for Improvising Cross-Device Interaction by Demonstration},<br>&nbsp;
+    &nbsp; &nbsp; &nbsp;author={Chen, Xiang‘Anthony’ and Li, Yang},<br>&nbsp; &nbsp;
+    &nbsp; &nbsp;journal={ACM Transactions on Computer-Human Interaction (TOCHI)},<br>&nbsp;
+    &nbsp; &nbsp; &nbsp;volume={24},<br>&nbsp; &nbsp; &nbsp; &nbsp;number={2},<br>&nbsp;
+    &nbsp; &nbsp; &nbsp;pages={15},<br>&nbsp; &nbsp; &nbsp; &nbsp;year={2017},<br>&nbsp;
+    &nbsp; &nbsp; &nbsp;publisher={ACM}<br>}"
+  videoId: '216769849'
+  videoType: vimeo
+  flickr: ''
+  paperThumbnail: tochi17_improv_thumbnail.jpg
+  paperUrl: https://www.dropbox.com/s/tvv5oldmakue3rh/tochi2017_improv.pdf?dl=0
+  paperInfo: 'Xiang ‘Anthony’ Chen, Yang Li. Improv: An Input Framework for Improvising
+    Cross-Device InteractionBy Demonstration.ACM TOCHI, 24(2), 15'
+  venue: TOCHI '17
+- imgUrl: vislens_small.jpg
+  name: VizLens
+  descp: A screen reader for physical interfaces based on crowd-labeld information.
+  venue: UIST '16
+  title: 'VizLens: A Robust and Interactive Screen Reader for Interfaces in the Real
+    World'
+  abstract: The world is full of physical interfaces that are inaccessible to blind
+    people, from microwaves and information kiosks to thermostats and checkout terminals.
+    Blind people cannot in­dependently use such devices without at least ﬁrst learning
+    their layout, and usually only after labeling them with sighted assistance. We
+    introduce VizLens —an accessible mobile ap­plication and supporting backend that
+    can robustly and inter­actively help blind people use nearly any interface they
+    en­counter. VizLens users capture a photo of an inaccessible interface and send
+    it to multiple crowd workers, who work in parallel to quickly label and describe
+    elements of the inter­face to make subsequent computer vision easier. The VizLens
+    application helps users recapture the interface in the ﬁeld of the camera, and
+    uses computer vision to interactively describe the part of the interface beneath
+    their ﬁnger (updating 8 times per second). We show that VizLens provides accurate
+    and usable real-time feedback in a study with 10 blind partici­pants, and our
+    crowdsourcing labeling workﬂow was fast (8 minutes), accurate (99.7%), and cheap
+    ($1.15). We then ex­plore extensions of VizLens that allow it to (i) adapt to
+    state changes in dynamic interfaces, (ii) combine crowd labeling with OCR technology
+    to handle dynamic displays, and (iii) beneﬁt from head-mounted cameras. VizLens
+    robustly solves a long-standing challenge in accessibility by deeply integrat­ing
+    crowdsourcing and computer vision, and foreshadows a future of increasingly powerful
+    interactive applications that would be currently impossible with either alone.
+  bibtex: "@inproceedings {vizlens,<br>&nbsp; &nbsp; &nbsp; &nbsp;author={Guo, A.,
+    Chen, A., Qi, H., White, S., Ghosh, S., Asakawa, C., and Bigham, J.P.},<br>&nbsp;
+    &nbsp; &nbsp; &nbsp;title={VizLens: A Robust and Interactive Screen Reader for
+    Interfaces in the Real World},<br>&nbsp; &nbsp; &nbsp; &nbsp;booktitle={Proceedings
+    of the ACM Symposium on User Interface Software and Technology (UIST 2016)},<br>&nbsp;
+    &nbsp; &nbsp; &nbsp;year={2016},<br>&nbsp; &nbsp; &nbsp; &nbsp;keywords={non-visual
+    interfaces, visually impaired users, accessibility, crowdsourcing, computer vision,
+    mobile devices, vizwiz},<br>}<br>"
+  videoId: hjCf-G51FWM
+  videoType: youtube
+  flickr: ''
+  paperThumbnail: uist2016_vizlens_thumbnail.jpg
+  paperUrl: https://www.dropbox.com/s/qiq9jbpffze125h/uist2016_vizlens.pdf?dl=0
+  paperInfo: 'Anhong Guo, Xiang ‘Anthony’ Chen, Haoran Qi, Samuel White, Suman Ghosh,
+    Chieko Asakawa, Jeffrey Bigham (2016). VizLens: A Robust and Interactive Screen
+    Reader for Interfaces in the Real World. Proceedings of the 29th Annual ACM Symposium
+    on User Interface Software and Technology (UIST 2016) Acceptance Rate: 20.6%.'
+- imgUrl: snaptoit_small.jpg
+  name: Snap to It
+  descp: Take a picture of an appliance and control it from your smart phone.
+  venue: CHI '16
+  title: 'Snap-To-It: A User-Inspired Platform for Opportunistic Device Interactions'
+  abstract: The ability to quickly interact with any nearby appliance from a mobile
+    device would allow people to perform a wide range of one-time tasks (e.g., printing
+    a document in an unfamiliar ofﬁce location). However, users currently lack this
+    capability, and must instead manually conﬁgure their devices for each appliance
+    they want to use. To address this problem, we cre-ated Snap-To-It, a system that
+    allows users to opportunistically interact with any appliance simply by taking
+    a picture of it. Snap-To-It shares the image of the appliance a user wants to
+    interact with over a local area network. Appliances then analyze this image (along
+    with the user’s location and device orientation) to see if they are being “selected,”
+    and deliver the corresponding control interface to the user’s mobile device. Snap-To-It’s
+    design was informed by two technology probes that explored how users would like
+    to select and interact with appliances using their mobile phone. These studies
+    highlighted the need to be able to select hardware and software via a cam-era,
+    and identiﬁed several novel use cases not supported by existing systems (e.g.,
+    interacting with disconnected objects, transferring settings between appliances).
+    In this paper, we show how Snap-To-It’s design is informed by our probes and how
+    developers can utilize our system. We then show that Snap-To-It can identify appliances
+    with over 95.3% accuracy, and demonstrate through a two-month deployment that
+    our approach is robust to gradual changes to the environment.
+  bibtex: "@inproceedings{de2016snap,<br>&nbsp; &nbsp; &nbsp; &nbsp;title={Snap-to-it:
+    a user-inspired platform for opportunistic device interactions},<br>&nbsp; &nbsp;
+    &nbsp; &nbsp;author={de Freitas, A and Nebeling, Michael and Chen, XiangAnthony
+    and Yang, Junrui and Ranithangam, ASKK and Dey, Anind K},<br>&nbsp; &nbsp; &nbsp;
+    &nbsp;booktitle={Proceedings of the 34th Annual ACM Conference on Human Factors
+    in Computing Systems (CHI 2016)},<br>&nbsp; &nbsp; &nbsp; &nbsp;year={2016}<br>}<br>"
+  videoId: '154829664'
+  videoType: vimeo
+  flickr: ''
+  paperThumbnail: chi2016_snaptoit_thumbnail.jpg
+  paperUrl: chi2016_snaptoit.pdf
+  paperInfo: 'Adrian de Freitas, Michael Nebeling, Xiang ‘Anthony’ Chen, Junrui Yang,
+    Akshaye Shreenithi Kirupa Karthikeyan Ranithangam, Anind Dey (2016). Snap-To-It:
+    A User-Inspired Platform for Opportunistic Device Interactions. Proceedings of
+    the 34th SIGCHI Conference on Human Factors in Computing Systems (CHI 2016). Acceptance
+    Rate: 23.4%.'
+sideprojects:
+- imgUrl: breader_small.jpg
+  name: b-reader
+  descp: A mobile Braille reader enabled by 3D printed actuation mechanism and OCR
+    on smart phones.
+  venue: HCI 05899
+- imgUrl: nudge_small.jpg
+  name: Nudge
+  descp: If you keep checking your phone on social occasions, it will make a scene
+    by causing others' phones to vibrate.
+  venue: DES 51878
+  vimeoId: '87716737'
+- imgUrl: armtouch_small.jpg
+  name: Arm Touch
+  descp: Mounting an accelerometer on your arm to enable simple arm tapping gestures.
+  venue: HCI 05833
+  vimeoId: '64470159'
+- imgUrl: ddr_small.jpg
+  name: DDR on Ardruino
+  descp: An finger Dance Dance Revolution game on an Arduino
+  venue: HCI 05833
+  vimeoId: '59873870'
