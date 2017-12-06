@@ -40,53 +40,55 @@
  var menuObj;
  var col = 3;
 
- var imgServer, docServer;
+ // var imgServer, docServer;
  var thbnServer = 'images/'
  var brBreak = $('<br/><br/>');
 
- $(document).ready(function() {
+$(document).ready(function() {
  	$(window).resize(function() {
  		checkResponsiveness();
  	});
 
- 	XAC.readTextFile('menu.json', function(text) {
- 		menuObj = JSON.parse(text);
+ 	// XAC.readTextFile('menu.json', function(text) {
+ 	// 	menuObj = JSON.parse(text);
+ 	// })
+
+ 	YAML.load('data.yml', function(result) {
+ 		menuObj = result;
+
+ 		$('#divSpecial').append(makeTitle('HOUSE SPECIALS'));
+ 		for (var i = 0; i < menuObj.specials.length; i++) {
+ 			$('#divSpecial').append(makeItem(menuObj.specials[i]));
+ 		}
+
+ 		$('#divMenu').append(makeTitle('FABITIZERS', true));
+ 		for (var i = 0; i < menuObj.fabrication.length; i++) {
+ 			$('#divMenu').append(makeItem(menuObj.fabrication[i]));
+ 		}
+
+ 		$('#divMenu').append(makeTitle('ENTR&Eacute;ERACTION TECHNIQUES'));
+ 		for (var i = 0; i < menuObj.interactiontechniques.length; i++) {
+ 			$('#divMenu').append(makeItem(menuObj.interactiontechniques[i]));
+ 		}
+
+ 		$('#divMenu').append(makeTitle('DISSERNET OF THINGS'));
+ 		for (var i = 0; i < menuObj.internetofthings.length; i++) {
+ 			$('#divMenu').append(makeItem(menuObj.internetofthings[i]));
+ 		}
+
+ 		$('#divMenu').append(makeTitle('SIDES'));
+ 		for (var i = 0; i < menuObj.sideprojects.length; i++) {
+ 			$('#divMenu').append(makeItem(menuObj.sideprojects[i]));
+ 		}
+
+ 		checkResponsiveness();
  	})
 
- 	imgServer = menuObj.imgServer;
- 	docServer = menuObj.docServer;
-
- 	$('#divSpecial').append(makeTitle('HOUSE SPECIALS'));
- 	for (var i = 0; i < menuObj.specials.length; i++) {
- 		$('#divSpecial').append(makeItem(menuObj.specials[i]));
- 	}
-
- 	$('#divMenu').append(makeTitle('FABITIZERS', true));
- 	for (var i = 0; i < menuObj.fabrication.length; i++) {
- 		$('#divMenu').append(makeItem(menuObj.fabrication[i]));
- 	}
-
- 	$('#divMenu').append(makeTitle('ENTR&Eacute;ERACTION TECHNIQUES'));
- 	for (var i = 0; i < menuObj.interactiontechniques.length; i++) {
- 		$('#divMenu').append(makeItem(menuObj.interactiontechniques[i]));
- 	}
-
- 	$('#divMenu').append(makeTitle('DISSERNET OF THINGS'));
- 	for (var i = 0; i < menuObj.internetofthings.length; i++) {
- 		$('#divMenu').append(makeItem(menuObj.internetofthings[i]));
- 	}
-
- 	$('#divMenu').append(makeTitle('SIDES'));
- 	for (var i = 0; i < menuObj.sideprojects.length; i++) {
- 		$('#divMenu').append(makeItem(menuObj.sideprojects[i]));
- 	}
-
- 	checkResponsiveness();
  });
 
  function makeTitle(title, isFirst) {
  	var hTitle = $('<div class="divtitle">' + title + '</div>');
- 	if(isFirst) hTitle.css('margin-top', 0);
+ 	if (isFirst) hTitle.css('margin-top', 0);
  	return hTitle;
  }
 
@@ -116,7 +118,7 @@
  					var iframeId = 'v_' + this.attr('id');
  					var src = $('iframe#' + iframeId).attr('src')
  					$('iframe#' + iframeId).attr('src', '');
-                    $(document.body).css('overflow', 'scroll');
+ 					$(document.body).css('overflow', 'scroll');
  				}
  			});
  			divPage.popup('show');
@@ -129,7 +131,7 @@
  				$('.divpage').css('width', '55%');
  			}
 
-            $(document.body).css('overflow', 'hidden');
+ 			$(document.body).css('overflow', 'hidden');
  		});
  	} else if (item.exturl != undefined) {
  		tdImage = $('<td class="tdimg"><a href=' + item.exturl + ' target="_blank">' + imgStr + '</a></td>');
