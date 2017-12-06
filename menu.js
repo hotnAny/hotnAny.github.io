@@ -1,17 +1,9 @@
  var XAC = XAC || {};
 
- XAC.readTextFile = function(file, followup) {
- 	var rawFile = new XMLHttpRequest();
- 	rawFile.open("GET", file, false);
- 	rawFile.onreadystatechange = function() {
- 		if (rawFile.readyState === 4) {
- 			if (rawFile.status === 200 || rawFile.status == 0) {
- 				if (followup != undefined) followup(rawFile.responseText);
- 			}
- 		}
- 	}
- 	rawFile.send(null);
- }
+ var divPages = [];
+ var divVideos = [];
+ var menuObj;
+ var col = 3;
 
  window.mobilecheck = function() {
  	var check = false;
@@ -35,23 +27,13 @@
  	$('#divMenu').css('-webkit-column-count', col);
  }
 
- var divPages = [];
- var divVideos = [];
- var menuObj;
- var col = 3;
-
- // var imgServer, docServer;
- var thbnServer = 'images/'
- var brBreak = $('<br/><br/>');
+ var dirImages = 'images/'
 
 $(document).ready(function() {
  	$(window).resize(function() {
  		checkResponsiveness();
  	});
 
- 	// XAC.readTextFile('menu.json', function(text) {
- 	// 	menuObj = JSON.parse(text);
- 	// })
 
  	YAML.load('data.yml', function(result) {
  		menuObj = result;
@@ -95,17 +77,12 @@ $(document).ready(function() {
  function makeItem(item) {
  	var tb = $('<table class="tbresearch" border="0"></table>');
  	var tr = $('<tr></tr>');
- 	var imgStr = '<image src="' + thbnServer + item.imgUrl + '" id="tdImg_' + item.name + '" class="imgicon"/>';
+ 	var imgStr = '<image src="' + dirImages + item.imgUrl + '" id="tdImg_' + item.name + '" class="imgicon"/>';
  	var img = $(imgStr);
- 	// var img = $('#tdImg_' + item.name);
- 	// var tdImage = $('<td class="tdimg">' + imgStr + '</td>');
  	var tdImage = $('<td class="tdimg"></td>');
  	tdImage.append(img);
 
  	if (item.title != undefined) {
- 		// 	XAC.readTextFile(item.pageSrc, function(text) {
- 		// 		divPages['tdImg_' + item.name] = text;
- 		// 	});
  		img.css('cursor', 'pointer');
  		img.click(function(e) {
  			var htmlText = divPages[$(e.target)[0].id];
@@ -141,7 +118,6 @@ $(document).ready(function() {
  		divVideos['tdImg_' + item.name] = embedCode;
  		img.css('cursor', 'pointer');
  		img.click(function(e) {
- 			// console.log($(e.target)[0].id);
  			var embedCode = divVideos[$(e.target)[0].id];
  			var divVideo = $('<div class="divvideo"></div>');
  			divVideo.html(embedCode);
@@ -190,7 +166,7 @@ $(document).ready(function() {
  	var divPubBib = $('<div class="divpubbib"></div>');
  	divPubBib.append($('<ul>' + '<li><a href="#tabPub">Publication</a></li>' + '<li><a href="#tabBib">Bibtex</a></li>' + '</ul>'))
  	var divPub = $('<div id="tabPub"></div>');
- 	divPub.append($('<table class="tbpubinfo" align="center" border="0" cellspacing="0" cellpadding="10px">' + '<tr><td><a href="' + docServer + item.paperUrl + '" target="_blank">' + '<img class="imgpaper" src="' + thbnServer + item.paperThumbnail + '"/></a></td>' + '<td class="tdpubinfo">' + item.paperInfo + '</td></tr></table>'));
+ 	divPub.append($('<table class="tbpubinfo" align="center" border="0" cellspacing="0" cellpadding="10px">' + '<tr><td><a href="' + docServer + item.paperUrl + '" target="_blank">' + '<img class="imgpaper" src="' + dirImages + item.paperThumbnail + '"/></a></td>' + '<td class="tdpubinfo">' + item.paperInfo + '</td></tr></table>'));
 
  	var divBib = $('<div id="tabBib"></div>');
  	divBib.append(item.bibtex);
@@ -215,7 +191,6 @@ $(document).ready(function() {
  		divPage.append($('<br>'));
  		divPage.append($('<br>'));
  	}
-
 
  	//
  	// album
