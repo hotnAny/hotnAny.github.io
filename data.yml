@@ -82,6 +82,11 @@ fabrication:
   descp: Generative design that combines user sketching and topology optimization.
   exturl: https://www.dropbox.com/s/4bg2fr4vw5ietba/chi2018_forte.mp4?dl=0
   venue: CHI ‘18
+- imgUrl: medley.jpg
+  name: Medley
+  descp: Embedding everyday things to enrich the materiality of 3D printed objects.
+  exturl: https://www.dropbox.com/s/vcb6b3a0f880mmw/chi2018_medley.mp4?dl=0
+  venue: CHI ‘18
 - imgUrl: facade_small.jpg
   name: Fa&ccedil;ade
   descp: Making appliances accessible with 3D printed Braille buttons.
