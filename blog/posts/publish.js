@@ -24,6 +24,23 @@ var parseArguments = function (objPost, index, val) {
 	}
 }
 
+var findTitle = function (postContents) {
+	while (true) {
+		var idx = postContents.indexOf('#')
+		if (idx < 0) break
+		if (postContents[idx + 1] != '#') {
+			postContents = postContents.substring(idx + 1)
+			var idx1 = postContents.indexOf('\n')
+			if (idx >= 0) return postContents.substring(0, idx1)
+			else return postContents
+		} else {
+			while (postContents[idx + 1] == '#') idx++
+		}
+		postContents = postContents.substring(idx + 1)
+	}
+	return undefined
+}
+
 process.argv.forEach(function (val, index, array) {
 	parseArguments(objPost, index, val)
 })
@@ -51,6 +68,9 @@ readYaml('posts.yml', function (err, data) {
 
 	data = data || {}
 	data.posts = data.posts || []
+	var postContents = fs.readFileSync(objPost.file, 'utf8')
+	var title = findTitle(postContents)
+	console.log(title)
 	var stats = fs.statSync(objPost.file)
 	objPost.birthdate = new Date(util.inspect(stats.birthtime))
 	objPost.pubdate = new Date()
