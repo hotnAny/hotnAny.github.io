@@ -69,8 +69,7 @@ readYaml('posts.yml', function (err, data) {
 	data = data || {}
 	data.posts = data.posts || []
 	var postContents = fs.readFileSync(objPost.file, 'utf8')
-	var title = findTitle(postContents)
-	console.log(title)
+	objPost.title = findTitle(postContents)
 	var stats = fs.statSync(objPost.file)
 	objPost.birthdate = new Date(util.inspect(stats.birthtime))
 	objPost.pubdate = new Date()
