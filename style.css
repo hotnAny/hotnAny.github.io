@@ -17,8 +17,10 @@ body {
     font-size: 10pt;
 }
 
-ul {
+#ulPosts {
     margin: 5px;
+    padding-left: 0px;
+    list-style: none;
 }
 
 a:link {
@@ -209,7 +211,15 @@ a:active {
 }
 
 .tdpagepost {
-    padding-top: 1%;
-    padding-left: 35%;
+    padding-top: 0%;
+    padding-left: 33%;
     padding-bottom: 3%;
+}
+
+.lbdate {
+    opacity: 0.33;
+}
+
+.ppost {
+    font-size: large;
 }

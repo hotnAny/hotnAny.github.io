@@ -1,6 +1,6 @@
 var XAC = XAC || {}
 
-XAC.renderMarkdown = function (file, container) {
+XAC.renderMarkdown = function (file, container, callback) {
 	// var file = file || "README.md";
 	var reader = new stmd.DocParser();
 	var writer = new stmd.HtmlRenderer();
@@ -17,18 +17,25 @@ XAC.renderMarkdown = function (file, container) {
 		log(content)
 		container.html(content);
 
-		/* try to extract h1 title and use as title for page
-		 if no h1, use name of file 
-	  */
 		try {
 			document.title = document.querySelector('h1').textContent
 		} catch (e) {
 			document.title = file;
 		}
+
+		callback()
 	}
 
 	xhr.open('GET', file);
 	xhr.send();
+}
+
+XAC.getDateString = function (dateObj) {
+	var month = dateObj.getUTCMonth() + 1; //months from 1-12
+	var day = dateObj.getUTCDate();
+	var year = dateObj.getUTCFullYear();
+
+	return year + "/" + month + "/" + day;
 }
 
 $(document).ready(function () {
@@ -40,17 +47,24 @@ $(document).ready(function () {
 	YAML.load('posts/posts.yml', function (result) {
 		var ulPosts = $('#ulPosts')
 		XAC.posts = result.posts
-		log(result.posts)
 		var idx = 0
 		for (post of XAC.posts) {
 			var liPost = $('<li/>')
 			liPost.css('cursor', 'pointer')
-			liPost.html(post.title || 'untitled')
+			var strDate = XAC.getDateString(post.pubdate)
+			var lbDate = $('<label/>')
+			lbDate.addClass('lbdate')
+			lbDate.html(strDate)
+			liPost.append(lbDate)
+			liPost.append('&nbsp;&nbsp;&nbsp;')
+			liPost.append(post.title || 'untitled')
 			liPost.attr('idx', idx++)
 			liPost.click(function (e) {
 				var idx = $(this).attr('idx')
 				var file = XAC.posts[idx].file
-				XAC.renderMarkdown('posts/' + file, $('#divPostContent'))
+				XAC.renderMarkdown('posts/' + file, $('#divPostContent'), function () {
+					$('#divPostContent').addClass('ppost')
+				})
 			})
 			ulPosts.append(liPost)
 		}
