@@ -3,6 +3,16 @@ posts:
     tags:
       - demo
       - reflection
-    title: ' On giving a good demo'
+    title: On giving a good demo
     birthdate: 2017-12-09T23:18:57.000Z
-    pubdate: 2017-12-23T02:36:19.047Z
+    pubdate: 2017-12-24T19:24:14.875Z
+    url: on-giving-a-good-demo
+  - file: 2017-12-22.md
+    tags:
+      - test1
+      - test2
+      - test3
+    title: Here's another title
+    birthdate: 2017-12-22T18:57:28.000Z
+    pubdate: 2017-12-24T19:40:40.653Z
+    url: heres-another-title
