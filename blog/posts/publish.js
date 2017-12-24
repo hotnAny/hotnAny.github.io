@@ -24,6 +24,7 @@ var parseArguments = function (objPost, index, val) {
 	}
 }
 
+// find the title from the markdown file
 var findTitle = function (postContents) {
 	while (true) {
 		var idx = postContents.indexOf('#')
@@ -31,14 +32,21 @@ var findTitle = function (postContents) {
 		if (postContents[idx + 1] != '#') {
 			postContents = postContents.substring(idx + 1)
 			var idx1 = postContents.indexOf('\n')
-			if (idx >= 0) return postContents.substring(0, idx1)
-			else return postContents
+			if (idx >= 0) postContents = postContents.substring(0, idx1)
+			while (postContents[0] == ' ') postContents = postContents.substring(1)
+			return postContents
 		} else {
 			while (postContents[idx + 1] == '#') idx++
 		}
 		postContents = postContents.substring(idx + 1)
 	}
 	return undefined
+}
+
+// create a unique part of the url from the title
+var createUrl = function (title) {
+	return title.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '')
+		.replace(/ /g, '-').toLowerCase()
 }
 
 process.argv.forEach(function (val, index, array) {
@@ -73,6 +81,7 @@ readYaml('posts.yml', function (err, data) {
 	var stats = fs.statSync(objPost.file)
 	objPost.birthdate = new Date(util.inspect(stats.birthtime))
 	objPost.pubdate = new Date()
+	objPost.url = createUrl(objPost.title)
 	data.posts.push(objPost)
 
 	writeYaml('posts.yml', data, function (err) {
