@@ -1,7 +1,6 @@
 var XAC = XAC || {}
 
 XAC.renderMarkdown = function (file, container, callback) {
-	// var file = file || "README.md";
 	var reader = new stmd.DocParser();
 	var writer = new stmd.HtmlRenderer();
 	var xhr = new XMLHttpRequest();
@@ -14,7 +13,6 @@ XAC.renderMarkdown = function (file, container, callback) {
 	function display(xhr) {
 		var parsed = reader.parse(xhr.responseText);
 		var content = writer.renderBlock(parsed);
-		log(content)
 		container.html(content);
 
 		try {
@@ -42,9 +40,9 @@ $(document).ready(function () {
 	var url = window.location.href
 	var idxLastSlash = url.lastIndexOf('#')
 	var idBlog = url.substring(idxLastSlash + 1)
-	log(idBlog)
 
 	YAML.load('posts/posts.yml', function (result) {
+		// load a list of posts as toc
 		var ulPosts = $('#ulPosts')
 		XAC.posts = result.posts
 		var idx = 0
@@ -60,13 +58,37 @@ $(document).ready(function () {
 			liPost.append(post.title || 'untitled')
 			liPost.attr('idx', idx++)
 			liPost.click(function (e) {
-				var idx = $(this).attr('idx')
-				var file = XAC.posts[idx].file
+				var idxClicked = $(this).attr('idx')
+				var postClicked = XAC.posts[idxClicked]
+				var file = postClicked.file
 				XAC.renderMarkdown('posts/' + file, $('#divPostContent'), function () {
 					$('#divPostContent').addClass('ppost')
+					var idxSharp = window.location.href.indexOf('#')
+					var urlNew = window.location.href
+					if (idxSharp >= 0) urlNew = urlNew.substring(0, idxSharp)
+					window.location.href = urlNew + '#' + postClicked.url
 				})
 			})
 			ulPosts.append(liPost)
 		}
+
+		// load the post as shown in the url
+		var url
+		var idxSharp = window.location.href.indexOf('#')
+		if (idxSharp >= 0) url = window.location.href.substring(idxSharp + 1)
+		var postToLoad
+		if (url != undefined)
+			for (post of XAC.posts) {
+				if (post.url == url) {
+					postToLoad = post
+					break
+				}
+			}
+		else
+			postToLoad = XAC.posts[XAC.posts.length - 1]
+			
+		XAC.renderMarkdown('posts/' + post.file, $('#divPostContent'), function () {
+			$('#divPostContent').addClass('ppost')
+		})
 	})
 })
