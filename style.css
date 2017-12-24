@@ -222,4 +222,9 @@ a:active {
 
 .ppost {
     font-size: large;
+    line-height: 150%;
+}
+
+#divPost {
+    margin-left: 5%;
 }
