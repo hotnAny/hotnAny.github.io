@@ -45,8 +45,8 @@ $(document).ready(function () {
 		// load a list of posts as toc
 		var ulPosts = $('#ulPosts')
 		XAC.posts = result.posts
-		var idx = 0
-		for (post of XAC.posts) {
+		for (i = XAC.posts.length - 1; i >= 0; i--) {
+			var post = XAC.posts[i]
 			var liPost = $('<li/>')
 			liPost.css('cursor', 'pointer')
 			var strDate = XAC.getDateString(post.pubdate)
@@ -56,7 +56,7 @@ $(document).ready(function () {
 			liPost.append(lbDate)
 			liPost.append('&nbsp;&nbsp;&nbsp;')
 			liPost.append(post.title || 'untitled')
-			liPost.attr('idx', idx++)
+			liPost.attr('idx', i)
 			liPost.click(function (e) {
 				var idxClicked = $(this).attr('idx')
 				var postClicked = XAC.posts[idxClicked]
@@ -86,8 +86,9 @@ $(document).ready(function () {
 			}
 		else
 			postToLoad = XAC.posts[XAC.posts.length - 1]
-			
-		XAC.renderMarkdown('posts/' + post.file, $('#divPostContent'), function () {
+
+		log(postToLoad)
+		XAC.renderMarkdown('posts/' + postToLoad.file, $('#divPostContent'), function () {
 			$('#divPostContent').addClass('ppost')
 		})
 	})
