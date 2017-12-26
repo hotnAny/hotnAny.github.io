@@ -1,5 +1,8 @@
 var XAC = XAC || {}
 
+//
+//	render markdown file into a html-based container
+//
 XAC.renderMarkdown = function (file, container, callback) {
 	var reader = new stmd.DocParser();
 	var writer = new stmd.HtmlRenderer();
@@ -28,6 +31,9 @@ XAC.renderMarkdown = function (file, container, callback) {
 	xhr.send();
 }
 
+//
+//	get a string representation from a date object
+//
 XAC.getDateString = function (dateObj) {
 	var month = dateObj.getUTCMonth() + 1; //months from 1-12
 	var day = dateObj.getUTCDate();
@@ -36,6 +42,9 @@ XAC.getDateString = function (dateObj) {
 	return year + "/" + month + "/" + day;
 }
 
+//
+//	ready function
+//
 $(document).ready(function () {
 	var url = window.location.href
 	var idxLastSlash = url.lastIndexOf('#')
@@ -45,7 +54,10 @@ $(document).ready(function () {
 		// load a list of posts as toc
 		var ulPosts = $('#ulPosts')
 		XAC.posts = result.posts
-		for (i = XAC.posts.length - 1; i >= 0; i--) {
+		XAC.posts.sort(function (a, b) {
+			return new Date(b.pubdate) - new Date(a.pubdate)
+		})
+		for (i = 0; i < XAC.posts.length; i++) {
 			var post = XAC.posts[i]
 			var liPost = $('<li/>')
 			liPost.css('cursor', 'pointer')
@@ -85,7 +97,7 @@ $(document).ready(function () {
 				}
 			}
 		else
-			postToLoad = XAC.posts[XAC.posts.length - 1]
+			postToLoad = XAC.posts[0]
 
 		log(postToLoad)
 		XAC.renderMarkdown('posts/' + postToLoad.file, $('#divPostContent'), function () {
