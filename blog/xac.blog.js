@@ -106,6 +106,8 @@ $(document).ready(function () {
 
 		XAC.renderMarkdown('posts/' + postToLoad.file, $('#divPostContent'), function () {
 			$('#divPostContent').addClass('ppost')
+			// var strMeta = 'published on ' + XAC.getDateString(postToLoad.pubdate)
+			// $('#divPostMeta').html(strMeta)
 		})
 	})
 })
