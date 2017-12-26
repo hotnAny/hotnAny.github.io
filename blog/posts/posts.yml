@@ -17,3 +17,12 @@ posts:
     birthdate: 2017-05-06T00:38:36.000Z
     pubdate: 2017-05-06T00:39:12.582Z
     url: redo-something-old-really-well
+  - file: 2017-10-10.md
+    tags:
+      - hci
+      - voice
+      - technology
+    title: On voice-based user interfaces
+    birthdate: 2017-12-26T17:58:30.000Z
+    pubdate: 2017-12-26T18:00:42.995Z
+    url: on-voice-based-user-interfaces

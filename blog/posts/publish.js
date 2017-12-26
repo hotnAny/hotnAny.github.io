@@ -61,7 +61,7 @@ if (objPost.file == undefined) {
 // write post metadata into posts.yml
 readYaml('posts.yml', function (err, data) {
 	if (err) throw err
-	console.log(data)
+	// console.log(data)
 
 	if (data != null && data.posts != null) {
 		// remove identical post for overwrite
