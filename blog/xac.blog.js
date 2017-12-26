@@ -39,7 +39,12 @@ XAC.getDateString = function (dateObj) {
 	var day = dateObj.getUTCDate();
 	var year = dateObj.getUTCFullYear();
 
-	return year + "/" + month + "/" + day;
+	var roundUp = function (num) {
+		return num >= 10 ? num : ('0' + num)
+	}
+
+	var strDate = year + "/" + roundUp(month) + "/" + roundUp(day)
+	return strDate
 }
 
 //
@@ -66,7 +71,7 @@ $(document).ready(function () {
 			lbDate.addClass('lbdate')
 			lbDate.html(strDate)
 			liPost.append(lbDate)
-			liPost.append('&nbsp;&nbsp;&nbsp;')
+			liPost.append('&nbsp;&nbsp;&nbsp;&nbsp;')
 			liPost.append(post.title || 'untitled')
 			liPost.attr('idx', i)
 			liPost.click(function (e) {
@@ -99,7 +104,6 @@ $(document).ready(function () {
 		else
 			postToLoad = XAC.posts[0]
 
-		log(postToLoad)
 		XAC.renderMarkdown('posts/' + postToLoad.file, $('#divPostContent'), function () {
 			$('#divPostContent').addClass('ppost')
 		})
