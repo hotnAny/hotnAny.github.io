@@ -47,6 +47,24 @@ XAC.getDateString = function (dateObj) {
 	return strDate
 }
 
+XAC.getMetaStrip = function (post) {
+	var strip = '<label class="lbmeta">'
+	strip += 'Published on: ' + XAC.getDateString(post.pubdate)
+	strip += '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tags: '
+	var strSep = ' , '
+	for(tag of post.tags) strip += tag + strSep
+	strip = strip.substring(0, strip.length - strSep.length)
+	strip += '</label>'
+	return strip
+}
+
+XAC.postProcessing = function (post) {
+	$('#divPostContent').addClass('ppost')
+	var metaStrip = XAC.getMetaStrip(post)
+	var htmlPost = $('#divPostContent').html()
+	$('#divPostContent').html(htmlPost.replace('</h1>', '</h1>' + metaStrip))
+}
+
 //
 //	ready function
 //
@@ -79,7 +97,7 @@ $(document).ready(function () {
 				var postClicked = XAC.posts[idxClicked]
 				var file = postClicked.file
 				XAC.renderMarkdown('posts/' + file, $('#divPostContent'), function () {
-					$('#divPostContent').addClass('ppost')
+					XAC.postProcessing(postClicked)
 					var idxSharp = window.location.href.indexOf('#')
 					var urlNew = window.location.href
 					if (idxSharp >= 0) urlNew = urlNew.substring(0, idxSharp)
@@ -105,9 +123,7 @@ $(document).ready(function () {
 			postToLoad = XAC.posts[0]
 
 		XAC.renderMarkdown('posts/' + postToLoad.file, $('#divPostContent'), function () {
-			$('#divPostContent').addClass('ppost')
-			// var strMeta = 'published on ' + XAC.getDateString(postToLoad.pubdate)
-			// $('#divPostMeta').html(strMeta)
+			XAC.postProcessing(postToLoad)
 		})
 	})
 })

@@ -1,5 +1,5 @@
 h1 {
-    line-height: 175%;
+    /* line-height: 75%; */
     text-align: left;
 }
 
@@ -211,7 +211,7 @@ a:active {
 }
 
 .tdpagepost {
-    padding-top: 0%;
+    padding-top: 2%;
     padding-left: 33%;
     padding-bottom: 3%;
 }
@@ -231,9 +231,9 @@ a:active {
     margin-left: 5%;
 }
 
-#divPostMeta {
+/* #divPostMeta {
     margin-top: 5%;
-}
+} */
 
 blockquote {
     background: #f9f9f9;
@@ -254,4 +254,9 @@ blockquote:before {
 
 blockquote p {
     display: inline;
+}
+
+.lbmeta {
+    opacity: 0.33;
+    font-size: normal;
 }
