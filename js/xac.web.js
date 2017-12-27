@@ -62,10 +62,6 @@ $(document).ready(function () {
 			$('#divMenu').append(makeItem(menuObj.sideprojects[i]))
 		}
 
-		document.addEventListener("wheel", function (e) {
-			e.stopPropagation()
-		})
-
 		checkResponsiveness()
 	})
 
@@ -186,7 +182,8 @@ function makePage(item) {
 		var walbum = col > 2 ? 640 : window.innerWidth * 0.5
 		var halbum = walbum * 9 / 16 * 1.2;
 
-		var divPhotos = $('<iframe id="ifPhotos" style="position: relative; top: 0; left: 0; width: 100%; height: ' + halbum + 'px;" src="https://flickrembed.com/cms_embed.php?source=flickr&layout=responsive&input=' + item.flickr + '&sort=0&by=album&theme=default_notextpanel&scale=fit&limit=10&skin=default-light&autoplay=false" scrolling="no" frameborder="0" allowFullScreen="true" webkitallowfullscreen="true" mozallowfullscreen="true"></iframe>')
+		var codeOnLoad = '' //'$(this).mousemove(function(e){console.log(e.which)})'
+		var divPhotos = $('<iframe id="ifPhotos" onload="' + codeOnLoad + '" style="position: relative; top: 0; left: 0; width: 100%; height: ' + halbum + 'px;" src="https://flickrembed.com/cms_embed.php?source=flickr&layout=responsive&input=' + item.flickr + '&sort=0&by=album&theme=default_notextpanel&scale=fit&limit=10&skin=default-light&autoplay=false" scrolling="no" frameborder="0" allowFullScreen="true" webkitallowfullscreen="true" mozallowfullscreen="true"></iframe>')
 
 		divPage.append(divPhotos)
 		divPage.append($('<br/><br/>'))
