@@ -62,6 +62,7 @@ XAC.postProcessing = function (post) {
 	$('#divPostContent').addClass('ppost')
 	var metaStrip = XAC.getMetaStrip(post)
 	var htmlPost = $('#divPostContent').html()
+	htmlPost = htmlPost.replace('<h1>', '<h1 class="h1post">')
 	$('#divPostContent').html(htmlPost.replace('</h1>', '</h1>' + metaStrip))
 }
 

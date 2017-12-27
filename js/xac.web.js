@@ -151,31 +151,12 @@ function makeItem(item) {
 }
 
 function makePage(item) {
-	var divPage = $('<div class="divPage"></div>');
+	var divPage = $('<div></div>');
 
 	//
 	// abstract & title
 	//
-	divPage.append($('<h1>' + item.title + '</h1>'))
-	divPage.append($('<br>'))
-
-	//
-	// pub & bib tex
-	//
-	var divPubBib = $('<div class="divpubbib"></div>')
-	divPubBib.append($('<ul>' + '<li><a href="#tabPub">Publication</a></li>' + '<li><a href="#tabBib">Bibtex</a></li>' + '</ul>'))
-	var divPub = $('<div id="tabPub"></div>')
-	divPub.append($('<table class="tbpubinfo" align="center" border="0" cellspacing="0" cellpadding="10px">' + '<tr><td><a href="' + item.paperUrl + '" target="_blank">' + '<img class="imgpaper" src="' + dirImages + item.paperThumbnail + '"/></a></td>' + '<td class="tdpubinfo">' + item.paperInfo + '</td></tr></table>'));
-
-	var divBib = $('<div id="tabBib"></div>')
-	divBib.append(item.bibtex)
-	divPubBib.append(divPub)
-	divPubBib.append(divBib)
-	divPubBib.tabs();
-
-	divPage.append(divPubBib)
-	divPage.append($('<br>'));
-
+	divPage.append($('<h1 class="h1project">' + item.title + '</h1>'))
 	divPage.append($('<p class="pabstract">' + item.abstract + '</p>'));
 
 	//
@@ -204,6 +185,24 @@ function makePage(item) {
 		divPhotos.html(item.flickr)
 		divPage.append(divPhotos)
 	}
+
+	divPage.append($('<br/>'))
+	//
+	// pub & bib tex
+	//
+	var divPubBib = $('<div class="divpubbib"></div>')
+	divPubBib.append($('<ul>' + '<li><a href="#tabPub">Publication</a></li>' + '<li><a href="#tabBib">Bibtex</a></li>' + '</ul>'))
+	var divPub = $('<div id="tabPub"></div>')
+	divPub.append($('<table class="tbpubinfo" align="center" border="0" cellspacing="0" cellpadding="10px">' + '<tr><td><a href="' + item.paperUrl + '" target="_blank">' + '<img class="imgpaper" src="' + dirImages + item.paperThumbnail + '"/></a></td>' + '<td class="tdpubinfo">' + item.paperInfo + '</td></tr></table>'));
+
+	var divBib = $('<div id="tabBib"></div>')
+	divBib.append(item.bibtex)
+	divPubBib.append(divPub)
+	divPubBib.append(divBib)
+	divPubBib.tabs();
+
+	divPage.append(divPubBib)
+	divPage.append($('<br>'));
 
 	return divPage
 }

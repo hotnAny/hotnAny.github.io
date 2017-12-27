@@ -1,5 +1,9 @@
-h1 {
-    /* line-height: 75%; */
+.h1project {
+    line-height: 150%;
+    text-align: left;
+}
+
+.h1post {
     text-align: left;
 }
 
@@ -128,7 +132,7 @@ a:active {
 }
 
 .divpage {
-    font-size: 9pt;
+    /* font-size: 9pt; */
     background-color: #ffffff;
     line-height: 150%;
     padding-left: 5%;
@@ -138,7 +142,7 @@ a:active {
 }
 
 .divvideo {
-    text-align: center;
+    text-align: left;
 }
 
 .divphotos {
@@ -168,6 +172,12 @@ a:active {
 }
 
 .pabstract {
+    margin-top: 3%;
+    font-size: 12pt;
+    line-height: 150%;
+}
+
+.ppitch {
     font-size: 10pt;
     line-height: 150%;
 }
