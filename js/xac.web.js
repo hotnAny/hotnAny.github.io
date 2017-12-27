@@ -28,6 +28,7 @@ function checkResponsiveness() {
 }
 
 $(document).ready(function () {
+
 	$(window).resize(function () {
 		checkResponsiveness()
 	});
@@ -61,6 +62,10 @@ $(document).ready(function () {
 			$('#divMenu').append(makeItem(menuObj.sideprojects[i]))
 		}
 
+		document.addEventListener("wheel", function (e) {
+			e.stopPropagation()
+		})
+
 		checkResponsiveness()
 	})
 
@@ -83,7 +88,6 @@ function makeItem(item) {
 	if (item.title != undefined) {
 		img.css('cursor', 'pointer')
 		img.click(function (e) {
-			// var htmlText = divPages[$(e.target)[0].id]
 			var divItem = $('<div class="divpage"></div>');
 
 			divItem.popup({
@@ -150,6 +154,10 @@ function makeItem(item) {
 	return tb
 }
 
+function resizeIframe(obj) {
+	obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
+}
+
 function makePage(item) {
 	var divPage = $('<div></div>');
 
@@ -168,43 +176,21 @@ function makePage(item) {
 		var hvideo = wvideo * 9 / 16
 		divVideo.html(getVideoEmbedCode(item.videoType, item.videoId, wvideo, hvideo, item.iframeId))
 		divPage.append(divVideo)
-		divPage.append($('<br>'))
-		divPage.append($('<br>'))
+		divPage.append($('<br><br><br>'))
 	}
 
 	//
 	// album
 	//
-	// var divPhotos = $('<div class="divphotos"><div>')
-	// var walbum = col > 2 ? 640 : window.innerWidth * 0.5
-	// var halbum = walbum * 9 / 16;
-
 	if (item.flickr != undefined) {
-		// var prefix = 'albums/'
-		// var idxAlbumId = item.flickr.indexOf(prefix)
-		// var strFlickr = item.flickr.substring(idxAlbumId + prefix.length)
-		// console.log(strFlickr)
-		// var idxEndAlbumId = Math.min(Math.min(strFlickr.indexOf("'"), 
-		// strFlickr.indexOf("\n")), strFlickr.indexOf(" "))
-		// console.log(idxEndAlbumId)
-		// var albumId = strFlickr.substring(0, idxEndAlbumId)
-		// console.log(albumId)
+		var walbum = col > 2 ? 640 : window.innerWidth * 0.5
+		var halbum = walbum * 9 / 16 * 1.2;
 
-		// 	item.flickr = item.flickr.replace('500', walbum)
-		// 	item.flickr = item.flickr.replace('281', halbum)
-		// 	divPhotos.html(item.flickr)
-		// 	divPage.append(divPhotos)
-
-
-		var divPhotos = $('<div id="flickrembed"></div><div style="position:absolute; top:-70px; display:block; text-align:center; z-index:-1;"></div><script src="https://flickrembed.com/embed_v2.js.php?source=flickr&layout=responsive&input=' + item.flickr + '&sort=0&by=album&theme=default_notextpanel&scale=fit&limit=10&skin=default-light&autoplay=false"></script>')
-
-		// var divPhotos = $('<iframe style="position: relative; top: 0; left: 0; width: 100%; height: 100%;" src="https://flickrembed.com/cms_embed.php?source=flickr&layout=responsive&input=' + item.flickr + '&sort=0&by=album&theme=default_notextpanel&scale=fit&limit=10&skin=default-light&autoplay=false" scrolling="no" frameborder="0" allowFullScreen="true" webkitallowfullscreen="true" mozallowfullscreen="true"></iframe><div style="position: absolute; padding-bottom: 60%; overflow: auto; -webkit-overflow-scrolling:touch;"><small style="display: block; text-align: center; position: absolute; bottom: 0; left: 0; right: 0; margin-left: auto; margin-right: auto;"></div><div style="position:absolute; top:-70px; display:block; text-align:center; z-index:-1;"> </div>')
+		var divPhotos = $('<iframe id="ifPhotos" style="position: relative; top: 0; left: 0; width: 100%; height: ' + halbum + 'px;" src="https://flickrembed.com/cms_embed.php?source=flickr&layout=responsive&input=' + item.flickr + '&sort=0&by=album&theme=default_notextpanel&scale=fit&limit=10&skin=default-light&autoplay=false" scrolling="no" frameborder="0" allowFullScreen="true" webkitallowfullscreen="true" mozallowfullscreen="true"></iframe>')
 
 		divPage.append(divPhotos)
-
 		divPage.append($('<br/><br/>'))
 	}
-
 
 	//
 	// pub & bib tex
