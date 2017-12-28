@@ -1,9 +1,7 @@
 var XAC = XAC || {}
 
-var divPages = []
-var divVideos = []
-var dirImages = 'image/'
-var col
+XAC.divVideos = []
+XAC.dirImages = 'image/'
 
 //
 //	check mobile platform
@@ -21,16 +19,16 @@ window.mobilecheck = function () {
 //
 XAC.checkResponsiveness = function () {
 	if ($(window).width() < 640 || window.mobilecheck() == true) {
-		col = 1
+		XAC.col = 1
 	} else if ($(window).width() < 1150) {
-		col = 1
+		XAC.col = 1
 	} else {
-		col = 2
+		XAC.col = 2
 	}
 
-	$('#divMenu').css('column-count', col)
-	$('#divMenu').css('-moz-column-count', col)
-	$('#divMenu').css('-webkit-column-count', col)
+	$('#divMenu').css('column-count', XAC.col)
+	$('#divMenu').css('-moz-column-count', XAC.col)
+	$('#divMenu').css('-webkit-column-count', XAC.col)
 }
 
 //
@@ -92,7 +90,7 @@ XAC.makeItem = function (item) {
 	var tb = $('<table class="tbresearch" border="0"></table>')
 	var tr = $('<tr></tr>')
 	var idImg = 'tdImg_' + XAC.createUrl(item.name).replace(/-/g, '_')
-	var imgStr = '<image src="' + dirImages + item.imgUrl +
+	var imgStr = '<image src="' + XAC.dirImages + item.imgUrl +
 		'" id="' + idImg + '" class="imgicon"/>'
 	var url = XAC.createUrl(item.name)
 	XAC.htProjects[url] = idImg
@@ -121,7 +119,7 @@ XAC.makeItem = function (item) {
 			item.iframeId = 'v_' + divItem.attr('id')
 			divItem.append(makePage(item))
 
-			if (col <= 1) {
+			if (XAC.col <= 1) {
 				$('.divpage').css('width', '70%')
 			} else {
 				$('.divpage').css('width', '55%')
@@ -140,10 +138,10 @@ XAC.makeItem = function (item) {
 	else if (item.vimeoId != undefined || item.youtubeId != undefined) {
 		var srcCode = item.vimeoId != undefined ? 'https://player.vimeo.com/video/' + item.vimeoId : 'https://www.youtube.com/embed/' + item.youtubeId + '?rel=0'
 		var embedCode = '<iframe id="ifmVideo" src="' + srcCode + '" width="960" height="540" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>'
-		divVideos[idImg] = embedCode
+		XAC.divVideos[idImg] = embedCode
 		img.css('cursor', 'pointer')
 		img.click(function (e) {
-			var embedCode = divVideos[$(e.target)[0].id]
+			var embedCode = XAC.divVideos[$(e.target)[0].id]
 			var divVideo = $('<div class="divvideo"></div>')
 			divVideo.html(embedCode)
 			divVideo.popup({
@@ -197,7 +195,7 @@ function makePage(item) {
 	//
 	if (item.videoId != undefined) {
 		var divVideo = $('<br><div class="divvideo"></div>')
-		var wvideo = col > 2 ? 640 : window.innerWidth * 0.5
+		var wvideo = XAC.col > 2 ? 640 : window.innerWidth * 0.5
 		var hvideo = wvideo * 9 / 16
 		divVideo.html(XAC.getVideoEmbedCode(item.videoType, item.videoId, wvideo, hvideo, item.iframeId))
 		divPage.append(divVideo)
@@ -209,7 +207,7 @@ function makePage(item) {
 	// ref: https://flickrembed.com/
 	//
 	if (item.flickr != undefined) {
-		var walbum = col > 2 ? 640 : window.innerWidth * 0.5
+		var walbum = XAC.col > 2 ? 640 : window.innerWidth * 0.5
 		var halbum = walbum * 9 / 16 * 1.2;
 
 		var codeOnLoad = ''
@@ -227,7 +225,7 @@ function makePage(item) {
 	var divPubBib = $('<div class="divpubbib"></div>')
 	divPubBib.append($('<ul>' + '<li><a href="#tabPub">Publication</a></li>' + '<li><a href="#tabBib">Bibtex</a></li>' + '</ul>'))
 	var divPub = $('<div id="tabPub"></div>')
-	divPub.append($('<table class="tbpubinfo" align="center" border="0" cellspacing="0" cellpadding="10px">' + '<tr><td><a href="' + item.paperUrl + '" target="_blank">' + '<img class="imgpaper" src="' + dirImages + item.paperThumbnail + '"/></a></td>' + '<td class="tdpubinfo">' + item.paperInfo + '</td></tr></table>'));
+	divPub.append($('<table class="tbpubinfo" align="center" border="0" cellspacing="0" cellpadding="10px">' + '<tr><td><a href="' + item.paperUrl + '" target="_blank">' + '<img class="imgpaper" src="' + XAC.dirImages + item.paperThumbnail + '"/></a></td>' + '<td class="tdpubinfo">' + item.paperInfo + '</td></tr></table>'));
 
 	var divBib = $('<div id="tabBib"></div>')
 	divBib.append(item.bibtex)
