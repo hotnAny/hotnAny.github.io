@@ -74,6 +74,11 @@ $(document).ready(function () {
 	var idxLastSlash = url.lastIndexOf('#')
 	var idBlog = url.substring(idxLastSlash + 1)
 
+	$('.divtitle').css('cursor', 'pointer')
+	$('.divtitle').click(function(e){
+		location.reload()
+	})
+
 	YAML.load('posts/posts.yml', function (result) {
 		// load a list of posts as toc
 		var ulPosts = $('#ulPosts')

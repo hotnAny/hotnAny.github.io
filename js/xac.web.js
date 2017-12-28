@@ -39,6 +39,11 @@ $(document).ready(function () {
 		XAC.checkResponsiveness()
 	});
 
+	$('.divtitle').css('cursor', 'pointer')
+	$('.divtitle').click(function(e){
+		location.reload()
+	})
+
 	XAC.htProjects = {}
 
 	YAML.load('data.yml', function (result) {
