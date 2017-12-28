@@ -5,6 +5,9 @@ var divVideos = []
 var dirImages = 'image/'
 var col
 
+//
+//	check mobile platform
+//
 window.mobilecheck = function () {
 	var check = false;
 	(function (a) {
@@ -13,7 +16,10 @@ window.mobilecheck = function () {
 	return check
 };
 
-function checkResponsiveness() {
+//
+//	check whether need to be responsive
+//
+XAC.checkResponsiveness = function () {
 	if ($(window).width() < 640 || window.mobilecheck() == true) {
 		col = 1
 	} else if ($(window).width() < 1150) {
@@ -27,9 +33,12 @@ function checkResponsiveness() {
 	$('#divMenu').css('-webkit-column-count', col)
 }
 
+//
+//	the ready function
+//
 $(document).ready(function () {
 	$(window).resize(function () {
-		checkResponsiveness()
+		XAC.checkResponsiveness()
 	});
 
 	XAC.htProjects = {}
@@ -37,32 +46,32 @@ $(document).ready(function () {
 	YAML.load('data.yml', function (result) {
 		var menuObj = result;
 
-		$('#divSpecial').append(makeTitle('HOUSE SPECIALS'))
+		$('#divSpecial').append(XAC.makeTitle('HOUSE SPECIALS'))
 		for (var i = 0; i < menuObj.specials.length; i++) {
-			$('#divSpecial').append(makeItem(menuObj.specials[i]))
+			$('#divSpecial').append(XAC.makeItem(menuObj.specials[i]))
 		}
 
-		$('#divMenu').append(makeTitle('FABITIZERS', true))
+		$('#divMenu').append(XAC.makeTitle('FABITIZERS', true))
 		for (var i = 0; i < menuObj.fabrication.length; i++) {
-			$('#divMenu').append(makeItem(menuObj.fabrication[i]))
+			$('#divMenu').append(XAC.makeItem(menuObj.fabrication[i]))
 		}
 
-		$('#divMenu').append(makeTitle('ENTR&Eacute;ERACTION TECHNIQUES'))
+		$('#divMenu').append(XAC.makeTitle('ENTR&Eacute;ERACTION TECHNIQUES'))
 		for (var i = 0; i < menuObj.interactiontechniques.length; i++) {
-			$('#divMenu').append(makeItem(menuObj.interactiontechniques[i]))
+			$('#divMenu').append(XAC.makeItem(menuObj.interactiontechniques[i]))
 		}
 
-		$('#divMenu').append(makeTitle('DISSERNET OF THINGS'))
+		$('#divMenu').append(XAC.makeTitle('DISSERNET OF THINGS'))
 		for (var i = 0; i < menuObj.internetofthings.length; i++) {
-			$('#divMenu').append(makeItem(menuObj.internetofthings[i]))
+			$('#divMenu').append(XAC.makeItem(menuObj.internetofthings[i]))
 		}
 
-		$('#divMenu').append(makeTitle('SIDES'))
+		$('#divMenu').append(XAC.makeTitle('SIDES'))
 		for (var i = 0; i < menuObj.sideprojects.length; i++) {
-			$('#divMenu').append(makeItem(menuObj.sideprojects[i]))
+			$('#divMenu').append(XAC.makeItem(menuObj.sideprojects[i]))
 		}
 
-		checkResponsiveness()
+		XAC.checkResponsiveness()
 
 		var url
 		var idxSharp = window.location.href.indexOf('#')
@@ -76,29 +85,10 @@ $(document).ready(function () {
 
 });
 
-function makeTitle(title, isFirst) {
-	var hTitle = $('<div class="divtitle">' + title + '</div>')
-	if (isFirst) hTitle.css('margin-top', 0)
-	return hTitle
-}
-
-// create a unique part of the url from the title
-XAC.createUrl = function (title) {
-	if (title == undefined) return ''
-	return title.replace(/[&\/\\#,+()$~%.'":*;?<>{}]/g, '')
-		.replace(/ /g, '-').toLowerCase()
-}
-
-XAC.updateUrl = function (name) {
-	var idxSharp = window.location.href.indexOf('#')
-	var urlNew = window.location.href
-	if (idxSharp >= 0) urlNew = urlNew.substring(0, idxSharp)
-	// if(name != undefined) 
-	window.location.href = urlNew + '#' + XAC.createUrl(name)
-	// else window.location.href = urlNew
-}
-
-function makeItem(item) {
+//
+//  make a project item displayed on the menu
+//
+XAC.makeItem = function (item) {
 	var tb = $('<table class="tbresearch" border="0"></table>')
 	var tr = $('<tr></tr>')
 	var idImg = 'tdImg_' + XAC.createUrl(item.name).replace(/-/g, '_')
@@ -110,6 +100,7 @@ function makeItem(item) {
 	var tdImage = $('<td class="tdimg"></td>')
 	tdImage.append(img);
 
+	// 1. has a stand-alone project page
 	if (item.title != undefined) {
 		img.css('cursor', 'pointer')
 		img.click(function (e) {
@@ -140,9 +131,13 @@ function makeItem(item) {
 
 			XAC.updateUrl(item.name)
 		})
-	} else if (item.exturl != undefined) {
+	} 
+	// 2. link to external page
+	else if (item.exturl != undefined) {
 		tdImage = $('<td class="tdimg"><a href=' + item.exturl + ' target="_blank">' + imgStr + '</a></td>')
-	} else if (item.vimeoId != undefined || item.youtubeId != undefined) {
+	} 
+	// 3. show embedded video
+	else if (item.vimeoId != undefined || item.youtubeId != undefined) {
 		var srcCode = item.vimeoId != undefined ? 'https://player.vimeo.com/video/' + item.vimeoId : 'https://www.youtube.com/embed/' + item.youtubeId + '?rel=0'
 		var embedCode = '<iframe id="ifmVideo" src="' + srcCode + '" width="960" height="540" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>'
 		divVideos[idImg] = embedCode
@@ -185,10 +180,9 @@ function makeItem(item) {
 	return tb
 }
 
-function resizeIframe(obj) {
-	obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
-}
-
+//
+//  make a detailed project page
+//
 function makePage(item) {
 	var divPage = $('<div></div>');
 
@@ -205,13 +199,14 @@ function makePage(item) {
 		var divVideo = $('<br><div class="divvideo"></div>')
 		var wvideo = col > 2 ? 640 : window.innerWidth * 0.5
 		var hvideo = wvideo * 9 / 16
-		divVideo.html(getVideoEmbedCode(item.videoType, item.videoId, wvideo, hvideo, item.iframeId))
+		divVideo.html(XAC.getVideoEmbedCode(item.videoType, item.videoId, wvideo, hvideo, item.iframeId))
 		divPage.append(divVideo)
 		divPage.append($('<br><br><br>'))
 	}
 
 	//
 	// album
+	// ref: https://flickrembed.com/
 	//
 	if (item.flickr != undefined) {
 		var walbum = col > 2 ? 640 : window.innerWidth * 0.5
@@ -219,7 +214,7 @@ function makePage(item) {
 
 		var codeOnLoad = ''
 		var divPhotos = $('<iframe id="ifPhotos" onload="' + codeOnLoad +
-			'" style="position: relative; top: 0; left: 0; text-align: left; width: 100%; height: ' + 
+			'" style="position: relative; top: 0; left: 0; text-align: left; width: 100%; height: ' +
 			halbum + 'px;" src="https://flickrembed.com/cms_embed.php?source=flickr&layout=responsive&input=' + item.flickr + '&sort=0&by=album&theme=default_notextpanel&scale=fit&limit=10&skin=alexis&autoplay=false" scrolling="no" frameborder="0" allowFullScreen="true" webkitallowfullscreen="true" mozallowfullscreen="true"></iframe>')
 
 		divPage.append(divPhotos)
@@ -246,9 +241,42 @@ function makePage(item) {
 	return divPage
 }
 
-function getVideoEmbedCode(type, vid, w, h, iframeId) {
+//
+//	create title for menu items
+//
+XAC.makeTitle = function (title, isFirst) {
+	var hTitle = $('<div class="divtitle">' + title + '</div>')
+	if (isFirst) hTitle.css('margin-top', 0)
+	return hTitle
+}
+
+//
+//  get video embed code with updated info
+//
+XAC.getVideoEmbedCode = function (type, vid, w, h, iframeId) {
 	var srcCode = type == 'youtube' ? 'https://www.youtube.com/embed/' + vid + '?rel=0' :
 		'https://player.vimeo.com/video/' + vid
 	console.info(iframeId)
 	return '<iframe id="' + iframeId + '" src="' + srcCode + '" width="' + w + '" height="' + h + '" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>'
+}
+
+//
+//  create a unique part of the url from the title
+//
+XAC.createUrl = function (title) {
+	if (title == undefined) return ''
+	return title.replace(/[&\/\\#,+()$~%.'":*;?<>{}]/g, '')
+		.replace(/ /g, '-').toLowerCase()
+}
+
+//
+//  update window url with project name (that's been clicked)
+//
+XAC.updateUrl = function (name) {
+	var idxSharp = window.location.href.indexOf('#')
+	var urlNew = window.location.href
+	if (idxSharp >= 0) urlNew = urlNew.substring(0, idxSharp)
+	// if(name != undefined) 
+	window.location.href = urlNew + '#' + XAC.createUrl(name)
+	// else window.location.href = urlNew
 }
