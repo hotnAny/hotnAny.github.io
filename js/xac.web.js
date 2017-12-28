@@ -28,11 +28,11 @@ function checkResponsiveness() {
 }
 
 $(document).ready(function () {
-
 	$(window).resize(function () {
 		checkResponsiveness()
 	});
 
+	XAC.htProjects = {}
 
 	YAML.load('data.yml', function (result) {
 		var menuObj = result;
@@ -63,6 +63,15 @@ $(document).ready(function () {
 		}
 
 		checkResponsiveness()
+
+		var url
+		var idxSharp = window.location.href.indexOf('#')
+		if (idxSharp >= 0) url = window.location.href.substring(idxSharp + 1)
+		var projToLoad
+		if (url != undefined) {
+			var idImgToClick = XAC.htProjects[url]
+			$('#' + idImgToClick).trigger('click')
+		}
 	})
 
 });
@@ -73,10 +82,30 @@ function makeTitle(title, isFirst) {
 	return hTitle
 }
 
+// create a unique part of the url from the title
+XAC.createUrl = function (title) {
+	if (title == undefined) return ''
+	return title.replace(/[&\/\\#,+()$~%.'":*;?<>{}]/g, '')
+		.replace(/ /g, '-').toLowerCase()
+}
+
+XAC.updateUrl = function (name) {
+	var idxSharp = window.location.href.indexOf('#')
+	var urlNew = window.location.href
+	if (idxSharp >= 0) urlNew = urlNew.substring(0, idxSharp)
+	// if(name != undefined) 
+	window.location.href = urlNew + '#' + XAC.createUrl(name)
+	// else window.location.href = urlNew
+}
+
 function makeItem(item) {
 	var tb = $('<table class="tbresearch" border="0"></table>')
 	var tr = $('<tr></tr>')
-	var imgStr = '<image src="' + dirImages + item.imgUrl + '" id="tdImg_' + item.name + '" class="imgicon"/>'
+	var idImg = 'tdImg_' + XAC.createUrl(item.name).replace(/-/g, '_')
+	var imgStr = '<image src="' + dirImages + item.imgUrl +
+		'" id="' + idImg + '" class="imgicon"/>'
+	var url = XAC.createUrl(item.name)
+	XAC.htProjects[url] = idImg
 	var img = $(imgStr)
 	var tdImage = $('<td class="tdimg"></td>')
 	tdImage.append(img);
@@ -94,6 +123,7 @@ function makeItem(item) {
 					var src = $('iframe#' + iframeId).attr('src')
 					$('iframe#' + iframeId).attr('src', '')
 					$(document.body).css('overflow', 'scroll')
+					XAC.updateUrl()
 				}
 			})
 			divItem.popup('show')
@@ -107,13 +137,15 @@ function makeItem(item) {
 			}
 
 			$(document.body).css('overflow', 'hidden')
+
+			XAC.updateUrl(item.name)
 		})
 	} else if (item.exturl != undefined) {
 		tdImage = $('<td class="tdimg"><a href=' + item.exturl + ' target="_blank">' + imgStr + '</a></td>')
 	} else if (item.vimeoId != undefined || item.youtubeId != undefined) {
 		var srcCode = item.vimeoId != undefined ? 'https://player.vimeo.com/video/' + item.vimeoId : 'https://www.youtube.com/embed/' + item.youtubeId + '?rel=0'
 		var embedCode = '<iframe id="ifmVideo" src="' + srcCode + '" width="960" height="540" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>'
-		divVideos['tdImg_' + item.name] = embedCode
+		divVideos[idImg] = embedCode
 		img.css('cursor', 'pointer')
 		img.click(function (e) {
 			var embedCode = divVideos[$(e.target)[0].id]
@@ -124,10 +156,13 @@ function makeItem(item) {
 				onclose: function () {
 					$('#ifmVideo').attr('src', '')
 					$('#ifmVideo').attr('id', '_ifmVideo')
+					XAC.updateUrl()
 				}
 			});
 
 			divVideo.popup('show')
+
+			XAC.updateUrl(item.name)
 		})
 	}
 
@@ -145,7 +180,7 @@ function makeItem(item) {
 
 	tb.append(tr)
 	tr.append(tdImage)
-	tr.append(tdDescp);
+	tr.append(tdDescp)
 
 	return tb
 }
@@ -182,8 +217,8 @@ function makePage(item) {
 		var walbum = col > 2 ? 640 : window.innerWidth * 0.5
 		var halbum = walbum * 9 / 16 * 1.2;
 
-		var codeOnLoad = '' //'$(this).mousemove(function(e){console.log(e.which)})'
-		var divPhotos = $('<iframe id="ifPhotos" onload="' + codeOnLoad + '" style="position: relative; top: 0; left: 0; width: 100%; height: ' + halbum + 'px;" src="https://flickrembed.com/cms_embed.php?source=flickr&layout=responsive&input=' + item.flickr + '&sort=0&by=album&theme=default_notextpanel&scale=fit&limit=10&skin=default-light&autoplay=false" scrolling="no" frameborder="0" allowFullScreen="true" webkitallowfullscreen="true" mozallowfullscreen="true"></iframe>')
+		var codeOnLoad = ''
+		var divPhotos = $('<iframe id="ifPhotos" onload="' + codeOnLoad + '" style="position: relative; top: 0; left: 0; text-align: left; width: 100%; height: ' + halbum + 'px;" src="https://flickrembed.com/cms_embed.php?source=flickr&layout=responsive&input=' + item.flickr + '&sort=0&by=album&theme=default_notextpanel&scale=fit&limit=10&skin=default-light&autoplay=false" scrolling="no" frameborder="0" allowFullScreen="true" webkitallowfullscreen="true" mozallowfullscreen="true"></iframe>')
 
 		divPage.append(divPhotos)
 		divPage.append($('<br/><br/>'))

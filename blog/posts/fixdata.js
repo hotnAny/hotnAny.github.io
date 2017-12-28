@@ -12,18 +12,11 @@ var fixflickr = function (project) {
     var prefix = 'albums/'
     var idxAlbumId = project.flickr.indexOf(prefix)
     var strFlickr = project.flickr.substring(idxAlbumId + prefix.length)
-    // // console.log(strFlickr)
-    // var idxEndAlbumId = strFlickr.indexOf(" ")
-    // // console.log(idxEndAlbumId)
-    // var albumId = strFlickr.substring(0, idxEndAlbumId)
     var albumId = ""
     while (parseInt(strFlickr[0]) >= 0) {
         albumId += strFlickr[0]
         strFlickr = strFlickr.substring(1)
     }
-    // if (albumId.length > 0)
-
-    // console.log(strFlickr)
     console.log(albumId)
     project.flickr = albumId
 }
