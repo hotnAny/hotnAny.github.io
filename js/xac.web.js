@@ -218,7 +218,9 @@ function makePage(item) {
 		var halbum = walbum * 9 / 16 * 1.2;
 
 		var codeOnLoad = ''
-		var divPhotos = $('<iframe id="ifPhotos" onload="' + codeOnLoad + '" style="position: relative; top: 0; left: 0; text-align: left; width: 100%; height: ' + halbum + 'px;" src="https://flickrembed.com/cms_embed.php?source=flickr&layout=responsive&input=' + item.flickr + '&sort=0&by=album&theme=default_notextpanel&scale=fit&limit=10&skin=default-light&autoplay=false" scrolling="no" frameborder="0" allowFullScreen="true" webkitallowfullscreen="true" mozallowfullscreen="true"></iframe>')
+		var divPhotos = $('<iframe id="ifPhotos" onload="' + codeOnLoad +
+			'" style="position: relative; top: 0; left: 0; text-align: left; width: 100%; height: ' + 
+			halbum + 'px;" src="https://flickrembed.com/cms_embed.php?source=flickr&layout=responsive&input=' + item.flickr + '&sort=0&by=album&theme=default_notextpanel&scale=fit&limit=10&skin=alexis&autoplay=false" scrolling="no" frameborder="0" allowFullScreen="true" webkitallowfullscreen="true" mozallowfullscreen="true"></iframe>')
 
 		divPage.append(divPhotos)
 		divPage.append($('<br/><br/>'))
