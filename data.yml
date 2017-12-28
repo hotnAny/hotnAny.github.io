@@ -78,6 +78,7 @@ specials:
       &nbsp;year={2017},<br>&nbsp; &nbsp; &nbsp; &nbsp;publisher={ACM}<br>}
     videoId: '216769849'
     videoType: vimeo
+    flickr: '72157664092225828'
     paperThumbnail: tochi17_improv_thumbnail.jpg
     paperUrl: 'https://www.dropbox.com/s/tvv5oldmakue3rh/tochi2017_improv.pdf?dl=0'
     paperInfo: >-
@@ -679,6 +680,7 @@ internetofthings:
       &nbsp;year={2017},<br>&nbsp; &nbsp; &nbsp; &nbsp;publisher={ACM}<br>}
     videoId: '216769849'
     videoType: vimeo
+    flickr: '72157664092225828'
     paperThumbnail: tochi17_improv_thumbnail.jpg
     paperUrl: 'https://www.dropbox.com/s/tvv5oldmakue3rh/tochi2017_improv.pdf?dl=0'
     paperInfo: >-
