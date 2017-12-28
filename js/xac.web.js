@@ -40,7 +40,7 @@ $(document).ready(function () {
 	});
 
 	$('.divtitle').css('cursor', 'pointer')
-	$('.divtitle').click(function(e){
+	$('.divtitle').click(function (e) {
 		location.reload()
 	})
 
@@ -134,11 +134,11 @@ XAC.makeItem = function (item) {
 
 			XAC.updateUrl(item.name)
 		})
-	} 
+	}
 	// 2. link to external page
 	else if (item.exturl != undefined) {
 		tdImage = $('<td class="tdimg"><a href=' + item.exturl + ' target="_blank">' + imgStr + '</a></td>')
-	} 
+	}
 	// 3. show embedded video
 	else if (item.vimeoId != undefined || item.youtubeId != undefined) {
 		var srcCode = item.vimeoId != undefined ? 'https://player.vimeo.com/video/' + item.vimeoId : 'https://www.youtube.com/embed/' + item.youtubeId + '?rel=0'
@@ -218,7 +218,7 @@ function makePage(item) {
 		var codeOnLoad = ''
 		var divPhotos = $('<iframe id="ifPhotos" onload="' + codeOnLoad +
 			'" style="position: relative; top: 0; left: 0; text-align: left; width: 100%; height: ' +
-			halbum + 'px;" src="https://flickrembed.com/cms_embed.php?source=flickr&layout=responsive&input=' + item.flickr + '&sort=0&by=album&theme=default_notextpanel&scale=fit&limit=10&skin=alexis&autoplay=false" scrolling="no" frameborder="0" allowFullScreen="true" webkitallowfullscreen="true" mozallowfullscreen="true"></iframe>')
+			halbum + 'px;" src="https://flickrembed.com/cms_embed.php?source=flickr&layout=responsive&input=' + item.flickr + '&sort=0&by=album&theme=default_notextpanel&scale=fit&limit=100&skin0&skin=alexis&autoplay=false" scrolling="no" frameborder="0" allowFullScreen="true" webkitallowfullscreen="true" mozallowfullscreen="true"></iframe>')
 
 		divPage.append(divPhotos)
 		divPage.append($('<br/><br/>'))
