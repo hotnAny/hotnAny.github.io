@@ -77,8 +77,8 @@ $(document).ready(function () {
 		XAC.checkResponsiveness()
 
 		var url
-		var idxSharp = window.location.href.indexOf('#')
-		if (idxSharp >= 0) url = window.location.href.substring(idxSharp + 1)
+		var idxSharp = location.href.indexOf('#')
+		if (idxSharp >= 0) url = location.href.substring(idxSharp + 1)
 		var projToLoad
 		if (url != undefined) {
 			var idImgToClick = XAC.htProjects[url]
@@ -276,10 +276,10 @@ XAC.createUrl = function (title) {
 //  update window url with project name (that's been clicked)
 //
 XAC.updateUrl = function (name) {
-	var idxSharp = window.location.href.indexOf('#')
-	var urlNew = window.location.href
+	var idxSharp = location.href.indexOf('#')
+	var urlNew = location.href
 	if (idxSharp >= 0) urlNew = urlNew.substring(0, idxSharp)
 	// if(name != undefined) 
-	window.location.href = urlNew + '#' + XAC.createUrl(name)
-	// else window.location.href = urlNew
+	location.href = urlNew + '#' + XAC.createUrl(name)
+	// else location.href = urlNew
 }

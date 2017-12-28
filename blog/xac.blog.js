@@ -47,17 +47,23 @@ XAC.getDateString = function (dateObj) {
 	return strDate
 }
 
+//
+//	get a strip of meta info of a blog post
+//
 XAC.getMetaStrip = function (post) {
 	var strip = '<label class="lbmeta">'
 	strip += 'Published on: ' + XAC.getDateString(post.pubdate)
 	strip += '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tags: '
 	var strSep = ' , '
-	for(tag of post.tags) strip += tag + strSep
+	for (tag of post.tags) strip += tag + strSep
 	strip = strip.substring(0, strip.length - strSep.length)
 	strip += '</label>'
 	return strip
 }
 
+//
+//	post processing after loading
+//
 XAC.postProcessing = function (post) {
 	$('#divPostContent').addClass('ppost')
 	var metaStrip = XAC.getMetaStrip(post)
@@ -70,13 +76,18 @@ XAC.postProcessing = function (post) {
 //	ready function
 //
 $(document).ready(function () {
-	var url = window.location.href
+	var url = location.href
 	var idxLastSlash = url.lastIndexOf('#')
 	var idBlog = url.substring(idxLastSlash + 1)
 
 	$('.divtitle').css('cursor', 'pointer')
-	$('.divtitle').click(function(e){
-		location.reload()
+	$('.divtitle').click(function (e) {
+		var idxSharp = location.href.indexOf('#')
+		var urlNew = location.href
+		if (idxSharp >= 0)
+			location.href = urlNew.substring(0, idxSharp)
+		else
+			location.reload()
 	})
 
 	YAML.load('posts/posts.yml', function (result) {
@@ -104,10 +115,10 @@ $(document).ready(function () {
 				var file = postClicked.file
 				XAC.renderMarkdown('posts/' + file, $('#divPostContent'), function () {
 					XAC.postProcessing(postClicked)
-					var idxSharp = window.location.href.indexOf('#')
-					var urlNew = window.location.href
+					var idxSharp = location.href.indexOf('#')
+					var urlNew = location.href
 					if (idxSharp >= 0) urlNew = urlNew.substring(0, idxSharp)
-					window.location.href = urlNew + '#' + postClicked.url
+					location.href = urlNew + '#' + postClicked.url
 				})
 			})
 			ulPosts.append(liPost)
@@ -115,8 +126,8 @@ $(document).ready(function () {
 
 		// load the post as shown in the url
 		var url
-		var idxSharp = window.location.href.indexOf('#')
-		if (idxSharp >= 0) url = window.location.href.substring(idxSharp + 1)
+		var idxSharp = location.href.indexOf('#')
+		if (idxSharp >= 0) url = location.href.substring(idxSharp + 1)
 		var postToLoad
 		if (url != undefined)
 			for (post of XAC.posts) {
