@@ -26,3 +26,12 @@ posts:
     birthdate: 2017-10-10T17:58:30.000Z
     pubdate: 2017-10-10T18:00:42.995Z
     url: on-voice-based-user-interfaces
+  - file: 2018-01-01.md
+    tags:
+      - wfh
+      - log
+      - productivity
+    title: 'My work-from-home log book #1'
+    birthdate: 2018-01-03T06:04:35.000Z
+    pubdate: 2018-01-03T06:25:00.424Z
+    url: my-work-from-home-log-book-1
