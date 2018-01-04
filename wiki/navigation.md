@@ -1,6 +1,5 @@
 # xac.wiki
 
-[Home](index.md)
 - - - -
 [Notes](notes/notes.md)
 - - - -
