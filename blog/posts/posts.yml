@@ -35,3 +35,22 @@ posts:
     birthdate: 2018-01-03T06:04:35.000Z
     pubdate: 2018-01-03T06:25:00.424Z
     url: my-work-from-home-log-book-1
+  - file: 2018-01-08.md
+    tags:
+      - fabrication
+      - future
+      - modeling
+      - domain
+    title: On modeling domain-specific making
+    birthdate: 2018-01-08T19:52:37.000Z
+    pubdate: 2018-01-08T19:59:21.405Z
+    url: on-modeling-domain-specific-making
+  - file: 2018-01-10.md
+    tags:
+      - wfh
+      - log
+      - productivity
+    title: 'My work-from-home log book #2'
+    birthdate: 2018-01-09T21:52:40.000Z
+    pubdate: 2018-01-11T05:28:02.177Z
+    url: my-work-from-home-log-book-2
