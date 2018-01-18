@@ -72,6 +72,21 @@ XAC.postProcessing = function (post) {
 	$('#divPostContent').html(htmlPost.replace('</h1>', '</h1>' + metaStrip))
 }
 
+XAC.trim = function(str, len) {
+	var tailBase = ' . . .'
+	if (str.length < len + tailBase.length) return str
+
+	for(var i=str.length-1, tail=tailBase; i>= 0; i--) {
+		if(i >= len) continue
+		if(str[i] == ' ') {
+			str = str.substring(0, i)
+			str += tail
+			return str
+		}
+		tail += ' .'
+	}
+}
+
 //
 //	ready function
 //
@@ -107,7 +122,7 @@ $(document).ready(function () {
 			lbDate.html(strDate)
 			liPost.append(lbDate)
 			liPost.append('&nbsp;&nbsp;&nbsp;&nbsp;')
-			liPost.append(post.title || 'untitled')
+			liPost.append(XAC.trim(post.title, 32) || 'untitled')
 			liPost.attr('idx', i)
 			liPost.click(function (e) {
 				var idxClicked = $(this).attr('idx')

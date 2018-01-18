@@ -4,6 +4,17 @@ specials:
     descp: Generative design that combines user sketching and topology optimization.
     exturl: 'https://www.dropbox.com/s/4bg2fr4vw5ietba/chi2018_forte.mp4?dl=0'
     venue: CHI '18
+    title: 'Forte: User-Driven Generative Design'
+    abstract: Low-cost fabrication machines (e.g., 3D printers) offer the promise of creating custom-designed objects by a range of users. To maximize performance, generative design methods such as topology optimization can automatically optimize properties of a design based on high-level specifications. Though promising, such methods require people to map their design ideas--often unintuitively--to a small number of mathematical input parameters, and the relationship between those parameters and a generated design is often unclear, making it difficult to iterate a design. We present Forte, a sketch-based, real-time interactive tool for people to directly express and iterate on their designs via 2D topology optimization. Users can ask the system to add structures, provide a variation with better performance, or optimize internal material layouts. Users can globally control how much to `deviate' from the initial sketch, or perform local suggestive editing, which interactively prompts the system to update based on the new information. Design sessions with 10 participants demonstrate that Forte empowers designers to create and explore a range of optimized designs with custom forms and styles.
+    bibtex: >-
+      @article{chen2017improv,<br>&nbsp; &nbsp; &nbsp; &nbsp;title={Improv: An Input Framework for Improvising Cross-Device Interaction by Demonstration},<br>&nbsp; &nbsp; &nbsp; &nbsp;author={Chen, Xiang‘Anthony’ and Li, Yang},<br>&nbsp; &nbsp; &nbsp; &nbsp;journal={ACM Transactions on Computer-Human Interaction (TOCHI)},<br>&nbsp; &nbsp; &nbsp; &nbsp;volume={24},<br>&nbsp; &nbsp; &nbsp; &nbsp;number={2},<br>&nbsp; &nbsp; &nbsp; &nbsp;pages={15},<br>&nbsp; &nbsp; &nbsp; &nbsp;year={2017},<br>&nbsp; &nbsp; &nbsp; &nbsp;publisher={ACM}<br>}
+    videoId: '244079629'
+    videoType: vimeo
+    flickr: '72157668597613889'
+    paperThumbnail: chi2018_forte_thumbnail.jpg
+    paperUrl: 'https://www.dropbox.com/s/lk2vi6j915ca1lt/chi2018_forte.pdf?dl=0'
+    paperInfo: >-
+      Xiang ‘Anthony’ Chen, Ye Tao, Guanyun Wang, Runchang Kang, Tovi Grossman, Stelian Coros, ScottHudson. Forte: User-Driven Generative DesignTo Appear at ACM CHI 2018. Acceptance Rate: 25.7%.
   - imgUrl: duet_small.jpg
     name: Duet
     descp: Joint interaction between a smart phone and a smart watch.

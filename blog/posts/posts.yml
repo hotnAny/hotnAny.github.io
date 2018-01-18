@@ -54,3 +54,23 @@ posts:
     birthdate: 2018-01-09T21:52:40.000Z
     pubdate: 2018-01-11T05:28:02.177Z
     url: my-work-from-home-log-book-2
+  - file: 2018-01-12.md
+    tags:
+      - fabrication
+      - AI
+      - future
+      - human-in-the-loop
+    title: On human-in-the-loop intelligence
+    birthdate: 2018-01-11T19:41:49.000Z
+    pubdate: 2018-01-11T20:38:15.800Z
+    url: on-human-in-the-loop-intelligence
+  - file: 2018-01-16.md
+    tags:
+      - innovation
+      - decision
+      - responsibility
+      - quotes
+    title: On deciding what is the right thing to do for an organization
+    birthdate: 2018-01-17T02:19:14.000Z
+    pubdate: 2018-01-17T02:32:21.491Z
+    url: on-deciding-what-is-the-right-thing-to-do-for-an-organization
