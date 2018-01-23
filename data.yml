@@ -7,14 +7,14 @@ specials:
     title: 'Forte: User-Driven Generative Design'
     abstract: Low-cost fabrication machines (e.g., 3D printers) offer the promise of creating custom-designed objects by a range of users. To maximize performance, generative design methods such as topology optimization can automatically optimize properties of a design based on high-level specifications. Though promising, such methods require people to map their design ideas--often unintuitively--to a small number of mathematical input parameters, and the relationship between those parameters and a generated design is often unclear, making it difficult to iterate a design. We present Forte, a sketch-based, real-time interactive tool for people to directly express and iterate on their designs via 2D topology optimization. Users can ask the system to add structures, provide a variation with better performance, or optimize internal material layouts. Users can globally control how much to `deviate' from the initial sketch, or perform local suggestive editing, which interactively prompts the system to update based on the new information. Design sessions with 10 participants demonstrate that Forte empowers designers to create and explore a range of optimized designs with custom forms and styles.
     bibtex: >-
-      @article{chen2017improv,<br>&nbsp; &nbsp; &nbsp; &nbsp;title={Improv: An Input Framework for Improvising Cross-Device Interaction by Demonstration},<br>&nbsp; &nbsp; &nbsp; &nbsp;author={Chen, Xiang‘Anthony’ and Li, Yang},<br>&nbsp; &nbsp; &nbsp; &nbsp;journal={ACM Transactions on Computer-Human Interaction (TOCHI)},<br>&nbsp; &nbsp; &nbsp; &nbsp;volume={24},<br>&nbsp; &nbsp; &nbsp; &nbsp;number={2},<br>&nbsp; &nbsp; &nbsp; &nbsp;pages={15},<br>&nbsp; &nbsp; &nbsp; &nbsp;year={2017},<br>&nbsp; &nbsp; &nbsp; &nbsp;publisher={ACM}<br>}
+      @unpublished{chen2017forte,<br>&nbsp; &nbsp; &nbsp; &nbsp;title={Forte: User-Driven Generative Design},<br>&nbsp; &nbsp; &nbsp; &nbsp;author={\textbf{Chen, X} and Ye, Tao and Wang, Guanyun and Runchang, Kang and Grossman, Tovi and Coros, Stelian and Hudson, Scott E},<br>&nbsp; &nbsp; &nbsp; &nbsp;note={To appear at CHI '18}<br>}
     videoId: '244079629'
     videoType: vimeo
     flickr: '72157668597613889'
     paperThumbnail: chi2018_forte_thumbnail.jpg
     paperUrl: 'https://www.dropbox.com/s/lk2vi6j915ca1lt/chi2018_forte.pdf?dl=0'
     paperInfo: >-
-      Xiang ‘Anthony’ Chen, Ye Tao, Guanyun Wang, Runchang Kang, Tovi Grossman, Stelian Coros, ScottHudson. Forte: User-Driven Generative Design. To Appear at ACM CHI 2018. Acceptance Rate: 25.7%.
+      Xiang ‘Anthony’ Chen, Ye Tao, Guanyun Wang, Runchang Kang, Tovi Grossman, Stelian Coros, Scott Hudson. Forte: User-Driven Generative Design. To Appear at ACM CHI 2018. Acceptance Rate: 25.7%.
   - imgUrl: duet_small.jpg
     name: Duet
     descp: Joint interaction between a smart phone and a smart watch.
@@ -100,24 +100,33 @@ fabrication:
   - imgUrl: forte.jpg
     name: Fort&eacute;
     descp: Generative design that combines user sketching and topology optimization.
-    exturl: 'https://www.dropbox.com/s/4bg2fr4vw5ietba/chi2018_forte.mp4?dl=0'
     venue: CHI '18
     title: 'Forte: User-Driven Generative Design'
     abstract: Low-cost fabrication machines (e.g., 3D printers) offer the promise of creating custom-designed objects by a range of users. To maximize performance, generative design methods such as topology optimization can automatically optimize properties of a design based on high-level specifications. Though promising, such methods require people to map their design ideas--often unintuitively--to a small number of mathematical input parameters, and the relationship between those parameters and a generated design is often unclear, making it difficult to iterate a design. We present Forte, a sketch-based, real-time interactive tool for people to directly express and iterate on their designs via 2D topology optimization. Users can ask the system to add structures, provide a variation with better performance, or optimize internal material layouts. Users can globally control how much to `deviate' from the initial sketch, or perform local suggestive editing, which interactively prompts the system to update based on the new information. Design sessions with 10 participants demonstrate that Forte empowers designers to create and explore a range of optimized designs with custom forms and styles.
     bibtex: >-
-      @article{chen2017improv,<br>&nbsp; &nbsp; &nbsp; &nbsp;title={Improv: An Input Framework for Improvising Cross-Device Interaction by Demonstration},<br>&nbsp; &nbsp; &nbsp; &nbsp;author={Chen, Xiang‘Anthony’ and Li, Yang},<br>&nbsp; &nbsp; &nbsp; &nbsp;journal={ACM Transactions on Computer-Human Interaction (TOCHI)},<br>&nbsp; &nbsp; &nbsp; &nbsp;volume={24},<br>&nbsp; &nbsp; &nbsp; &nbsp;number={2},<br>&nbsp; &nbsp; &nbsp; &nbsp;pages={15},<br>&nbsp; &nbsp; &nbsp; &nbsp;year={2017},<br>&nbsp; &nbsp; &nbsp; &nbsp;publisher={ACM}<br>}
+      @unpublished{chen2017forte,<br>&nbsp; &nbsp; &nbsp; &nbsp;title={Forte: User-Driven Generative Design},<br>&nbsp; &nbsp; &nbsp; &nbsp;author={\textbf{Chen, X} and Ye, Tao and Wang, Guanyun and Runchang, Kang and Grossman, Tovi and Coros, Stelian and Hudson, Scott E},<br>&nbsp; &nbsp; &nbsp; &nbsp;note={To appear at CHI '18}<br>}
     videoId: '244079629'
     videoType: vimeo
     flickr: '72157668597613889'
     paperThumbnail: chi2018_forte_thumbnail.jpg
     paperUrl: 'https://www.dropbox.com/s/lk2vi6j915ca1lt/chi2018_forte.pdf?dl=0'
     paperInfo: >-
-      Xiang ‘Anthony’ Chen, Ye Tao, Guanyun Wang, Runchang Kang, Tovi Grossman, Stelian Coros, ScottHudson. Forte: User-Driven Generative Design. To Appear at ACM CHI 2018. Acceptance Rate: 25.7%.
+      Xiang ‘Anthony’ Chen, Ye Tao, Guanyun Wang, Runchang Kang, Tovi Grossman, Stelian Coros, Scott Hudson. Forte: User-Driven Generative Design. To Appear at ACM CHI 2018. Acceptance Rate: 25.7%.
   - imgUrl: medley.jpg
     name: Medley
     descp: Embedding everyday things to enrich the materiality of 3D printed objects.
-    exturl: 'https://www.dropbox.com/s/vcb6b3a0f880mmw/chi2018_medley.mp4?dl=0'
+    title: 'Medley: A Library of Embeddables to Explore Rich Material Properties for 3D Printed Objects'
     venue: CHI ‘18
+    videoId: '252273058'
+    videoType: vimeo
+    flickr: '72157689656591312'
+    abstract: In our everyday life, we interact with and benefit from objects with a wide range of material properties. In contrast, personal fabrication machines (e.g., desktop 3D printers) currently only support a much smaller set of materials. Our goal is to close the gap between current limitations and the future of multi-material printing by enabling people to explore the reuse of material from everyday objects into their custom designs. To achieve this, we develop a library of embeddables--everyday objects that can be cut, worked and embedded into 3D printable designs. We describe a design space that characterizes the geometric and material properties of embeddables. We then develop Medley---a design tool whereby users can import a 3D model, search for embeddables with desired material properties, and interactively edit and integrate their geometry to fit into the original design. Medley also supports the final fabrication and embedding process, including instructions for carving or cutting the objects, and generating optimal paths for inserting embeddables. To validate the expressiveness of our library, we showcase numerous examples augmented by embeddables that go beyond the objects' original printed materials.
+    bibtex: >-
+      @unpublished{chen2017medley,<br>&nbsp; &nbsp; &nbsp; &nbsp;title={Medley: A Library of Embeddables to Explore Rich Material Properties for 3D Printed Objects},<br>&nbsp; &nbsp; &nbsp; &nbsp;author={\textbf{Chen, X} and Coros, Stelian and Hudson, Scott E},<br>&nbsp; &nbsp; &nbsp; &nbsp;note={To appear at CHI '18}<br>}
+    paperThumbnail: chi2018_medley_thumbnail.jpg
+    paperUrl: 'https://www.dropbox.com/s/93p1q9njp60qa20/medley_chi2018.pdf?dl=0' 
+    paperInfo: >-
+      Xiang ‘Anthony’ Chen, Stelian Coros, Scott Hudson. Medley: A Library of Embeddables to Explore RichMaterial Properties for 3D Printed ObjectsTo Appear at ACM CHI 2018. Acceptance Rate: 25.7%.
   - imgUrl: facade_small.jpg
     name: Fa&ccedil;ade
     descp: Making appliances accessible with 3D printed Braille buttons.
