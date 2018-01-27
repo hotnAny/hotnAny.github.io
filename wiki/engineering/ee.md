@@ -1,6 +1,8 @@
 # Electrical Engineering Basics
 * **CMOS**
 
+* **FPGA** (Field Programmable Gate Array) refers to integrated circuits that can be re-configured by the users. For example, a user can configure an FPGA to connect an external LED and switch so that the switch turns on/off the LED; alternatively, the user can re-configure the FPGA to add an NOT-gate in the existing circuit so the switch behaves the opposite way. FPGA differs from a microcontroller in that you write programs that run on a microcontroller, but you write 'programs' that change the actual circuitry in an FPGA
+
 * **Integrated Circuits**
 
 * **Semiconductor**

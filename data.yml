@@ -598,45 +598,6 @@ interactiontechniques:
       Saul Greenberg (2012). Spalendar: Spatially Visualizing Group’s Calendar
       Activities as a Public Interactive Display. Proceedings of the 11th
       International Working Conference on Advanced Visual Interfaces (AVI 2012).
-  - imgUrl: maestro_small.jpg
-    name: Maestro
-    descp: 'Instrumenting IMUs on a user''s head, wrist, finger and pocket.'
-    venue: Unpublished
-    title: 'Maestro: Sensing Techniques with Multiple Wearables '
-    abstract: >-
-      We explore techniques that leverage inertial motion sensors in multiple
-      wearable devices distributed over a user’s body, and demonstrate their
-      potential in Maestro, a system for small group co-located presentations.
-      Maestro employs multiple wearables to respond in contextually-appropriate
-      ways to the posture, relative body orientation, and hand gestures of the
-      presenter in relation to a situated touch display. For example, users can
-      knock on the display (sensed by the correspondence of wrist motion and
-      touch events on the screen) to retrieve personal slide decks. Users can
-      stand to the left or right side of the display (inferred from head and
-      body orientation), which automatically summons pen mark-up tools nearby.
-      Users can also gesture at the display to spotlight areas of the slide.
-      Informed by our observations of body language during presentations, these
-      techniques complement existing vision-based approaches, and illuminate new
-      interaction possibilities that uniquely leverage the collective sensing
-      capabilities of multiple wearables. Maestro explores a mobile means of
-      inferring users’ naturally-occurring actions and behaviors—without
-      resorting to environmentally situated modalities—to enhance the flow of
-      co-located presentations.
-    bibtex: >-
-      @inproceedings{chen2014maestro,<br>&nbsp; &nbsp; &nbsp;
-      &nbsp;title={Maestro: Sensing Techniques with Multiple
-      Wearables},<br>&nbsp; &nbsp; &nbsp; &nbsp;author={Chen, XiangAnthony and
-      Hinkley, Ken and Pahud, Michel and Buxton, Bill},<br>&nbsp; &nbsp; &nbsp;
-      &nbsp;year={2014},<br>&nbsp; &nbsp; &nbsp;
-      &nbsp;organization={Unpublished}<br>}<br>
-    videoId: '185710610'
-    videoType: vimeo
-    flickr: '72157671376270794'
-    paperThumbnail: unpublished_maestro_thumbnail.jpg
-    paperUrl: 'https://www.dropbox.com/s/60et83pzcrqevwd/unpublished_maestro.pdf?dl=0'
-    paperInfo: >-
-      Xiang 'Anthony' Chen, Ken Hinckley, Michel Pahud, Bill Buxton (2014).
-      Maestro: Sensing Techniques with Multiple Wearables. Unpublished paper.
 internetofthings:
   - imgUrl: duet_small.jpg
     name: Duet
@@ -817,6 +778,45 @@ internetofthings:
       Snap-To-It: A User-Inspired Platform for Opportunistic Device
       Interactions. Proceedings of the 34th SIGCHI Conference on Human Factors
       in Computing Systems (CHI 2016). Acceptance Rate: 23.4%.
+  - imgUrl: maestro_small.jpg
+    name: Maestro
+    descp: 'Instrumenting IMUs on a user''s head, wrist, finger and pocket.'
+    venue: Unpublished
+    title: 'Maestro: Sensing Techniques with Multiple Wearables '
+    abstract: >-
+      We explore techniques that leverage inertial motion sensors in multiple
+      wearable devices distributed over a user’s body, and demonstrate their
+      potential in Maestro, a system for small group co-located presentations.
+      Maestro employs multiple wearables to respond in contextually-appropriate
+      ways to the posture, relative body orientation, and hand gestures of the
+      presenter in relation to a situated touch display. For example, users can
+      knock on the display (sensed by the correspondence of wrist motion and
+      touch events on the screen) to retrieve personal slide decks. Users can
+      stand to the left or right side of the display (inferred from head and
+      body orientation), which automatically summons pen mark-up tools nearby.
+      Users can also gesture at the display to spotlight areas of the slide.
+      Informed by our observations of body language during presentations, these
+      techniques complement existing vision-based approaches, and illuminate new
+      interaction possibilities that uniquely leverage the collective sensing
+      capabilities of multiple wearables. Maestro explores a mobile means of
+      inferring users’ naturally-occurring actions and behaviors—without
+      resorting to environmentally situated modalities—to enhance the flow of
+      co-located presentations.
+    bibtex: >-
+      @inproceedings{chen2014maestro,<br>&nbsp; &nbsp; &nbsp;
+      &nbsp;title={Maestro: Sensing Techniques with Multiple
+      Wearables},<br>&nbsp; &nbsp; &nbsp; &nbsp;author={Chen, XiangAnthony and
+      Hinkley, Ken and Pahud, Michel and Buxton, Bill},<br>&nbsp; &nbsp; &nbsp;
+      &nbsp;year={2014},<br>&nbsp; &nbsp; &nbsp;
+      &nbsp;organization={Unpublished}<br>}<br>
+    videoId: '185710610'
+    videoType: vimeo
+    flickr: '72157671376270794'
+    paperThumbnail: unpublished_maestro_thumbnail.jpg
+    paperUrl: 'https://www.dropbox.com/s/60et83pzcrqevwd/unpublished_maestro.pdf?dl=0'
+    paperInfo: >-
+      Xiang 'Anthony' Chen, Ken Hinckley, Michel Pahud, Bill Buxton (2014).
+      Maestro: Sensing Techniques with Multiple Wearables. Unpublished paper.
 sideprojects:
   - imgUrl: breader_small.jpg
     exturl: https://www.dropbox.com/s/eixesi3rsjtk646/b.reader.pdf?dl=0

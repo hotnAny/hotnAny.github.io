@@ -2,9 +2,9 @@
 - - - -
 [Notes]()
 
-  * [Multimodal Interaction](notes/multimodal.md)
-  * [Human-in-the-Loop AI](notes/hitl_ai.md)
-  * [Sandbox](notes/sandbox.md)
+  * [Multimodal Interaction](notes/_multimodal.md)
+  * [Human-in-the-Loop AI](notes/_hitl_ai.md)
+  * [Sandbox](notes/_sandbox.md)
 
 [Fabrication]()
 
