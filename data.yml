@@ -127,6 +127,11 @@ fabrication:
     paperUrl: 'https://www.dropbox.com/s/93p1q9njp60qa20/medley_chi2018.pdf?dl=0' 
     paperInfo: >-
       Xiang ‘Anthony’ Chen, Stelian Coros, Scott Hudson. Medley: A Library of Embeddables to Explore RichMaterial Properties for 3D Printed Objects. To Appear at ACM CHI 2018. Acceptance Rate: 25.7%.
+  - imgUrl: thermorph_small.jpg
+    name: Thermorph
+    venue: 🔥 CHI ‘18 
+    descp: Leveraging FDM warpage to print self-folding structures in off-the-shelf machines.
+    exturl: http://morphingmatter.cs.cmu.edu/thermorph/
   - imgUrl: facade_small.jpg
     name: Fa&ccedil;ade
     descp: Making appliances accessible with 3D printed Braille buttons.
