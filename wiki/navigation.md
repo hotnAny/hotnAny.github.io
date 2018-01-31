@@ -2,7 +2,7 @@
 - - - -
 [Notes]()
 
-  * [Multimodal Interaction](notes/_multimodal.md)
+  * [Multimodal Interaction](notes/0multimodal.md)
   * [Human-in-the-Loop AI](notes/_hitl_ai.md)
   * [Sandbox](notes/_sandbox.md)
 
