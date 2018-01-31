@@ -19,7 +19,7 @@ specials:
     name: Duet
     descp: Joint interaction between a smart phone and a smart watch.
     title: 'Duet: Joint Interaction Between a Smart Phone and a Smart Watch'
-    venue: ★ CHI '14
+    venue: CHI '14 🏆
     abstract: >-
       The emergence of smart devices (e.g., smart watches and smart eyewear) is
       redefining mobile interaction from the solo performance of a smart phone,
@@ -518,7 +518,7 @@ interactiontechniques:
     descp: >-
       Grip and motion sensing while naturally manipulating tablet and stylus
       devices.
-    venue: ★ UIST '14
+    venue: UIST '14 🏆
     exturl: >-
       https://kenhinckley.wordpress.com/2015/10/16/paper-sensing-techniques-for-tabletstylus-interaction-best-paper-award/
   - imgUrl: penmotion_small.jpg
@@ -608,7 +608,7 @@ internetofthings:
     name: Duet
     descp: Joint interaction between a smart phone and a smart watch.
     title: 'Duet: Joint Interaction Between a Smart Phone and a Smart Watch'
-    venue: ★ CHI '14
+    venue: CHI '14 🏆
     abstract: >-
       The emergence of smart devices (e.g., smart watches and smart eyewear) is
       redefining mobile interaction from the solo performance of a smart phone,
