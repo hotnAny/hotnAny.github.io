@@ -548,7 +548,7 @@ interactiontechniques:
     exturl: 'http://www.gierad.com/projects/sweepsense/'
   - imgUrl: wristext_small.png
     name: WrisText
-    venue: 🔥 CHI '18
+    venue: 🎖 CHI '18
     descp: A one-handed text entry technique using wrist swirling.
     exturl: http://www.cs.dartmouth.edu/~xingdong/
   - imgUrl: twistnknock_small.jpg
