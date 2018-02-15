@@ -3,8 +3,8 @@
 [Notes]()
 
   * [Multimodal Interaction](notes/0multimodal.md)
-  * [Human-in-the-Loop AI](notes/_hitl_ai.md)
-  * [Sandbox](notes/_sandbox.md)
+  * [Human-in-the-Loop AI](notes/1hitl_ai.md)
+  * [Sandbox](notes/99sandbox.md)
 
 [Fabrication]()
 
