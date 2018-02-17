@@ -89,7 +89,11 @@ posts:
     pubdate: 2018-01-30T05:19:22.369Z
     url: on-real-data-first
   - file: 2018-02-16.md
+    tags:
+      - IoT
+      - data
+      - value
     title: On the value of IoT devices
     birthdate: 2018-02-17T02:02:27.000Z
-    pubdate: 2018-02-17T02:05:23.343Z
+    pubdate: 2018-02-17T02:07:32.017Z
     url: on-the-value-of-iot-devices
