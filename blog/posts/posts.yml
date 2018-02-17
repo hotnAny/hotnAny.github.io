@@ -83,11 +83,6 @@ posts:
     birthdate: 2018-01-25T04:26:38.000Z
     pubdate: 2018-01-25T04:59:44.262Z
     url: my-work-from-home-log-book-3
-  - file: 2018-01-29.md
-    title: On real data first
-    birthdate: 2018-01-30T05:16:26.000Z
-    pubdate: 2018-01-30T05:19:22.369Z
-    url: on-real-data-first
   - file: 2018-02-16.md
     tags:
       - IoT
@@ -97,3 +92,13 @@ posts:
     birthdate: 2018-02-17T02:02:27.000Z
     pubdate: 2018-02-17T02:07:32.017Z
     url: on-the-value-of-iot-devices
+  - file: 2018-01-29.md
+    tags:
+      - data
+      - AI
+      - UX
+      - design
+    title: On real data first
+    birthdate: 2018-01-30T05:16:26.000Z
+    pubdate: 2018-02-17T02:08:24.938Z
+    url: on-real-data-first
