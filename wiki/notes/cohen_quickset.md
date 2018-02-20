@@ -34,7 +34,7 @@ This paper contributes "a new unification-based mechanism for fusing partial mea
 
 #### Temporal and semantic compatibility for unification
 * Temporal compatibility
-> "... when users speak and gesture in a sequential manner, they gesture first, then speak within a relatively short time window; speech rarely precedes gesture. As a consequence, our multimodal intpreer prefers to integrate gesture with speech that follows within a short time interval, than with preceding speech. If speech arrives after that interval, the gesture will be interpreted unimodally."
+> "... when users speak and gesture in a sequential manner, they gesture first, then speak within a relatively short time window; speech rarely precedes gesture. As a consequence, our multimodal interpreter prefers to integrate gesture with speech that follows within a short time interval, than with preceding speech. If speech arrives after that interval, the gesture will be interpreted unimodally."
 * Semantic compatibility
 
   * ... is achieved through "typed feature structure"
