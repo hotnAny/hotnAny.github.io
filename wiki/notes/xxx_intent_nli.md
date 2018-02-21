@@ -8,7 +8,8 @@
 * This paper is about mapping intent to different visualizations and the transitions in between.
 
 ## More Sentences
-* The Wizard-of-Oz study was based on a 2x2 of four conditions: (w/, w/o intent) x (w/, w/o context).
+* The Wizard-of-Oz study was based on a 2x2 of four conditions: (w/, w/o intent) x (w/, w/o context). 
+> "... varying by how intelligently the wizard responded to user intent in utteranes and whether or not the wizard considered the current context (i.e., visualization state)"
 ** W/ intent means the wizard will manipulate the visualization to meet the user's intent; w/o intent means the visualization will follow prescribed rules (rather than reacting to users' intent);
 ** W/ context means an utterance will be interpreted with its context (whenever possible); w/o context means each utterance will be interpreted independently.
 
