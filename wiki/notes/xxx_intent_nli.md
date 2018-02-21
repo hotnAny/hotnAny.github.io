@@ -1,5 +1,5 @@
 
-# Did You Mean Compare or Correlate? Identifying Intent in Visual Analytical Conversations
+[//]: # "# Did You Mean Compare or Correlate? Identifying Intent in Visual Analytical Conversations"
 
 
 
