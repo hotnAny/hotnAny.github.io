@@ -32,7 +32,7 @@ The conversational transitional model
 The unexpected system behavior, which was intereprted from participants' reaction to the wizard's work on the vis
 * Vis states
 
-** unexpected schema (attribute?)
-** unexpected transformations
-** unexpected filters
-** unexpected encodings
+  ** unexpected schema (attribute?)
+  ** unexpected transformations
+  ** unexpected filters
+  ** unexpected encodings
