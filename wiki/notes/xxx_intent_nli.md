@@ -32,7 +32,13 @@ The conversational transitional model
 The unexpected system behavior, which was intereprted from participants' reaction to the wizard's work on the vis
 * Vis states
 
-  ** unexpected schema (attribute?)
-  ** unexpected transformations
-  ** unexpected filters
-  ** unexpected encodings
+  * unexpected schema (attribute?): didn't not infer the right attribute from a query
+  * unexpected transformations: e.g., "did younger women survive better than older women?"; expected two bins (young and old) but instead got all age bins
+  * unexpected filters: failures to in/exclude data or not providing filter controls
+  * unexpected encodings: returning an unwanted/undesired chart type
+
+* Transitions: "... either desired context from the prior state was lost, or undesired context was retained."
+
+Comparison of conditions
+* C4 (intent, context) had the least unexpected system behaviors, retries and resets
+* C3 (intent, no context) had the most unexpected system behaviors, retries and resets
