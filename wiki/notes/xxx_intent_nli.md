@@ -23,3 +23,16 @@ The information retrieval side:
 The visual analytics side:
 > "... none of these systems attempt to infer user intent; they rely either on data characteristics alone or on explicit task descriptions that can be cumbersome to create."
 
+The conversational transitional model
+<add image of figure 4>
+> "The key insight of our model is that the transitional states need to be applied to all elements of the visualization state (attributes, transformations, filters, and encodings), not just to filters."
+
+> "An intelligent conversational system will need to infer a user's transitional goals based on their actions, translate these to transitional states, and then update the visualization components accordingly."
+
+The unexpected system behavior, which was intereprted from participants' reaction to the wizard's work on the vis
+* Vis states
+
+** unexpected schema (attribute?)
+** unexpected transformations
+** unexpected filters
+** unexpected encodings
