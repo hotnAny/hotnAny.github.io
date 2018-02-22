@@ -102,3 +102,13 @@ posts:
     birthdate: 2018-01-30T05:16:26.000Z
     pubdate: 2018-02-17T02:08:24.938Z
     url: on-real-data-first
+  - file: 2018-02-21.md
+    tags:
+      - AI
+      - human-in-the-loop
+      - augmenting
+      - humans
+    title: On how AI should augment human intelligence
+    birthdate: 2018-02-22T03:42:03.000Z
+    pubdate: 2018-02-22T03:55:56.919Z
+    url: on-how-ai-should-augment-human-intelligence
