@@ -16,6 +16,8 @@ This paper describes an interface that allows people to use natural language to 
 
 It advocates a type of visualization interface whereon a user asks a question, and the system manipulates itself so that it appears more insightful towards answering the user's question
 
+(https://i.imgur.com/zgS0WAX.png "Eviza screenshot")
+
 ## More Sentences
 "We introduce Eviza, a natural language interface for visual data analysis. Eviza enables a user to have an interactive conversation with their data by emphasizing the ability for a user to continually revise and update their queries in an iterative way to create a 'dialog' with the visualization."
 
