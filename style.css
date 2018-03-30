@@ -78,6 +78,12 @@ a:active {
     color: #aaaaaa;
 }
 
+.imgprofile{
+    border-radius: 10px;
+    display: block;
+    width: 64px;
+}
+
 .imgicon {
     border-radius: 10px;
     display: block;
