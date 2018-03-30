@@ -13,10 +13,10 @@
 
 [Interaction]()
 
-  * [General](interaction/_general.md)
+  * [General](interaction/0general.md)
   * [Situated Displays](interaction/situated.md)
   * [Tablet & Stylus](interaction/tablet.md)
-  * [Mobile Computers](interaction/_mobile.md)
+  * [Mobile Computers](interaction/3mobile.md)
   * [Wearable Devices](interaction/wearable.md)
 
 [Engineering]()
