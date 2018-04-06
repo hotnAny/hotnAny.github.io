@@ -78,10 +78,10 @@ a:active {
     color: #aaaaaa;
 }
 
-.imgprofile{
-    border-radius: 10px;
+.img-profile{
+    border-radius: 16px;
     display: block;
-    width: 64px;
+    width: 90%;
 }
 
 .imgicon {
