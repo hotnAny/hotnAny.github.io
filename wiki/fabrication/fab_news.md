@@ -1,5 +1,6 @@
 # News
 ## 2018
+* According to Wohler's report, sales of metal additive manufacturing machines grew by 80% in 2017. [[link]](http://www.3ders.org/articles/20180327-wohlers-report-2018-sales-of-metal-3d-printers-up-by-staggering-80-percent.html)
 * UC Berkeley researchers developed a way to 3D print liquid (water) inside liquid (silicone oil), by utilizing the attraction of two substances: gold nanoparticles in water and ligands in oil. The attraction forms a tube between water and oil to make the former stay in shape, which can later be altered by external forces. [[link]](http://www.3ders.org/articles/20180327-liquid-3d-printing-berkeley-lab-scientists-create-complex-all-liquid-3d-structures-from-water-and-oil.html)
 * MIT researchers developed a method to automatically generating micro structures (e.g., those used for metamaterials) given user-specified material properties. [[link]](http://www.3ders.org/articles/20180205-new-software-from-mit-generates-3d-printable-microstructures-with-custom-mechanical-properties.html)
 * Researchers from RepRap developed a way to level print bed using piezoelectric diaphrams, which will generate voltage output upon contact. For example, the authors reported a detectable 8V output at 20ºC. [[link]](http://www.3ders.org/articles/20180206-fdm-3d-printer-bed-leveling-with-cheap-piezoelectric-elements.html)
