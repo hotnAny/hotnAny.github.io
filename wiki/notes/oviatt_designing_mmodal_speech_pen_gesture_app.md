@@ -43,7 +43,7 @@ because pen input conveys rich and precise graphical information.
 * Satisfy higher levels of user preference.
 * Support enhanced error avoidance and ease of error resolution.
 
-Early approach
+#### Early approach
 > "Many early multimodal interfaces that handled combined speech and gesture, such as Bolt's (1980) Put That There system, were based on a control structure in which multimodal integration occurred during the process of parsing spoken langauge. When the user spoken a deictic expression, such as 'here' or 'this', the system would search for a synchronized gestural act that designated the spoken referent."
 
 Two ways to jointly process input signals
@@ -64,3 +64,7 @@ Two ways to jointly process input signals
 * A data-driven statistical process that enhances the likelihood of selecting the best joint interpretation of multimodal input.
 * A flexible asynchronous architecture that permits multiprocessing, keeps pace with user input, and potentially handles input from multiple simultaneous users.
 * A multimodal interface design that combines complementary modes in a synergistic manner, thereby yielding significant levels of mutual disambiguation between modes and improved recognition rates.
+
+#### Difference in processing input signals between GUI and multimodal systems
+1. Simultaneity: "... for many multimodal interfaces, the need to process simultaneous input from different streams will be the norm";
+2. Uncertainty: involving natural human behaviors, thus using "probabilistic methods of processing".
