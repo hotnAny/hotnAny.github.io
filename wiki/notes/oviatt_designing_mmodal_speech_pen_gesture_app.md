@@ -82,4 +82,6 @@ A hybrid architecture processes an assortment of signals together, individual or
 * Teams make up Committee, which applies different weights to combine different teams' input
 * All the weights can be computed from training data
 
-![mtc](https://www.dropbox.com/s/sgnocpgqfw5ht82/members-teams%3Dcommittee.jpg?dl=0)
+![mtc](https://dl.dropbox.com/s/sgnocpgqfw5ht82/members-teams%3Dcommittee.jpg?dl=0)
+
+> "The primary difference between this integration approach and the conventional approach is that in conventional approaches the probability of the merged FSs is the cross-product of the probabilities of individual FSs. In the approach presented here, the probability of the merged FS is the weighting interpolation of the probabilisties of individual FSs"
