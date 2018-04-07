@@ -68,3 +68,18 @@ Two ways to jointly process input signals
 #### Difference in processing input signals between GUI and multimodal systems
 1. Simultaneity: "... for many multimodal interfaces, the need to process simultaneous input from different streams will be the norm";
 2. Uncertainty: involving natural human behaviors, thus using "probabilistic methods of processing".
+
+#### Architecture of a multimodal system
+![multimodal architecture](https://dl.dropbox.com/s/6ger5okjfw2s3uu/multimodal_architecture.jpg?dl=0)
+
+#### Multimodal agents ...
+... solve the problem of different components of a multimodal system might have been written in different programming languages, deployed on different machines running different OS, etc.
+
+#### Hybrid architecture
+A hybrid architecture processes an assortment of signals together, individual or multiple of them. Member-Team-Committee is one such approach:
+* Members deal with input signals from different modes;
+* Members make up different teams (one member can belong to multiple teams), where each team applies different weights to combine different members' input
+* Teams make up Committee, which applies different weights to combine different teams' input
+* All the weights can be computed from training data
+
+![mtc](https://www.dropbox.com/s/sgnocpgqfw5ht82/members-teams%3Dcommittee.jpg?dl=0)
