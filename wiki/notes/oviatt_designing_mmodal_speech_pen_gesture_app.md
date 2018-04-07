@@ -31,7 +31,7 @@
 4. Users report less subjective frsutration when interacting multimodally;
 5. Well architectured, a system can support mutual-disambiguation ("Mutual disambiguation involve recovery from unimodal recognition errors within a multimodal architecture because semantic information from each input mode supplies partial disambiguation of the other mode, thereby leading to more stable and robust overall system performance."
 
-Benefits of speech + pen:
+#### Benefits of speech + pen
 * Permit flexible use of input modes, including alternation and integrated use.
 * Support improved efficiency, especially when manipulating graphical
 information.
@@ -42,3 +42,25 @@ NLP.
 because pen input conveys rich and precise graphical information.
 * Satisfy higher levels of user preference.
 * Support enhanced error avoidance and ease of error resolution.
+
+Early approach
+> "Many early multimodal interfaces that handled combined speech and gesture, such as Bolt's (1980) Put That There system, were based on a control structure in which multimodal integration occurred during the process of parsing spoken langauge. When the user spoken a deictic expression, such as 'here' or 'this', the system would search for a synchronized gestural act that designated the spoken referent."
+
+Two ways to jointly process input signals
+* "Feature level" (early fusion) looks at low-level, raw sources of signals "mixed" together, e.g., multiple Hidden Markov Models;
+* "Semantic level" (late futions) first recognize and derive meanings from each sources and combine them later.
+
+> "... such a (feature-level) system tends to not apply or generalize as well if it consists of models that differ substantially in the information content of time-scale characteristics of their features."
+
+#### Sychrony of speech and gesture
+> "... users' multimodal speech and gesture constructions can involve either sequentially integrated or simultaneously delivered signal pieces"
+> "Empirical work on speech and gesture input has established that users' written input precedes speech during a sequentially integrated multimodal command"
+
+#### Architectural requirements for processing multiple input modes:
+* Parallel recognizers and interpreters that produce a set of time-stamped meaning fragments for each continuous input stream
+* A common framework for representing meaning fragments derived from multiple modalities
+* A time-sensitive grouping process that determines when to combine individual meaning fragments from each modality stream.
+* Meaning fusion operations that combine semantically and temporally compatible meaning fragments.
+* A data-driven statistical process that enhances the likelihood of selecting the best joint interpretation of multimodal input.
+* A flexible asynchronous architecture that permits multiprocessing, keeps pace with user input, and potentially handles input from multiple simultaneous users.
+* A multimodal interface design that combines complementary modes in a synergistic manner, thereby yielding significant levels of mutual disambiguation between modes and improved recognition rates.
