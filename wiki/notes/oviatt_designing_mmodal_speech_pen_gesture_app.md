@@ -85,3 +85,31 @@ A hybrid architecture processes an assortment of signals together, individual or
 ![mtc](https://dl.dropbox.com/s/sgnocpgqfw5ht82/members-teams%3Dcommittee.jpg?dl=0)
 
 > "The primary difference between this integration approach and the conventional approach is that in conventional approaches the probability of the merged FSs is the cross-product of the probabilities of individual FSs. In the approach presented here, the probability of the merged FS is the weighting interpolation of the probabilisties of individual FSs"
+
+#### Speech and gesture applications
+* QuickSet: "... a medical unit could be created at a specific location and orientation by saying 'medical company facing this way <draw arrow>.'"
+* IBM Human-Centric Word Processor (HCWP):
+  
+  * "Example 1: 'Delete this word <point to word>'"
+  * "Example 2: 'Change this date to the third <point to date>'"
+  * "Example 3: 'Underline from here to there <point to start and end of text line>'"
+  * "Example 4: 'Move this sentence here <points to sentence and new location>.'"
+  
+  "In Example 2, the user only needs to point in the vicinity of a date for the system to understand which text elements are involved."
+  
+  Interesting problem that is worth attention: "All systems like HCWP that support the use of speech for dictation and commands face the problem of categorizing each utterance correctly as dictated text or as a command. Some systems employ a 'modal' approach with the application in either dictation or command mode."
+  
+* Boeing's VR Aircraft Maintenance Traning Prototype: "When working in the VR environment, the user can decide when to gesture and when to speak and can use these modes alone or in combination. For example, the user can point to an object and say, "Give me that." Alternatively, if the object is distant, occluded, or otherwise out of view, she might say, 'Hand me the socket wrench'."
+
+* NCR's Field Medic Informatoin System, addressing domain specific problem: "The system was designed to address field medics' current difficulty using paper forms to document patient care rapidly and accurately, especially under emergency circumstances when their eyes and hands must be devoted to assessing and treating the patient."
+
+  Another scenario: "... tapping on neck graphic while speaking a description of the injury"
+  
+* BBN'S Portable Voice Assistant: "... an online vehicle repair manual and parts-ordering system, for which the intended users are army personnel repairing field equipment. For mobile applications such as this, in which the user's visual attention and hands are occupied, speech input and output are particularly attractive."
+  
+  "The PVA can interpret simultaneous pen-voice input so, for example, the user can say 'Show me that part' while pointing at a screw on the display."
+
+  Other application areas: "point-of-sale purchase records, medical diagnostics, and in-car navigation systems."
+  
+#### Future work
+* "... although the field is developing rapidly, there are not yet commercially available systems of this type. To reach this goal, more general, robust, and scalable multimodal architectures will be needed."
