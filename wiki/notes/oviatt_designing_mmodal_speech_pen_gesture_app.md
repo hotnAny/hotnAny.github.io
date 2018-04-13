@@ -87,8 +87,9 @@ A hybrid architecture processes an assortment of signals together, individual or
 > "The primary difference between this integration approach and the conventional approach is that in conventional approaches the probability of the merged FSs is the cross-product of the probabilities of individual FSs. In the approach presented here, the probability of the merged FS is the weighting interpolation of the probabilisties of individual FSs"
 
 #### Speech and gesture applications
-* QuickSet: "... a medical unit could be created at a specific location and orientation by saying 'medical company facing this way <draw arrow>.'"
-* IBM Human-Centric Word Processor (HCWP):
+* **QuickSet**: "... a medical unit could be created at a specific location and orientation by saying 'medical company facing this way <draw arrow>.'"
+  
+* **IBM Human-Centric Word Processor (HCWP)**:
   
   * "Example 1: 'Delete this word <point to word>'"
   * "Example 2: 'Change this date to the third <point to date>'"
@@ -99,13 +100,13 @@ A hybrid architecture processes an assortment of signals together, individual or
   
   Interesting problem that is worth attention: "All systems like HCWP that support the use of speech for dictation and commands face the problem of categorizing each utterance correctly as dictated text or as a command. Some systems employ a 'modal' approach with the application in either dictation or command mode."
   
-* Boeing's VR Aircraft Maintenance Traning Prototype: "When working in the VR environment, the user can decide when to gesture and when to speak and can use these modes alone or in combination. For example, the user can point to an object and say, "Give me that." Alternatively, if the object is distant, occluded, or otherwise out of view, she might say, 'Hand me the socket wrench'."
+* **Boeing's VR Aircraft Maintenance Traning Prototype**: "When working in the VR environment, the user can decide when to gesture and when to speak and can use these modes alone or in combination. For example, the user can point to an object and say, "Give me that." Alternatively, if the object is distant, occluded, or otherwise out of view, she might say, 'Hand me the socket wrench'."
 
-* NCR's Field Medic Informatoin System, addressing domain specific problem: "The system was designed to address field medics' current difficulty using paper forms to document patient care rapidly and accurately, especially under emergency circumstances when their eyes and hands must be devoted to assessing and treating the patient."
+* **NCR's Field Medic Informatoin System**, addressing domain specific problem: "The system was designed to address field medics' current difficulty using paper forms to document patient care rapidly and accurately, especially under emergency circumstances when their eyes and hands must be devoted to assessing and treating the patient."
 
   Another scenario: "... tapping on neck graphic while speaking a description of the injury"
   
-* BBN'S Portable Voice Assistant: "... an online vehicle repair manual and parts-ordering system, for which the intended users are army personnel repairing field equipment. For mobile applications such as this, in which the user's visual attention and hands are occupied, speech input and output are particularly attractive."
+* **BBN'S Portable Voice Assistant**: "... an online vehicle repair manual and parts-ordering system, for which the intended users are army personnel repairing field equipment. For mobile applications such as this, in which the user's visual attention and hands are occupied, speech input and output are particularly attractive."
   
   "The PVA can interpret simultaneous pen-voice input so, for example, the user can say 'Show me that part' while pointing at a screw on the display."
 
@@ -113,3 +114,38 @@ A hybrid architecture processes an assortment of signals together, individual or
   
 #### Future work
 * "... although the field is developing rapidly, there are not yet commercially available systems of this type. To reach this goal, more general, robust, and scalable multimodal architectures will be needed."
+
+1. **Cognitive theory and empirical science underpinnings** 
+  - "... a better understanding will be required of the unique linguistic and performance characteristics of natural communication modalities."
+
+  - "... limited literature is available on how different communication modalities or combined modes are organized specifically during human-computer interaction"
+  
+2. **New multimodal interface concepts** 
+
+  - It seems modalities shouldn't be defined by technology, but rather by humans. For example, a user's hand gesture can be tracked either by motion sensor or camera. These are different input technologies but they attempt to interpret the same input modality. As another example, a camera can track both a user's hand gestures as well as facial expression. There is only one input technology but there are two input modalities.
+
+  - "... as new types of multimodal systems proliferate in the future, they also are increasingly likely to include more than two input modes"
+  
+3. **Multimodal language and dialogue processing** 
+  - "To provide a scientific foundation for developing multimodal speech and gesture dialogue systems, a general theory of conversational interaction will be needed, as will relatively media-independent representations of intent, semantic content, and context."
+
+  - "Future research will need to address the development of complete multimodal dialogue systems that incorporate a level of intent representation suitable for nonspeech modalities such as gesture."
+  
+  - "Unlike GUIs that are designed to be context independent ..." For example, when you press Button A, it has no idea that you just dragged Slider B.
+
+4. **Error-handling techniques**: Allowing users to empoloy alternate modalities to handle error (without too much extra effort)
+  
+5. **Adaptive multimodal architectures**
+ 
+ - "... two main types of user--ones who habitually deliver speech and pen signals in an overlapped or simultaneous manner, and others who synchronize signals sequentially with pen input preceding speech by up to 4 sec."
+  
+  - (Example of adapting to the environment) "... if SNR is a low value, then the reliability of the speech signal interpretation would be regarded as weak and this mode would be relatively underweighted compared with gesture input."
+  
+6. **Multidevice, multiuser ubiquitous computing**
+  
+  - Imagining the challenges for multi-user multimodal interaction: 1) building common ground: there is likely a larger gap between instances of multimodal input, e.g., "the location you suggested needs to be moved closer to here <draw>"; 2) handling more complex NL input: speaking to both a collaborator and a computer will inevitably raise the complexity of language.
+  
+7. **Multimodal research infrastructure**
+
+  - Wiz-of-oz style system to elicit users' multimodal behavior or to evaluate designs before committing to building a system
+  - Toolkitss for building/prototyping multimodal systems
