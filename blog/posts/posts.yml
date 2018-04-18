@@ -121,3 +121,12 @@ posts:
     birthdate: 2018-03-21T04:04:08.000Z
     pubdate: 2018-03-21T04:06:32.381Z
     url: take-away-from-sitting-in-a-hiring-meeting
+  - file: 2018-03-15.md
+    tags:
+      - hacking
+      - research
+      - method
+    title: On hacking
+    birthdate: 2018-03-18T05:32:33.000Z
+    pubdate: 2018-03-18T05:35:50.962Z
+    url: on-hacking
