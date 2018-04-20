@@ -1,6 +1,6 @@
 # Multimodal Interaction
 Neal, J.G., Thielman, C.Y., Dobes, Z., Haller, S.M. and Shapiro, S.C., 1989, October. 
-[[**Natural language with integrated deictic and graphic gestures**]](neal_natural_language_deictic_graphic.md)
+[**Natural language with integrated deictic and graphic gestures**](neal_natural_language_deictic_graphic.md)
 In Proceedings of the workshop on Speech and Natural Language (pp. 410-423). Association for Computational Linguistics.
 
 Cohen, P.R., Johnston, M., McGee, D., Oviatt, S., Pittman, J., Smith, I., Chen, L. and Clow, J.
