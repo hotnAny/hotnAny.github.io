@@ -49,6 +49,7 @@ Observation:
 
 Gesticulation as an alternate expression of ideas
 > "... in terms of the phrasal organization of the gesticulation a distinct phrase of gesticulation is produed for each unit of meaning or 'idea unit' the utterer deals with"
+
 > "This means that the phrases of gesticulation that co-occur with speech are not to be thought of either as mere embellishments of expression or as by-products of the speech process. They are, rather, an alternate manifestation of the process by which 'ideas' are encoded into patterns of behavior which can be apprehended by others as *reportive* of those ideas."
 
 Gestures are not by-products of speech (evidence)
