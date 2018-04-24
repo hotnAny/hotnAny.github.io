@@ -54,3 +54,18 @@ Gesticulation as an alternate expression of ideas
 
 Gestures are not by-products of speech (evidence)
 > "The appearance of G-Phrases somewhat in advance of the appearance of speech phrases with which they are associated means, of course, that the G-Phrase must have been organized at least at the same time, if not a little in advance of its associated speech phrase. Thus the G-Phrase must be seen as originating simultaneously with the origination of speech and not as a product of the speech production process."
+
+> "The way in which the content of the utterance appears to be manifested in the Gesticular Phrase suggests that the process of utterance has its origin in the orgnization and manipulation of mental representations of images and actions directly and not, initially, in the organization of forms that can be derived only from verbal language"
+
+The contents of gesticulation and speech
+> "The relationship between the content of gesticulation and the content of speech is a highly complex one ... the mode by which ideas are encoded in gesticulation is quite different from the way in which they are encoded in language."
+
+> "The enactments of gesticulation described above are broadly of three sorts: ... the form of an *object*, ... the *actions* being directly described, ... the arrangement of objects in *space*"
+
+> "Gesticulation does not only depict objects, actions, or behavior styles of others that are being described. It may also be used to encode more abstract features of the utterers discourse."
+
+Why gesticulation
+> "Several writers have suggested that since the mode of representation of ideas in gesture is more primitive it is likely to be resorted to where the speaker is finding it difficult to express what he has to say in words"
+
+Historical implication
+> "The least we can say about this is that we would not, perhaps, expect a more elaborate and time consuming method of utterance to be the one that was first developed in language evolution. In these respects, thus, the findings reviewed in this paper are fully consistent with Hewes' argument in favor of a gestural origin for language."
