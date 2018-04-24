@@ -1,4 +1,8 @@
 # Multimodal Interaction
+Kendon, A., 1980. 
+[**Gesticulation and speech: Two aspects of the process of utterance**](kendon_gesticulation_speech.md) 
+The relationship of verbal and nonverbal communication, 25(1980), pp.207-227.
+
 Neal, J.G., Thielman, C.Y., Dobes, Z., Haller, S.M. and Shapiro, S.C., 1989, October. 
 [**Natural language with integrated deictic and graphic gestures**](neal_natural_language_deictic_graphic.md)
 In Proceedings of the workshop on Speech and Natural Language (pp. 410-423). Association for Computational Linguistics.
