@@ -130,3 +130,12 @@ posts:
     birthdate: 2018-03-18T05:32:33.000Z
     pubdate: 2018-03-18T05:35:50.962Z
     url: on-hacking
+  - file: 2018-04-02.md
+    tags:
+      - research
+      - life
+      - success
+    title: Research and succeeding in your life
+    birthdate: 2018-04-02T04:39:42.000Z
+    pubdate: 2018-04-02T04:41:09.860Z
+    url: research-and-succeeding-in-your-life
