@@ -15,7 +15,7 @@
 ## One Sentence
 This paper describes a framework for jointly interpreting multimodal input signals by merging semantic frames, and maintaining context by merging temporally adjacent frames
 
-![](https://dl.dropbox.com/s/1fbth926a3br0xf/vo_interpretation_using_frames.png?dl=0)
+![](https://dl.dropbox.com/s/1fbth926a3br0xf/vo_interpretation_using_frames.png?raw=1 =360x)
 
 ## Key Points
 #### The calendar interaction scenario
