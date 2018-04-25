@@ -34,17 +34,20 @@ Condon and Ogston (1966, 1967b)
 > "Its principal significance for our present concern is that it shows that the individual, in speakinug, acts as a whole, that speech is not a disjunct action system but that is continuously mobilizes the muscular systems of the whole body."
 
 Speech's four levels of organization:
+
 * Locution (complete sentences)
 * Locution Groups
 * Locution Clusters (equivalent to paragraphs)
 * Discourse (highest level)
 
 Gesticulation's organization:
+
 * The basic unit is called a "a phrase of gesticulation, or *G-Phrase*"
 * A G-Phrase starts and ends at rest positions, and is distinguished in the "excrusionary movement in which the limb, or part of it, shows a distinct peaking of *effort*", or "a moment of accented movement" called *stroke*
 * A G-Phrase starts at *rest position*, go through *preparation*, *stroke*, *recovery/return* to rest position.
 
 Observation:
+
 * Locution clusters contrast each other with distinct gesticulations
 * "... each Locution is associated with a distinctive unit of gesticulatory activity"
 * "... there were 26 Tone Units, twenty of these had a corresponding G-Phrase. Of the other six Tone Units, three, occuring in succession, shared a single G-Phrase ..."
