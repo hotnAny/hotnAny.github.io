@@ -15,7 +15,7 @@
 ## One Sentence
 This paper describes a framework for jointly interpreting multimodal input signals by merging semantic frames, and maintaining context by merging temporally adjacent frames
 
-![](https://dl.dropbox.com/s/1fbth926a3br0xf/vo_interpretation_using_frames.png?raw=1)
+<img src="https://dl.dropbox.com/s/1fbth926a3br0xf/vo_interpretation_using_frames.png?raw=1" width="360px"></img>
 
 ## Key Points
 #### The calendar interaction scenario
@@ -27,4 +27,16 @@ This paper describes a framework for jointly interpreting multimodal input signa
 #### Two main technical contributions
 > "A multimodal interpretation engine jointly interprets information from all inpt sources by merging semantic frames. A domain-independent dialog processor maintains context information across inpout events."
 
+#### Frame merging
+> "Frames are merged by taking the union of the sets of values filling each slots and adding corresponding scores."
 
+#### Preferences of modalities
+This is different from Oviatt's finding: 
+> "In the pilot tests it was observed that some subjects prferred to use gestures more often, some preferred speech, others mixed the two."
+
+## Take-Away
+Some take-away from the "state-of-the-art" performance evaluation
+
+* Gesture annd handwriting recognition was worse than speech recognition
+* Adding more modalities reduces errors
+* Despite recognition errors, multimodal interaction still provides users with the correct interpretation amongst choosable options
