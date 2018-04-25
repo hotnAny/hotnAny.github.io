@@ -13,7 +13,8 @@
 ```
 
 ## One Sentence
-This paper describes gesticulation--the movements of hand and arm accompanying speech--as one of the two aspects of utterance, both of which "appear together, as manifestations of the same proess of utterance. That is, in the translation of 'ideas' into observable behavior which may be read by others as being reportive of those ideas".
+This paper describes gesticulation--the movements of hand and arm accompanying speech--as one of the two aspects of utterance, both of which 
+> "appear together, as manifestations of the same proess of utterance. That is, in the translation of 'ideas' into observable behavior which may be read by others as being reportive of those ideas".
 
 ## Key Points
 Gesticulation:
