@@ -15,6 +15,10 @@ Fukumoto, M., Suenaga, Y. and Mase, K., 1994.
 [**“Finger-Pointer”: Pointing interface by image processing**](fukumoto_finger_pointer.md)
 Computers & Graphics, 18(5), pp.633-642.
 
+Vo, M.T. and Wood, C., 1996.
+[**Building an application framework for speech and pen input integration in multimodal learning interfaces**](vo_joint_interpretation_multimodal.md)
+In Acoustics, Speech, and Signal Processing, 1996. ICASSP-96. Conference Proceedings., 1996 IEEE International Conference on (Vol. 6, pp. 3545-3548). IEEE.
+
 Oviatt, S., Cohen, P., Wu, L., Duncan, L., Suhm, B., Bers, J., Holzman, T., Winograd, T., Landay, J., Larson, J. and Ferro, D.
 [**Designing the user interface for multimodal speech and pen-based gesture applications: state-of-the-art systems and future research directions**](oviatt_designing_mmodal_speech_pen_gesture_app.md)
 Human-computer interaction, 15(4), pp.263-322.
