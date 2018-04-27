@@ -1,4 +1,8 @@
 # Multimodal Interaction
+Kendon, A., 1980. 
+[**Gesticulation and speech: Two aspects of the process of utterance**](kendon_gesticulation_speech.md) 
+The relationship of verbal and nonverbal communication, 25(1980), pp.207-227.
+
 Neal, J.G., Thielman, C.Y., Dobes, Z., Haller, S.M. and Shapiro, S.C., 1989, October. 
 [**Natural language with integrated deictic and graphic gestures**](neal_natural_language_deictic_graphic.md)
 In Proceedings of the workshop on Speech and Natural Language (pp. 410-423). Association for Computational Linguistics.
@@ -10,6 +14,10 @@ In Proceedings of the fifth ACM international conference on Multimedia (pp. 31-4
 Fukumoto, M., Suenaga, Y. and Mase, K., 1994. 
 [**“Finger-Pointer”: Pointing interface by image processing**](fukumoto_finger_pointer.md)
 Computers & Graphics, 18(5), pp.633-642.
+
+Vo, M.T. and Wood, C., 1996.
+[**Building an application framework for speech and pen input integration in multimodal learning interfaces**](vo_joint_interpretation_multimodal.md)
+In Acoustics, Speech, and Signal Processing, 1996. ICASSP-96. Conference Proceedings., 1996 IEEE International Conference on (Vol. 6, pp. 3545-3548). IEEE.
 
 Oviatt, S., Cohen, P., Wu, L., Duncan, L., Suhm, B., Bers, J., Holzman, T., Winograd, T., Landay, J., Larson, J. and Ferro, D.
 [**Designing the user interface for multimodal speech and pen-based gesture applications: state-of-the-art systems and future research directions**](oviatt_designing_mmodal_speech_pen_gesture_app.md)
