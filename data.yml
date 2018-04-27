@@ -2,7 +2,7 @@ specials:
   - imgUrl: forte.jpg
     name: Fort&eacute;
     descp: Generative design that combines user sketching and topology optimization.
-    exturl: 'https://www.dropbox.com/s/4bg2fr4vw5ietba/chi2018_forte.mp4?dl=0'
+    exturl: 'https://www.dropbox.com/s/4bg2fr4vw5ietba/chi2018_forte.mp4?raw=1'
     venue: CHI '18
     title: 'Forte: User-Driven Generative Design'
     abstract: Low-cost fabrication machines (e.g., 3D printers) offer the promise of creating custom-designed objects by a range of users. To maximize performance, generative design methods such as topology optimization can automatically optimize properties of a design based on high-level specifications. Though promising, such methods require people to map their design ideas--often unintuitively--to a small number of mathematical input parameters, and the relationship between those parameters and a generated design is often unclear, making it difficult to iterate a design. We present Forte, a sketch-based, real-time interactive tool for people to directly express and iterate on their designs via 2D topology optimization. Users can ask the system to add structures, provide a variation with better performance, or optimize internal material layouts. Users can globally control how much to `deviate' from the initial sketch, or perform local suggestive editing, which interactively prompts the system to update based on the new information. Design sessions with 10 participants demonstrate that Forte empowers designers to create and explore a range of optimized designs with custom forms and styles.
@@ -12,7 +12,7 @@ specials:
     videoType: vimeo
     flickr: '72157668597613889'
     paperThumbnail: chi2018_forte_thumbnail.jpg
-    paperUrl: 'https://www.dropbox.com/s/rlw00fdmbht3rm2/chi2018_forte.pdf?dl=0'
+    paperUrl: 'https://www.dropbox.com/s/rlw00fdmbht3rm2/chi2018_forte.pdf?raw=1'
     paperInfo: >-
       Xiang ‘Anthony’ Chen, Ye Tao, Guanyun Wang, Runchang Kang, Tovi Grossman, Stelian Coros, Scott Hudson. Forte: User-Driven Generative Design. To Appear at ACM CHI 2018. Acceptance Rate: 25.7%.
   - imgUrl: duet_small.jpg
@@ -46,7 +46,7 @@ specials:
     videoType: vimeo
     flickr: '72157672834628310'
     paperThumbnail: chi2014_duet_thumbnail.jpg
-    paperUrl: 'https://www.dropbox.com/s/i63ivpl9bqg8leq/chi2014_duet.pdf?dl=0'
+    paperUrl: 'https://www.dropbox.com/s/i63ivpl9bqg8leq/chi2014_duet.pdf?raw=1'
     paperInfo: >-
       Xiang ‘Anthony’ Chen, Tovi Grossman, Daniel Wigdor, George Fitzmaurice
       (2014). Duet: Exploring Joint Interactions on a Smart Phone and a Smart
@@ -91,7 +91,7 @@ specials:
     videoType: vimeo
     flickr: '72157664092225828'
     paperThumbnail: tochi17_improv_thumbnail.jpg
-    paperUrl: 'https://www.dropbox.com/s/tvv5oldmakue3rh/tochi2017_improv.pdf?dl=0'
+    paperUrl: 'https://www.dropbox.com/s/tvv5oldmakue3rh/tochi2017_improv.pdf?raw=1'
     paperInfo: >-
       Xiang ‘Anthony’ Chen, Yang Li. Improv: An Input Framework for Improvising
       Cross-Device InteractionBy Demonstration.ACM TOCHI, 24(2), 15
@@ -109,7 +109,7 @@ fabrication:
     videoType: vimeo
     flickr: '72157668597613889'
     paperThumbnail: chi2018_forte_thumbnail.jpg
-    paperUrl: 'https://www.dropbox.com/s/rlw00fdmbht3rm2/chi2018_forte.pdf?dl=0'
+    paperUrl: 'https://www.dropbox.com/s/rlw00fdmbht3rm2/chi2018_forte.pdf?raw=1'
     paperInfo: >-
       Xiang ‘Anthony’ Chen, Ye Tao, Guanyun Wang, Runchang Kang, Tovi Grossman, Stelian Coros, Scott Hudson. Forte: User-Driven Generative Design. To Appear at ACM CHI 2018. Acceptance Rate: 25.7%.
   - imgUrl: medley.jpg
@@ -124,7 +124,7 @@ fabrication:
     bibtex: >-
       @unpublished{chen2017medley,<br>&nbsp; &nbsp; &nbsp; &nbsp;title={Medley: A Library of Embeddables to Explore Rich Material Properties for 3D Printed Objects},<br>&nbsp; &nbsp; &nbsp; &nbsp;author={\textbf{Chen, X} and Coros, Stelian and Hudson, Scott E},<br>&nbsp; &nbsp; &nbsp; &nbsp;note={To appear at CHI '18}<br>}
     paperThumbnail: chi2018_medley_thumbnail.jpg
-    paperUrl: 'https://www.dropbox.com/s/93p1q9njp60qa20/medley_chi2018.pdf?dl=0' 
+    paperUrl: 'https://www.dropbox.com/s/93p1q9njp60qa20/medley_chi2018.pdf?raw=1' 
     paperInfo: >-
       Xiang ‘Anthony’ Chen, Stelian Coros, Scott Hudson. Medley: A Library of Embeddables to Explore RichMaterial Properties for 3D Printed Objects. To Appear at ACM CHI 2018. Acceptance Rate: 25.7%.
   - imgUrl: thermorph_small.jpg
@@ -167,7 +167,7 @@ fabrication:
       computer vision, mobile devices, vizwiz},<br>}<br>
     venue: CHI '17
     paperThumbnail: chi2017_facade_thumbnail.jpg
-    paperUrl: 'https://www.dropbox.com/s/xc9mywdkb6c8zvw/chi2017_facade.pdf?dl=0'
+    paperUrl: 'https://www.dropbox.com/s/xc9mywdkb6c8zvw/chi2017_facade.pdf?raw=1'
     paperInfo: >-
       Anhong Guo, Xiang 'Anthony' Chen, Haoran Qi, Samuel White, Suman Ghosh,
       Chieko Asakawa, Jeffrey Bigham. Facade: Auto-generating Tactile Interfaces
@@ -206,7 +206,7 @@ fabrication:
       &nbsp;year={2016},<br>&nbsp; &nbsp; &nbsp; &nbsp;organization={ACM}<br>}
     flickr: '72157674285753686'
     paperThumbnail: uist2016_reprise_thumbnail.jpg
-    paperUrl: 'https://www.dropbox.com/s/on9ltbgpnwo6df8/uist2016_reprise.pdf?dl=0'
+    paperUrl: 'https://www.dropbox.com/s/on9ltbgpnwo6df8/uist2016_reprise.pdf?raw=1'
     paperInfo: >-
       Xiang ‘Anthony’ Chen, Jeeeun Kim, Jennifer Mankoff, Tovi Grossman, Stelian
       Coros, Scott Hudson (2016). Reprise: A Design Tool for Specifying,
@@ -251,7 +251,7 @@ fabrication:
       &nbsp;organization={ACM}<br>}
     flickr: '72157670690945024'
     paperThumbnail: uist2015_encore_thumbnail.jpg
-    paperUrl: 'https://www.dropbox.com/s/rggynu7m7ovg4uj/uist2015_encore.pdf?dl=0'
+    paperUrl: 'https://www.dropbox.com/s/rggynu7m7ovg4uj/uist2015_encore.pdf?raw=1'
     paperInfo: >-
       Xiang ‘Anthony’ Chen, Stelian Coros, Jennifer Mankoff, Scott Hudson
       (2015). Encore: 3D Printed Augmentation of Everyday Objects with
@@ -295,7 +295,7 @@ interactiontechniques:
       &nbsp;organization={ACM}<br>}
     flickr: '72157670702717043'
     paperThumbnail: uist2014_airtouch_thumbnail.jpg
-    paperUrl: 'https://www.dropbox.com/s/0tf6l2yhdw9plb2/uist2014_airtouch.pdf?dl=0'
+    paperUrl: 'https://www.dropbox.com/s/0tf6l2yhdw9plb2/uist2014_airtouch.pdf?raw=1'
     paperInfo: >-
       Xiang ‘Anthony’ Chen, Julia Schwarz, Chris Harrison, Jennifer Mankoff,
       Scott Hudson (2014). Air+Touch: Interweaving Touch & In-Air Gestures.
@@ -338,7 +338,7 @@ interactiontechniques:
     videoType: vimeo
     flickr: '72157674290832196'
     paperThumbnail: uist2014_swipeboard_thumbnail.jpg
-    paperUrl: 'https://www.dropbox.com/s/66murnflu0yfp2h/uist2014_swipeboard.pdf?dl=0'
+    paperUrl: 'https://www.dropbox.com/s/66murnflu0yfp2h/uist2014_swipeboard.pdf?raw=1'
     paperInfo: >-
       Xiang ‘Anthony’ Chen, Tovi Grossman, George Fitzmaurice (2014).
       Swipeboard: A Text Entry Technique for Ultra-Small Interfaces That
@@ -379,7 +379,7 @@ interactiontechniques:
     videoType: youtube
     flickr: '72157691606961415'
     paperThumbnail: mhci2015_swipeglass_thumbnail.jpg
-    paperUrl: 'https://www.dropbox.com/s/59o62k9btlirc5s/mhci2015_swipeglass.pdf?dl=0'
+    paperUrl: 'https://www.dropbox.com/s/59o62k9btlirc5s/mhci2015_swipeglass.pdf?raw=1'
     paperInfo: >-
       Tovi Grossman, Xiang ‘Anthony’ Chen, George Fitzmaurice (2015). Typing on
       Glasses: Adapting Text Entry to Smart Eyewear. Proceedings of the 17th
@@ -423,7 +423,7 @@ interactiontechniques:
     videoType: vimeo
     flickr: '72157671061225703'
     paperThumbnail: uist2016_locus_thumbnail.jpg
-    paperUrl: 'https://www.dropbox.com/s/atguws31wg62s28/uist2016_locus.pdf?dl=0'
+    paperUrl: 'https://www.dropbox.com/s/atguws31wg62s28/uist2016_locus.pdf?raw=1'
     paperInfo: >-
       Xiang 'Anthony' Chen, Yang Li (2016). Bootstrapping User-Defined Body
       Tapping Recognition with Offline-Learned Probabilistic Representation.
@@ -464,7 +464,7 @@ interactiontechniques:
     videoType: vimeo
     flickr: '72157674813685485'
     paperThumbnail: mhci2014_aroundbody_thumbnail.jpg
-    paperUrl: 'https://www.dropbox.com/s/s4by7sh9fcp3jlz/mhci2014_aroundbody.pdf?dl=0'
+    paperUrl: 'https://www.dropbox.com/s/s4by7sh9fcp3jlz/mhci2014_aroundbody.pdf?raw=1'
     paperInfo: >-
       Xiang ‘Anthony’ Chen, Julia Schwarz, Chris Harrison, Jennifer Mankoff,
       Scott Hudson (2014). Around-Body Interaction: Sensing & Interaction
@@ -511,7 +511,7 @@ interactiontechniques:
     videoType: vimeo
     flickr: '72157674424983716'
     paperThumbnail: mhci2012_bci_thumbnail.jpg
-    paperUrl: 'https://www.dropbox.com/s/qe7btp0v8nxxd41/mhci2012_bci.pdf?dl=0'
+    paperUrl: 'https://www.dropbox.com/s/qe7btp0v8nxxd41/mhci2012_bci.pdf?raw=1'
     paperInfo: >-
       Xiang ‘Anthony’ Chen, Nicolai Marquardt, Anthony Tang, Sebastian Boring,
       Saul Greenberg (2012). Extending a Mobile Device’s Interaction Space
@@ -602,7 +602,7 @@ interactiontechniques:
     videoId: '31823922'
     videoType: vimeo
     paperThumbnail: avi2012_spalendar_thumbnail.jpg
-    paperUrl: 'https://www.dropbox.com/s/koypzyl1pdm1782/avi2012_spalendar.pdf?dl=0'
+    paperUrl: 'https://www.dropbox.com/s/koypzyl1pdm1782/avi2012_spalendar.pdf?raw=1'
     paperInfo: >-
       Xiang ‘Anthony’ Chen, Sebastian Boring, Sheelagh Carpendale, Anthony Tang,
       Saul Greenberg (2012). Spalendar: Spatially Visualizing Group’s Calendar
@@ -640,7 +640,7 @@ internetofthings:
     videoType: vimeo
     flickr: '72157672834628310'
     paperThumbnail: chi2014_duet_thumbnail.jpg
-    paperUrl: 'https://www.dropbox.com/s/i63ivpl9bqg8leq/chi2014_duet.pdf?dl=0'
+    paperUrl: 'https://www.dropbox.com/s/i63ivpl9bqg8leq/chi2014_duet.pdf?raw=1'
     paperInfo: >-
       Xiang ‘Anthony’ Chen, Tovi Grossman, Daniel Wigdor, George Fitzmaurice
       (2014). Duet: Exploring Joint Interactions on a Smart Phone and a Smart
@@ -685,7 +685,7 @@ internetofthings:
     videoType: vimeo
     flickr: '72157664092225828'
     paperThumbnail: tochi17_improv_thumbnail.jpg
-    paperUrl: 'https://www.dropbox.com/s/tvv5oldmakue3rh/tochi2017_improv.pdf?dl=0'
+    paperUrl: 'https://www.dropbox.com/s/tvv5oldmakue3rh/tochi2017_improv.pdf?raw=1'
     paperInfo: >-
       Xiang ‘Anthony’ Chen, Yang Li. Improv: An Input Framework for Improvising
       Cross-Device InteractionBy Demonstration.ACM TOCHI, 24(2), 15
@@ -734,7 +734,7 @@ internetofthings:
     videoId: hjCf-G51FWM
     videoType: youtube
     paperThumbnail: uist2016_vizlens_thumbnail.jpg
-    paperUrl: 'https://www.dropbox.com/s/qiq9jbpffze125h/uist2016_vizlens.pdf?dl=0'
+    paperUrl: 'https://www.dropbox.com/s/qiq9jbpffze125h/uist2016_vizlens.pdf?raw=1'
     paperInfo: >-
       Anhong Guo, Xiang ‘Anthony’ Chen, Haoran Qi, Samuel White, Suman Ghosh,
       Chieko Asakawa, Jeffrey Bigham (2016). VizLens: A Robust and Interactive
@@ -781,7 +781,7 @@ internetofthings:
     videoId: '154829664'
     videoType: vimeo
     paperThumbnail: chi2016_snaptoit_thumbnail.jpg
-    paperUrl: https://www.dropbox.com/s/q2nsjwd6pqy8d6a/chi2016_snaptoit.pdf?dl=0
+    paperUrl: https://www.dropbox.com/s/q2nsjwd6pqy8d6a/chi2016_snaptoit.pdf?raw=1
     paperInfo: >-
       Adrian de Freitas, Michael Nebeling, Xiang ‘Anthony’ Chen, Junrui Yang,
       Akshaye Shreenithi Kirupa Karthikeyan Ranithangam, Anind Dey (2016).
@@ -823,13 +823,13 @@ internetofthings:
     videoType: vimeo
     flickr: '72157671376270794'
     paperThumbnail: unpublished_maestro_thumbnail.jpg
-    paperUrl: 'https://www.dropbox.com/s/60et83pzcrqevwd/unpublished_maestro.pdf?dl=0'
+    paperUrl: 'https://www.dropbox.com/s/60et83pzcrqevwd/unpublished_maestro.pdf?raw=1'
     paperInfo: >-
       Xiang 'Anthony' Chen, Ken Hinckley, Michel Pahud, Bill Buxton (2014).
       Maestro: Sensing Techniques with Multiple Wearables. Unpublished paper.
 sideprojects:
   - imgUrl: breader_small.jpg
-    exturl: https://www.dropbox.com/s/eixesi3rsjtk646/b.reader.pdf?dl=0
+    exturl: https://www.dropbox.com/s/eixesi3rsjtk646/b.reader.pdf?raw=1
     name: b-reader
     descp: >-
       A mobile Braille reader enabled by 3D printed actuation mechanism and OCR
