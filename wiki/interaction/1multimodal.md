@@ -7,6 +7,10 @@ Neal, J.G., Thielman, C.Y., Dobes, Z., Haller, S.M. and Shapiro, S.C., 1989, Oct
 [**Natural language with integrated deictic and graphic gestures**](neal_natural_language_deictic_graphic.md)
 In Proceedings of the workshop on Speech and Natural Language (pp. 410-423). Association for Computational Linguistics.
 
+Schmandt, C., Ackerman, M.S. and Hindus, D., 1990. 
+[**Augmenting a window system with speech input**](schmandt_aug_win_speech_input.md)
+Computer, 23(8), pp.50-56.
+
 Cohen, P.R., Johnston, M., McGee, D., Oviatt, S., Pittman, J., Smith, I., Chen, L. and Clow, J.
 [**QuickSet: Multimodal interaction for distributed applications**](cohen_quickset.md)
 In Proceedings of the fifth ACM international conference on Multimedia (pp. 31-40). ACM.
