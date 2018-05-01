@@ -2,7 +2,6 @@
 - - - -
 [Notes]()
 
-  * [Multimodal Interaction](notes/0multimodal.md)
   * [Human-in-the-Loop AI](notes/1hitl_ai.md)
   * [Sandbox](notes/99sandbox.md)
 
@@ -14,6 +13,7 @@
 [Interaction]()
 
   * [General](interaction/0general.md)
+  * [Multimodal Interaction](interaction/1multimodal.md)
   * [Situated Displays](interaction/situated.md)
   * [Tablet & Stylus](interaction/tablet.md)
   * [Mobile Computers](interaction/3mobile.md)
