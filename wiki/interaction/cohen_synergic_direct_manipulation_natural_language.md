@@ -26,7 +26,7 @@ DM's weakness
 * Hierarchiy of visual elements make it difficult for navigation.
 
 Resolving anaphoric ambiguiity: "where was board 1 then" -- by using DM to select a specific interval, "then" is resolved to that interval.
-![](https://dl.dropbox.com/s/x21bpffsfk3t7a6/cohen_synergistic_direct_manipulation_natural_language_1.png?raw=1)
+![](https://dl.dropbox.com/s/x21bpffsfk3t7a6/cohen_synergistic_direct_manipulation_natural_language_1.png?raw=1 =400x)
 
 Representing the discourse as a tree so that users can select specific utterances to define custom contexts
 ![](https://dl.dropbox.com/s/rksy39anvftzgn1/cohen_synergistic_direct_manipulation_natural_language_2.png?raw=1)
