@@ -29,6 +29,7 @@ This paper contributes "a new unification-based mechanism for fusing partial mea
 * ExInit. Users can create different types of units by naming them (perhaps with more descriptive information) while providing spatial information (e.g, position/orientation) by drawing
 
 <br>
+
 #### Something that direct manipulation cannot do:
 > "Spoken interaction with virtual worlds offers distinct advantages over direct manipulation, in that users are able to describe entities and locations that are not in view, can be teleported to those out of view locations and entities, and can ask questions about entities in the scene."
 
