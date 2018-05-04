@@ -2,19 +2,18 @@ specials:
   - imgUrl: forte.jpg
     name: Fort&eacute;
     descp: Generative design that combines user sketching and topology optimization.
-    exturl: 'https://www.dropbox.com/s/4bg2fr4vw5ietba/chi2018_forte.mp4?raw=1'
     venue: CHI '18
     title: 'Forte: User-Driven Generative Design'
     abstract: Low-cost fabrication machines (e.g., 3D printers) offer the promise of creating custom-designed objects by a range of users. To maximize performance, generative design methods such as topology optimization can automatically optimize properties of a design based on high-level specifications. Though promising, such methods require people to map their design ideas--often unintuitively--to a small number of mathematical input parameters, and the relationship between those parameters and a generated design is often unclear, making it difficult to iterate a design. We present Forte, a sketch-based, real-time interactive tool for people to directly express and iterate on their designs via 2D topology optimization. Users can ask the system to add structures, provide a variation with better performance, or optimize internal material layouts. Users can globally control how much to `deviate' from the initial sketch, or perform local suggestive editing, which interactively prompts the system to update based on the new information. Design sessions with 10 participants demonstrate that Forte empowers designers to create and explore a range of optimized designs with custom forms and styles.
     bibtex: >-
-      @unpublished{chen2017forte,<br>&nbsp; &nbsp; &nbsp; &nbsp;title={Forte: User-Driven Generative Design},<br>&nbsp; &nbsp; &nbsp; &nbsp;author={\textbf{Chen, X} and Ye, Tao and Wang, Guanyun and Runchang, Kang and Grossman, Tovi and Coros, Stelian and Hudson, Scott E},<br>&nbsp; &nbsp; &nbsp; &nbsp;note={To appear at CHI '18}<br>}
+      @inproceedings{chen2018forte,<br>&nbsp; &nbsp; &nbsp; &nbsp;title={Forte: User-Driven Generative Design},<br>&nbsp; &nbsp; &nbsp; &nbsp;author={Chen, XiangAnthony and Tao, Ye and Wang, Guanyun and Kang, Runchang and Grossman, Tovi and Coros, Stelian and Hudson, Scott E},<br>&nbsp; &nbsp; &nbsp; &nbsp;booktitle={Proceedings of the 2018 CHI Conference on Human Factors in Computing Systems},<br>&nbsp; &nbsp; &nbsp; &nbsp;pages={496},<br>&nbsp; &nbsp; &nbsp; &nbsp;year={2018},<br>&nbsp; &nbsp; &nbsp; &nbsp;organization={ACM}<br>}
     videoId: '244079629'
     videoType: vimeo
     flickr: '72157668597613889'
     paperThumbnail: chi2018_forte_thumbnail.jpg
     paperUrl: 'https://www.dropbox.com/s/rlw00fdmbht3rm2/chi2018_forte.pdf?raw=1'
     paperInfo: >-
-      Xiang ‘Anthony’ Chen, Ye Tao, Guanyun Wang, Runchang Kang, Tovi Grossman, Stelian Coros, Scott Hudson. Forte: User-Driven Generative Design. To Appear at ACM CHI 2018. Acceptance Rate: 25.7%.
+      Xiang ‘Anthony’ Chen, Ye Tao, Guanyun Wang, Runchang Kang, Tovi Grossman, Stelian Coros, Scott Hudson. Forte: User-Driven Generative Design. Chen, X.A., Tao, Y., Wang, G., Kang, R., Grossman, T., Coros, S. and Hudson, S.E., 2018, April. Forte: User-Driven Generative Design. In Proceedings of the 2018 CHI Conference on Human Factors in Computing Systems (p. 496). ACM. Acceptance Rate: 25.7%.
   - imgUrl: duet_small.jpg
     name: Duet
     descp: Joint interaction between a smart phone and a smart watch.
@@ -104,14 +103,14 @@ fabrication:
     title: 'Forte: User-Driven Generative Design'
     abstract: Low-cost fabrication machines (e.g., 3D printers) offer the promise of creating custom-designed objects by a range of users. To maximize performance, generative design methods such as topology optimization can automatically optimize properties of a design based on high-level specifications. Though promising, such methods require people to map their design ideas--often unintuitively--to a small number of mathematical input parameters, and the relationship between those parameters and a generated design is often unclear, making it difficult to iterate a design. We present Forte, a sketch-based, real-time interactive tool for people to directly express and iterate on their designs via 2D topology optimization. Users can ask the system to add structures, provide a variation with better performance, or optimize internal material layouts. Users can globally control how much to `deviate' from the initial sketch, or perform local suggestive editing, which interactively prompts the system to update based on the new information. Design sessions with 10 participants demonstrate that Forte empowers designers to create and explore a range of optimized designs with custom forms and styles.
     bibtex: >-
-      @unpublished{chen2017forte,<br>&nbsp; &nbsp; &nbsp; &nbsp;title={Forte: User-Driven Generative Design},<br>&nbsp; &nbsp; &nbsp; &nbsp;author={\textbf{Chen, X} and Ye, Tao and Wang, Guanyun and Runchang, Kang and Grossman, Tovi and Coros, Stelian and Hudson, Scott E},<br>&nbsp; &nbsp; &nbsp; &nbsp;note={To appear at CHI '18}<br>}
+      @inproceedings{chen2018forte,<br>&nbsp; &nbsp; &nbsp; &nbsp;title={Forte: User-Driven Generative Design},<br>&nbsp; &nbsp; &nbsp; &nbsp;author={Chen, XiangAnthony and Tao, Ye and Wang, Guanyun and Kang, Runchang and Grossman, Tovi and Coros, Stelian and Hudson, Scott E},<br>&nbsp; &nbsp; &nbsp; &nbsp;booktitle={Proceedings of the 2018 CHI Conference on Human Factors in Computing Systems},<br>&nbsp; &nbsp; &nbsp; &nbsp;pages={496},<br>&nbsp; &nbsp; &nbsp; &nbsp;year={2018},<br>&nbsp; &nbsp; &nbsp; &nbsp;organization={ACM}<br>}
     videoId: '244079629'
     videoType: vimeo
     flickr: '72157668597613889'
     paperThumbnail: chi2018_forte_thumbnail.jpg
     paperUrl: 'https://www.dropbox.com/s/rlw00fdmbht3rm2/chi2018_forte.pdf?raw=1'
     paperInfo: >-
-      Xiang ‘Anthony’ Chen, Ye Tao, Guanyun Wang, Runchang Kang, Tovi Grossman, Stelian Coros, Scott Hudson. Forte: User-Driven Generative Design. To Appear at ACM CHI 2018. Acceptance Rate: 25.7%.
+      Xiang ‘Anthony’ Chen, Ye Tao, Guanyun Wang, Runchang Kang, Tovi Grossman, Stelian Coros, Scott Hudson. Forte: User-Driven Generative Design. Chen, X.A., Tao, Y., Wang, G., Kang, R., Grossman, T., Coros, S. and Hudson, S.E., 2018, April. Forte: User-Driven Generative Design. In Proceedings of the 2018 CHI Conference on Human Factors in Computing Systems (p. 496). ACM. Acceptance Rate: 25.7%.
   - imgUrl: medley.jpg
     name: Medley
     descp: Embedding everyday things to enrich the materiality of 3D printed objects.
@@ -122,11 +121,11 @@ fabrication:
     flickr: '72157689656591312'
     abstract: In our everyday life, we interact with and benefit from objects with a wide range of material properties. In contrast, personal fabrication machines (e.g., desktop 3D printers) currently only support a much smaller set of materials. Our goal is to close the gap between current limitations and the future of multi-material printing by enabling people to explore the reuse of material from everyday objects into their custom designs. To achieve this, we develop a library of embeddables--everyday objects that can be cut, worked and embedded into 3D printable designs. We describe a design space that characterizes the geometric and material properties of embeddables. We then develop Medley---a design tool whereby users can import a 3D model, search for embeddables with desired material properties, and interactively edit and integrate their geometry to fit into the original design. Medley also supports the final fabrication and embedding process, including instructions for carving or cutting the objects, and generating optimal paths for inserting embeddables. To validate the expressiveness of our library, we showcase numerous examples augmented by embeddables that go beyond the objects' original printed materials.
     bibtex: >-
-      @unpublished{chen2017medley,<br>&nbsp; &nbsp; &nbsp; &nbsp;title={Medley: A Library of Embeddables to Explore Rich Material Properties for 3D Printed Objects},<br>&nbsp; &nbsp; &nbsp; &nbsp;author={\textbf{Chen, X} and Coros, Stelian and Hudson, Scott E},<br>&nbsp; &nbsp; &nbsp; &nbsp;note={To appear at CHI '18}<br>}
+      @inproceedings{chen2018medley,<br>&nbsp; &nbsp; &nbsp; &nbsp;title={Medley: A Library of Embeddables to Explore Rich Material Properties for 3D Printed Objects},<br>&nbsp; &nbsp; &nbsp; &nbsp;author={Chen, XiangAnthony and Coros, Stelian and Hudson, Scott E},<br>&nbsp; &nbsp; &nbsp; &nbsp;booktitle={Proceedings of the 2018 CHI Conference on Human Factors in Computing Systems},<br>&nbsp; &nbsp; &nbsp; &nbsp;pages={162},<br>&nbsp; &nbsp; &nbsp; &nbsp;year={2018},<br>&nbsp; &nbsp; &nbsp; &nbsp;organization={ACM}<br>}
     paperThumbnail: chi2018_medley_thumbnail.jpg
     paperUrl: 'https://www.dropbox.com/s/93p1q9njp60qa20/medley_chi2018.pdf?raw=1' 
     paperInfo: >-
-      Xiang ‘Anthony’ Chen, Stelian Coros, Scott Hudson. Medley: A Library of Embeddables to Explore RichMaterial Properties for 3D Printed Objects. To Appear at ACM CHI 2018. Acceptance Rate: 25.7%.
+      Xiang ‘Anthony’ Chen, Stelian Coros, Scott Hudson. Medley: A Library of Embeddables to Explore RichMaterial Properties for 3D Printed Objects.  In Proceedings of the 2018 CHI Conference on Human Factors in Computing Systems (p. 162). ACM. Acceptance Rate: 25.7%.
   - imgUrl: thermorph_small.jpg
     name: Thermorph
     venue: CHI ‘18 
@@ -212,7 +211,7 @@ fabrication:
       Coros, Scott Hudson (2016). Reprise: A Design Tool for Specifying,
       Generating, and Customizing 3D Printable Adaptations on Everyday Objects.
       Proceedings of the 29th Annual ACM Symposium on User Interface Software
-      and Technology (UIST 2016) Acceptance Rate: 20.6%.
+      and Technology (UIST 2016). Acceptance Rate: 20.6%.
   - imgUrl: encore_small.jpg
     name: Encore
     descp: >-
@@ -300,7 +299,7 @@ interactiontechniques:
       Xiang ‘Anthony’ Chen, Julia Schwarz, Chris Harrison, Jennifer Mankoff,
       Scott Hudson (2014). Air+Touch: Interweaving Touch & In-Air Gestures.
       Proceedings of the 27th Annual ACM Symposium on User Interface Software
-      and Technology (UIST 2014) Acceptance Rate: 22.2%.
+      and Technology (UIST 2014). Acceptance Rate: 22.2%.
   - imgUrl: swipeboard_small.jpg
     name: Swipeboard
     descp: An eyes-free text entry technique for ultra-small interfaces
@@ -343,7 +342,7 @@ interactiontechniques:
       Xiang ‘Anthony’ Chen, Tovi Grossman, George Fitzmaurice (2014).
       Swipeboard: A Text Entry Technique for Ultra-Small Interfaces That
       Supports Novice to Expert Transitions. Proceedings of the 27th Annual ACM
-      Symposium on User Interface Software and Technology (UIST 2014) Acceptance
+      Symposium on User Interface Software and Technology (UIST 2014). Acceptance
       Rate: 22.2%.
   - imgUrl: swipeglass_small.jpg
     name: Swipeglass
@@ -428,7 +427,7 @@ interactiontechniques:
       Xiang 'Anthony' Chen, Yang Li (2016). Bootstrapping User-Defined Body
       Tapping Recognition with Offline-Learned Probabilistic Representation.
       Proceedings of the 29th Annual ACM Symposium on User Interface Software
-      and Technology (UIST 2016) Acceptance Rate: 20.6%.
+      and Technology (UIST 2016). Acceptance Rate: 20.6%.
   - imgUrl: aroundbody_small.jpg
     name: Around-Body
     descp: Tracking a commodity smart phone's position around a user's body.
@@ -517,7 +516,7 @@ interactiontechniques:
       Saul Greenberg (2012). Extending a Mobile Device’s Interaction Space
       through Body-Centric Interaction. Proceedings of the 14th international
       conference on Human-computer interaction with mobile devices and services
-      (MobileHCI 2012) Acceptance Rate: 25%.
+      (MobileHCI 2012). Acceptance Rate: 25%.
   - imgUrl: tabletstylus_small.jpg
     name: Tablet+Stylus
     descp: >-
@@ -714,7 +713,7 @@ internetofthings:
       VizLens provides accurate and usable real-time feedback in a study with 10
       blind partici­pants, and our crowdsourcing labeling workﬂow was fast (8
       minutes), accurate (99.7%), and cheap ($1.15). We then ex­plore extensions
-      of VizLens that allow it to (i) adapt to state changes in dynamic
+      of VizLens that allow it to (i). Adapt to state changes in dynamic
       interfaces, (ii) combine crowd labeling with OCR technology to handle
       dynamic displays, and (iii) beneﬁt from head-mounted cameras. VizLens
       robustly solves a long-standing challenge in accessibility by deeply
