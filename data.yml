@@ -13,7 +13,7 @@ specials:
     paperThumbnail: chi2018_forte_thumbnail.jpg
     paperUrl: 'https://www.dropbox.com/s/rlw00fdmbht3rm2/chi2018_forte.pdf?raw=1'
     paperInfo: >-
-      Xiang ‘Anthony’ Chen, Ye Tao, Guanyun Wang, Runchang Kang, Tovi Grossman, Stelian Coros, Scott Hudson. Forte: User-Driven Generative Design. Chen, X.A., Tao, Y., Wang, G., Kang, R., Grossman, T., Coros, S. and Hudson, S.E., 2018, April. Forte: User-Driven Generative Design. In Proceedings of the 2018 CHI Conference on Human Factors in Computing Systems (p. 496). ACM. Acceptance Rate: 25.7%.
+      Xiang ‘Anthony’ Chen, Ye Tao, Guanyun Wang, Runchang Kang, Tovi Grossman, Stelian Coros, Scott Hudson., 2018, April. Forte: User-Driven Generative Design. In Proceedings of the 2018 CHI Conference on Human Factors in Computing Systems (p. 496). ACM. Acceptance Rate: 25.7%.
   - imgUrl: duet_small.jpg
     name: Duet
     descp: Joint interaction between a smart phone and a smart watch.
@@ -110,7 +110,7 @@ fabrication:
     paperThumbnail: chi2018_forte_thumbnail.jpg
     paperUrl: 'https://www.dropbox.com/s/rlw00fdmbht3rm2/chi2018_forte.pdf?raw=1'
     paperInfo: >-
-      Xiang ‘Anthony’ Chen, Ye Tao, Guanyun Wang, Runchang Kang, Tovi Grossman, Stelian Coros, Scott Hudson. Forte: User-Driven Generative Design. Chen, X.A., Tao, Y., Wang, G., Kang, R., Grossman, T., Coros, S. and Hudson, S.E., 2018, April. Forte: User-Driven Generative Design. In Proceedings of the 2018 CHI Conference on Human Factors in Computing Systems (p. 496). ACM. Acceptance Rate: 25.7%.
+      Xiang ‘Anthony’ Chen, Ye Tao, Guanyun Wang, Runchang Kang, Tovi Grossman, Stelian Coros, Scott Hudson., 2018, April. Forte: User-Driven Generative Design. In Proceedings of the 2018 CHI Conference on Human Factors in Computing Systems (p. 496). ACM. Acceptance Rate: 25.7%.
   - imgUrl: medley.jpg
     name: Medley
     descp: Embedding everyday things to enrich the materiality of 3D printed objects.
