@@ -26,7 +26,7 @@ The three authors summarize 10 challenges for the future of computer-aided desig
 #### Shape control
 > "Shape control defines the occurrence and position of inflection points (points at which the signed curvature of a planar curve changes)."
 
-On allowing designers to test their designs early
+#### On allowing designers to test their designs early
 > "... it would be more efficient if technology existed that allowed preliminary tests on the desktop or even on PDs. Designers could then catch bad designs much earlier in the process. This would also help them discover, explore, refine, and understand the most promising designs as early in the process as possible."
 
 #### Designers and their work should be linked automatically by matching the work's nature
