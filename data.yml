@@ -125,7 +125,7 @@ fabrication:
     paperThumbnail: chi2018_medley_thumbnail.jpg
     paperUrl: 'https://www.dropbox.com/s/93p1q9njp60qa20/medley_chi2018.pdf?raw=1' 
     paperInfo: >-
-      Xiang ‘Anthony’ Chen, Stelian Coros, Scott Hudson. Medley: A Library of Embeddables to Explore RichMaterial Properties for 3D Printed Objects.  In Proceedings of the 2018 CHI Conference on Human Factors in Computing Systems (p. 162). ACM. Acceptance Rate: 25.7%.
+      Xiang ‘Anthony’ Chen, Stelian Coros, Scott Hudson. Medley: A Library of Embeddables to Explore Rich Material Properties for 3D Printed Objects.  In Proceedings of the 2018 CHI Conference on Human Factors in Computing Systems (p. 162). ACM. Acceptance Rate: 25.7%.
   - imgUrl: thermorph_small.jpg
     name: Thermorph
     venue: CHI ‘18 
