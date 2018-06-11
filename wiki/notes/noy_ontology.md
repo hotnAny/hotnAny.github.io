@@ -24,16 +24,16 @@
 
 #### Why develop and ontology?
 > * To share common understanding of the structure of information among people or software agents
-* To enable reuse of domain knowledge
-* To make domain assumption explicit
-* To separate domain knowledge from the operational knowledge
-* To analyze domain knowledge
+> * To enable reuse of domain knowledge
+> * To make domain assumption explicit
+> * To separate domain knowledge from the operational knowledge
+> * To analyze domain knowledge
 
 #### How is ontology different from Object-Oriented Programming
 > "Object-oriented programming centers primarily around methods on classes––a programmer makes design decisions based on the operational properties of a class, whereas an ontology designer makes these decisions based on the structural properties of a class. As a result, a class structure and relations among classes in an ontology are different from the structure for a similar domain in an object-oriented program."
 
 #### Basic steps to develop an ontology
 > * defining classes in the ontology,
-* arranging the classes in a taxonomic (subclass-superclass) hierachy,
-* defining slots and describing allowed values for these slots,
-* filling in the values for slots for instances.
+> * arranging the classes in a taxonomic (subclass-superclass) hierachy,
+> * defining slots and describing allowed values for these slots,
+> * filling in the values for slots for instances.
