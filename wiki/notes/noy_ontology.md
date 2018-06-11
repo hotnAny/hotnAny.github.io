@@ -66,3 +66,12 @@
 
 #### What are competency questions?
 It is "a list of questions that a knowledge base based on the ontology should be able to answer". Sketching a list of competency questions helps to determine the scope of the ontology.
+
+#### Other tips
+* The synonym of a concept is not another class——they are different 'pointers' referring to the same class
+
+> "All the siblings in the hierachiy (except for the ones at the root) must be at the same level of generality"
+
+> "In other words, we introduce a new class in the hierachy usually only when there is something that we can say about this class that we cannot say about the superclass"
+
+> "If the concepts with different slot values become restrictions for different slots in other classes, then we should create a new class for the distinction. Otherwise, we represent the distinction in a slot value." This is equivalent to saying a new class is worth creating only if its properties (different from the superclass) actually matter, e.g, wine being white or red matters for food matching in restaurants but not so much for bottle manufacturing in factories.
