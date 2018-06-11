@@ -10,6 +10,7 @@
 ```
 
 ## One Sentence
+This guide introduces the fundamental concepts of ontology, steps to develop an ontology and design considerations.
 
 ## Key Points
 #### What is ontology?
