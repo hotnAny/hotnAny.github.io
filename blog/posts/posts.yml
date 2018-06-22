@@ -149,3 +149,23 @@ posts:
     birthdate: 2018-05-15T22:57:22.000Z
     pubdate: 2018-05-15T22:59:27.278Z
     url: navals-how-to-get-rich-without-getting-lucky
+  - file: 2018-06-06.md
+    tags:
+      - Mixed-initiative
+      - Google
+      - Photos
+      - Automation
+    title: Another perspective on mixed-initiative interaction
+    birthdate: 2018-06-06T05:00:45.000Z
+    pubdate: 2018-06-06T05:50:26.105Z
+    url: another-perspective-on-mixed-initiative-interaction
+  - file: 2018-05-28.md
+    tags:
+      - Change
+      - Bill
+      - Gates
+      - Prediction
+    title: Bill Gates on predicting changes
+    birthdate: 2018-05-28T05:47:02.000Z
+    pubdate: 2018-05-28T05:50:48.313Z
+    url: bill-gates-on-predicting-changes
