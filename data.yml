@@ -849,7 +849,7 @@ sideprojects:
     venue: HCI 05833
     vimeoId: '64470159'
   - imgUrl: ddr_small.jpg
-    name: DDR on Ardruino
-    descp: An finger Dance Dance Revolution game on an Arduino
+    name: DDR on Arduino
+    descp: A finger Dance Dance Revolution game on an Arduino
     venue: HCI 05833
     vimeoId: '59873870'
