@@ -155,15 +155,7 @@ fabrication:
       person. We demonstrate the viability of Facade in a study with 11 blind
       participants.
     bibtex: >-
-      @inproceedings {vizlens,<br>&nbsp; &nbsp; &nbsp; &nbsp;author={Guo, A.,
-      Chen, A., Qi, H., White, S., Ghosh, S., Asakawa, C., and Bigham,
-      J.P.},<br>&nbsp; &nbsp; &nbsp; &nbsp;title={VizLens: A Robust and
-      Interactive Screen Reader for Interfaces in the Real World},<br>&nbsp;
-      &nbsp; &nbsp; &nbsp;booktitle={Proceedings of the ACM Symposium on User
-      Interface Software and Technology (UIST 2016)},<br>&nbsp; &nbsp; &nbsp;
-      &nbsp;year={2016},<br>&nbsp; &nbsp; &nbsp; &nbsp;keywords={non-visual
-      interfaces, visually impaired users, accessibility, crowdsourcing,
-      computer vision, mobile devices, vizwiz},<br>}<br>
+      @inproceedings{guo2017facade,<br>&nbsp; &nbsp; &nbsp; &nbsp;title={Facade: Auto-generating tactile interfaces to appliances},<br>&nbsp; &nbsp; &nbsp; &nbsp;author={Guo, Anhong and Kim, Jeeeun and Chen, XiangAnthony and Yeh, Tom and Hudson, Scott E and Mankoff, Jennifer and Bigham, Jeffrey P},<br>&nbsp; &nbsp; &nbsp; &nbsp;booktitle={Proceedings of the 2017 CHI Conference on Human Factors in Computing Systems},<br>&nbsp; &nbsp; &nbsp; &nbsp;pages={5826--5838},<br>&nbsp; &nbsp; &nbsp; &nbsp;year={2017},<br>&nbsp; &nbsp; &nbsp; &nbsp;organization={ACM}<br>}
     venue: CHI '17
     paperThumbnail: chi2017_facade_thumbnail.jpg
     paperUrl: 'https://www.dropbox.com/s/xc9mywdkb6c8zvw/chi2017_facade.pdf?raw=1'
