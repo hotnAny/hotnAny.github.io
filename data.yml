@@ -410,13 +410,7 @@ interactiontechniques:
       over a template matching method. Based on these findings, we discuss how
       our approach can be generalized to other user-defined gesture problems. 
     bibtex: >-
-      @inproceedings{chen2016reprise,<br>&nbsp; &nbsp; &nbsp;
-      &nbsp;title={Bootstrapping User-Defined Body Tapping Recognition with
-      Offline-Learned Probabilistic Representation},<br>&nbsp; &nbsp; &nbsp;
-      &nbsp;author={Chen, XiangAnthony and Li, Yang},<br>&nbsp; &nbsp; &nbsp;
-      &nbsp;booktitle={the 29th Annual ACM Symposium on User Interface Software
-      and Technology},<br>&nbsp; &nbsp; &nbsp; &nbsp;year={2016},<br>&nbsp;
-      &nbsp; &nbsp; &nbsp;organization={ACM}<br>}
+      @inproceedings{chen2016bootstrapping,<br>&nbsp; &nbsp; &nbsp; &nbsp;title={Bootstrapping User-Defined Body Tapping Recognition with Offline-Learned Probabilistic Representation},<br>&nbsp; &nbsp; &nbsp; &nbsp;author={Chen, XiangAnthony and Li, Yang},<br>&nbsp; &nbsp; &nbsp; &nbsp;booktitle={Proceedings of the 29th Annual Symposium on User Interface Software and Technology},<br>&nbsp; &nbsp; &nbsp; &nbsp;pages={359--364},<br>&nbsp; &nbsp; &nbsp; &nbsp;year={2016},<br>&nbsp; &nbsp; &nbsp; &nbsp;organization={ACM}<br>}
     venue: UIST '16
     videoId: '184405883'
     videoType: vimeo
