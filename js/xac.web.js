@@ -221,22 +221,28 @@ function makePage(item) {
 			halbum + 'px;" src="https://flickrembed.com/cms_embed.php?source=flickr&layout=responsive&input=' + item.flickr + '&sort=0&by=album&theme=default_notextpanel&scale=fit&limit=100&skin0&skin=alexis&autoplay=false" scrolling="no" frameborder="0" allowFullScreen="true" webkitallowfullscreen="true" mozallowfullscreen="true"></iframe>')
 
 		divPage.append(divPhotos)
-		divPage.append($('<br/><br/>'))
+		// divPage.append($('<br/><br/>'))
 	}
 
 	//
 	// pub & bib tex
 	//
 	var divPubBib = $('<div class="divpubbib"></div>')
-	divPubBib.append($('<ul>' + '<li><a href="#tabPub">Publication</a></li>' + '<li><a href="#tabBib">Bibtex</a></li>' + '</ul>'))
-	var divPub = $('<div id="tabPub"></div>')
-	divPub.append($('<table class="tbpubinfo" align="center" border="0" cellspacing="0" cellpadding="10px">' + '<tr><td><a href="' + item.paperUrl + '" target="_blank">' + '<img class="imgpaper" src="' + XAC.dirImages + item.paperThumbnail + '"/></a></td>' + '<td class="tdpubinfo">' + item.paperInfo + '</td></tr></table>'));
+	// divPubBib.append($('<ul>' + '<li><a href="#tabPub">Publication</a></li>' + '<li><a href="#tabBib">Bibtex</a></li>' + '</ul>'))
+	
+	var divPub = $('<div></div>')
+	divPub.append($('<table class="tbpubinfo" width="95%" align="center" border="0" cellspacing="0" cellpadding="10px">' + 
+		'<tr><td><a href="' + item.paperUrl + '" target="_blank">' + '<img class="imgpaper" src="' + XAC.dirImages + item.paperThumbnail + '"/></a></td>' 
+		+ '<td class="tdpubinfo">' + item.paperInfo + '</td></tr>'
+		+ '<tr><td colspan=2><div class="div-bib">' + item.bibtex + '</div></td></tr></table>'));
 
-	var divBib = $('<div id="tabBib"></div>')
-	divBib.append(item.bibtex)
+	// var divBib = $('<div class="div-bib"></div>');
+	// divBib.css('width', '95%');
+	// divBib.append(item.bibtex)
 	divPubBib.append(divPub)
-	divPubBib.append(divBib)
-	divPubBib.tabs();
+	// divPubBib.append($('<br>'));
+	// divPubBib.append(divBib)
+	// divPubBib.tabs();
 
 	divPage.append(divPubBib)
 	divPage.append($('<br>'));

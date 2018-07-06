@@ -190,8 +190,10 @@ a:active {
 }
 
 .tbpubinfo {
-    font-family: 'Alegreya Sans', sans-serif;
+    font-family: 'Lucida Console', sans-serif;
+    font-size: x-small;
     line-height: 20px;
+    background-color: #efefef;
 }
 
 .imgpaper {
