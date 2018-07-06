@@ -707,15 +707,7 @@ internetofthings:
       of increasingly powerful interactive applications that would be currently
       impossible with either alone.
     bibtex: >-
-      @inproceedings {vizlens,<br>&nbsp; &nbsp; &nbsp; &nbsp;author={Guo, A.,
-      Chen, A., Qi, H., White, S., Ghosh, S., Asakawa, C., and Bigham,
-      J.P.},<br>&nbsp; &nbsp; &nbsp; &nbsp;title={VizLens: A Robust and
-      Interactive Screen Reader for Interfaces in the Real World},<br>&nbsp;
-      &nbsp; &nbsp; &nbsp;booktitle={Proceedings of the ACM Symposium on User
-      Interface Software and Technology (UIST 2016)},<br>&nbsp; &nbsp; &nbsp;
-      &nbsp;year={2016},<br>&nbsp; &nbsp; &nbsp; &nbsp;keywords={non-visual
-      interfaces, visually impaired users, accessibility, crowdsourcing,
-      computer vision, mobile devices, vizwiz},<br>}<br>
+      @inproceedings{guo2016vizlens,<br>&nbsp; &nbsp; &nbsp; &nbsp;title={Vizlens: A robust and interactive screen reader for interfaces in the real world},<br>&nbsp; &nbsp; &nbsp; &nbsp;author={Guo, Anhong and Chen, XiangAnthony and Qi, Haoran and White, Samuel and Ghosh, Suman and Asakawa, Chieko and Bigham, Jeffrey P},<br>&nbsp; &nbsp; &nbsp; &nbsp;booktitle={Proceedings of the 29th Annual Symposium on User Interface Software and Technology},<br>&nbsp; &nbsp; &nbsp; &nbsp;pages={651--664},<br>&nbsp; &nbsp; &nbsp; &nbsp;year={2016},<br>&nbsp; &nbsp; &nbsp; &nbsp;organization={ACM}<br>}
     videoId: hjCf-G51FWM
     videoType: youtube
     paperThumbnail: uist2016_vizlens_thumbnail.jpg
