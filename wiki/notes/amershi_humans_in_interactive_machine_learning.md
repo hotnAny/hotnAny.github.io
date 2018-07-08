@@ -28,6 +28,13 @@ How is interactive machine learning different?
 People Naturally Want to Provide More Than Just Data Labels:
 > "The authors found that people naturally provided a wide variety of input types to improve the classifier’s performance, including suggesting alternative features to use, adjusting the importance or weight given to different features, and modifying the information extracted from the text. These results present an opportunity to develop new machine-learning algorithms that might better support the natural feedback people want to provide to learners, rather than force users to interact in limited, learner-centered ways."
 
+The fallacy of involving users too much ---
+> "Cakmak’s study (figure 3) found that the constant stream of questions from the robot during the interaction was perceived as imbalanced and annoying. The stream of questions also led to a decline in the user’s mental model of how the robot learned, causing some participants to “turn their brain off” or “lose track of what they were teaching”"
+
+Users tend to interact with intelligent systems in unexpected ways:
+> "... to provide guidance to the agent about future actions, rather than actual feedback about previous action"
+While labeling a happened action is natural from a machine learning point of view; it is not for a human, as human would try to guide a successful future action rather than dwelling on what went wrong in the previous trial.
+
 ## Take-Away
 About Fails and Olsen's Crayon: Image segmentation seems innately amenable to providing expert feedback (i.e., by painting over pixels); some other domain knowledge (e.g., how a patient should be assessed) is less explicit.
 
