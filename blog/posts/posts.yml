@@ -169,3 +169,13 @@ posts:
     birthdate: 2018-05-28T05:47:02.000Z
     pubdate: 2018-05-28T05:50:48.313Z
     url: bill-gates-on-predicting-changes
+  - file: 2018-07-07.md
+    tags:
+      - Literature
+      - Search
+      - Research
+      - Methods
+    title: An Algorithm of Performing Literature Search
+    birthdate: 2018-07-08T01:21:34.612Z
+    pubdate: 2018-07-08T01:31:52.755Z
+    url: an-algorithm-of-performing-literature-search
