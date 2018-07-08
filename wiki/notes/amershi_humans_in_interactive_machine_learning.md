@@ -33,6 +33,7 @@ The fallacy of involving users too much ---
 
 Users tend to interact with intelligent systems in unexpected ways:
 > "... to provide guidance to the agent about future actions, rather than actual feedback about previous action"
+
 While labeling a happened action is natural from a machine learning point of view; it is not for a human, as human would try to guide a successful future action rather than dwelling on what went wrong in the previous trial.
 
 ## Take-Away
