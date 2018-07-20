@@ -376,6 +376,11 @@ interactiontechniques:
       Glasses: Adapting Text Entry to Smart Eyewear. Proceedings of the 17th
       international conference on Human-computer interaction with mobile devices
       and services (MobileHCI 2015). Acceptance Rate: 25.2%.
+  - imgUrl: orecchio.jpg
+    name: Orecchio
+    descp: >-
+      Actuating ears to non-verbally express emotion.
+    venue: UIST '19'
   - imgUrl: locus_small.jpg
     name: Locus
     descp: >-
