@@ -380,7 +380,7 @@ interactiontechniques:
     name: Orecchio
     descp: >-
       Actuating ears to non-verbally express emotion.
-    venue: UIST '19'
+    venue: UIST '19
   - imgUrl: locus_small.jpg
     name: Locus
     descp: >-
