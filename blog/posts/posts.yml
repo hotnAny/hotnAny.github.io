@@ -179,3 +179,13 @@ posts:
     birthdate: 2018-07-08T01:21:34.612Z
     pubdate: 2018-07-08T01:31:52.755Z
     url: an-algorithm-of-performing-literature-search
+  - file: 2018-07-21.md
+    tags:
+      - Git
+      - Course
+      - Research
+      - Coding
+    title: A Pragmatic Need-to-Know Crash Course on Git
+    birthdate: 2018-07-21T22:10:19.000Z
+    pubdate: 2018-07-21T22:17:04.246Z
+    url: a-pragmatic-need-to-know-crash-course-on-git

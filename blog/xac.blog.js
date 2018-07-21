@@ -78,7 +78,8 @@ XAC.trim = function(str, len) {
 
 	for(var i=str.length-1, tail=tailBase; i>= 0; i--) {
 		if(i >= len) continue
-		if(str[i] == ' ') {
+		// if(str[i] == ' ') 
+		else {
 			str = str.substring(0, i)
 			str += tail
 			return str
