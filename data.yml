@@ -380,7 +380,7 @@ interactiontechniques:
     name: Orecchio
     descp: >-
       Actuating ears to non-verbally express emotion.
-    venue: UIST '19
+    venue: UIST '18
   - imgUrl: locus_small.jpg
     name: Locus
     descp: >-
@@ -540,7 +540,7 @@ interactiontechniques:
     name: WrisText
     venue: 🥇 CHI '18
     descp: A one-handed text entry technique using wrist swirling.
-    exturl: http://www.cs.dartmouth.edu/~xingdong/
+    exturl: http://www.cs.dartmouth.edu/~jungong/publication/wristext/
   - imgUrl: twistnknock_small.jpg
     name: Twist 'n' Knock
     descp: A one-handed gesture for smart watches.
