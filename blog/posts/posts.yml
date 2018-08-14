@@ -189,3 +189,12 @@ posts:
     birthdate: 2018-07-21T22:10:19.000Z
     pubdate: 2018-07-21T22:17:04.246Z
     url: a-pragmatic-need-to-know-crash-course-on-git
+  - file: 2018-08-13.md
+    tags:
+      - AI
+      - Algorithm
+      - Human
+    title: Some excellent points from Rachel Thomas
+    birthdate: 2018-08-14T05:56:34.000Z
+    pubdate: 2018-08-14T06:00:39.672Z
+    url: some-excellent-points-from-rachel-thomas
