@@ -45,7 +45,7 @@ specials:
     videoType: vimeo
     flickr: '72157672834628310'
     paperThumbnail: chi2014_duet_thumbnail.jpg
-    paperUrl: 'https://www.dropbox.com/s/i63ivpl9bqg8leq/chi2014_duet.pdf?raw=1'
+    paperUrl: 'https://www.dropbox.com/s/r7llh1crqtwg16u/chi2014_duet.pdf?raw=1'
     paperInfo: >-
       Xiang ‘Anthony’ Chen, Tovi Grossman, Daniel Wigdor, George Fitzmaurice
       (2014). Duet: Exploring Joint Interactions on a Smart Phone and a Smart
@@ -90,7 +90,7 @@ specials:
     videoType: vimeo
     flickr: '72157664092225828'
     paperThumbnail: tochi17_improv_thumbnail.jpg
-    paperUrl: 'https://www.dropbox.com/s/tvv5oldmakue3rh/tochi2017_improv.pdf?raw=1'
+    paperUrl: 'https://www.dropbox.com/s/bwct58u1z70jvt0/tochi2017_improv.pdf?raw=1'
     paperInfo: >-
       Xiang ‘Anthony’ Chen, Yang Li. Improv: An Input Framework for Improvising
       Cross-Device InteractionBy Demonstration.ACM TOCHI, 24(2), 15
@@ -197,7 +197,7 @@ fabrication:
       &nbsp;year={2016},<br>&nbsp; &nbsp; &nbsp; &nbsp;organization={ACM}<br>}
     flickr: '72157674285753686'
     paperThumbnail: uist2016_reprise_thumbnail.jpg
-    paperUrl: 'https://www.dropbox.com/s/on9ltbgpnwo6df8/uist2016_reprise.pdf?raw=1'
+    paperUrl: 'https://www.dropbox.com/s/j8kywu7dex12ery/uist2016_reprise.pdf?raw=1'
     paperInfo: >-
       Xiang ‘Anthony’ Chen, Jeeeun Kim, Jennifer Mankoff, Tovi Grossman, Stelian
       Coros, Scott Hudson (2016). Reprise: A Design Tool for Specifying,
@@ -242,7 +242,7 @@ fabrication:
       &nbsp;organization={ACM}<br>}
     flickr: '72157670690945024'
     paperThumbnail: uist2015_encore_thumbnail.jpg
-    paperUrl: 'https://www.dropbox.com/s/rggynu7m7ovg4uj/uist2015_encore.pdf?raw=1'
+    paperUrl: 'https://www.dropbox.com/s/2fvypkcxhv2wclk/uist2015_encore.pdf?raw=1'
     paperInfo: >-
       Xiang ‘Anthony’ Chen, Stelian Coros, Jennifer Mankoff, Scott Hudson
       (2015). Encore: 3D Printed Augmentation of Everyday Objects with
@@ -286,7 +286,7 @@ interactiontechniques:
       &nbsp;organization={ACM}<br>}
     flickr: '72157670702717043'
     paperThumbnail: uist2014_airtouch_thumbnail.jpg
-    paperUrl: 'https://www.dropbox.com/s/0tf6l2yhdw9plb2/uist2014_airtouch.pdf?raw=1'
+    paperUrl: 'https://www.dropbox.com/s/yaspxpqsx4vtz99/uist2014_airtouch.pdf?raw=1'
     paperInfo: >-
       Xiang ‘Anthony’ Chen, Julia Schwarz, Chris Harrison, Jennifer Mankoff,
       Scott Hudson (2014). Air+Touch: Interweaving Touch & In-Air Gestures.
@@ -329,7 +329,7 @@ interactiontechniques:
     videoType: vimeo
     flickr: '72157674290832196'
     paperThumbnail: uist2014_swipeboard_thumbnail.jpg
-    paperUrl: 'https://www.dropbox.com/s/66murnflu0yfp2h/uist2014_swipeboard.pdf?raw=1'
+    paperUrl: 'https://www.dropbox.com/s/sqd5dxsl22zgpnb/uist2014_swipeboard.pdf?raw=1'
     paperInfo: >-
       Xiang ‘Anthony’ Chen, Tovi Grossman, George Fitzmaurice (2014).
       Swipeboard: A Text Entry Technique for Ultra-Small Interfaces That
@@ -370,7 +370,7 @@ interactiontechniques:
     videoType: youtube
     flickr: '72157691606961415'
     paperThumbnail: mhci2015_swipeglass_thumbnail.jpg
-    paperUrl: 'https://www.dropbox.com/s/59o62k9btlirc5s/mhci2015_swipeglass.pdf?raw=1'
+    paperUrl: 'https://www.dropbox.com/s/cpnt5dib4v98bf1/mhci2015_swipeglass.pdf?raw=1'
     paperInfo: >-
       Tovi Grossman, Xiang ‘Anthony’ Chen, George Fitzmaurice (2015). Typing on
       Glasses: Adapting Text Entry to Smart Eyewear. Proceedings of the 17th
@@ -413,7 +413,7 @@ interactiontechniques:
     videoType: vimeo
     flickr: '72157671061225703'
     paperThumbnail: uist2016_locus_thumbnail.jpg
-    paperUrl: 'https://www.dropbox.com/s/atguws31wg62s28/uist2016_locus.pdf?raw=1'
+    paperUrl: 'https://www.dropbox.com/s/iw4eqv7b9rhzykx/uist2016_locus.pdf?raw=1'
     paperInfo: >-
       Xiang 'Anthony' Chen, Yang Li (2016). Bootstrapping User-Defined Body
       Tapping Recognition with Offline-Learned Probabilistic Representation.
@@ -454,7 +454,7 @@ interactiontechniques:
     videoType: vimeo
     flickr: '72157674813685485'
     paperThumbnail: mhci2014_aroundbody_thumbnail.jpg
-    paperUrl: 'https://www.dropbox.com/s/s4by7sh9fcp3jlz/mhci2014_aroundbody.pdf?raw=1'
+    paperUrl: 'https://www.dropbox.com/s/lyqbpiq854b2qos/mhci2014_aroundbody.pdf?raw=1'
     paperInfo: >-
       Xiang ‘Anthony’ Chen, Julia Schwarz, Chris Harrison, Jennifer Mankoff,
       Scott Hudson (2014). Around-Body Interaction: Sensing & Interaction
@@ -501,7 +501,7 @@ interactiontechniques:
     videoType: vimeo
     flickr: '72157674424983716'
     paperThumbnail: mhci2012_bci_thumbnail.jpg
-    paperUrl: 'https://www.dropbox.com/s/qe7btp0v8nxxd41/mhci2012_bci.pdf?raw=1'
+    paperUrl: 'https://www.dropbox.com/s/z74oxofbcqlc3lr/mhci2012_bci.pdf?raw=1'
     paperInfo: >-
       Xiang ‘Anthony’ Chen, Nicolai Marquardt, Anthony Tang, Sebastian Boring,
       Saul Greenberg (2012). Extending a Mobile Device’s Interaction Space
@@ -592,7 +592,7 @@ interactiontechniques:
     videoId: '31823922'
     videoType: vimeo
     paperThumbnail: avi2012_spalendar_thumbnail.jpg
-    paperUrl: 'https://www.dropbox.com/s/koypzyl1pdm1782/avi2012_spalendar.pdf?raw=1'
+    paperUrl: 'https://www.dropbox.com/s/0uvmpuhpq3vpzfy/avi2012_spalendar.pdf?raw=1'
     paperInfo: >-
       Xiang ‘Anthony’ Chen, Sebastian Boring, Sheelagh Carpendale, Anthony Tang,
       Saul Greenberg (2012). Spalendar: Spatially Visualizing Group’s Calendar
@@ -630,7 +630,7 @@ internetofthings:
     videoType: vimeo
     flickr: '72157672834628310'
     paperThumbnail: chi2014_duet_thumbnail.jpg
-    paperUrl: 'https://www.dropbox.com/s/i63ivpl9bqg8leq/chi2014_duet.pdf?raw=1'
+    paperUrl: 'https://www.dropbox.com/s/r7llh1crqtwg16u/chi2014_duet.pdf?raw=1'
     paperInfo: >-
       Xiang ‘Anthony’ Chen, Tovi Grossman, Daniel Wigdor, George Fitzmaurice
       (2014). Duet: Exploring Joint Interactions on a Smart Phone and a Smart
@@ -675,7 +675,7 @@ internetofthings:
     videoType: vimeo
     flickr: '72157664092225828'
     paperThumbnail: tochi17_improv_thumbnail.jpg
-    paperUrl: 'https://www.dropbox.com/s/tvv5oldmakue3rh/tochi2017_improv.pdf?raw=1'
+    paperUrl: 'https://www.dropbox.com/s/bwct58u1z70jvt0/tochi2017_improv.pdf?raw=1'
     paperInfo: >-
       Xiang ‘Anthony’ Chen, Yang Li. Improv: An Input Framework for Improvising
       Cross-Device InteractionBy Demonstration.ACM TOCHI, 24(2), 15
@@ -716,7 +716,7 @@ internetofthings:
     videoId: hjCf-G51FWM
     videoType: youtube
     paperThumbnail: uist2016_vizlens_thumbnail.jpg
-    paperUrl: 'https://www.dropbox.com/s/qiq9jbpffze125h/uist2016_vizlens.pdf?raw=1'
+    paperUrl: 'https://www.dropbox.com/s/tvopavl3e5u9yjg/uist2016_vizlens.pdf?raw=1'
     paperInfo: >-
       Anhong Guo, Xiang ‘Anthony’ Chen, Haoran Qi, Samuel White, Suman Ghosh,
       Chieko Asakawa, Jeffrey Bigham (2016). VizLens: A Robust and Interactive
@@ -763,7 +763,7 @@ internetofthings:
     videoId: '154829664'
     videoType: vimeo
     paperThumbnail: chi2016_snaptoit_thumbnail.jpg
-    paperUrl: https://www.dropbox.com/s/q2nsjwd6pqy8d6a/chi2016_snaptoit.pdf?raw=1
+    paperUrl: https://www.dropbox.com/s/et9wnqg0gu48ufi/chi2016_snaptoit.pdf?raw=1
     paperInfo: >-
       Adrian de Freitas, Michael Nebeling, Xiang ‘Anthony’ Chen, Junrui Yang,
       Akshaye Shreenithi Kirupa Karthikeyan Ranithangam, Anind Dey (2016).
@@ -805,7 +805,7 @@ internetofthings:
     videoType: vimeo
     flickr: '72157671376270794'
     paperThumbnail: unpublished_maestro_thumbnail.jpg
-    paperUrl: 'https://www.dropbox.com/s/60et83pzcrqevwd/unpublished_maestro.pdf?raw=1'
+    paperUrl: 'https://www.dropbox.com/s/ggj3em846blo0b7/unpublished_maestro.pdf?raw=1'
     paperInfo: >-
       Xiang 'Anthony' Chen, Ken Hinckley, Michel Pahud, Bill Buxton (2014).
       Maestro: Sensing Techniques with Multiple Wearables. Unpublished paper.
