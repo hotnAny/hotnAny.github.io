@@ -25,9 +25,9 @@ Compared to other approaches
 > "Computational feature selection techniques, which rely on identifying statistical patterns in data, may not have sufficient evidence given the small number of training examples encountered in LfD [learning from demonstration]"
 
 The study conditions
-* Human feature selection
-* Human feature reduction
-* Human instance selection
+- Human feature selection
+- Human feature reduction
+- Human instance selection
 
   * Additional feature selection
   * Additional feature reduction
