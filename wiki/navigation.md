@@ -14,10 +14,11 @@
 
   * [General](interaction/0general.md)
   * [Multimodal Interaction](interaction/1multimodal.md)
-  * [Situated Displays](interaction/situated.md)
-  * [Tablet & Stylus](interaction/tablet.md)
+  * [Situated Displays](interaction/2situated.md)
+  <!-- * [Tablet & Stylus](interaction/tablet.md) -->
   * [Mobile Computers](interaction/3mobile.md)
-  * [Wearable Devices](interaction/wearable.md)
+  * [Wearable Devices](interaction/3wearable.md)
+  * [Human-Robot Interaction](interaction/4hri.md)
 
 [Engineering]()
 
