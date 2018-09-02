@@ -123,7 +123,7 @@ fabrication:
     bibtex: >-
       @inproceedings{chen2018medley,<br>&nbsp; &nbsp; &nbsp; &nbsp;title={Medley: A Library of Embeddables to Explore Rich Material Properties for 3D Printed Objects},<br>&nbsp; &nbsp; &nbsp; &nbsp;author={Chen, XiangAnthony and Coros, Stelian and Hudson, Scott E},<br>&nbsp; &nbsp; &nbsp; &nbsp;booktitle={Proceedings of the 2018 CHI Conference on Human Factors in Computing Systems},<br>&nbsp; &nbsp; &nbsp; &nbsp;pages={162},<br>&nbsp; &nbsp; &nbsp; &nbsp;year={2018},<br>&nbsp; &nbsp; &nbsp; &nbsp;organization={ACM}<br>}
     paperThumbnail: chi2018_medley_thumbnail.jpg
-    paperUrl: 'https://www.dropbox.com/s/93p1q9njp60qa20/medley_chi2018.pdf?raw=1' 
+    paperUrl: 'https://www.dropbox.com/s/97nvsjjqawn14e9/medley_chi2018.pdf?raw=1' 
     paperInfo: >-
       Xiang ‘Anthony’ Chen, Stelian Coros, Scott Hudson. Medley: A Library of Embeddables to Explore Rich Material Properties for 3D Printed Objects.  In Proceedings of the 2018 CHI Conference on Human Factors in Computing Systems (p. 162). ACM. Acceptance Rate: 25.7%.
   - imgUrl: thermorph_small.jpg
@@ -158,7 +158,7 @@ fabrication:
       @inproceedings{guo2017facade,<br>&nbsp; &nbsp; &nbsp; &nbsp;title={Facade: Auto-generating tactile interfaces to appliances},<br>&nbsp; &nbsp; &nbsp; &nbsp;author={Guo, Anhong and Kim, Jeeeun and Chen, XiangAnthony and Yeh, Tom and Hudson, Scott E and Mankoff, Jennifer and Bigham, Jeffrey P},<br>&nbsp; &nbsp; &nbsp; &nbsp;booktitle={Proceedings of the 2017 CHI Conference on Human Factors in Computing Systems},<br>&nbsp; &nbsp; &nbsp; &nbsp;pages={5826--5838},<br>&nbsp; &nbsp; &nbsp; &nbsp;year={2017},<br>&nbsp; &nbsp; &nbsp; &nbsp;organization={ACM}<br>}
     venue: CHI '17
     paperThumbnail: chi2017_facade_thumbnail.jpg
-    paperUrl: 'https://www.dropbox.com/s/xc9mywdkb6c8zvw/chi2017_facade.pdf?raw=1'
+    paperUrl: 'https://www.dropbox.com/s/0heek4s65qvw27p/chi2017_facade.pdf?raw=1'
     paperInfo: >-
       Anhong Guo, Xiang 'Anthony' Chen, Haoran Qi, Samuel White, Suman Ghosh,
       Chieko Asakawa, Jeffrey Bigham. Facade: Auto-generating Tactile Interfaces
