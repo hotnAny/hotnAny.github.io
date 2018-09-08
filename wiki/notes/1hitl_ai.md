@@ -9,3 +9,7 @@ AI Magazine, 35(4), pp.105-120.
 * Ribeiro, M.T., Singh, S. and Guestrin, C., 2018. 
 [**Anchors: High-precision model-agnostic explanations**](ribeiro_anchors.md)
 In AAAI Conference on Artificial Intelligence.
+
+* Stumpf, S., Rajaram, V., Li, L., Wong, W.K., Burnett, M., Dietterich, T., Sullivan, E. and Herlocker, J., 2009. 
+[**Interacting meaningfully with machine learning systems: Three experiments**](stumpf_three_experiments.md) 
+International Journal of Human-Computer Studies, 67(8), pp.639-662.

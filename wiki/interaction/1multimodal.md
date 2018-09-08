@@ -39,3 +39,7 @@ Psychonomic bulletin & review, 20(1), pp.21-53.
 * Setlur, V., Battersby, S.E., Tory, M., Gossweiler, R. and Chang, A.X.
 [**Eviza: A Natural Language Interface for Visual Analysis**](seltur_eviza.md)
 In Proceedings of the 29th Annual Symposium on User Interface Software and Technology (pp. 365-377). ACM.
+
+* Li, T.J.J., Azaria, A. and Myers, B.A., 2017.
+[**SUGILITE: creating multimodal smartphone automation by demonstration**](li_sugilite.md)
+In Proceedings of the 2017 CHI Conference on Human Factors in Computing Systems (pp. 6038-6049). ACM.
