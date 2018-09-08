@@ -25,6 +25,9 @@ Examples
 
 > "[the list] has two options 'Cappuccino' and 'Iced Cappuccino'. SUGILITE will first identify 'Cappuccino' as a parameter, and then add 'Iced Cappuccino' to the set as an alternative value for the parameter, allowing the user to order Iced Cappuccino using the same script."
 
+The NLP aspect:
+> "... Learning by Instruction Agent ... The LIA uses a Combinatory Cateogrial Grammar (CCG) parser to parse the verbal command."
+
 ## Take-Away
 * Two important notions: each action is a series of events; users should be able to fork an action. It could use a tree representation.
 
@@ -33,3 +36,9 @@ Examples
 * The approach assumes very little a prior knowledge but almost always requires programming by demonstration (unless it is familar to or forkable from prior script).
 
 * Limitation: doesn't know what belongs to and what does not belong to a list (menu), e.g., including 'store location' with the variety of coffee.
+
+* Limitation: can't handle changes of UI layout, or an app that shows up in a different state than the one used for demonstration.
+
+* SUGILITE uses a ```try```/```catch``` mechanism to handle error, which is also extensible by the user.
+
+* Limitation: can't handle web application because it is a different ecosystem
