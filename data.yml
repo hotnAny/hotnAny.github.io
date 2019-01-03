@@ -1,19 +1,4 @@
 specials:
-  - imgUrl: forte.jpg
-    name: Fort&eacute;
-    descp: Generative design that combines user sketching and topology optimization.
-    venue: CHI '18
-    title: 'Forte: User-Driven Generative Design'
-    abstract: Low-cost fabrication machines (e.g., 3D printers) offer the promise of creating custom-designed objects by a range of users. To maximize performance, generative design methods such as topology optimization can automatically optimize properties of a design based on high-level specifications. Though promising, such methods require people to map their design ideas--often unintuitively--to a small number of mathematical input parameters, and the relationship between those parameters and a generated design is often unclear, making it difficult to iterate a design. We present Forte, a sketch-based, real-time interactive tool for people to directly express and iterate on their designs via 2D topology optimization. Users can ask the system to add structures, provide a variation with better performance, or optimize internal material layouts. Users can globally control how much to `deviate' from the initial sketch, or perform local suggestive editing, which interactively prompts the system to update based on the new information. Design sessions with 10 participants demonstrate that Forte empowers designers to create and explore a range of optimized designs with custom forms and styles.
-    bibtex: >-
-      @inproceedings{chen2018forte,<br>&nbsp; &nbsp; &nbsp; &nbsp;title={Forte: User-Driven Generative Design},<br>&nbsp; &nbsp; &nbsp; &nbsp;author={Chen, XiangAnthony and Tao, Ye and Wang, Guanyun and Kang, Runchang and Grossman, Tovi and Coros, Stelian and Hudson, Scott E},<br>&nbsp; &nbsp; &nbsp; &nbsp;booktitle={Proceedings of the 2018 CHI Conference on Human Factors in Computing Systems},<br>&nbsp; &nbsp; &nbsp; &nbsp;pages={496},<br>&nbsp; &nbsp; &nbsp; &nbsp;year={2018},<br>&nbsp; &nbsp; &nbsp; &nbsp;organization={ACM}<br>}
-    videoId: '244079629'
-    videoType: vimeo
-    flickr: '72157668597613889'
-    paperThumbnail: chi2018_forte_thumbnail.jpg
-    paperUrl: 'https://www.dropbox.com/s/bld0v2nc420x1ld/chi2018_forte.pdf?raw=1'
-    paperInfo: >-
-      Xiang ‘Anthony’ Chen, Ye Tao, Guanyun Wang, Runchang Kang, Tovi Grossman, Stelian Coros, Scott Hudson., 2018, April. Forte: User-Driven Generative Design. In Proceedings of the 2018 CHI Conference on Human Factors in Computing Systems (p. 496). ACM. Acceptance Rate: 25.7%.
   - imgUrl: duet_small.jpg
     name: Duet
     descp: Joint interaction between a smart phone and a smart watch.
@@ -47,10 +32,7 @@ specials:
     paperThumbnail: chi2014_duet_thumbnail.jpg
     paperUrl: 'https://www.dropbox.com/s/r7llh1crqtwg16u/chi2014_duet.pdf?raw=1'
     paperInfo: >-
-      Xiang ‘Anthony’ Chen, Tovi Grossman, Daniel Wigdor, George Fitzmaurice
-      (2014). Duet: Exploring Joint Interactions on a Smart Phone and a Smart
-      Watch. Proceedings of the 32nd SIGCHI Conference on Human Factors in
-      Computing Systems (CHI 2014). Acceptance Rate: 22.8%.  Best Paper Award
+      Chen, X., Grossman, T., Wigdor, D. J., & Fitzmaurice, G. (2014). Duet: exploring joint interactions on a smart phone and a smart watch. In Proceedings of the SIGCHI Conference on Human Factors in Computing Systems (pp. 159–168).
   - imgUrl: improv_small.jpg
     name: Improv
     descp: An input framework for users to create cross-device gestures.
@@ -92,9 +74,24 @@ specials:
     paperThumbnail: tochi17_improv_thumbnail.jpg
     paperUrl: 'https://www.dropbox.com/s/bwct58u1z70jvt0/tochi2017_improv.pdf?raw=1'
     paperInfo: >-
-      Xiang ‘Anthony’ Chen, Yang Li. Improv: An Input Framework for Improvising
-      Cross-Device InteractionBy Demonstration.ACM TOCHI, 24(2), 15
+      Chen, X., & Li, Y. (2017). Improv: An Input Framework for Improvising Cross-Device Interaction by Demonstration. ACM Transactions on Computer-Human Interaction (TOCHI), 24(2), 15.
     venue: TOCHI '17
+  - imgUrl: forte.jpg
+    name: Fort&eacute;
+    descp: Generative design that combines user sketching and topology optimization.
+    venue: CHI '18
+    title: 'Forte: User-Driven Generative Design'
+    abstract: Low-cost fabrication machines (e.g., 3D printers) offer the promise of creating custom-designed objects by a range of users. To maximize performance, generative design methods such as topology optimization can automatically optimize properties of a design based on high-level specifications. Though promising, such methods require people to map their design ideas--often unintuitively--to a small number of mathematical input parameters, and the relationship between those parameters and a generated design is often unclear, making it difficult to iterate a design. We present Forte, a sketch-based, real-time interactive tool for people to directly express and iterate on their designs via 2D topology optimization. Users can ask the system to add structures, provide a variation with better performance, or optimize internal material layouts. Users can globally control how much to `deviate' from the initial sketch, or perform local suggestive editing, which interactively prompts the system to update based on the new information. Design sessions with 10 participants demonstrate that Forte empowers designers to create and explore a range of optimized designs with custom forms and styles.
+    bibtex: >-
+      @inproceedings{chen2018forte,<br>&nbsp; &nbsp; &nbsp; &nbsp;title={Forte: User-Driven Generative Design},<br>&nbsp; &nbsp; &nbsp; &nbsp;author={Chen, XiangAnthony and Tao, Ye and Wang, Guanyun and Kang, Runchang and Grossman, Tovi and Coros, Stelian and Hudson, Scott E},<br>&nbsp; &nbsp; &nbsp; &nbsp;booktitle={Proceedings of the 2018 CHI Conference on Human Factors in Computing Systems},<br>&nbsp; &nbsp; &nbsp; &nbsp;pages={496},<br>&nbsp; &nbsp; &nbsp; &nbsp;year={2018},<br>&nbsp; &nbsp; &nbsp; &nbsp;organization={ACM}<br>}
+    videoId: '244079629'
+    videoType: vimeo
+    flickr: '72157668597613889'
+    paperThumbnail: chi2018_forte_thumbnail.jpg
+    paperUrl: 'https://www.dropbox.com/s/bld0v2nc420x1ld/chi2018_forte.pdf?raw=1'
+    paperInfo: >-
+      Chen, X., Tao, Y., Wang, G., Kang, R., Grossman, T., Coros, S., & Hudson, S. E. (2018). Forte: User-Driven Generative Design. In Proceedings of the 2018 CHI Conference on Human Factors in Computing Systems (p. 496).
+
 fabrication:
   - imgUrl: forte.jpg
     name: Fort&eacute;
@@ -110,7 +107,8 @@ fabrication:
     paperThumbnail: chi2018_forte_thumbnail.jpg
     paperUrl: 'https://www.dropbox.com/s/bld0v2nc420x1ld/chi2018_forte.pdf?raw=1'
     paperInfo: >-
-      Xiang ‘Anthony’ Chen, Ye Tao, Guanyun Wang, Runchang Kang, Tovi Grossman, Stelian Coros, Scott Hudson., 2018, April. Forte: User-Driven Generative Design. In Proceedings of the 2018 CHI Conference on Human Factors in Computing Systems (p. 496). ACM. Acceptance Rate: 25.7%.
+      Chen, X., Tao, Y., Wang, G., Kang, R., Grossman, T., Coros, S., & Hudson, S. E. (2018). Forte: User-Driven Generative Design. In Proceedings of the 2018 CHI Conference on Human Factors in Computing Systems (p. 496).
+
   - imgUrl: medley.jpg
     name: Medley
     descp: Embedding everyday things to enrich the materiality of 3D printed objects.
@@ -125,12 +123,14 @@ fabrication:
     paperThumbnail: chi2018_medley_thumbnail.jpg
     paperUrl: 'https://www.dropbox.com/s/97nvsjjqawn14e9/medley_chi2018.pdf?raw=1' 
     paperInfo: >-
-      Xiang ‘Anthony’ Chen, Stelian Coros, Scott Hudson. Medley: A Library of Embeddables to Explore Rich Material Properties for 3D Printed Objects.  In Proceedings of the 2018 CHI Conference on Human Factors in Computing Systems (p. 162). ACM. Acceptance Rate: 25.7%.
+      Chen, X., Coros, S., & Hudson, S. E. (2018). Medley: A Library of Embeddables to Explore Rich Material Properties for 3D Printed Objects. In Proceedings of the 2018 CHI Conference on Human Factors in Computing Systems (p. 162).
+  
   - imgUrl: thermorph_small.jpg
     name: Thermorph
     venue: CHI ‘18 
     descp: Leveraging FDM warpage to print self-folding structures in off-the-shelf machines.
     exturl: http://morphingmatter.cs.cmu.edu/thermorph/
+
   - imgUrl: facade_small.jpg
     name: Fa&ccedil;ade
     descp: Making appliances accessible with 3D printed Braille buttons.
@@ -160,10 +160,8 @@ fabrication:
     paperThumbnail: chi2017_facade_thumbnail.jpg
     paperUrl: 'https://www.dropbox.com/s/0heek4s65qvw27p/chi2017_facade.pdf?raw=1'
     paperInfo: >-
-      Anhong Guo, Xiang 'Anthony' Chen, Haoran Qi, Samuel White, Suman Ghosh,
-      Chieko Asakawa, Jeffrey Bigham. Facade: Auto-generating Tactile Interfaces
-      to Appliances. Proceedings of the 35th SIGCHI Conference on Human Factors
-      in Computing Systems (CHI 2017).
+      Guo, A., Kim, J., Chen, X., Yeh, T., Hudson, S. E., Mankoff, J., & Bigham, J. P. (2017). Facade: Auto-generating tactile interfaces to appliances. In Proceedings of the 2017 CHI Conference on Human Factors in Computing Systems (pp. 5826–5838).
+  
   - imgUrl: reprise_small.jpg
     name: Reprise
     descp: >-
@@ -199,11 +197,8 @@ fabrication:
     paperThumbnail: uist2016_reprise_thumbnail.jpg
     paperUrl: 'https://www.dropbox.com/s/j8kywu7dex12ery/uist2016_reprise.pdf?raw=1'
     paperInfo: >-
-      Xiang ‘Anthony’ Chen, Jeeeun Kim, Jennifer Mankoff, Tovi Grossman, Stelian
-      Coros, Scott Hudson (2016). Reprise: A Design Tool for Specifying,
-      Generating, and Customizing 3D Printable Adaptations on Everyday Objects.
-      Proceedings of the 29th Annual ACM Symposium on User Interface Software
-      and Technology (UIST 2016). Acceptance Rate: 20.6%.
+      Chen, X., Kim, J., Mankoff, J., Grossman, T., Coros, S., & Hudson, S. E. (2016). Reprise: A Design Tool for Specifying, Generating, and Customizing 3D Printable Adaptations on Everyday Objects. In the 29th Annual ACM Symposium on User Interface Software and Technology.
+
   - imgUrl: encore_small.jpg
     name: Encore
     descp: >-
@@ -244,11 +239,8 @@ fabrication:
     paperThumbnail: uist2015_encore_thumbnail.jpg
     paperUrl: 'https://www.dropbox.com/s/2fvypkcxhv2wclk/uist2015_encore.pdf?raw=1'
     paperInfo: >-
-      Xiang ‘Anthony’ Chen, Stelian Coros, Jennifer Mankoff, Scott Hudson
-      (2015). Encore: 3D Printed Augmentation of Everyday Objects with
-      Printed-Over, Affixed and Interlocked Attachments. Proceedings of the 28th
-      Annual ACM Symposium on User Interface Software and Technology (UIST 2015)
-      Acceptance Rate: 23.6%.
+      Chen, X., Coros, S., Mankoff, J., & Hudson, S. E. (2015). Encore: 3D printed augmentation of everyday objects with printed-over, affixed and interlocked attachments. In Proceedings of the 28th Annual ACM Symposium on User Interface Software and Technology (pp. 73–82).
+
   - imgUrl: 3dphair_small2.jpg
     name: 3D Printed Hair
     descp: A technique to print hair-like structures using commodity FDM printer.
@@ -262,6 +254,7 @@ interactiontechniques:
     descp: >-
       Actuating ears to non-verbally express emotion.
     venue: UIST '18
+    exturl: 'http://home.cs.dartmouth.edu/~jungong/blog/orecchio'
 
   - imgUrl: wristext_small.png
     name: WrisText
@@ -311,10 +304,7 @@ interactiontechniques:
     paperThumbnail: mhci2015_swipeglass_thumbnail.jpg
     paperUrl: 'https://www.dropbox.com/s/cpnt5dib4v98bf1/mhci2015_swipeglass.pdf?raw=1'
     paperInfo: >-
-      Tovi Grossman, Xiang ‘Anthony’ Chen, George Fitzmaurice (2015). Typing on
-      Glasses: Adapting Text Entry to Smart Eyewear. Proceedings of the 17th
-      international conference on Human-computer interaction with mobile devices
-      and services (MobileHCI 2015). Acceptance Rate: 25.2%.
+      Grossman, T., Chen, X. A., & Fitzmaurice, G. (2015). Typing on glasses: adapting text entry to smart eyewear. In Proceedings of the 17th International Conference on Human-Computer Interaction with Mobile Devices and Services (pp. 144–152).
 
   - imgUrl: duet_small.jpg
     name: Duet
@@ -349,10 +339,7 @@ interactiontechniques:
     paperThumbnail: chi2014_duet_thumbnail.jpg
     paperUrl: 'https://www.dropbox.com/s/r7llh1crqtwg16u/chi2014_duet.pdf?raw=1'
     paperInfo: >-
-      Xiang ‘Anthony’ Chen, Tovi Grossman, Daniel Wigdor, George Fitzmaurice
-      (2014). Duet: Exploring Joint Interactions on a Smart Phone and a Smart
-      Watch. Proceedings of the 32nd SIGCHI Conference on Human Factors in
-      Computing Systems (CHI 2014). Acceptance Rate: 22.8%.  Best Paper Award
+      Chen, X., Grossman, T., Wigdor, D. J., & Fitzmaurice, G. (2014). Duet: exploring joint interactions on a smart phone and a smart watch. In Proceedings of the SIGCHI Conference on Human Factors in Computing Systems (pp. 159–168).
   
   - imgUrl: air_touch_small.jpg
     name: Air+Touch
@@ -387,10 +374,7 @@ interactiontechniques:
     paperThumbnail: uist2014_airtouch_thumbnail.jpg
     paperUrl: 'https://www.dropbox.com/s/yaspxpqsx4vtz99/uist2014_airtouch.pdf?raw=1'
     paperInfo: >-
-      Xiang ‘Anthony’ Chen, Julia Schwarz, Chris Harrison, Jennifer Mankoff,
-      Scott Hudson (2014). Air+Touch: Interweaving Touch & In-Air Gestures.
-      Proceedings of the 27th Annual ACM Symposium on User Interface Software
-      and Technology (UIST 2014). Acceptance Rate: 22.2%.
+      Chen, X., Schwarz, J., Harrison, C., Mankoff, J., & Hudson, S. E. (2014). Air + touch: interweaving touch & in-air gestures. In Proceedings of the 27th annual ACM symposium on User interface software and technology (pp. 519–525).
   
   - imgUrl: swipeboard_small.jpg
     name: Swipeboard
@@ -431,11 +415,7 @@ interactiontechniques:
     paperThumbnail: uist2014_swipeboard_thumbnail.jpg
     paperUrl: 'https://www.dropbox.com/s/sqd5dxsl22zgpnb/uist2014_swipeboard.pdf?raw=1'
     paperInfo: >-
-      Xiang ‘Anthony’ Chen, Tovi Grossman, George Fitzmaurice (2014).
-      Swipeboard: A Text Entry Technique for Ultra-Small Interfaces That
-      Supports Novice to Expert Transitions. Proceedings of the 27th Annual ACM
-      Symposium on User Interface Software and Technology (UIST 2014). Acceptance
-      Rate: 22.2%.  
+      Chen, X., Grossman, T., & Fitzmaurice, G. (2014). Swipeboard: a text entry technique for ultra-small interfaces that supports novice to expert transitions. In Proceedings of the 27th annual ACM symposium on User interface software and technology (pp. 615–620).
   
   - imgUrl: aroundbody_small.jpg
     name: Around-Body
@@ -474,12 +454,7 @@ interactiontechniques:
     paperThumbnail: mhci2014_aroundbody_thumbnail.jpg
     paperUrl: 'https://www.dropbox.com/s/lyqbpiq854b2qos/mhci2014_aroundbody.pdf?raw=1'
     paperInfo: >-
-      Xiang ‘Anthony’ Chen, Julia Schwarz, Chris Harrison, Jennifer Mankoff,
-      Scott Hudson (2014). Around-Body Interaction: Sensing & Interaction
-      Techniques for Proprioception-Enhanced Input with Mobile Devices.
-      Proceedings of the 16th international conference on Human-computer
-      interaction with mobile devices and services (MobileHCI 2014). Acceptance
-      Rate: 21.3%.
+      Chen, X., Schwarz, J., Harrison, C., Mankoff, J., & Hudson, S. (2014). Around-body interaction: sensing & interaction techniques for proprioception-enhanced input with mobile devices. In Proceedings of the 16th international conference on Human-computer interaction with mobile devices & services (pp. 287–290).
   
   - imgUrl: tabletstylus_small.jpg
     name: Tablet+Stylus
@@ -546,11 +521,7 @@ interactiontechniques:
     paperThumbnail: mhci2012_bci_thumbnail.jpg
     paperUrl: 'https://www.dropbox.com/s/z74oxofbcqlc3lr/mhci2012_bci.pdf?raw=1'
     paperInfo: >-
-      Xiang ‘Anthony’ Chen, Nicolai Marquardt, Anthony Tang, Sebastian Boring,
-      Saul Greenberg (2012). Extending a Mobile Device’s Interaction Space
-      through Body-Centric Interaction. Proceedings of the 14th international
-      conference on Human-computer interaction with mobile devices and services
-      (MobileHCI 2012). Acceptance Rate: 25%.
+      Chen, X., Marquardt, N., Tang, A., Boring, S., & Greenberg, S. (2012). Extending a mobile device’s interaction space through body-centric interaction. In Proceedings of the 14th international conference on Human-computer interaction with mobile devices and services (pp. 151–160).
 
   - imgUrl: fatthumb_small.jpg
     name: Fat Thumb
@@ -601,10 +572,7 @@ interactiontechniques:
     paperThumbnail: avi2012_spalendar_thumbnail.jpg
     paperUrl: 'https://www.dropbox.com/s/0uvmpuhpq3vpzfy/avi2012_spalendar.pdf?raw=1'
     paperInfo: >-
-      Xiang ‘Anthony’ Chen, Sebastian Boring, Sheelagh Carpendale, Anthony Tang,
-      Saul Greenberg (2012). Spalendar: Spatially Visualizing Group’s Calendar
-      Activities as a Public Interactive Display. Proceedings of the 11th
-      International Working Conference on Advanced Visual Interfaces (AVI 2012).
+      Chen, X., Boring, S., Carpendale, S., Tang, A., & Greenberg, S. (2012). Spalendar: visualizing a group’s calendar events over a geographic space on a public display. In AVI ’12 Proceedings of the International Working Conference on Advanced Visual Interfaces (pp. 689–696).
 
   - imgUrl: maestro_small.jpg
     name: Maestro
@@ -643,11 +611,10 @@ interactiontechniques:
     paperThumbnail: unpublished_maestro_thumbnail.jpg
     paperUrl: 'https://www.dropbox.com/s/ggj3em846blo0b7/unpublished_maestro.pdf?raw=1'
     paperInfo: >-
-      Xiang 'Anthony' Chen, Ken Hinckley, Michel Pahud, Bill Buxton (2014).
-      # Maestro: Sensing Techniques with Multiple Wearables. Unpublished paper.
+      Chen, X., Hinckley K., Pahud M., Buxton B. (2014). Maestro: Sensing Techniques with Multiple Wearables. Unpublished paper.
 
 intelligentuserinterfaces:
-  
+
   - imgUrl: improv_small.jpg
     name: Improv
     descp: An input framework for users to create cross-device gestures.
@@ -689,8 +656,7 @@ intelligentuserinterfaces:
     paperThumbnail: tochi17_improv_thumbnail.jpg
     paperUrl: 'https://www.dropbox.com/s/bwct58u1z70jvt0/tochi2017_improv.pdf?raw=1'
     paperInfo: >-
-      Xiang ‘Anthony’ Chen, Yang Li. Improv: An Input Framework for Improvising
-      Cross-Device InteractionBy Demonstration.ACM TOCHI, 24(2), 15
+      Chen, X., & Li, Y. (2017). Improv: An Input Framework for Improvising Cross-Device Interaction by Demonstration. ACM Transactions on Computer-Human Interaction (TOCHI), 24(2), 15.
     venue: TOCHI '17
 
   - imgUrl: locus_small.jpg
@@ -727,10 +693,7 @@ intelligentuserinterfaces:
     paperThumbnail: uist2016_locus_thumbnail.jpg
     paperUrl: 'https://www.dropbox.com/s/iw4eqv7b9rhzykx/uist2016_locus.pdf?raw=1'
     paperInfo: >-
-      Xiang 'Anthony' Chen, Yang Li (2016). Bootstrapping User-Defined Body
-      Tapping Recognition with Offline-Learned Probabilistic Representation.
-      Proceedings of the 29th Annual ACM Symposium on User Interface Software
-      and Technology (UIST 2016). Acceptance Rate: 20.6%.
+      Chen, X., & Li, Y. (2016). Bootstrapping User-Defined Body Tapping Recognition with Offline-Learned Probabilistic Representation. In Proceedings of the 29th Annual Symposium on User Interface Software and Technology (pp. 359–364).
 
   - imgUrl: vislens_small.jpg
     name: VizLens
@@ -770,11 +733,7 @@ intelligentuserinterfaces:
     paperThumbnail: uist2016_vizlens_thumbnail.jpg
     paperUrl: 'https://www.dropbox.com/s/tvopavl3e5u9yjg/uist2016_vizlens.pdf?raw=1'
     paperInfo: >-
-      Anhong Guo, Xiang ‘Anthony’ Chen, Haoran Qi, Samuel White, Suman Ghosh,
-      Chieko Asakawa, Jeffrey Bigham (2016). VizLens: A Robust and Interactive
-      Screen Reader for Interfaces in the Real World. Proceedings of the 29th
-      Annual ACM Symposium on User Interface Software and Technology (UIST 2016)
-      Acceptance Rate: 20.6%.
+      Guo, A., Chen, X., Qi, H., White, S., Ghosh, S., Asakawa, C., & Bigham, J. P. (2016). Vizlens: A robust and interactive screen reader for interfaces in the real world. In Proceedings of the 29th Annual Symposium on User Interface Software and Technology (pp. 651–664).
 
   - imgUrl: snaptoit_small.jpg
     name: Snap to It
@@ -818,11 +777,7 @@ intelligentuserinterfaces:
     paperThumbnail: chi2016_snaptoit_thumbnail.jpg
     paperUrl: https://www.dropbox.com/s/et9wnqg0gu48ufi/chi2016_snaptoit.pdf?raw=1
     paperInfo: >-
-      Adrian de Freitas, Michael Nebeling, Xiang ‘Anthony’ Chen, Junrui Yang,
-      Akshaye Shreenithi Kirupa Karthikeyan Ranithangam, Anind Dey (2016).
-      Snap-To-It: A User-Inspired Platform for Opportunistic Device
-      Interactions. Proceedings of the 34th SIGCHI Conference on Human Factors
-      in Computing Systems (CHI 2016). Acceptance Rate: 23.4%.
+      de Freitas, A. A., Nebeling, M., Chen, X., Yang, J., Karthikeyan Ranithangam, A. S. K., & Dey, A. K. (2016). Snap-to-it: A user-inspired platform for opportunistic device interactions. In Proceedings of the 2016 CHI Conference on Human Factors in Computing Systems (pp. 5909–5920).
 
   - imgUrl: sweepsense_small.jpg
     name: SweepSense
