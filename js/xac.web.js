@@ -49,27 +49,27 @@ $(document).ready(function () {
 	YAML.load('data.yml', function (result) {
 		var menuObj = result;
 
-		$('#divSpecial').append(XAC.makeTitle('HOUSE SPECIALS'))
+		$('#divSpecial').append(XAC.makeTitle('SELECTED PROJECTS'))
 		for (var i = 0; i < menuObj.specials.length; i++) {
 			$('#divSpecial').append(XAC.makeItem(menuObj.specials[i]))
 		}
 
-		$('#divMenu').append(XAC.makeTitle('FABITIZERS', true))
-		for (var i = 0; i < menuObj.fabrication.length; i++) {
-			$('#divMenu').append(XAC.makeItem(menuObj.fabrication[i]))
+		$('#divMenu').append(XAC.makeTitle('INTELLIGENT USER INTERFACES', true))
+		for (var i = 0; i < menuObj.intelligentuserinterfaces.length; i++) {
+			$('#divMenu').append(XAC.makeItem(menuObj.intelligentuserinterfaces[i]))
 		}
 
-		$('#divMenu').append(XAC.makeTitle('ENTR&Eacute;ERACTION TECHNIQUES'))
+		$('#divMenu').append(XAC.makeTitle('SENSING & INTERACTION TECHNIQUES'))
 		for (var i = 0; i < menuObj.interactiontechniques.length; i++) {
 			$('#divMenu').append(XAC.makeItem(menuObj.interactiontechniques[i]))
 		}
 
-		$('#divMenu').append(XAC.makeTitle('DISSERNET OF THINGS'))
-		for (var i = 0; i < menuObj.internetofthings.length; i++) {
-			$('#divMenu').append(XAC.makeItem(menuObj.internetofthings[i]))
+		$('#divMenu').append(XAC.makeTitle('COMPUTATIONAL DESIGN & FABRICATION'))
+		for (var i = 0; i < menuObj.fabrication.length; i++) {
+			$('#divMenu').append(XAC.makeItem(menuObj.fabrication[i]))
 		}
 
-		$('#divMenu').append(XAC.makeTitle('SIDES'))
+		$('#divMenu').append(XAC.makeTitle('SIDE PROJECTS'))
 		for (var i = 0; i < menuObj.sideprojects.length; i++) {
 			$('#divMenu').append(XAC.makeItem(menuObj.sideprojects[i]))
 		}
