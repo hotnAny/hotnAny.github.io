@@ -49,10 +49,10 @@ $(document).ready(function () {
 	YAML.load('data.yml', function (result) {
 		var menuObj = result;
 
-		$('#divSpecial').append(XAC.makeTitle('SELECTED PROJECTS'))
-		for (var i = 0; i < menuObj.specials.length; i++) {
-			$('#divSpecial').append(XAC.makeItem(menuObj.specials[i]))
-		}
+		// $('#divSpecial').append(XAC.makeTitle('SELECTED PROJECTS'))
+		// for (var i = 0; i < menuObj.specials.length; i++) {
+		// 	$('#divSpecial').append(XAC.makeItem(menuObj.specials[i]))
+		// }
 
 		$('#divMenu').append(XAC.makeTitle('INTELLIGENT USER INTERFACES', true))
 		for (var i = 0; i < menuObj.intelligentuserinterfaces.length; i++) {

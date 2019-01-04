@@ -212,20 +212,20 @@ a:active {
 }
 
 .maintable {
-    margin-left: 8%;
-    margin-right: 8%;
+    margin-left: 9%;
+    margin-right: 9%;
 }
 
 .tdpageintro {
     position: fixed;
-    width: 27%;
+    width: 22%;
     vertical-align: top;
     padding-top: 3%;
 }
 
 .tdpagemenu {
     padding-top: 3%;
-    padding-left: 35%;
+    padding-left: 29%;
     padding-bottom: 3%;
 }
 
@@ -279,4 +279,9 @@ blockquote p {
 .lbmeta {
     opacity: 0.33;
     font-size: normal;
+}
+
+.img-profile{
+    width: 160px;
+    border-radius: 50%;   
 }
