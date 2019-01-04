@@ -260,7 +260,7 @@ interactiontechniques:
     name: WrisText
     venue: 🥇 CHI '18
     descp: A one-handed text entry technique using wrist swirling.
-    exturl: http://www.cs.dartmouth.edu/~jungong/publication/wristext/
+    exturl: http://home.cs.dartmouth.edu/~jungong/blog/wristext
   
   - imgUrl: twistnknock_small.jpg
     name: Twist 'n' Knock
