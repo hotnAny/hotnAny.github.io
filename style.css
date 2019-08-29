@@ -218,7 +218,7 @@ a:active {
 
 .tdpageintro {
     position: fixed;
-    width: 22%;
+    width: 20%;
     vertical-align: top;
     padding-top: 3%;
 }
@@ -284,4 +284,8 @@ blockquote p {
 .img-profile{
     width: 160px;
     border-radius: 50%;   
+}
+
+.twitter-follow-button{
+    filter: grayscale(100%);
 }
