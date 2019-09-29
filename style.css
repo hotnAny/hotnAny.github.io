@@ -190,7 +190,8 @@ a:active {
 }
 
 .tbpubinfo {
-    font-family: 'Lucida Console', sans-serif;
+    /* font-family: 'Lucida Console', sans-serif; */
+    font-family: monospace;
     font-size: x-small;
     line-height: 20px;
     background-color: #efefef;
