@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.99999 (TeX Live 2018) (preloaded format=xelatex 2018.4.16)  31 MAY 2020 17:14
+This is XeTeX, Version 3.14159265-2.6-0.99999 (TeX Live 2018) (preloaded format=xelatex 2018.4.16)  29 JUN 2020 13:07
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -836,7 +836,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 4--4
  []
 
 [2] [3])
-Underfull \hbox (badness 10000) in paragraph at lines 219--27
+Underfull \hbox (badness 10000) in paragraph at lines 234--27
 
  []
 
@@ -855,17 +855,17 @@ Underfull \hbox (badness 10000) in paragraph at lines 35--36
 
  []
 
-(./press.tex [5])
+(./press.tex [5] [6])
 Underfull \hbox (badness 10000) in paragraph at lines 222--39
 
  []
 
-[6] (./presentations.tex)
+(./presentations.tex [7])
 Underfull \hbox (badness 10000) in paragraph at lines 176--42
 
  []
 
-(./teaching.tex [7] [8])
+(./teaching.tex [8])
 Underfull \hbox (badness 10000) in paragraph at lines 485--45
 
  []
@@ -896,12 +896,12 @@ Package rerunfilecheck Info: File `chen_cv.out' has not changed.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 52.
  ) 
 Here is how much of TeX's memory you used:
- 19918 strings out of 492970
- 383029 string characters out of 6133938
+ 19916 strings out of 492970
+ 382919 string characters out of 6133938
  499583 words of memory out of 5000000
- 23748 multiletter control sequences out of 15000+600000
- 535639 words of font info for 69 fonts, out of 8000000 for 9000
+ 23747 multiletter control sequences out of 15000+600000
+ 535631 words of font info for 68 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 46i,11n,67p,10437b,425s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 46i,11n,67p,10437b,383s stack positions out of 5000i,500n,10000p,200000b,80000s
 
 Output written on /Users/xac/Development/Web/cv/.texpadtmp/chen_cv.pdf (10 pages).
