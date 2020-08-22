@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.99999 (TeX Live 2018) (preloaded format=xelatex 2018.4.16)  30 JUN 2020 20:13
+This is XeTeX, Version 3.14159265-2.6-0.99999 (TeX Live 2018) (preloaded format=xelatex 2018.4.16)  18 AUG 2020 22:22
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -822,21 +822,8 @@ Underfull \hbox (badness 10000) in paragraph at lines 101--24
 
  []
 
-(./publications.tex
-LaTeX Font Info:    Try loading font information for U+msa on input line 4.
- (/usr/local/texlive/2018/texmf-dist/tex/latex/amsfonts/umsa.fd
-File: umsa.fd 2013/01/14 v3.01 AMS symbols A
-)
-LaTeX Font Info:    Try loading font information for U+msb on input line 4.
- (/usr/local/texlive/2018/texmf-dist/tex/latex/amsfonts/umsb.fd
-File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-)
-Underfull \hbox (badness 10000) in paragraph at lines 4--4
-
- []
-
-[2] [3])
-Underfull \hbox (badness 10000) in paragraph at lines 234--27
+(./publications.tex [2] [3])
+Underfull \hbox (badness 10000) in paragraph at lines 241--27
 
  []
 
@@ -846,6 +833,14 @@ Underfull \hbox (badness 10000) in paragraph at lines 138--30
  []
 
 (./funding.tex
+LaTeX Font Info:    Try loading font information for U+msa on input line 13.
+ (/usr/local/texlive/2018/texmf-dist/tex/latex/amsfonts/umsa.fd
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+)
+LaTeX Font Info:    Try loading font information for U+msb on input line 13.
+ (/usr/local/texlive/2018/texmf-dist/tex/latex/amsfonts/umsb.fd
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+)
 Underfull \hbox (badness 1286) in paragraph at lines 13--13
 []\TU/MinionPro-Regular.otf(0)/bx/n/10 Xiang ‘Anthony’ Chen \TU/MinionPro-Regular.otf(0)/m/n/10 (Sole PI). NSF CRII: CHS: Techniques for Helping Domain Experts Un-
  []
@@ -866,7 +861,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 222--39
  []
 
 (./presentations.tex [7])
-Underfull \hbox (badness 10000) in paragraph at lines 176--42
+Underfull \hbox (badness 10000) in paragraph at lines 186--42
 
  []
 
@@ -902,11 +897,11 @@ Package rerunfilecheck Info: File `chen_cv.out' has not changed.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 52.
  ) 
 Here is how much of TeX's memory you used:
- 19916 strings out of 492970
- 382919 string characters out of 6133938
+ 19886 strings out of 492970
+ 382255 string characters out of 6133938
  498540 words of memory out of 5000000
- 23747 multiletter control sequences out of 15000+600000
- 535631 words of font info for 68 fonts, out of 8000000 for 9000
+ 23730 multiletter control sequences out of 15000+600000
+ 532491 words of font info for 51 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  46i,11n,67p,10437b,420s stack positions out of 5000i,500n,10000p,200000b,80000s
 
