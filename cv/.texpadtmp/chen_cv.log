@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.99999 (TeX Live 2018) (preloaded format=xelatex 2018.4.16)  18 AUG 2020 22:22
+This is XeTeX, Version 3.14159265-2.6-0.99999 (TeX Live 2018) (preloaded format=xelatex 2018.4.16)  25 SEP 2020 23:12
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -866,28 +866,22 @@ Underfull \hbox (badness 10000) in paragraph at lines 186--42
  []
 
 (./teaching.tex [8])
-Underfull \hbox (badness 10000) in paragraph at lines 485--45
+Underfull \hbox (badness 10000) in paragraph at lines 506--45
 
  []
 
-(./service.tex [9]
-Underfull \hbox (badness 10000) in paragraph at lines 67--67
+(./service.tex [9])
+Underfull \hbox (badness 10000) in paragraph at lines 117--48
 
  []
 
-)
-Underfull \hbox (badness 10000) in paragraph at lines 115--48
-
- []
-
-(./references.tex)
+(./references.tex [10])
 Underfull \hbox (badness 10000) in paragraph at lines 71--51
 
  []
 
-[10]
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 52.
- [11]
+[11]
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 52.
  (/Users/xac/Development/Web/cv/.texpadtmp/chen_cv.aux)
 Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 52.
