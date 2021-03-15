@@ -29,14 +29,10 @@ function init() {
         var htmlText = this.responseText;
 
         if (window.mobileCheck() == true) {
-            // document.getElementsByTagName('img').classList.add('imgmobile')
             htmlText = htmlText.replace('imgdesktop', 'imgmobile')
         }
 
         document.body.innerHTML = htmlText
-        // }else {
-        //     document.getElementsByTagName('img').classList.add('imgdesktop')
-        // }
     };
     xhr.send();
 }

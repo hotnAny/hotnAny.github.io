@@ -1,10 +1,12 @@
+* {
+    font-family: 'Playfair Display', serif;
+}
+
 .bodydesktop {
     margin-top: 2%;
     margin-left: 25%;
     margin-right: 25%;
     font-size: xx-large;
-    font-family: 'Playfair Display', serif;
-
 }
 
 .bodymobile {
@@ -19,6 +21,11 @@
     font-family: 'Playfair Display', serif;
 }
 
+body.description {
+    margin-top: 2%;
+    margin-left: 25%;
+    margin-right: 25%;
+}
 
 .imgdesktop{
     width: 40%;
@@ -34,6 +41,14 @@
     /* float: right; */
     margin: 1%;
     filter: grayscale(33%);
+}
+
+img.figure{
+    max-width: 100%;
+}
+
+p.description{
+    font-size: 12pt;
 }
 
 a:link {
