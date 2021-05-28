@@ -15,12 +15,6 @@ window.mobileCheck = function () {
 };
 
 function init() {
-    if (window.mobileCheck() == true) {
-        document.body.classList.add("bodymobile")
-    } else {
-        document.body.classList.add("bodydesktop")
-    }
-
     var xhr = new XMLHttpRequest();
     xhr.open('GET', 'content.html', true);
     xhr.onreadystatechange = function () {
@@ -28,8 +22,20 @@ function init() {
         if (this.status !== 200) return; // or whatever error handling you want
         var htmlText = this.responseText;
 
+        // if (window.mobileCheck() == true) {
+        //     htmlText = htmlText.replace('imgdesktop', 'imgmobile')
+        // }
+
         if (window.mobileCheck() == true) {
+            document.body.classList.add("bodymobile")
             htmlText = htmlText.replace('imgdesktop', 'imgmobile')
+            htmlText = htmlText.replace(' class="statement"', '')
+            htmlText = htmlText.replace('<br clear="left" />', '')
+            
+            // console.log(document.getElementsByClassName('statement'))
+            // document.getElementsByClassName('statement')[0].remove('statement')
+        } else {
+            document.body.classList.add("bodydesktop")
         }
 
         document.body.innerHTML = htmlText
