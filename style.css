@@ -4,6 +4,7 @@
     margin-right: 25%;
     font-size: x-large;
     font-family: 'Playfair Display', serif;
+    line-height: 1.5;
 }
 
 .bodymobile {
@@ -26,6 +27,7 @@ body.description {
 
 .imgdesktop{
     width: 40%;
+    max-width: 320px;
     border-radius: 50%;   
     float: right;
     margin: 1%;
