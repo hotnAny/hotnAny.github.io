@@ -198,3 +198,12 @@ posts:
     birthdate: 2018-08-14T05:56:34.000Z
     pubdate: 2018-08-14T06:00:39.672Z
     url: some-excellent-points-from-rachel-thomas
+  - file: 2021-07-18.md
+    tags:
+      - random
+      - thoughts
+      - brain
+    title: We are controlled by our brain
+    birthdate: 2021-12-15T04:06:08.292Z
+    pubdate: 2021-12-15T04:10:41.695Z
+    url: we-are-controlled-by-our-brain
