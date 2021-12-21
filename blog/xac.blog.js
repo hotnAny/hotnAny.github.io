@@ -72,30 +72,26 @@ XAC.postProcessing = function (post) {
 	$('#divPostContent').html(htmlPost.replace('</h1>', '</h1>' + metaStrip))
 }
 
-XAC.trim = function (str, len) {
-	var tailBase = ' . . .'
-	if (str.length < len + tailBase.length) return str
+// XAC.trim = function (str, len) {
+// 	var tailBase = ' . . .'
+// 	if (str.length < len + tailBase.length) return str
 
-	for (var i = str.length - 1, tail = tailBase; i >= 0; i--) {
-		if (i >= len) continue
-		// if(str[i] == ' ') 
-		else {
-			str = str.substring(0, i)
-			str += tail
-			return str
-		}
-		tail += ' .'
-	}
-}
+// 	for (var i = str.length - 1, tail = tailBase; i >= 0; i--) {
+// 		if (i >= len) continue
+// 		// if(str[i] == ' ') 
+// 		else {
+// 			str = str.substring(0, i)
+// 			str += tail
+// 			return str
+// 		}
+// 		tail += ' .'
+// 	}
+// }
 
 //
 //	ready function
 //
 $(document).ready(function () {
-	var url = location.href
-	// var idxLastSlash = url.lastIndexOf('#')
-	// var idBlog = url.substring(idxLastSlash + 1)
-
 	$('.divtitle').css('cursor', 'pointer')
 	$('.divtitle').click(function (e) {
 		var idxSharp = location.href.indexOf('#')
