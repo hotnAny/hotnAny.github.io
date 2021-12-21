@@ -80,6 +80,10 @@ td.pagepost {
   padding-bottom: 3%;
 }
 
+#divPost {
+    max-width: 888px;
+}
+
 .lbdate {
   opacity: 0.33;
   font-family: Lucida Console;
