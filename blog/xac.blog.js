@@ -72,22 +72,6 @@ XAC.postProcessing = function (post) {
 	$('#divPostContent').html(htmlPost.replace('</h1>', '</h1>' + metaStrip))
 }
 
-// XAC.trim = function (str, len) {
-// 	var tailBase = ' . . .'
-// 	if (str.length < len + tailBase.length) return str
-
-// 	for (var i = str.length - 1, tail = tailBase; i >= 0; i--) {
-// 		if (i >= len) continue
-// 		// if(str[i] == ' ') 
-// 		else {
-// 			str = str.substring(0, i)
-// 			str += tail
-// 			return str
-// 		}
-// 		tail += ' .'
-// 	}
-// }
-
 //
 //	ready function
 //
