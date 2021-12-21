@@ -72,12 +72,12 @@ XAC.postProcessing = function (post) {
 	$('#divPostContent').html(htmlPost.replace('</h1>', '</h1>' + metaStrip))
 }
 
-XAC.trim = function(str, len) {
+XAC.trim = function (str, len) {
 	var tailBase = ' . . .'
 	if (str.length < len + tailBase.length) return str
 
-	for(var i=str.length-1, tail=tailBase; i>= 0; i--) {
-		if(i >= len) continue
+	for (var i = str.length - 1, tail = tailBase; i >= 0; i--) {
+		if (i >= len) continue
 		// if(str[i] == ' ') 
 		else {
 			str = str.substring(0, i)
@@ -93,8 +93,8 @@ XAC.trim = function(str, len) {
 //
 $(document).ready(function () {
 	var url = location.href
-	var idxLastSlash = url.lastIndexOf('#')
-	var idBlog = url.substring(idxLastSlash + 1)
+	// var idxLastSlash = url.lastIndexOf('#')
+	// var idBlog = url.substring(idxLastSlash + 1)
 
 	$('.divtitle').css('cursor', 'pointer')
 	$('.divtitle').click(function (e) {
@@ -102,8 +102,7 @@ $(document).ready(function () {
 		var urlNew = location.href
 		if (idxSharp >= 0)
 			location.href = urlNew.substring(0, idxSharp)
-		else
-			location.reload()
+		location.reload()
 	})
 
 	YAML.load('posts/posts.yml', function (result) {
@@ -123,7 +122,7 @@ $(document).ready(function () {
 			lbDate.html(strDate)
 			liPost.append(lbDate)
 			liPost.append('&nbsp;&nbsp;&nbsp;&nbsp;')
-			liPost.append(XAC.trim(post.title, 32) || 'untitled')
+			liPost.append(post.title || 'untitled')
 			liPost.attr('idx', i)
 			liPost.click(function (e) {
 				var idxClicked = $(this).attr('idx')
@@ -135,6 +134,7 @@ $(document).ready(function () {
 					var urlNew = location.href
 					if (idxSharp >= 0) urlNew = urlNew.substring(0, idxSharp)
 					location.href = urlNew + '#' + postClicked.url
+					location.reload()
 				})
 			})
 			ulPosts.append(liPost)
@@ -143,20 +143,27 @@ $(document).ready(function () {
 		// load the post as shown in the url
 		var url
 		var idxSharp = location.href.indexOf('#')
-		if (idxSharp >= 0) url = location.href.substring(idxSharp + 1)
+		if (idxSharp >= 0) {
+			url = location.href.substring(idxSharp + 1)
+		}
+		
 		var postToLoad
-		if (url != undefined)
+		if (url != undefined) {
+			$('#ulPosts').hide()
 			for (post of XAC.posts) {
 				if (post.url == url) {
 					postToLoad = post
 					break
 				}
 			}
-		else
-			postToLoad = XAC.posts[0]
 
-		XAC.renderMarkdown('posts/' + postToLoad.file, $('#divPostContent'), function () {
-			XAC.postProcessing(postToLoad)
-		})
+			XAC.renderMarkdown('posts/' + postToLoad.file, $('#divPostContent'), function () {
+				XAC.postProcessing(postToLoad)
+			})
+		}
+		else {
+			$('#divPost').hide()
+		}
+
 	})
 })
