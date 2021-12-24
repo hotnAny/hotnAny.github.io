@@ -1,0 +1,13 @@
+reviews:
+  - file: 2021-nudge.md
+    cover: nudge.jpeg
+    title: "Nudge: Improving Decisions About Health, Wealth, and Happiness"
+    author: "Richard H. Thaler, Cass R. Sunstein"
+    pubdate: 2021-12-23T07:15:29.695Z
+    url: 2021-nudge
+  - file: 2021-on-intelligence.md
+    cover: on_intelligence.jpeg
+    title: "On Intelligence"
+    author: "Jeff Hawkins, Sandra Blakeslee"
+    pubdate: 2021-12-25T09:20:13.435Z
+    url: 2021-on-intelligence

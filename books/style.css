@@ -18,11 +18,15 @@ body {
   line-height: 150%;
 }
 
-#ulPosts {
+ul.booklist {
   margin: 0px;
   padding-left: 0px;
-  padding-right: 5%;
   list-style: none;
+  /* display:flex; */
+}
+
+li.booklist {
+  padding-right: 32px;
 }
 
 a:link {
@@ -49,8 +53,8 @@ a:active {
   text-decoration: none;
 }
 
-a.info{
-    font-size: 14pt;
+a.info {
+  font-size: 14pt;
 }
 
 .copyright {
@@ -76,14 +80,14 @@ td.info {
   padding-right: 5%;
 }
 
-td.pagepost {
+td.bookpage {
   padding-top: 50px;
   padding-left: 5%;
   padding-right: 5%;
   padding-bottom: 3%;
 }
 
-#divPost {
+#divReview {
   max-width: 888px;
   margin-left: 0%;
 }

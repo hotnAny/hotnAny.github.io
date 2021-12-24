@@ -1,50 +1,14 @@
 var XAC = XAC || {}
 
 //
-//	render markdown file into a html-based container
+//	post processing after loading
 //
-XAC.renderMarkdown = function (file, container, callback) {
-	var reader = new stmd.DocParser();
-	var writer = new stmd.HtmlRenderer();
-	var xhr = new XMLHttpRequest();
-	xhr.onreadystatechange = function () {
-		if (xhr.readyState === 4 && xhr.status === 200) {
-			display(xhr);
-		}
-	};
-
-	function display(xhr) {
-		var parsed = reader.parse(xhr.responseText);
-		var content = writer.renderBlock(parsed);
-		container.html(content);
-
-		try {
-			document.title = document.querySelector('h1').textContent
-		} catch (e) {
-			document.title = file;
-		}
-
-		callback()
-	}
-
-	xhr.open('GET', file);
-	xhr.send();
-}
-
-//
-//	get a string representation from a date object
-//
-XAC.getDateString = function (dateObj) {
-	var month = dateObj.getUTCMonth() + 1; //months from 1-12
-	var day = dateObj.getUTCDate();
-	var year = dateObj.getUTCFullYear();
-
-	var roundUp = function (num) {
-		return num >= 10 ? num : ('0' + num)
-	}
-
-	var strDate = year + "/" + roundUp(month) + "/" + roundUp(day)
-	return strDate
+XAC.postProcessing = function (post) {
+	$('#divPostContent').addClass('ppost')
+	var metaStrip = XAC.getMetaStrip(post)
+	var htmlPost = $('#divPostContent').html()
+	htmlPost = htmlPost.replace('<h1>', '<h1 class="h1post">')
+	$('#divPostContent').html(htmlPost.replace('</h1>', '</h1>' + metaStrip))
 }
 
 //
@@ -55,21 +19,12 @@ XAC.getMetaStrip = function (post) {
 	strip += 'Published on: ' + XAC.getDateString(post.pubdate)
 	strip += '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tags: '
 	var strSep = ' , '
-	for (tag of post.tags) strip += tag + strSep
+	if(post.tags != undefined) {
+		for (tag of post.tags) strip += tag + strSep
+	}
 	strip = strip.substring(0, strip.length - strSep.length)
 	strip += '</label>'
 	return strip
-}
-
-//
-//	post processing after loading
-//
-XAC.postProcessing = function (post) {
-	$('#divPostContent').addClass('ppost')
-	var metaStrip = XAC.getMetaStrip(post)
-	var htmlPost = $('#divPostContent').html()
-	htmlPost = htmlPost.replace('<h1>', '<h1 class="h1post">')
-	$('#divPostContent').html(htmlPost.replace('</h1>', '</h1>' + metaStrip))
 }
 
 //
