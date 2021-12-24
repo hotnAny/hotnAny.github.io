@@ -1,6 +1,6 @@
 var XAC = XAC || {}
 
-const MINCOVERWIDTH = 640
+const MINCOVERWIDTH = 1080
 const COVERHEIGHT = 256
 const COVERWIDTH = COVERHEIGHT * 3 / 4
 //
@@ -30,10 +30,11 @@ $(document).ready(function () {
                 divBook.css('width', '100%')
                 imgBook.css('width', '100%')
             } else {
-                divBook.css('height', COVERHEIGHT)
-                ulBookList.css('columns', (window.innerWidth / COVERWIDTH | 0))
+                // divBook.css('height', COVERHEIGHT)
+                // ulBookList.css('columns', (window.innerWidth / COVERWIDTH - 1 | 0))
                 ulBookList.css('display', 'flex')
-                imgBook.css('height', '100%')
+                ulBookList.css('flex-wrap', 'wrap')
+                imgBook.css('width', COVERWIDTH)
             }
 
             divBook.append(imgBook)
@@ -45,7 +46,6 @@ $(document).ready(function () {
                 let reviewClicked = XAC.reviews[idxClicked]
                 var file = reviewClicked.file
                 XAC.renderMarkdown('reviews/' + file, $('#divReviewContent'), function () {
-                    // XAC.postProcessing(reviewClicked)
                     var idxSharp = location.href.indexOf('#')
                     var urlNew = location.href
                     if (idxSharp >= 0) urlNew = urlNew.substring(0, idxSharp)
@@ -96,6 +96,7 @@ $(document).ready(function () {
                 imgBook.css('width', COVERWIDTH)
                 imgBook.css('float', 'left')
                 imgBook.css('padding-right', '32px')
+                imgBook.css('padding-bottom', '32px')
                 $('#divReviewContent').prepend(imgBook)
             })
         }

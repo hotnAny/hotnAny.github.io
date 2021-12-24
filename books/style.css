@@ -22,11 +22,13 @@ ul.booklist {
   margin: 0px;
   padding-left: 0px;
   list-style: none;
-  /* display:flex; */
+  max-width: 90%;
 }
 
 li.booklist {
   padding-right: 32px;
+  padding-bottom: 32px;
+  display:inline;
 }
 
 a:link {
