@@ -1,6 +1,6 @@
 var XAC = XAC || {}
 
-const MINCOVERWIDTH = 1080
+const MINCOVERWIDTH = 640
 const COVERHEIGHT = 256
 const COVERWIDTH = COVERHEIGHT * 3 / 4
 //
