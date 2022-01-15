@@ -1,0 +1,5 @@
+What this book tells us is that small, frequent, and deliberate practices in a skill that expose your weakness for you to work on can add up to make a significant difference in how well you master that skill.
+
+For example, to improve your skill of public speech, you can volunteer to give a five-minute update of your project in a weekly meeting. What’s more, you can try to vary the situation, e.g., changing to different topics, inviting different crowds, using different media. Basically, you are trying to “poke” your comfort bubble and see what make you struggle in a speech. Also importantly, you should ask for feedback from others, which is often unpleasant but rewarding in the long run because others’ feedback provides you with much richer and more diverse perspectives than your own.
+
+The book also explains how talents are biologically formulated inside our body. Each skill consists of a series of neural response to outside stimuli and practices add myelin—an insulating layer that wraps around neurons to make such response transmitted as faster and stronger signals.

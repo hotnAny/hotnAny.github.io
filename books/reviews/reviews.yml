@@ -11,3 +11,9 @@ reviews:
     author: "Jeff Hawkins, Sandra Blakeslee"
     pubdate: 2021-12-25T09:20:13.435Z
     url: 2021-on-intelligence
+  - file: 2022-talent-code.md
+    cover: talent_code.jpeg
+    title: "Talent Code"
+    author: "Daniel Coyle"
+    pubdate: 2022-01-14T18:37:00
+    url: 2022-talent-code
