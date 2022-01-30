@@ -31,10 +31,11 @@ $(document).ready(function () {
                 imgBook.css('width', '100%')
             } else {
                 imgBook.css('height', COVERHEIGHT)
+                // imgBook.css('width', COVERWIDTH)
+
                 ulBookList.css('columns', (window.innerWidth / COVERWIDTH - 1 | 0))
                 ulBookList.css('display', 'flex')
                 ulBookList.css('flex-wrap', 'wrap')
-                // imgBook.css('width', COVERWIDTH)
             }
 
             divBook.append(imgBook)
