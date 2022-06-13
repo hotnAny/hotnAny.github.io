@@ -17,3 +17,9 @@ reviews:
     author: "Daniel Coyle"
     pubdate: 2022-01-14T18:37:00
     url: 2022-talent-code
+  - file: 2022-think-again.md
+    cover: think_again.jpeg
+    title: "Think Again"
+    author: "Adam Grant"
+    pubdate: 2022-06-13T12:52:00
+    url: 2022-think-again
