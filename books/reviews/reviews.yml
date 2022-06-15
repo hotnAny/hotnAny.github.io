@@ -23,3 +23,9 @@ reviews:
     author: "Adam Grant"
     pubdate: 2022-06-13T12:52:00
     url: 2022-think-again
+  - file: 2021-why-we-get-sick.md
+    cover: why_we_get_sick.jpeg
+    title: "Why We Get Sick"
+    author: "Benjamin Bikman"
+    pubdate: 2022-06-14T17:28:00
+    url: 2021-why-we-get-sick
