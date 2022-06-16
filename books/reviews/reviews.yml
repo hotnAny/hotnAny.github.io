@@ -35,3 +35,9 @@ reviews:
     author: "Michael Bungay Stanier"
     pubdate: 2022-06-15T18:05:00
     url: 2022-the-coaching-habit
+  - file: 2022-deep-work.md
+    cover: deep-work.jpeg
+    title: "Deep Work"
+    author: "Cal Newport"
+    pubdate: 2022-06-16T16:10:00
+    url: 2022-deep-work
