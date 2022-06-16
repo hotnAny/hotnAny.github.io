@@ -29,3 +29,9 @@ reviews:
     author: "Benjamin Bikman"
     pubdate: 2022-06-14T17:28:00
     url: 2021-why-we-get-sick
+  - file: 2022-the-coaching-habit.md
+    cover: the-coaching-habit.jpeg
+    title: "The Coaching Habit"
+    author: "Michael Bungay Stanier"
+    pubdate: 2022-06-15T18:05:00
+    url: 2022-the-coaching-habit

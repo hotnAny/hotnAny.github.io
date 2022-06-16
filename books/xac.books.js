@@ -14,7 +14,7 @@ $(document).ready(function () {
             return new Date(b.pubdate) - new Date(a.pubdate)
         })
 
-        for (i = 0; i < XAC.reviews.length; i++) {
+        for (i = XAC.reviews.length - 1; i >= 0 ; i--) {
             let review = XAC.reviews[i]
             let liBook = $('<li/>')
             liBook.addClass('booklist')

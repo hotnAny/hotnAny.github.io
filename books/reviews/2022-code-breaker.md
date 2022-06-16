@@ -1,0 +1,3 @@
+I am only one-eighth into the book but have already fallen in love with Walter Isaacson's writing. How could he write highly-technical topics (e.g., understanding RNA's structure) with such accuracy and clarity while also making it so engaging and fun to read?
+
+I also appreciate how he started all the way from Darwin and Mendel, trying to provide lay readers a starting-from-scratch introduction. Each chapter is neither too long nor too short. At least for me, it is never boring to read through each chapter as a self-contained nugget of history (even when I am already familiar with that part of history).
