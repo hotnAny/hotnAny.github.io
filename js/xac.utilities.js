@@ -24,61 +24,61 @@ function time(desc) {
 }
 
 
-//
-//	load models from stl binary/ascii data
-//
-XAC.loadStl = function (data, onStlLoaded) {
-	var stlLoader = new THREE.STLLoader();
-	var geometry = stlLoader.parse(data);
-	var object = new THREE.Mesh(geometry, XAC.MATERIALNORMAL);
-	// XAC.scene.add(object.clone());
+// //
+// //	load models from stl binary/ascii data
+// //
+// XAC.loadStl = function (data, onStlLoaded) {
+// 	var stlLoader = new THREE.STLLoader();
+// 	var geometry = stlLoader.parse(data);
+// 	var object = new THREE.Mesh(geometry, XAC.MATERIALNORMAL);
+// 	// XAC.scene.add(object.clone());
 
-	var dims = getBoundingBoxDimensions(object);
-	var ctr = getBoundingBoxCenter(object);
+// 	var dims = getBoundingBoxDimensions(object);
+// 	var ctr = getBoundingBoxCenter(object);
 
-	// reposition the ground & grid
-	XAC.ground.position.y -= dims[1];
+// 	// reposition the ground & grid
+// 	XAC.ground.position.y -= dims[1];
 
-	XAC.scene.remove(XAC.grid);
-	XAC.grid = XAC.drawGrid(dims[1]);
-	XAC.scene.add(XAC.grid);
+// 	XAC.scene.remove(XAC.grid);
+// 	XAC.grid = XAC.drawGrid(dims[1]);
+// 	XAC.scene.add(XAC.grid);
 
-	// relocate the camera
-	var r = Math.max(25, getBoundingSphereRadius(object));
-	XAC.camera.position.copy(XAC.posCam.clone().normalize().multiplyScalar(r * 2));
+// 	// relocate the camera
+// 	var r = Math.max(25, getBoundingSphereRadius(object));
+// 	XAC.camera.position.copy(XAC.posCam.clone().normalize().multiplyScalar(r * 2));
 
-	// re-lookAt for the camera
-	XAC.mouseCtrls.target = new THREE.Vector3(0, 0, 0);
+// 	// re-lookAt for the camera
+// 	XAC.mouseCtrls.target = new THREE.Vector3(0, 0, 0);
 
-	// store the object
-	XAC.objects.push(object);
+// 	// store the object
+// 	XAC.objects.push(object);
 
-	if (onStlLoaded != undefined) {
-		onStlLoaded(object);
-	}
-}
+// 	if (onStlLoaded != undefined) {
+// 		onStlLoaded(object);
+// 	}
+// }
 
-//
-//	sending web sockets to a server
-//
-XAC.pingServer = function (xmlhttp, host, port, keys, values) {
-	var prefix = "http://";
-	xmlhttp.open("POST", prefix + host + ":" + port, true);
-	xmlhttp.setRequestHeader("Content-type", "text/html");
+// //
+// //	sending web sockets to a server
+// //
+// XAC.pingServer = function (xmlhttp, host, port, keys, values) {
+// 	var prefix = "http://";
+// 	xmlhttp.open("POST", prefix + host + ":" + port, true);
+// 	xmlhttp.setRequestHeader("Content-type", "text/html");
 
-	var strMsg = '?';
-	if (keys == undefined || values == undefined) {
-		xmlhttp.send();
-	} else {
-		for (var i = 0; i < keys.length; i++) {
-			strMsg += keys[i] + '=' + values[i];
-			if (i < keys.length - 1) {
-				strMsg += '&';
-			}
-		}
-		xmlhttp.send(strMsg);
-	}
-}
+// 	var strMsg = '?';
+// 	if (keys == undefined || values == undefined) {
+// 		xmlhttp.send();
+// 	} else {
+// 		for (var i = 0; i < keys.length; i++) {
+// 			strMsg += keys[i] + '=' + values[i];
+// 			if (i < keys.length - 1) {
+// 				strMsg += '&';
+// 			}
+// 		}
+// 		xmlhttp.send(strMsg);
+// 	}
+// }
 
 //
 //	parse url and get parameter by name

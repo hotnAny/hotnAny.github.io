@@ -1,0 +1,89 @@
+body {
+  font-family: "Alegreya Sans", sans-serif;
+  font-size: 14pt;
+  line-height: 150%;
+}
+
+table.main {
+  table-layout: fixed;
+  /* height: 640px; */
+}
+
+tr.main {
+}
+
+td {
+  padding: 10px;
+}
+
+ul.toc {
+  margin: 0px;
+  padding-left: 0px;
+  padding-right: 5%;
+  list-style: none;
+}
+
+li.trip {
+  cursor: pointer;
+}
+
+li.trip.selected {
+  font-weight: bold;
+}
+
+td.toc {
+  vertical-align: top;
+}
+
+td.photo {
+  text-align: center;
+}
+
+a.photo {
+  display: inline-block;
+  overflow: hidden;
+}
+
+td.info {
+  vertical-align: bottom;
+}
+
+a.prev {
+  float: left;
+  cursor: pointer;
+}
+
+a.next {
+  float: right;
+  cursor: pointer;
+}
+
+img.memory {
+  width: auto;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+a:link {
+  color: #000000;
+  border-bottom: 1px dotted #000;
+  text-decoration: none;
+}
+
+a:visited {
+  color: #000000;
+  border-bottom: 1px dotted #000;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #888888;
+  border-bottom: 1px dotted #000;
+  text-decoration: none;
+}
+
+a:active {
+  color: #000000;
+  border-bottom: 1px dotted #000;
+  text-decoration: none;
+}

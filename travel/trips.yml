@@ -1,0 +1,31 @@
+trips:
+  - date: 7/2022
+    place: 🇯🇵 Hokkaido
+    memories:
+      - photo: https://lh3.googleusercontent.com/ToxkYmCZfHEkruj8Pu3l_qIxSkuYJTQDkJq53ycKuZF3qc0ut1gzaAG-X7SXziONYrX5_9AjqBj_lK-oulBHZbEUZDcHS6eNpx0lCMSTX2iPn59j2drB0Yg3_P7sWjHxXg66cqOeuLU=w2400
+        caption: Ready for my trip to Hokkaido!
+        description: Still jet-lagged. Just finished a slide deck since working from 6 AM. Packed six days of stuff in one backpack. Here we go!
+      - photo: https://lh3.googleusercontent.com/EYoJVm4E8uf2wz2TTolfh2cio8XnWnJ4oZ32EeMEzRJFkOyuaO6ORD56xGqQ8auud5Y7g916Y9VoaKGKDDyimWR-7U7Te36iro3xJu2cuc0aeWduIZTb8pdPuVj9Qp7Ph_QcJlxiLiE=w2400
+        caption: All these just cost 2,600 yen?!
+        description: A proper meal after bathing in 万葉の湯---a local onsen at Asahikawa.
+      - photo: https://lh3.googleusercontent.com/wnWH1nsXGo7NkuckJyKeDK5TviQ3BWKvtK_PPG8ZXSTKGi1sAUi9ctPVimboxfGSTBECwdmj3Q_JOCBgKB77TtPrXpa3WRr8ZWYzi26jaQxOG_JQVLp_EsCQ90_OkCVCyxVXhr3O6DM=w2400
+        caption: Accessibility is taken really seriously
+        description: From Tokyo to Hokkaido, I was very impressed by how accessibility is so consistently implemented on sidewalks, ramps, stairs, and even parks.
+      - photo: https://lh3.googleusercontent.com/4ElQtUQfqGxsRzQAs94aiS6ukwNXh9YrxLcO2m7ofTiCnathX8tf_QCZ740YbMoC34dciRP0o4iE2pudLIkZ0XviUOAZSw9A-COLZVK_FHLlnvU3eBlFzWKn-AV7S8Jc430V7oFBFIE=w2400
+        caption: Look what I found
+        description: Overseen in a shopping mall in Asahikawa. Glad UCLA made it so far here.
+      - photo: https://lh3.googleusercontent.com/I8JNJID9cU7J5Z925upNnrJgLcNjfUQuZRu5o-PRSDzj-d1n3OdTkjL3rtLdOmhtztJj8QcZPrRJ8FcrJnX906beEm6J6tBWywdgNxc0GUOu7ngmBc4l6eaZQxOcXAtR9SDLny35TWo=w2400
+        caption: The best traditional Japanese cuisine ...
+        description: 板前料理 渥美 is queitly tucked in the busiest district in Sapporo. Highly delicious food and attentative service. I actually struck quite a conversation (via Google Translate) with the couple that ran the restaurant.
+      - photo: https://lh3.googleusercontent.com/PaV7WK_ZB88-HhCTXD8ox2F9ZY12yCNhS63UgVpqAZcUntnt_6LD2ArmQC9gJ3OjG95D5N-VQ2ADR96Is57CSWCBkl1tfMVF355ffLuMZLt9_n_f06Y8PB9IG61mEZyly2EVrTj5jhg=w2400
+        caption: Hokkaido cheese tart!
+        description: You can't not eat cheese tart when visiting Hokkaido. I bought this in a touristic store at Furano. Frozen style. Tasted like icecream sandwich with a natural milky flavor.
+  - date: 7/2022
+    place: 🇯🇵 Tokyo
+    memories: 
+      - photo: https://lh3.googleusercontent.com/cR-BsIEN7Hi_2IQzB825VbbBXsROD8JxltJ_nmTcn8w_cmA5MChqhAOd8P1a-_bnis6jnYwa3qP1E4CnX8OUr6bRvXHEIN4Cv02rhjSwDCJS85UhDW9U-6x0_pSR5l80SOjbDyZT744=w2400
+        caption: Tokyo Metropolitan Government Building
+        description: "A very impressive government building. I was quote shocked at the shear scale of this establishment, which really delivers the message that Tokyo is a real metropolitan city."
+      - photo: https://lh3.googleusercontent.com/GkyKLfy1Y-HZdnxPbUAwMoVztIvGfbwH6srnM5s81DHrBZOQeqdWdsYukfp_IPv9D7MynmdZ7Db0rHKTm_bbJWOSu7NaOG46ay2kuMwRqlWJLiXR3_enLJcWohra6-gncvcxweFaZfg=w2400
+        caption: 忠犬八公 statue.
+        description: Located at the famous Shibuya Crossing. I think it is quite a tribute to set up this statue at probably one of the busiest intersections in the world.
