@@ -30,6 +30,14 @@ $(document).ready(function () {
             initCaption()
 
             $('li.trip:first').trigger('click')
+
+            $('body').on('keydown', (e) => {
+                if(e.keyCode == 37) {
+                    $('a.prev').trigger('click')
+                } else if(e.keyCode == 39) {
+                    $('a.next').trigger('click')
+                }
+            })
         }
 
         xhr.send()
