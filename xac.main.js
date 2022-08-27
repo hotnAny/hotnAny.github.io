@@ -25,9 +25,8 @@ function init() {
         if (window.mobileCheck() == true) {
             document.body.classList.add("bodymobile")
             htmlText = htmlText.replace('imgdesktop', 'imgmobile')
-            htmlText = htmlText.replace(' class="statement"', '')
+            htmlText = htmlText.replaceAll(' class="statement"', '')
             htmlText = htmlText.replace('<br clear="left" />', '')
-            
         } else {
             document.body.classList.add("bodydesktop")
         }
