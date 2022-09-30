@@ -1,107 +1,106 @@
 .bodydesktop {
-    margin-top: 2%;
-    margin-left: 25%;
-    margin-right: 15%;
-    font-size: 16pt;
-    font-family: 'Playfair Display', serif;
-    line-height: 1.5;
+  margin-top: 2%;
+  margin-left: 20%;
+  margin-right: 15%;
+  font-size: 16pt;
+  font-family: "Playfair Display", serif;
+  line-height: 1.5;
 }
 
 .bodymobile {
-    /* margin-top: 2%;
-    margin-left: 10%;
-    margin-right: 10%; */
-    margin-top: 0%;
-    font-size: 48pt;
-    margin-left: 2%;
-    margin-right: 2%;
-    text-align: center;
-    font-family: 'Playfair Display', serif;
+  margin-top: 0%;
+  font-size: 48pt;
+  margin-left: 2%;
+  margin-right: 2%;
+  text-align: center;
+  font-family: "Playfair Display", serif;
 }
 
-.imgdesktop{
-    width: 30%;
-    max-width: 250px;
-    border-radius: 50%;   
-    float: left;
-    margin-right: 5%;
-    margin-bottom: 100%;
-    filter: grayscale(33%);
+.imgdesktop {
+  width: 30%;
+  max-width: 250px;
+  border-radius: 50%;
+  float: left;
+  margin-right: 5%;
+  margin-bottom: 65%;
+  filter: grayscale(33%);
 }
 
 .imgmobile {
-    width: 80%;
-    border-radius: 50%;   
-    /* float: right; */
-    margin: 1%;
-    filter: grayscale(33%);
+  width: 80%;
+  border-radius: 50%;
+  margin: 1%;
+  filter: grayscale(33%);
 }
 
-img.figure{
-    max-width: 100%;
+img.figure {
+  max-width: 100%;
 }
 
-p.description{
-    font-size: 12pt;
+p.description {
+  font-size: 12pt;
 }
 
 a:link {
-    color: #666666;
-    border-bottom: 1px dotted #000;
-    text-decoration: none;
+  color: #666666;
+  border-bottom: 1px dotted #000;
+  text-decoration: none;
 }
 
 a:visited {
-    color: #666666;
-    border-bottom: 1px dotted #000;
-    text-decoration: none;
+  color: #666666;
+  border-bottom: 1px dotted #000;
+  text-decoration: none;
 }
 
 a:hover {
-    color: #bbbbbb;
-    border-bottom: 1px dotted #000;
-    text-decoration: none;
+  color: #bbbbbb;
+  border-bottom: 1px dotted #000;
+  text-decoration: none;
 }
 
 a:active {
-    color: #666666;
-    border-bottom: 1px dotted #000;
-    text-decoration: none;
+  color: #666666;
+  border-bottom: 1px dotted #000;
+  text-decoration: none;
 }
 
 p.statement {
-    margin-right: 25%;
+  margin-right: 20%;
+  max-width: 720px;
+  min-width: 360px !important;
 }
 
 div.bibyear {
-    font-family: Verdana, Arial, Helvetica, sans-serif;
-    font-size: 150%;
-    font-weight: bold;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: 150%;
+  font-weight: bold;
 }
 
 div.bibdoi {
-    display: inline;
+  display: inline;
 }
 
 div.bibtitle {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 div.bibauthor {
-    display: inline-block;
+  display: inline-block;
 }
 
 div.bibauthors {
-    font-style: italic;
+  font-style: italic;
 }
 
-div.bibauthors a:link, a:visited {
-    color: #000000;
-    text-decoration: none;
-    font-weight: normal;
+div.bibauthors a:link,
+a:visited {
+  color: #000000;
+  text-decoration: none;
+  font-weight: normal;
 }
 
 div.bibauthors a:hover {
-    color: #000000;
-    text-decoration: underline;
+  color: #000000;
+  text-decoration: underline;
 }

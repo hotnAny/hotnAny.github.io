@@ -1,0 +1,52 @@
+trips:
+  - date: 7/2022
+    place: 🇯🇵 Hokkaido
+    memories:
+      - photo: https://lh3.googleusercontent.com/pw/AL9nZEVUQIghSNx6dYd-Lq2hmwtgQbl-oDxE22CpQgYgcbvoHfr4ytGCtltC8_Syg0yHfR0Sy3Vjnqy2SLFxG3TWCJGnZuZ9MRoy_DSyBGZzhLhUpABnMFkRz3vdG-168nj1EZXytm4UxLn9hNt2Qgo1gYj-8A=w1956-h2608-no?authuser=1
+        caption: Ready for my trip to Hokkaido!
+        description: Still jet-lagged. Just finished a slide deck since working from 6 AM. Packed six days of stuff in one backpack. Here we go!
+      - photo: https://lh3.googleusercontent.com/pw/AL9nZEWr7yQk7eh0n3b4gUksMEG0xVsAdmGGb5-9s2VOKq9hzeC1z84d_IGLEFzwZrisT0wgv5w5u1q5GbzC3ct-Gai5nXG8wb9NK43Ie-efaylqyRNCcn2h2mJJLk2p6BPufDAbm1C_iKJ9E5ht1Haf9j1k1A=w3478-h2608-no?authuser=1
+        caption: All these just cost 2,600 yen?!
+        description: A proper meal after bathing in 万葉の湯---a local onsen at Asahikawa.
+      - photo: https://lh3.googleusercontent.com/pw/AL9nZEWhnhPuiNqaWhG98ea-5yJ0POBbHOuruweE3OuPrQFCJiH-AcwaYkme_HisTo0yffjrKwKCq9PAKLS6M2iqOz4fNeQK42FMKGvnBB3o-gJyi2oqLEYMeu_1j2b7Jz0Da8IND9OIGfGWux8ao48msCGn3Q=w1956-h2608-no?authuser=1
+        caption: Accessibility is taken really seriously
+        description: From Tokyo to Hokkaido, I was very impressed by how accessibility is so consistently implemented on sidewalks, ramps, stairs, and even parks.
+      - photo: https://lh3.googleusercontent.com/pw/AL9nZEUNgyf5qSKbK9MoX04qHTB9-f-eAcR-GPHJ6A6MTRwAFLsxzm-Y0v29bfCSHgl-UKUpb7mTehWBASd-BIB2V9e46YNCti3-44gmsZJbMOY1GQTV_HIT97tCcX-71lTvfNu1J3fohvfPqDUTzaqv5ezryA=w1956-h2608-no?authuser=1
+        caption: Look what I found
+        description: Overseen in a shopping mall in Asahikawa. Glad UCLA made it so far here.
+      - photo: https://lh3.googleusercontent.com/pw/AL9nZEVo1kYK8iJMsaoQWo9fSrv_27LBUcVWDjBq9kwdtqW52Z-4P6KaHP83vhFqNrTefrUeF3gjM6-oOnpxUHMJnAVzSoZk1YhyWq2z9pTgMSng9QVcpgzuSrg-skw-oCcb7c1mvMpfUU6OquuuFP0732DqNg=w1956-h2608-no?authuser=1
+        caption: The best traditional Japanese cuisine ...
+        description: 板前料理 渥美 is queitly tucked in the busiest district in Sapporo. Highly delicious food and attentative service. I actually struck quite a conversation (via Google Translate) with the couple that ran the restaurant.
+      - photo: https://lh3.googleusercontent.com/pw/AL9nZEUpN_RKdPvNAN8iEcvyq86wIn48kX0gpzIabNENic-PnWwiNt-uExuSskkS13GoShTzfVrHoBMQ6dDNT-bmzQQZW5NccnpMhtPjkf6kevl8uG3_djfLsNmTsPzPMi1L3cweYKaObmT74zk9LoW8Wco-hA=w1956-h2608-no?authuser=1
+        caption: Hokkaido cheese tart!
+        description: You can't not eat cheese tart when visiting Hokkaido. I bought this in a touristic store at Furano. Frozen style. Tasted like icecream sandwich with a natural milky flavor.
+      - photo: https://lh3.googleusercontent.com/pw/AL9nZEVcAJwu70GBtBWZsEtEOMcc91de7e3SEj78JMBslGlSqtdJu1JgWQypWmKh-k7RwRGNNNPcMe4Qsv2buE5HsPfZQ0_WlqN3omDU436BiDizslfac2lo8S1t--dL9NyRksBe7pwyUQxrJqzXVWlcsJapqg=w3478-h2608-no?authuser=1
+        caption: Uni over rice
+        description: Another can't-miss experience---eating uni over rice for breakfast at the local market at Sapporo.
+      - photo: https://lh3.googleusercontent.com/pw/AL9nZEWWlsdvcJnENZ2t7XbPbpn7DQKfz55nI2lUAQ1WA9ASqBLvV0fvrGGORGLS9ruQW-fMmji40YgY-g0AqKlGK4tpmurpUqngy9IubGbUR5JFZTZ3yGI14CpADLKOKNnykTauDYe4DiRf16rPEgyVNLyH_Q=w1956-h2608-no?authuser=1
+        caption: Lots of crabs at Nijo Market
+        description: The display is also quite aesthetically pleasing ...
+      - photo: https://lh3.googleusercontent.com/pw/AL9nZEVeFLrl_sZDGVOLAAgHQNvNAIdyV7cyPeiXKpQZvQJc8pDyMGYrk-Q1G5b4EHvCUsEAqq756pHujGJoWXXsj640MS7Dz9xyCSyZ4Ce72BDVrLQ4R8krGJydmXU1jZr6wExirzygVlel44pAhmZJqLLrgw=w1956-h2608-no?authuser=1
+        caption: Japanese crows are huge ...
+        description: They are probably twice the size as ones I have seen in the US and their beak looks like a weapon. Luckily, these crows seem pretty mild-tempered ...
+      - photo: https://lh3.googleusercontent.com/pw/AL9nZEVWe92tid701PpMOUri2euplP-X0fuvAy01NzNatGtmyMBs_fKTnG3P9tmoIQKRSChjnp8yq2-STsSuYf-yUyAp4VZyARPOehNr8I93PsN9y6-mP523fmQp3wn6hTCb2699QfN8yjIaEbNuFAT_AivTOg=w1956-h2608-no?authuser=1
+        caption: Hokkaido-Jingu Shrine
+        description: Arrived at this shrine on a (probably unusually) hot day in Sapporo.
+      - photo: https://lh3.googleusercontent.com/pw/AL9nZEW2ZeG1rhUTVU8TEMkCqGYxAp-ZLY400CMU44vlhcQdBwHP5FEkUcCTVKiJpFFeSEDWt6O_txQOcFM3QV3aXEh_dCuBk5hvzhiXLR44xXqZTZ3vNDHIDv94mSVFDuaGrbstq25Fp7lsNdsuJla1_JKTHg=w1956-h2608-no?authuser=1
+        caption: Hokkaido-Jingu Shrine
+        description: The color and texture of the wood, interleaved with the lanterns, imbue the environment with a sense of tranquility.
+      - photo: https://lh3.googleusercontent.com/pw/AL9nZEXJai4ZD60J1ghADxeEhaA1v__lM_O_yoQPBAvWLBFqCD6J2uab0k5hU5zD_ONz6zfGHJEGMnHtDvVpSa3A2UO3LZamVvDH42YY4wANY5vJ8keK3wwYS1Ur4rJ8QkxJR3TRhJkt6amQDVSeLRATqrpzMA=w1958-h2608-no?authuser=1
+        caption: Sapporo TV Tower
+        description: ... with an election activity happening in front of it. It's election season in Japan.
+      - photo: https://lh3.googleusercontent.com/pw/AL9nZEXA_wuV9LbPefk5_I8w_VNdU7_mMvXKwJEn9kdDv1O8Nkcic26BRcxTpFR7Zbm6MFRFaUuWF7Yr_BMISqUi8Hr5EcesUTmuk6Gf2UsFNdWFiBAYab0wOssLCa0j_4Ub-Mr0YC-EE_5TlPoQCOp7NZhnaA=w1956-h2608-no?authuser=1
+        caption: Meat is also delicious in Hokkaido 
+        description: A very decent Yakiniku restaurant called 極み超熟成炭火焼肉しぶき. I like freshly prepared meat freshly grilled to be freshly enjoyed.
+  - date: 7/2022
+    place: 🇯🇵 Tokyo
+    memories: 
+      - photo: https://lh3.googleusercontent.com/cR-BsIEN7Hi_2IQzB825VbbBXsROD8JxltJ_nmTcn8w_cmA5MChqhAOd8P1a-_bnis6jnYwa3qP1E4CnX8OUr6bRvXHEIN4Cv02rhjSwDCJS85UhDW9U-6x0_pSR5l80SOjbDyZT744=w2400
+        caption: Tokyo Metropolitan Government Building
+        description: "A very impressive government building. I was quote shocked at the shear scale of this establishment, which really delivers the message that Tokyo is a real metropolitan city."
+      - photo: https://lh3.googleusercontent.com/GkyKLfy1Y-HZdnxPbUAwMoVztIvGfbwH6srnM5s81DHrBZOQeqdWdsYukfp_IPv9D7MynmdZ7Db0rHKTm_bbJWOSu7NaOG46ay2kuMwRqlWJLiXR3_enLJcWohra6-gncvcxweFaZfg=w2400
+        caption: 忠犬八公 statue.
+        description: Located at the famous Shibuya Crossing. I think it is quite a tribute to set up this statue at probably one of the busiest intersections in the world.

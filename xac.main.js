@@ -19,15 +19,14 @@ function init() {
     xhr.open('GET', 'content.html', true);
     xhr.onreadystatechange = function () {
         if (this.readyState !== 4) return;
-        if (this.status !== 200) return; // or whatever error handling you want
+        if (this.status !== 200) return; 
         var htmlText = this.responseText;
 
         if (window.mobileCheck() == true) {
             document.body.classList.add("bodymobile")
             htmlText = htmlText.replace('imgdesktop', 'imgmobile')
-            htmlText = htmlText.replace(' class="statement"', '')
+            htmlText = htmlText.replaceAll(' class="statement"', '')
             htmlText = htmlText.replace('<br clear="left" />', '')
-            
         } else {
             document.body.classList.add("bodydesktop")
         }

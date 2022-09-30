@@ -227,3 +227,22 @@ posts:
     birthdate: 2022-06-17T19:40:15.633Z
     pubdate: 2022-06-17T22:05:37.614Z
     url: a-week-of-mostly-reading--walking-and-towards-big-think-and-deep-work
+  - file: 2022-07-14.md
+    tags:
+      - Deep
+      - Work
+      - Journal
+      - Phone
+    title: 'Deep Work Journal #1'
+    birthdate: 2022-07-14T08:06:03.389Z
+    pubdate: 2022-07-14T08:30:14.630Z
+    url: deep-work-journal-1
+  - file: 2022-08-20.md
+    tags:
+      - Japan
+      - Lessons
+      - Travel
+    title: What I Learned from a Summer Living in Japan
+    birthdate: 2022-08-20T05:37:22.500Z
+    pubdate: 2022-08-20T06:30:02.143Z
+    url: what-i-learned-from-a-summer-living-in-japan

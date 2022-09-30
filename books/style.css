@@ -61,11 +61,12 @@ a.info {
 
 .copyright {
   position: fixed;
-  text-align: left;
+  text-align: right;
   margin-top: 3%;
   margin-bottom: 1%;
+  right: 1%;
   bottom: 1%;
-  color: #aaaaaa;
+  color: #cccccc;
   background-color: rgba(255, 255, 255, 0.75);
 }
 
