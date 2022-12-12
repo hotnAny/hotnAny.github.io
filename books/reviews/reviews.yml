@@ -41,3 +41,9 @@ reviews:
     author: "Cal Newport"
     pubdate: 2022-06-16T16:10:00
     url: 2022-deep-work
+  - file: 2022-sciences-of-the-artificial.md
+    cover: the-sciences-of-the artificial.jpeg
+    title: "The Sciences of the Artificial"
+    author: "Herbert A. Simon"
+    pubdate: 2022-12-12T09:11:00
+    url: 2022-sciences-of-the-artificial
