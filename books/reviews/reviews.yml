@@ -47,3 +47,9 @@ reviews:
     author: "Herbert A. Simon"
     pubdate: 2022-12-12T09:11:00
     url: 2022-sciences-of-the-artificial
+  - file: 2022-blue-ocean-strategy.md
+    cover: blue-ocean-strategy.jpeg
+    title: "Blue Ocean Strategy"
+    author: "W. Chan Kim, Renée Mauborgne"
+    pubdate: 2022-12-15T09:40:00
+    url: 2022-blue-ocean-strategy
