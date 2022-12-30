@@ -53,3 +53,9 @@ reviews:
     author: "W. Chan Kim, Renée Mauborgne"
     pubdate: 2022-12-15T09:40:00
     url: 2022-blue-ocean-strategy
+  - file: 2022-rich-dad-poor-dad.md
+    cover: rich-dad-poor-dad.jpg
+    title: "Rich Dad Poor Dad"
+    author: "Robert T. Kiyosaki"
+    pubdate: 2022-12-30T12:52:00
+    url: 2022-rich-dad-poor-dad
