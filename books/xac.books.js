@@ -9,6 +9,11 @@ const COVERWIDTH = COVERHEIGHT * 3 / 4
 $(document).ready(function () {
     YAML.load('reviews/reviews.yml', (result) => {
         let ulBookList = $('ul.booklist')
+        if (window.innerWidth >= MINCOVERWIDTH) {
+            ulBookList.css('columns', (window.innerWidth / COVERWIDTH - 1 | 0))
+            ulBookList.css('display', 'flex')
+            ulBookList.css('flex-wrap', 'wrap')
+        }
         XAC.reviews = result.reviews
         XAC.reviews.sort(function (a, b) {
             return new Date(b.pubdate) - new Date(a.pubdate)
@@ -27,16 +32,15 @@ $(document).ready(function () {
 
             let divBook = $('<div/>')
             divBook.addClass('bookcover')
+            // mobile device
             if (window.innerWidth < MINCOVERWIDTH) {
                 divBook.css('width', '100%')
                 imgBook.css('width', '100%')
-            } else {
+            }
+            // desktop
+            else {
                 imgBook.css('height', COVERHEIGHT)
                 // imgBook.css('width', COVERWIDTH)
-
-                ulBookList.css('columns', (window.innerWidth / COVERWIDTH - 1 | 0))
-                ulBookList.css('display', 'flex')
-                ulBookList.css('flex-wrap', 'wrap')
             }
 
             divBook.append(imgBook)
@@ -85,10 +89,10 @@ $(document).ready(function () {
                 let strip = '<label class="lbmeta">'
                 // strip += 'Published on: ' + XAC.getDateString(post.pubdate)
                 strip += 'Reviewed on: ' + XAC.getDateString(review.pubdate)
-	            strip += '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Author: ' + review.author
+                strip += '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Author: ' + review.author
                 strip += '</label>'
                 var htmlPost = $('#divReviewContent').html()
-        	    $('#divReviewContent').html(htmlPost.replace('</h1>', '</h1>' + strip))
+                $('#divReviewContent').html(htmlPost.replace('</h1>', '</h1>' + strip))
 
 
                 // add figure
