@@ -119,7 +119,7 @@ let updateMemory = () => {
     let i = $('li.trip.selected').attr('index')
     i = parseInt(i)
     let trip = XAC.trips[i]
-    log(trip.memories)
+    // log(trip.memories)
     XAC.idxMemories = (XAC.idxMemories + trip.memories.length) % (trip.memories.length)
     let memory = trip.memories[XAC.idxMemories]
     $('img.memory').attr('src', memory.photo)
