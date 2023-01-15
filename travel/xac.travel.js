@@ -1,11 +1,17 @@
 var XAC = XAC || {}
 
+const MOBILEWIDTH = 640
+
 // 
 // 
 // 
 $(document).ready(function () {
     XAC.isMobile = mobileCheck()
     let layout = XAC.isMobile ? "mobile_layout.html" : "regular_layout.html"
+
+    if (XAC.isMobile) {
+        $('body').css('font-size', '28pt')
+    }
 
     let xhr = new XMLHttpRequest()
     xhr.open('GET', layout, true);
@@ -49,7 +55,7 @@ $(document).ready(function () {
 //
 //
 let mobileCheck = () => {
-    return false
+    return screen.width < MOBILEWIDTH
 }
 
 //
@@ -85,7 +91,11 @@ let initTOC = () => {
 //
 //
 let initPhoto = () => {
-    $('a.photo').css('height', window.innerHeight * 0.8)
+    if(XAC.isMobile) {
+
+    } else {
+        $('a.photo').css('height', window.innerHeight * 0.8)
+    }
 }
 
 //

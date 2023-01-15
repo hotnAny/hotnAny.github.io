@@ -6,14 +6,15 @@ body {
 
 table.main {
   table-layout: fixed;
-  /* height: 640px; */
-}
-
-tr.main {
 }
 
 td {
   padding: 10px;
+}
+
+td.mobile {
+  padding-left: 5%;
+  padding-right: 5%;
 }
 
 ul.toc {
