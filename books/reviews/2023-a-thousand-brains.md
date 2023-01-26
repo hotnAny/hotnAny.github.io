@@ -9,3 +9,7 @@ Does AI have to mimic the brain to be truly intelligent? This remains a philosop
 The kind of intelligence discussed in this book (or maybe also the predecessor "On Intelligence") remains narrow, mainly limited to recognizing objects and places. How about the intelligence of solving math problems, the intelligence of creating art, or the intelligence of empathizing with another human being?
 
 I do find the visioning of intelligent systems exploring the vast universe fascinating. At the time I read this chapter, I just finished "Existential Physics" that really piqued my interest wanting to know the "secrets' of the universe. However, I didn't put together such interest and AI until seeing Hawkins' proposal. It also reminds me of how the famous sci-fi story about a machine calculated "42" as the answer to the "ultimate question of life, the universe, and everything".
+
+The author firmly believes that intelligent machines will not threaten humans' existence. One of the reasons is how such machine intelligence will not "explode" exponentially to overwhelm us:
+
+> We can endow a machine with the ability to learn a model of the world, but the knowledge that makes up that model has to be learned, and learning takes time. ... although we can make intelligent machines that run a million times faster than a biological brain, they cannot acquire new knowledge a million times faster.
