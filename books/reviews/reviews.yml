@@ -83,3 +83,9 @@ reviews:
     author: Matthew McConaughey
     pubdate: 2023-01-16T15:27:00
     url: 2023-greenlights
+  - file: 2023-plans-and-situated-actions.md
+    cover: plans-and-situated-actions.jpeg
+    title: Plans and Situated Actions
+    author: Lucy A. Suchman
+    pudate: 2023-01-29T17:24:00
+    url: 2023-plans-and-situated-actions
