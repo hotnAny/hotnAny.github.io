@@ -89,3 +89,9 @@ reviews:
     author: Lucy A. Suchman
     pubdate: 2023-01-29T17:24:00
     url: 2023-plans-and-situated-actions
+  - file: 2023-science-of-storytelling.md
+    cover: science-of-storytelling.jpeg
+    title: "The Science of Storytelling"
+    author: Will Storr
+    pubdate: 2023-02-05T16:46:00
+    url: 2023-science-of-storytelling
