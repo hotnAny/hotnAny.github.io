@@ -19,3 +19,5 @@ I find the last part of the book lacks rigor. For example, the author tries to e
 The birth control example is an interesting one to illustrate the relationship between our old and new brain. While the old brain wants us to have sex and procreate, the new brain invents birth control to 'trick' the old brain---have as much sex as you want with little risk of over-procreation.
 
 The segway at the end of Chapter 14 to the existential crisis of humanity is a little out of the blue. But maybe not. The author cares about brains because our brains make us who we are. We want to live as individuals and a species because our brains have evolved to enable us to accomplish so much. Thus it is natural to be concerned about any crisis that might prevent our brains from existing.
+
+<!-- https://m.toutiao.com/article/7201288095407899140/?upstream_biz=toutiao_pc -->
