@@ -26,3 +26,25 @@ I kept thinking how one can tone down and apply these principles in running an a
 - Indoctrination. I am not a big fan of indoctrination of anything; rather, I believe in influence by examples. Demonstrate the kinds of qualities you wish your students have to the students.
 - Tightness of fit. I also don't fully buy this one. For PhD students, the are not fixed fits or mis-fits; rather, they have great potential to change themselves, potentially becoming more fit by closely working with the advisors.
 - Elitism. This would be great only if it's not attained by blind self-belief or chanting some empty slogans. Ideally, students should aim for andx achieve great things to build up such elitism visible to each other.
+
+# Try a Lot of Stuff and Keep What Works
+
+At first, this might seem orthogonal to having a core value/purpose. The American Express story about how they seized the opportunity to go against their CEO and get into the travel service business illustrates the connection:
+
+> In spite of Fargo's dictum, that's exactly what AmEx did. The company had developed a pattern of solving customer problems and quickly exploiting opportunities--an impulse guided by its core ideology of heroic customer service--that could not be easily suppressed, even by the CEO.
+
+About thriving on accidental opportunities (aka. pivoting?)
+> We're not saying that these companies never had plans. But we were surprised to find so many examples of key moves by the visionary companies that came about by some process other than planning
+
+What's the relationship of this principle and BHAG (Big Hairy Ambitious Goal)?
+> It uses BHAGs to define a mountain to climbing, users evolution to invent a way to the top.
+
+Bumper stickers to be repurposed for academic use:
+
+- "Give it a try---and quick!" I tend to think of this synonymous to Meta/Facebook's "move fast and break things" culture (except the latter is quite unconstrained by the other considerations below);
+- "Accept that mistakes will be made";
+- "Take small steps"---the bigger the risk, the faster the pace, the smaller the step should be and the more necessary to reflect on each step taken before making the next one;
+- "Give people the room they need";
+
+> We find that managers often underestimate the importance of this fifth lesson and fail to translate their intentions into tangible mechanisms.
+Overall, to foster these habits above, it's important to reinforce a culture. For example, instead of abstractly chatting about new ideas in meetings, encourage students to act on ideas, quickly try something small, and accept the high chance that it might not work.
