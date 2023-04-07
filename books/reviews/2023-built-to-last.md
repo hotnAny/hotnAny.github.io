@@ -10,7 +10,7 @@ Comparatively, I found Blue Ocean Strategies more timeless because the authors a
 
 The chapter about core value and purpose makes sense, although it began to raise some red flags. For example, isn't it superficial to just declare such value and purpose without the grit or the means to actualize them?
 
-# Cult-like Cultures
+## Cult-like Cultures
 The book found most visionary companies exhibit the following cult-like behavior:
 - Fervently held ideology
 - Indoctrination
@@ -23,7 +23,7 @@ I kept thinking how one can tone down and apply these principles in running an a
 - Tightness of fit. I also don't fully buy this one. For PhD students, the are not fixed fits or mis-fits; rather, they have great potential to change themselves, potentially becoming more fit by closely working with the advisors.
 - Elitism. This would be great only if it's not attained by blind self-belief or chanting some empty slogans. Ideally, students should aim for andx achieve great things to build up such elitism visible to each other.
 
-# Try a Lot of Stuff and Keep What Works
+## Try a Lot of Stuff and Keep What Works
 
 At first, this might seem orthogonal to having a core value/purpose. The American Express story about how they seized the opportunity to go against their CEO and get into the travel service business illustrates the connection:
 
@@ -44,6 +44,8 @@ Bumper stickers to be repurposed for academic use:
 
 > We find that managers often underestimate the importance of this fifth lesson and fail to translate their intentions into tangible mechanisms.
 Overall, to foster these habits above, it's important to reinforce a culture. For example, instead of abstractly chatting about new ideas in meetings, encourage students to act on ideas, quickly try something small, and accept the high chance that it might not work.
+
+## Other Take-Away's
 
 Sony's core purpose could be a good example:
 > To experience the joy of advancing and applying technology for the benefit of the public.
