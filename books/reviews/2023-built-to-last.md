@@ -20,8 +20,8 @@ The book found most visionary companies exhibit the following cult-like behavior
 I kept thinking how one can tone down and apply these principles in running an academic research group. Here are some thoughts:
 - Fervently held ideology. The group leader can be explicit and occasionally re-state the group's core mission;
 - Indoctrination. I am not a big fan of indoctrination of anything; rather, I believe in influence by examples. Demonstrate the kinds of qualities you wish your students have to the students.
-- Tightness of fit. I also don't fully buy this one. For PhD students, the are not fixed fits or mis-fits; rather, they have great potential to change themselves, potentially becoming more fit by closely working with the advisors.
-- Elitism. This would be great only if it's not attained by blind self-belief or chanting some empty slogans. Ideally, students should aim for andx achieve great things to build up such elitism visible to each other.
+- Tightness of fit. I also don't fully buy this one. For PhD students, they are not fixed fits or mis-fits; rather, they have great potential to change themselves, potentially becoming more fit by closely working with the advisors.
+- Elitism. This would be great only if it's not attained by blind self-belief or chanting some empty slogans. Ideally, students should aim for and achieve great things to build up such elitism visible to each other.
 
 ## Try a Lot of Stuff and Keep What Works
 
