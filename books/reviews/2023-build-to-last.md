@@ -1,4 +1,4 @@
-<!-- 2023-build-to-last -->
+<!-- 2023-built-to-last -->
 
 I had quite a high expectation of this book after listening to Jim Collins' interview on the Tim Ferriss' podcast.
 
@@ -7,10 +7,6 @@ I did resonate with the opening of the book that we should be curious to know wh
 One cross-cutting problem of this book is that what it thought was vs. was not visionary companies seems outdated today. For example, the book praised Citibank over Chase but these two nowadays are mostly considered equal. Some of the visionary companies had gone obsolete, if not completely annihilated, such as Motorola. So should we or should we not follow what Motorola did? This book itself doesn't seem to have been built to last ...
 
 Comparatively, I found Blue Ocean Strategies more timeless because the authors acknowledge that there is no constantly "Blue" companies. A company might innovate in the Blue Ocean at some times but fail to do so at other times.
-
-
-
-
 
 The chapter about core value and purpose makes sense, although it began to raise some red flags. For example, isn't it superficial to just declare such value and purpose without the grit or the means to actualize them?
 
@@ -37,7 +33,7 @@ About thriving on accidental opportunities (aka. pivoting?)
 > We're not saying that these companies never had plans. But we were surprised to find so many examples of key moves by the visionary companies that came about by some process other than planning
 
 What's the relationship of this principle and BHAG (Big Hairy Ambitious Goal)?
-> It uses BHAGs to define a mountain to climbing, users evolution to invent a way to the top.
+> It uses BHAGs to define a mountain to climbing, users evolution to invent   a way to the top.
 
 Bumper stickers to be repurposed for academic use:
 
@@ -48,3 +44,11 @@ Bumper stickers to be repurposed for academic use:
 
 > We find that managers often underestimate the importance of this fifth lesson and fail to translate their intentions into tangible mechanisms.
 Overall, to foster these habits above, it's important to reinforce a culture. For example, instead of abstractly chatting about new ideas in meetings, encourage students to act on ideas, quickly try something small, and accept the high chance that it might not work.
+
+Sony's core purpose could be a good example:
+> To experience the joy of advancing and applying technology for the benefit of the public.
+
+A few 'myths' of core values:
+- Core values are not made up or created; core values are discovered within what a company is already doing or what to do;
+- Core values might not be differentiable as multiple companies could claim they have the same core values (but not every one will devote to those values as much as the others);
+- Core values cannot be imposed on employees; rather, a company should find and retain employees that share or have a predisposition to share the core values.
