@@ -101,9 +101,33 @@ reviews:
     author: Barbara Tversky
     pubdate: 2023-02-19T13:14:00
     url: 2023-mind-in-motion
+  - file: 2023-why-we-make-things.md
+    cover: why-we-make-things.jpeg
+    title: Why We Make Things and Why It Matters
+    author: Peter Korn
+    pubdate: 2023-03-11T16:53:00
+    url: 2023-why-we-make-things
   - file: 2023-a-thousand-brains.md
     cover: a-thousand-brains.jpg
     title: A Thousand Brains
     author: Jeff Hawkins
     pubdate: 2023-03-10T13:30:00
     url: 2023-a-thousand-brain
+  - file: 2023-seeing-like-a-state.md
+    cover: seeing-like-a-state.jpeg
+    title: Seeing Like a State
+    author: James C. Scott
+    pubdate: 2023-03-26T18:56:00
+    url: 2023-seeing-like-a-state
+  - file: 2023-ride-of-a-lifetime.md
+    cover: ride-of-a-lifetime.jpeg
+    title: The Ride of a Lifetime
+    author: Robert Iger
+    pubdate: 2023-04-16T17:42:00
+    url: 2023-ride-of-a-lifetime
+  - file: 2023-built-to-last.md
+    cover: built-to-last.jpeg
+    title: Built to Last
+    author: Jim Collins, Jerry I. Porras
+    pubdate: 2023-04-07T10:59:00
+    url: 2023-built-to-last
