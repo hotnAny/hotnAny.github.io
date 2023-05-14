@@ -2,6 +2,8 @@
 
 Since I read this book after "Poor Dad, Rich Dad", I feel the gist is similar---to be rich or wealthy, you need to build assets, which is money that can make money for you. *A part of what I earned was mine to keep.*
 
+This book, however, was written way earlier (1926). The famous quote "Pay yourself first" was also coined by Clason and used in "Poor Dad, Rich Dad".
+
 Maybe this is just hindsight but, if people find this book highly inspiring, they must have been very financially illiterate ...
 
 Perhaps this book also goes a little further by suggesting what (not) to do to accumulate wealth, such as avoiding investment without credibility and avoiding taking shortcuts.
