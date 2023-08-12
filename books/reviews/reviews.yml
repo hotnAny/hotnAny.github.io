@@ -149,3 +149,9 @@ reviews:
     author: Timothy Ferriss
     pubdate: 2023-06-30T21:27:00
     url: 2023-4-hour-work-week
+  - file: 2023-old-man-and-the-sea.md
+    cover: old-man-and-the-sea.jpeg
+    title: The Old Man and the Sea
+    author: Ernest Hemingway
+    pubdate: 2023-08-12T14:18:00
+    url: 2023-old-man-and-the-sea
