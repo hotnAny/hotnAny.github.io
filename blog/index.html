@@ -1,45 +1,57 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <link
+      href="https://fonts.googleapis.com/css?family=Alegreya+Sans:400,700"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"
+    />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
 
-<head>
-	<link href="https://fonts.googleapis.com/css?family=Alegreya+Sans:400,700" rel="stylesheet">
-	<link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-	<link rel="stylesheet" href="./style.css" />
-</head>
+  <body>
+    <table class="maintable" width="100%" border="0">
+      <tr>
+        <td class="info">
+          <div class="header">
+            <a class="info" href=".">Blog Posts</a>
+            by
+            <a class="info" href="../"><b>Xiang 'Anthony' Chen</b></a>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td class="pagepost">
+          <ul id="ulPosts"></ul>
+          <div id="divPost">
+            <div id="divPostContent"></div>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td class="info">
+          <div class="copyright">
+            &copy;2016-
+            <script>
+              document.write(new Date().getFullYear());
+            </script>
+            Xiang 'Anthony' Chen. All rights reserved.
+          </div>
+        </td>
+      </tr>
+    </table>
 
-<body>
-	<table class="maintable" width="100%" border="0">
-		<tr>
-			<td class="info">
-				<div class="header">
-					<a class="info" href=".">Blog Posts</a> 
-					by 
-					<a class="info" href="../"><b>Xiang 'Anthony' Chen</b></a>
-				</div>
-			</td>
-		</tr>
-		<tr>
-			<td class="pagepost">
-				<ul id="ulPosts"></ul>
-				<div id="divPost">
-					<div id="divPostContent"></div>
-				</div>
-			</td>
-		</tr>
-		<tr>
-			<td class="info">
-				<div class="copyright">&copy;2016-<script>document.write( new Date().getFullYear() );</script>
-					Xiang 'Anthony' Chen. All rights reserved.</div>
-			</td>
-		</tr>
-	</table>
-
-	<script type="text/javascript" src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
-	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-	<script type="text/javascript" src="../js/yaml.min.js"></script>
-	<script src="../js/stmd.js"></script>
-	<script type="text/javascript" src="../js/xac.utilities.js"></script>
-	<script type="text/javascript" src="xac.blog.js"></script>
-</body>
-
+    <script
+      type="text/javascript"
+      src="https://code.jquery.com/jquery-3.1.0.min.js"
+    ></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script type="text/javascript" src="../js/yaml.min.js"></script>
+    <script src="../js/stmd.js"></script>
+    <script type="text/javascript" src="../js/xac.utilities.js"></script>
+    <script type="text/javascript" src="xac.blog.js"></script>
+  </body>
 </html>
