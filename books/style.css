@@ -25,11 +25,11 @@ ul.booklist {
   /* max-width: 90%; */
 }
 
-li.booklist {
+/* li.booklist {
   padding-right: 32px;
   padding-bottom: 32px;
   display:inline;
-}
+} */
 
 a:link {
   color: #000000;

@@ -8,29 +8,48 @@ const COVERWIDTH = COVERHEIGHT * 3 / 4
 //
 $(document).ready(function () {
     YAML.load('reviews/reviews.yml', (result) => {
-        let ulReviewList = $('ul.booklist')
+        let ulBookList = $('ul.booklist')
+        if (window.innerWidth >= MINCOVERWIDTH) {
+            ulBookList.css('columns', (window.innerWidth / COVERWIDTH - 1 | 0))
+            ulBookList.css('display', 'flex')
+            ulBookList.css('flex-wrap', 'wrap')
+        }
         XAC.reviews = result.reviews
         XAC.reviews.sort(function (a, b) {
             return new Date(b.pubdate) - new Date(a.pubdate)
         })
 
+        // for (i = XAC.reviews.length - 1; i >= 0 ; i--) {
         for (i = 0; i < XAC.reviews.length; i++) {
             let review = XAC.reviews[i]
-            let liReview = $('<li/>')
-            liReview.addClass('booklist')
-            liReview.css('cursor', 'pointer')
-            
-            var strDate = XAC.getDateString(review.pubdate)
-            var lbDate = $('<label/>')
-            lbDate.addClass('lbdate')
-            lbDate.html(strDate)
-            liReview.append(lbDate)
-            liReview.append('&nbsp;&nbsp;&nbsp;&nbsp;')
-            liReview.append(review.title || 'untitled')
-            liReview.attr('idx', i)
-            liReview.click(function (e) {
-                var idxClicked = $(this).attr('idx')
-                var reviewClicked = XAC.reviews[idxClicked]
+            let liBook = $('<li/>')
+            liBook.addClass('booklist')
+            liBook.css('cursor', 'pointer')
+
+            imgBook = $('<img/>')
+            imgBook.addClass('book')
+            imgBook.attr('src', 'reviews/images/' + review.cover)
+
+            let divBook = $('<div/>')
+            divBook.addClass('bookcover')
+            // mobile device
+            if (window.innerWidth < MINCOVERWIDTH) {
+                divBook.css('width', '100%')
+                imgBook.css('width', '100%')
+            }
+            // desktop
+            else {
+                imgBook.css('height', COVERHEIGHT)
+                // imgBook.css('width', COVERWIDTH)
+            }
+
+            divBook.append(imgBook)
+            liBook.append(divBook)
+
+            liBook.attr('idx', i)
+            liBook.click(function (e) {
+                let idxClicked = $(this).attr('idx')
+                let reviewClicked = XAC.reviews[idxClicked]
                 var file = reviewClicked.file
                 XAC.renderMarkdown('reviews/' + file, $('#divReviewContent'), function () {
                     var idxSharp = location.href.indexOf('#')
@@ -40,8 +59,7 @@ $(document).ready(function () {
                     location.reload()
                 })
             })
-
-            ulReviewList.append(liReview)
+            ulBookList.append(liBook)
         }
 
         // load the review as shown in the url
@@ -69,11 +87,12 @@ $(document).ready(function () {
 
                 // add author
                 let strip = '<label class="lbmeta">'
+                // strip += 'Published on: ' + XAC.getDateString(post.pubdate)
                 strip += 'Reviewed on: ' + XAC.getDateString(review.pubdate)
                 strip += '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Author: ' + review.author
                 strip += '</label>'
-                var htmlReview = $('#divReviewContent').html()
-                $('#divReviewContent').html(htmlReview.replace('</h1>', '</h1>' + strip))
+                var htmlPost = $('#divReviewContent').html()
+                $('#divReviewContent').html(htmlPost.replace('</h1>', '</h1>' + strip))
 
 
                 // add figure
