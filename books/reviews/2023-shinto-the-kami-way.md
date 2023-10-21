@@ -1,5 +1,3 @@
-<!-- 2023-shinto-the-kami-way -->
-
 Like many people who visited Japan, I was very impressed by how clean the country is and how people keep it that way. Then I read from an article that suggests the cleanness is partially due to the belief in Shinto, that cleaning is considered an activity to keep one's mind pure.
 
 I was so intrigued that I bought this book to learn more about how the philosophy of Shinto can be beneficial to my life. Unfortunately, most of the book is just about Shinto as a religion rather than a generalizable philosophy of life. Nonetheless, I found a few quotes that seem to go beyond religion alone.
