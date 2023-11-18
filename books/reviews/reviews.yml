@@ -179,3 +179,9 @@ reviews:
     author: Mark Manson
     pubdate: 2023-10-20T21:06:00
     url: subtle-art-of-not-giving-a-fuck
+  - file: 2023-power-law.md
+    cover: power-law.jpeg
+    title: "The Power Law"
+    author: Sebastian Mallaby
+    pubdate: 2023-11-17T20:08:00
+    url: power-law
