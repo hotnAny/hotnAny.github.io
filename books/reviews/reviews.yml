@@ -184,4 +184,10 @@ reviews:
     title: "The Power Law"
     author: Sebastian Mallaby
     pubdate: 2023-11-17T20:08:00
-    url: power-law
+    url: 2023-the-power-law
+  - file: 2023-the-alignment-problem.md
+    cover: alignment-problem.jpeg
+    title: The Alignment Problem
+    author: Brian Christian
+    pubdate: 2023-12-16T14:27:00
+    url: 2023-the-alignment-problem
