@@ -197,3 +197,9 @@ reviews:
     author: Cathy Park Hong
     pubdate: 2023-12-24T19:14:00
     url: 2023-minor-feelings
+  - file: 2024-elon-musk.md
+    cover: elon-musk.jpeg
+    title: Elon Musk
+    author: Walter Issacson
+    pubdate: 2024-02-09T21:22:00
+    url: 2024-elon-musk
