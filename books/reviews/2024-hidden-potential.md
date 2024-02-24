@@ -1,0 +1,5 @@
+<!-- 2024-hidden-potential -->
+
+I listened to the audio book version ...
+
+To be honest, I don't find this book very informative.Even though the title sounds enticing--unlocking one's hidden potential.The lessons offered throughout the book pretty much amount to "here are things successful people do", which is what 10,000 other personal development books offer as well.I find it hard to see anything unique to the theme of "hidden potential".Maybe a term we can borrow to describe the problem here is "specificity": the book include quite a lot of lessons that might include a few about unlocking hidden potentials; but the majority of those lessons aren't specific to this topic.Overall, it is another feel-good personal development book--it feels good as long as you don't want to think about it deeper or question whether it offers any unique values.
