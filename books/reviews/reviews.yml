@@ -1,7 +1,7 @@
 reviews:
   - file: 2021-nudge.md
     cover: nudge.jpeg
-    title: "Nudge: Improving Decisions About Health, Wealth, and Happiness"
+    title: "Nudge"
     author: "Richard H. Thaler, Cass R. Sunstein"
     pubdate: 2021-12-23T07:15:29.695Z
     url: 2021-nudge
@@ -209,3 +209,9 @@ reviews:
     author: Adam Grant
     pubdate: 2024-02-23T20:35:00
     url: 2024-hidden-potential
+  - file: 2024-how-to-raise-successful-people
+    cover: how-to-raise-successful-people.jpeg
+    title: How to Raise Successful People
+    author: Esther Wojcicki
+    pubdate: 2024-03-08T20:38:00
+    url: 2024-how-to-raise-successful-people
