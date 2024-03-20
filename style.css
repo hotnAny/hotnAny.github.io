@@ -67,7 +67,7 @@ a:active {
 
 p.statement {
   margin-right: 15%;
-  /* max-width: 720px; */
+  max-width: 960px;
   min-width: 360px !important;
 }
 
