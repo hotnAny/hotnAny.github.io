@@ -10,12 +10,19 @@ Basic Information:
       link: 'https://hci.prof'
 Current Position:
   '':
-    - startYear: '2018'
+    - startYear: '2024'
       endYear: Now
-      label: Assistant Professor
+      label: Associate Professor
       description: |-
         Department of Electrical & Computer Engineering
         Department of Computer Science (By courtesy)
+        UCLA
+      link: ''
+    - startYear: '2018'
+      endYear: '2024'
+      label: Assistant Professor
+      description: |-
+        Department of Electrical & Computer Engineering
         UCLA
       link: ''
 Education:
@@ -167,6 +174,11 @@ Awards:
       description: University of Hong Kong Crimson Summer Exchange Co-Fellowship
       link: ''
   Awards Won by Students:
+    - startYear: '2024'
+      endYear: ''
+      label: ''
+      description: Hongyan Gu - CESASC Scholarship
+      link: ''
     - startYear: '2023'
       endYear: ''
       label: ''
@@ -268,14 +280,82 @@ Professional Experiences:
       link: ''
 Publications:
   Conferences & Journals:
+    - startYear: '2024'
+      endYear: ''
+      label: IUI
+      description: >-
+        Noyan Evirgen, Ruolin Wang, Xiang 'Anthony' Chen. From Text to Pixels:
+        Enhancing User Understanding through Text-to-Image Model Explanations.
+        To appear at IUI 2024.
+      link: ''
+    - startYear: '2024'
+      endYear: ''
+      label: CHI
+      description: >-
+        Xingyu Bruce Liu, Jiahao Nick Li, David Kim, Xiang 'Anthony' Chen,
+        Ruofei Du. Human I/O: Towards a Unified Approach to Detecting
+        Situational Impairments. To appear at CHI 2024.
+      link: ''
+    - startYear: '2024'
+      endYear: ''
+      label: ANC
+      description: >-
+        Hongyan Gu, Chunxu Yang, Issa Al-kharouf, Shino Magaki, Nelli Lakis,
+        Christopher Kazu Williams, Sallam Mohammad Alrosan, Ellie Kate Onstott,
+        Wenzhong Yan, Negar Khanlou, Imna Cobos, Xinhai Robert Zhang, Neda
+        Zarrin-Khameh, Harry V. Vinters, Xiang 'Anthony' Chen, Mohammad Haeri.
+        Enhancing Mitosis Count Assessment in Meningiomas with Computational
+        Digital Pathology. Acta Neuropathologica Communications. 12, 7 (2024).
+      link: 'https://doi.org/10.1186/s40478-023-01707-6'
+    - startYear: '2024'
+      endYear: ''
+      label: GI
+      description: >-
+        Chia-Ming Chang, Yi Tang, Xi Yang, Xiang 'Anthony' Chen, Takeo Igarashi,
+        2024. Speed Labeling: Non-stop Scrolling for Fast Image Labeling. The
+        50th International Conference on Graphics Interface and Human-Computer
+        Interaction (Gl 2024), Halifax, Nova Scotia, Canada, 3-6 June 2024.
+      link: ''
+    - startYear: '2024'
+      endYear: ''
+      label: alt.chi
+      description: >-
+        Xiang 'Anthony' Chen. HCI Papers Cite HCI Papers, Increasingly So. To
+        appear at CHI 2024.
+      link: ''
+    - startYear: '2024'
+      endYear: ''
+      label: ICHI
+      description: >-
+        Hongyan Gu, Zihan Yan, Ayesha Alvi, Brandon Day, Chunxu Yang, Zida Wu,
+        Shino Magaki, Mohammad Haeri, Xiang'Anthony' Chen. Supporting Mitosis
+        Detection AI Training with Inter-Observer Eye-Gaze Consistencies. To
+        appear at IEEE ICHI 2024.
+      link: ''
+    - startYear: '2024'
+      endYear: ''
+      label: MEDIA
+      description: >
+        Marc Aubreville, Nikolas Stathonikos, Taryn A. Donovan, Robert
+        Klopfleisch, Jonas Ammeling, Jonathan Ganz, Frauke Wilm, Mitko Veta,
+        Samir Jabari, Markus Eckstein, Jonas Annuscheit, Christian Krumnow,
+        Engin Bozaba, Sercan Çayır, Hongyan Gu, Xiang ‘Anthony’ Chen, Mostafa
+        Jahanifar, Adam Shephard, Satoshi Kondo, Satoshi Kasai, Sujatha Kotte,
+        V.G. Saipradeep, Maxime W. Lafarge, Viktor H. Koelzer, Ziyue Wang,
+        Yongbing Zhang, Sen Yang, Xiyue Wang, Katharina Breininger, Christof A.
+        Bertram. Domain generalization across tumor types, laboratories, and
+        species—Insights from the 2022 edition of the Mitosis Domain
+        Generalization Challenge. Medical Image Analysis, 94, 103155. 
+      link: 'https://doi.org/10.1016/j.media.2024.103155'
     - startYear: '2023'
       endYear: ''
       label: UIST
       description: >-
         Zihan Yan, Chunxu Yang, Qihao Liang, Pattie Maes, Xiang 'Anthony' Chen.
         XCreation: A Graph-based Crossmodal Generative Creativity Support Tool.
-        To appear at UIST '23
-      link: ''
+        Proceedings of the 36th Annual ACM Symposium on User Interface Software
+        and Technology, 2023.
+      link: 'https://dl.acm.org/doi/10.1145/3586183.3606826'
     - startYear: '2023'
       endYear: ''
       label: TOCHI
@@ -301,17 +381,17 @@ Publications:
       description: >-
         Zihan Yan, Yanhong Wu, Danli Luo, Chao Zhang, Qihang Jin, Wei Chen,
         Yingcai Wu, Xiang 'Anthony' Chen, Guanyun Wang, Haipeng Mi. NaCanva:
-        Exploring and Enabling the Nature-Inspired Creativity for Children. To
-        appear at MobileHCI '23.
-      link: ''
+        Exploring and Enabling the Nature-Inspired Creativity for Children.
+        Proceedings of the ACM on Human-Computer Interaction, Volume 7, Issue
+        MHCI. Article No.: 215, pp 1–25.
+      link: 'https://dl.acm.org/doi/10.1145/3604262'
     - startYear: '2023'
       endYear: ''
       label: GI
       description: >-
         Yijun Zhou, JinHong Lu, Xiang 'Anthony' Chen, Chia-Ming Chang, Takeo
         Igarashi. RelRoll: A Relative Elicitation Mechanism for Scoring
-        Annotation with A Case Study on Speech Emotion. To appear at Graphics
-        Interface '23.
+        Annotation with A Case Study on Speech Emotion. Graphics Interface 2023.
       link: 'https://openreview.net/forum?id=VBATVIBIMos'
     - startYear: '2023'
       endYear: ''
@@ -1002,6 +1082,13 @@ Funding:
         Xiang 'Anthony' Chen (Sole PI)
       link: ''
     - startYear: '2022'
+      endYear: ''
+      label: '$50,000'
+      description: |-
+        Adobe gift funding
+        Xiang 'Anthony' Chen (Sole PI)
+      link: ''
+    - startYear: '2022'
       endYear: '2023'
       label: '$50,000'
       description: |-
@@ -1013,13 +1100,6 @@ Funding:
       label: '$60,000'
       description: |-
         Google Research Scholar Award
-        Xiang 'Anthony' Chen (Sole PI)
-      link: ''
-    - startYear: '2022'
-      endYear: ''
-      label: '$50,000'
-      description: |-
-        Adobe gift funding
         Xiang 'Anthony' Chen (Sole PI)
       link: ''
     - startYear: '2021'
@@ -1151,6 +1231,13 @@ Press:
       link: ''
 Talks:
   '':
+    - startYear: '2024'
+      endYear: ''
+      label: ''
+      description: |-
+        Building Human-Centered AI Systems
+        Stanford HCI Seminar (hosted by Michael Bernstein)
+      link: ''
     - startYear: '2023'
       endYear: ''
       label: ''
