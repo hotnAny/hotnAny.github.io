@@ -19,7 +19,7 @@ $(document).ready(function () {
             let liReview = $('<li/>')
             liReview.addClass('booklist')
             liReview.css('cursor', 'pointer')
-            
+
             var strDate = XAC.getDateString(review.pubdate)
             var lbDate = $('<label/>')
             lbDate.addClass('lbdate')
@@ -66,6 +66,7 @@ $(document).ready(function () {
                 let h1Title = $('<h1 class="h1post"/>')
                 h1Title.html(review.title)
                 $('#divReviewContent').prepend(h1Title)
+                document.title = review.title
 
                 // add author
                 let strip = '<label class="lbmeta">'
@@ -89,6 +90,7 @@ $(document).ready(function () {
         }
         else {
             $('#divReview').hide()
+            document.title = "Books Read by Anthony"
         }
     })
 })

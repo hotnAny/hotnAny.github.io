@@ -71,6 +71,11 @@ Education:
       link: ''
 Awards:
   '':
+    - startYear: '2024'
+      endYear: ''
+      label: ''
+      description: CHI Best Paper Honorable Mention Award
+      link: ''
     - startYear: '2023'
       endYear: ''
       label: ''
@@ -295,6 +300,7 @@ Publications:
         Xingyu Bruce Liu, Jiahao Nick Li, David Kim, Xiang 'Anthony' Chen,
         Ruofei Du. Human I/O: Towards a Unified Approach to Detecting
         Situational Impairments. To appear at CHI 2024.
+      award: Best Paper Honorable Mention Award
       link: ''
     - startYear: '2024'
       endYear: ''
