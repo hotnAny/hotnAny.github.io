@@ -7,7 +7,7 @@ While there is no universal formula of writing good introductions, for [technica
 
 - **Promise**: What is a technology that promises us something good?
 - **Problem**: What is the problem that prevents this technology from realizing its promise?
-- **Prior work**: What is the most representative set of prior work that has attempted to solve this problem and why did it fail?
+- **Prior work**: What is the most representative prior work that has attempted to solve this problem and why did it fail?
 - **Proposed solution**: What is your proposed solution given where prior work fell short?
 - **Proof of contribution**: What is your proof to validate that your proposed solution contributes to solving that problem?
 
