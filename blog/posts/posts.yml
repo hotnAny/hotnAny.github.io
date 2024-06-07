@@ -187,6 +187,15 @@ posts:
     birthdate: 2024-05-30T08:44:00
     pubdate: 2024-05-30T08:44:00
     url: 5p-intro
+  - file: 3q_formative_study.md
+    tags:
+      - HCI
+      - Formative Study
+      - Human-Centered Design
+    title: A Minimal Viable Method for Running a Formative Study
+    birthdate: 2024-06-07T09:10:00
+    pubdate: 2024-06-07T09:10:00
+    url: 3q-formative-study
   # - file: 2018-07-21.md
   #   tags:
   #     - Git
