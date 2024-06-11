@@ -233,3 +233,9 @@ reviews:
     author: Amy Chua
     pubdate: 2024-06-10T11:37:00
     url: 2024-tiger-mom
+  - file: 2024-seven-habits.md
+    cover: seven-habits.jpg
+    title: The 7 Habits of Highly Effective People
+    author: Stephen R. Covey
+    pubdate: 2024-06-11T10:04:00
+    url: 2024-seven-habits
