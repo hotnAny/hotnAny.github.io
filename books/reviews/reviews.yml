@@ -239,3 +239,9 @@ reviews:
     author: Stephen R. Covey
     pubdate: 2024-06-11T10:04:00
     url: 2024-seven-habits
+  - file: 2024-psychology-of-money.md
+    cover: psychology-of-money.jpeg
+    title: The Psychology of Money
+    author: Morgan Housel
+    pubdate: 2024-06-13T11:36:00
+    url: psychology-of-money
