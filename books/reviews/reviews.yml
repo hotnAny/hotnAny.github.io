@@ -218,7 +218,7 @@ reviews:
   - file: 2024-book-of-why.md
     cover: book-of-why.jpeg
     title: The Book of Why
-    author: Judea Peral, Dana Mackenzie
+    author: Judea Pearl, Dana Mackenzie
     pubdate: 2024-04-12T21:02:00
     url: 2024-book-of-why
   - file: 2024-tools-of-titans.md
@@ -244,4 +244,10 @@ reviews:
     title: The Psychology of Money
     author: Morgan Housel
     pubdate: 2024-06-13T11:36:00
-    url: psychology-of-money
+    url: 2024-psychology-of-money
+  - file: 2024-being-you.md
+    cover: being-you.jpeg
+    title: Being You
+    author: Anil Seth
+    pubdate: 2024-06-21T16:08:00
+    url: 2024-being-you
