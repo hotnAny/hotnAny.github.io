@@ -3,10 +3,10 @@
 The following text is mainly based on the following chapter:
 
 ```
-Hudson, S.E. and Mankoff, J., 2014. Concepts, values, and methods for technical human–computer interaction research. In Ways of Knowing in HCI (pp. 69-93). New York, NY: Springer New York.
+Hudson, S.E. and Mankoff, J., 2014. Concepts, values, and methods for technical human–computer 
+interaction research. In Ways of Knowing in HCI (pp. 69-93). New York, NY: Springer New York.
 ```
 
-<!-- tldr -->
 ## What is technical HCI & why are we talking about it
 In one sentence---
 > ... the fundamental activity of technical HCI is one of invention—we seek to use technology to expand what can be done or to find how best to do things that can already be done.
@@ -34,7 +34,7 @@ Quite a lot of HCI research, for example, is mainly about inventing new interact
 
 In any domain, invention is always about creating innovative things. 
 To conduct inventive, technical HCI research, there are two general challenges, which we briefly discuss below.
-<!-- how to realize an innovative idea -->
+
 
 ## Challenge \#1: how to come up with innovative ideas?
 Hudson and Mankoff's chapter didn't really answer this question; rather, their take is that it doesn't really matter how---
@@ -74,11 +74,6 @@ In such cases, we often need to put together a complex system using building blo
 Sometimes there is a misconception that a system is not innovative because each of its components isn't new. It's important to stress that the innovative aspect comes from the system as a whole that realizes/approximates an innovative HCI idea. 
 Additionally, innovation can be designing an way (architecture) to purposefully put together the already-existing components, which goes beyond the existing knowledge about each individual component alone.
 
-<!-- Why implementation solutions for invention are not often the most advanced -->
-
-<!-- ## Methods of invention: science or myth? -->
-<!-- the controversial aspect -->
-<!-- process not important -->
-<!-- cookbook-y -->
-
 ## Final words
+Technical HCI research focuses on inventing innovative ideas of interactive technology, which contrasts discovery HCI research that employs rigorous methods to understand existing interactive technology.
+To succeed in conducting technical HCI research, one must develop methods to come up with innovative ideas (with support from theory and empirical studies) and employing the appropriate implementation solutions to realize or approximate an idea.
