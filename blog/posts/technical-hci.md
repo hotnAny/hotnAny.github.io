@@ -2,10 +2,11 @@
 
 The following text is mainly based on the following chapter:
 
+<div style="font-size: 12px;">
 ```
-Hudson, S.E. and Mankoff, J., 2014. Concepts, values, and methods for technical human–computer 
-interaction research. In Ways of Knowing in HCI (pp. 69-93). New York, NY: Springer New York.
+Hudson, S.E. and Mankoff, J., 2014. Concepts, values, and methods for technical human–computer interaction research. In Ways of Knowing in HCI (pp. 69-93). New York, NY: Springer New York.
 ```
+</div>
 
 ## What is technical HCI & why are we talking about it
 In one sentence---
@@ -51,7 +52,9 @@ In other words, one can scaffold the ideation process with relevant theory and b
 
 The figure below comes from Michel Beaudouin-Lafon's [paper](https://dl.acm.org/doi/full/10.1145/3468505).
 
+<div style="width:600px;">
 ![A diagram showing Mackay and Fayard's model of HCI research that is an interplay amongst theory development, artifact design, and empirical observation](assets/mackay-fayard.png)
+</div>
 
 ## Challenge \#2: how to realize an innovative idea?
 There might be a misconception that HCI invention will result in an actual product, like what a tech start-up company does.
