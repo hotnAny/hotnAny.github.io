@@ -2,10 +2,11 @@
 
 The following text is mainly based on the following chapter:
 
-<div style="font-size: 12px;">
-```
-Hudson, S.E. and Mankoff, J., 2014. Concepts, values, and methods for technical human–computer interaction research. In Ways of Knowing in HCI (pp. 69-93). New York, NY: Springer New York.
-```
+<div style="font-size: 14px;">
+<pre>
+Hudson, S.E. and Mankoff, J., 2014. Concepts, values, and methods for technical human–computer 
+interaction research. In Ways of Knowing in HCI (pp. 69-93). New York, NY: Springer New York.
+</pre>
 </div>
 
 ## What is technical HCI & why are we talking about it
@@ -50,11 +51,15 @@ In contrast, there is a different perspective that systematizes HCI's process of
 For example, [Mackay and Fayard](https://dl.acm.org/doi/abs/10.1145/263552.263612) consider this process an interplay amongst theory development, artifact design, and empirical observation. 
 In other words, one can scaffold the ideation process with relevant theory and back it up with empirical evidence.
 
-The figure below comes from Michel Beaudouin-Lafon's [paper](https://dl.acm.org/doi/full/10.1145/3468505).
 
-<div style="width:600px;">
-![A diagram showing Mackay and Fayard's model of HCI research that is an interplay amongst theory development, artifact design, and empirical observation](assets/mackay-fayard.png)
-</div>
+
+<!-- ![A diagram showing Mackay and Fayard's model of HCI research that is an interplay amongst theory development, artifact design, and empirical observation](assets/mackay-fayard.png) -->
+
+<figure style="width:850px; text-align:center;">
+  <img src="assets/mackay-fayard.png" alt="A diagram showing Mackay and Fayard's model of HCI research that is an interplay amongst theory development, artifact design, and empirical observation" style="width:100%;">
+  <figcaption>Credit: Michel Beaudouin-Lafon's <a href="https://dl.acm.org/doi/full/10.1145/3468505">paper</a>.</figcaption>
+</figure>
+
 
 ## Challenge \#2: how to realize an innovative idea?
 There might be a misconception that HCI invention will result in an actual product, like what a tech start-up company does.
