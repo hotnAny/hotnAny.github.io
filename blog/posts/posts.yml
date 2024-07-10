@@ -196,6 +196,15 @@ posts:
     birthdate: 2024-06-07T09:10:00
     pubdate: 2024-06-07T09:10:00
     url: 3q-formative-study
+  - file: technical-hci.md
+    tags:
+      - HCI
+      - Technical HCI
+      - Inventive HCI
+    title: Technical HCI Research
+    birthdate: 2024-07-10T09:31:00
+    pubdate: 2024-07-10T09:31:00
+    url: technical-hci
   # - file: 2018-07-21.md
   #   tags:
   #     - Git
