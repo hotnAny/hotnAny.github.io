@@ -213,6 +213,7 @@ posts:
     title: Your Moss Garden
     birthdate: 2024-07-23T03:22:00
     pubdate: 2024-07-23T03:22:00
+    url: moss-garden
   # - file: 2018-07-21.md
   #   tags:
   #     - Git
