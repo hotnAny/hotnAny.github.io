@@ -205,6 +205,14 @@ posts:
     birthdate: 2024-07-10T09:31:00
     pubdate: 2024-07-10T09:31:00
     url: technical-hci
+  - file: 2024-07-21.md
+    tags:
+      - Travel
+      - Thoughts
+      - Memoir
+    title: Your Moss Garden
+    birthdate: 2024-07-23T03:22:00
+    pubdate: 2024-07-23T03:22:00
   # - file: 2018-07-21.md
   #   tags:
   #     - Git

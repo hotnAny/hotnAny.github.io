@@ -257,3 +257,9 @@ reviews:
     author: Chade-Meng Tan
     pubdate: 2024-07-18T07:25:00
     url: 2024-joy-on-demand
+  - file: 2024-amazon-unbound.md
+    cover: amazon-unbound.jpg
+    title: Amazon Unbound
+    author: Brad Stone
+    pubdate: 2024-07-24T08:07:00
+    url: 2024-amazon-unbound
