@@ -46,7 +46,7 @@ Pay attention to the "yes, but" response of your audience. This is where they se
 
 ### Write an introduction
 Write the introduction of a paper as if you have already finished working on the idea.
-My introduction often amounts to answering [five questions](/blog/#5p-intro).
+My introduction often amounts to answering [five questions](https://hci.prof/blog/#5p-intro).
 In essence, this process has similar effects as communicating your idea to some audience.
 You will most definitely notice something you haven't considered and can develop the idea further by freshing out those details.
 
