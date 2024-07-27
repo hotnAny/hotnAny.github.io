@@ -214,6 +214,15 @@ posts:
     birthdate: 2024-07-23T03:22:00
     pubdate: 2024-07-23T03:22:00
     url: moss-garden
+  - file: research-ideas.md
+    tags:
+      - HCI
+      - Creativity
+      - Research Ideas
+    title: Coming Up with Research Ideas
+    birthdate: 2024-07-27T07:53:00
+    pubdate: 2024-07-27T07:53:00
+    url: research-ideas
   # - file: 2018-07-21.md
   #   tags:
   #     - Git
