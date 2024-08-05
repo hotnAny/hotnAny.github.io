@@ -287,3 +287,9 @@ reviews:
     author: Haruki Murakami
     pubdate: 2024-08-03T13:51:00
     url: what-i-talk-about-when-i-talk-about-running
+  - file: 2024-coach.md
+    cover: coach.jpg
+    title: "Coach: Lessons on the Game of Life"
+    author: Michael Lewis
+    pubdate: 2024-08-05T11:50:00
+    url: 2024-coach
