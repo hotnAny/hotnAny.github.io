@@ -293,3 +293,9 @@ reviews:
     author: Michael Lewis
     pubdate: 2024-08-05T11:50:00
     url: 2024-coach
+  - file: 2024-silent-spring.md
+    cover: silent-spring.jpg
+    title: Silent Spring
+    author: Rachel Carson
+    pubdate: 2024-08-23T09:58:00
+    url: 2024-silent-spring
