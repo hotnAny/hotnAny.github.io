@@ -1765,7 +1765,7 @@ endobj
 (react-pdf)
 endobj
 235 0 obj
-(D:20240807160007Z)
+(D:20240804230359Z)
 endobj
 232 0 obj
 <<
@@ -1777,7 +1777,7 @@ endobj
 237 0 obj
 <<
 /Type /FontDescriptor
-/FontName /XCSJYH+EBGaramond-Bold
+/FontName /SALIBB+EBGaramond-Bold
 /Flags 4
 /FontBBox [-290 -324 2500 985]
 /ItalicAngle 0
@@ -1793,7 +1793,7 @@ endobj
 <<
 /Type /Font
 /Subtype /CIDFontType2
-/BaseFont /XCSJYH+EBGaramond-Bold
+/BaseFont /SALIBB+EBGaramond-Bold
 /CIDSystemInfo <<
 /Registry (Adobe)
 /Ordering (Identity)
@@ -1807,7 +1807,7 @@ endobj
 <<
 /Type /Font
 /Subtype /Type0
-/BaseFont /XCSJYH+EBGaramond-Bold
+/BaseFont /SALIBB+EBGaramond-Bold
 /Encoding /Identity-H
 /DescendantFonts [238 0 R]
 /ToUnicode 239 0 R
@@ -1816,7 +1816,7 @@ endobj
 241 0 obj
 <<
 /Type /FontDescriptor
-/FontName /PHBGJG+EBGaramond-Regular
+/FontName /IQLJUR+EBGaramond-Regular
 /Flags 4
 /FontBBox [-290 -324 2500 985]
 /ItalicAngle 0
@@ -1832,7 +1832,7 @@ endobj
 <<
 /Type /Font
 /Subtype /CIDFontType2
-/BaseFont /PHBGJG+EBGaramond-Regular
+/BaseFont /IQLJUR+EBGaramond-Regular
 /CIDSystemInfo <<
 /Registry (Adobe)
 /Ordering (Identity)
@@ -1846,7 +1846,7 @@ endobj
 <<
 /Type /Font
 /Subtype /Type0
-/BaseFont /PHBGJG+EBGaramond-Regular
+/BaseFont /IQLJUR+EBGaramond-Regular
 /Encoding /Identity-H
 /DescendantFonts [242 0 R]
 /ToUnicode 243 0 R
@@ -1855,7 +1855,7 @@ endobj
 245 0 obj
 <<
 /Type /FontDescriptor
-/FontName /CJXNCM+EBGaramond-Italic
+/FontName /BLDWDT+EBGaramond-Italic
 /Flags 68
 /FontBBox [-321 -337 2500 986]
 /ItalicAngle -17.199997
@@ -1871,7 +1871,7 @@ endobj
 <<
 /Type /Font
 /Subtype /CIDFontType2
-/BaseFont /CJXNCM+EBGaramond-Italic
+/BaseFont /BLDWDT+EBGaramond-Italic
 /CIDSystemInfo <<
 /Registry (Adobe)
 /Ordering (Identity)
@@ -1885,7 +1885,7 @@ endobj
 <<
 /Type /Font
 /Subtype /Type0
-/BaseFont /CJXNCM+EBGaramond-Italic
+/BaseFont /BLDWDT+EBGaramond-Italic
 /Encoding /Identity-H
 /DescendantFonts [246 0 R]
 /ToUnicode 247 0 R

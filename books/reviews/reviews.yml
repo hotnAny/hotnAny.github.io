@@ -251,3 +251,45 @@ reviews:
     author: Anil Seth
     pubdate: 2024-06-21T16:08:00
     url: 2024-being-you
+  - file: 2024-joy-on-demand.md
+    cover: joy-on-demand.jpg
+    title: Joy on Demand
+    author: Chade-Meng Tan
+    pubdate: 2024-07-18T07:25:00
+    url: 2024-joy-on-demand
+  - file: 2024-amazon-unbound.md
+    cover: amazon-unbound.jpg
+    title: Amazon Unbound
+    author: Brad Stone
+    pubdate: 2024-07-24T08:07:00
+    url: 2024-amazon-unbound
+  - file: 2024-understanding-media.md
+    cover: understanding-media.jpg
+    title: Understanding Media
+    author: Marshall McLuhan
+    pubdate: 2024-07-30T10:58:00
+    url: 2024-understanding-media
+  - file: 2024-80-20.md
+    cover: 80-20-principles.jpeg
+    title: The 80/20 Principle
+    author: Richard Koch
+    pubdate: 2024-07-30T11:00:00
+    url: 2024-80-20-principles
+  - file: 2024-almanack-naval-ravikant.md
+    cover: almanack-naval-ravikant.jpg
+    title: The Almanack of Naval Ravikant
+    author: Eric Jorgenson, Tim Ferriss
+    pubdate: 2024-08-01T14:29:00
+    url: 2024-almanack-naval-ravikant
+  - file: 2024-what-i-talk-about-when-i-talk-about-running.md
+    cover: what-i-talk-about-when-i-talk-about-running.jpeg
+    title: What I Talk About When I Talk About Running
+    author: Haruki Murakami
+    pubdate: 2024-08-03T13:51:00
+    url: what-i-talk-about-when-i-talk-about-running
+  - file: 2024-coach.md
+    cover: coach.jpg
+    title: "Coach: Lessons on the Game of Life"
+    author: Michael Lewis
+    pubdate: 2024-08-05T11:50:00
+    url: 2024-coach
