@@ -299,3 +299,9 @@ reviews:
     author: Rachel Carson
     pubdate: 2024-08-23T09:58:00
     url: 2024-silent-spring
+  - file: 2024-thinking-fast-slow.md
+    cover: thinking-fast-slow.jpg
+    title: Thinking, Fast and Slow
+    author: Daniel Kahneman
+    pubdate: 2024-09-28T09:42:00
+    url: 2024-thinking-fast-slow
