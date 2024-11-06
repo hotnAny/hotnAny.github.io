@@ -223,6 +223,15 @@ posts:
     birthdate: 2024-07-27T07:53:00
     pubdate: 2024-07-27T07:53:00
     url: research-ideas
+  - files: template_paper_reading.md
+    tags:
+      - Research
+      - Reading
+      - Papers
+    title: A Template for Writing Paper Reading Summary
+    birthdate: 2014-11-06T08:41:00
+    pubdate: 2014-11-06T08:41:00
+    url: template-paper-summary
   # - file: 2018-07-21.md
   #   tags:
   #     - Git
