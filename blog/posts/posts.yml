@@ -223,7 +223,7 @@ posts:
     birthdate: 2024-07-27T07:53:00
     pubdate: 2024-07-27T07:53:00
     url: research-ideas
-  - files: template-paper-summary.md
+  - file: template-paper-summary.md
     tags:
       - Research
       - Reading
