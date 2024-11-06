@@ -305,3 +305,15 @@ reviews:
     author: Daniel Kahneman
     pubdate: 2024-09-28T09:42:00
     url: 2024-thinking-fast-slow
+  - file: 2024-four-hour-body.md
+    cover: four-hour-body.jpg
+    title: The 4-Hour Body
+    author: Time Ferriss
+    pubdate: 2024-10-04T22:01:00
+    url: 2024-four-hour-body
+  - file: 2024-montessori-toddler.md
+    cover: montessori-toddler.jpg
+    title: The Montessori Toddler
+    author: Simone Davies
+    pubdate: 2024-10-25T21:49:00
+    url: 2024-montessori-toddler
