@@ -1,0 +1,13 @@
+
+
+The foundation of this book is the dichotomy of countries as inclusive vs. extractive institutions. 
+
+Inclusive institutions ensure that economic development stems from a wide participation, innovation, and productivity amongst the constituents, featuring secure property rights, impartial rule of law, a level playing field, and mechanisms for broad political and economic participation.
+
+On the other hand, extractive institutions aim to extract resources and wealth from their constituents in their economic developments. One clear disadvantage of extractive institutions is a shortsighted sacrifice of innovation for the near-term economic gains. Innovation requires spending to incentivize and support potential innovators amongst the public, which goes against the objective of maximizing extraction. 
+
+ Personally, I do not find the argument or findings surprising. I believe, deep down, that'd be the answer I'd give if asked the same question that confronted the authors. Maybe because, growing up in China, I was taught almost the exact same theory, except the opposite, i.e., capitalism is inferior to communism and, guess what, most capitalistic countries happen to be inclusive institutions.
+
+ I paid close attention to the small portion about China where this dichotomy, as early as 2012, predicted the economic downfall of China as recent as 2024, during a period of time where the West seemed to have been intimidated by China's growth. To me, that's no small feat as it proved how this theory can see through superficiality and inform us of the truth and the future.
+
+ However, I think the main weakness of this book and its theory is over-simplification, which many other scholars have also pointed out. There are exceptions that this book's theory cannot account for, e.g., China vs. India. I heard from a podcast that the authors did explain, using some amendments, why their theory'd still apply to such exception cases, e.g., India is not that inclusive and China also not as extractive as we thought it was. To me, this almost sounds like cheating, as such explanations somehow add subjectivity to how you define inclusiveness and extractiveness and one can always bend their definition to fit the theory to reality. Still, I believe the root problem is over-simplification. The reasons why nations fail are bound to be multi-dimensional. When the authors tried to find a single concept to explain such a multi-dimensional problem, there will always be exceptions. Rather than trying to add "patches" to the theory, perhaps the authors should acknowledge the complexity of the problem and the naivety of their theory.

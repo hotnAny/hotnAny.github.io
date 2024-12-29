@@ -323,3 +323,9 @@ reviews:
     author: Connie Chung
     pubdate: 2024-12-22T20:14:00
     url: 2024-connie
+  - file: 2024-why-nations-fail.md
+    cover: why-nations-fail.jpg
+    title: Why Nations Fail
+    author: Daron Acemoglu, James A. Robinson
+    pubdate: 2024-12-28T20:50:00
+    url: 2024-why-nations-fail
