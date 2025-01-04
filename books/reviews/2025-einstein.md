@@ -13,4 +13,3 @@ This echoed a common yet perhaps less known phenomenon that good researchers are
 Einstein was just another example.
 However, there were exceptions. 
 Feynman, for instance, was good at both. He was famously known for being able to articulate a hard problem to make it easily understood.
-
