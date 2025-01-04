@@ -335,3 +335,9 @@ reviews:
     author: Thich Nhat Hanh
     pubdate: 2025-01-02T08:33:00
     url: 2025-no-fear-no-death
+  - file: 2025-einstein
+    cover: einstein.jpg
+    title: Einstein
+    author: Walter Isaacson
+    pubdate: 2025-01-04T09:15:00
+    url: 2025-einstein
