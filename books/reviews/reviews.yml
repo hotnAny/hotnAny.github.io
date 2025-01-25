@@ -341,3 +341,9 @@ reviews:
     author: Walter Isaacson
     pubdate: 2025-01-04T09:15:00
     url: 2025-einstein
+  - file: 2025-nvidia-way.md
+    cover: nvidia-way.jpg
+    title: The Nvidia Way
+    author: Tae Kim
+    pubdate: 2025-01-25T10:24:00
+    url: 2025-nvidia-way

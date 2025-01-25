@@ -1,15 +1,20 @@
 <!-- 2025-nvidia-way -->
 
-use whiteboard for meetings, not slides
+This was my 2024 holiday reading. I was quite looking forward to reading about Jensen Huang and Nvidia and this book did not disappoint.
 
-work extremely hard
-- similar to musk
+The book is not exactly a biography of Jensen though; rather, it chronicles the growth of Nvidia that revolved around Jensen as the company's one and only CEO (for 32 years and counting).
 
-do emails on sunday night (with a drink)
+The main take-away is Jensen and Nvidia work very very hard.
 
-working hard is a necessary but not sufficient condition of success
-- prereq: need to find a mission
-- prereq: 
+Jensen is famously known to do emails on Sunday nights with a glass of scotch. The book also talks about how, during family vacations, he worked on his laptop in the hotel balcony watching his kids played on beach. He said that was the perfect time for him to get some work done.
 
-having a single, very clear mission and how it fits into the current market
-- not new insight but echoed through the nvidia example
+Some US companies were recently shocked to learn about China's 996 culture (working 9 AM to 9 PM for 6 days a week); but Nvidia has been doing that pretty much since it was founded. Parking lots were usually full after 7 PM on weekdays as well as on weekends.
+It is funny that the fullness of parking lots serve as a public indicator of a company's culture (and more). In the book "Chaos Monkeys", the author Antonio García Martínez talked about a time when his company Facebook worried about the threat of the new Google+ feature and had the whole engineering team working manically over the weekends. During one of such weekends, before arriving at work, Martínez made a detour to the Google campus and saw the park lots pretty much empty. He sighed with a sense of relief, drove back to working, knowing that Google+ would never be a threat.
+
+Enough with the digress. Back to Nvida---so it's secret is just working hard? I've asked myself many times since I read this book and every time my response was, no, working hard is a necessary but not sufficient condition to Nvidia's success. They had worked hard but failed to position their work in the market and ended up creating something engineering-perfect but nobody wanted. They had worked hard but the chip manufacturers failed to deliver the products in time. They had worked hard on a bet of GPU at a time where no investors believed GPU was worth the money or resources to develop. Nvidia had to overcome a lot more than working hard to achieve their success. Or, just as Jensen put it, it's the resilience that defines their secret.
+
+There are other things to learn besides resilience. The multiple successful products of Nvidia echoes the old adage that a company needs to have a single, very clear mission and how it fits into the current market. For Nvidia, this mission started as making gaming graphics card and now evolved into empowering AI models. Nvidia also innovated on its process, making what's impossible in other competitive companies possible, such as having a very short product cycle so their products never fell behind their competitors'. Jensen'd like to break down the process, understand the bottleneck of each step, and try to accelerate each step to the limit of physics. This reminds me of Elon Musk's first-principles' approach of breaking down complex problems to tease out the real challenge.
+
+A side note. Jensen runs whiteboard-only, no-slides meetings because he believes that, in front of a whiteboard, you can't hide problems or imperfections using carefully crafted words or beautifully designed visuals. You are stripped naked to face the real issues at hand.
+
+Finally, I like my strategy of reading this book. I finished it right on time at the end of the holiday break. I read it whenever I had some time to spare. I paused the reading of all other articles or books. I liked the focus, the simplicity, and the sense of accomplishment upon finishing the book. I might adopt this strategy more often in 2025.
