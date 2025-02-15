@@ -17,4 +17,6 @@ There are other things to learn besides resilience. The multiple successful prod
 
 On a side note. Jensen runs whiteboard-only, no-slides meetings because he believes that, in front of a whiteboard, you can't hide problems or imperfections using carefully crafted words or beautifully designed visuals. You are stripped naked to face the real issues at hand.
 
+On another side note. Once Jensen was having a breakfast meeting with another company's CEO who kept checking his schedule on the calendar. Jensen was mildly annoyed. The other CEO thought Jensen would understand because they'd both have a packed schedule of meetings. Then Jensen said something along the line of ``don't let your schedule get in the way of important things''. This breakfast meeting was important to Jensen so he didn't care what happened next on his schedule.
+
 Finally, I like my strategy of reading this book. I finished it right on time at the end of the holiday break. I read it whenever I had some time to spare. I paused the reading of all other articles or books. I liked the focus, the simplicity, and the sense of accomplishment upon finishing the book. I might adopt this strategy more often in 2025.
