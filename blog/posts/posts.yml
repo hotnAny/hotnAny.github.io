@@ -232,6 +232,15 @@ posts:
     birthdate: 2024-11-06T08:41:00
     pubdate: 2024-11-06T08:41:00
     url: template-paper-summary
+  - file: project-based-diary-study.md
+    tags:
+      - HCI
+      - Empirical Study
+      - Human-Centered Design
+    title: Project-based Diary Study
+    brithdate: 2025-03-05T09:59:00
+    pubdate: 2025-03-05T09:59:00
+    url: project-based-diary-study
   # - file: 2018-07-21.md
   #   tags:
   #     - Git
