@@ -1,3 +1,5 @@
+# Project-based Diary Study
+
 In a project-based diary study, a participant uses a system to work on a "take-home" project—typically lasting about a week—while keeping a diary to log their experiences and feedback.
 
 ## Why this Study?
