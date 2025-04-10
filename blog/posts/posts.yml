@@ -241,6 +241,16 @@ posts:
     brithdate: 2025-03-05T09:59:00
     pubdate: 2025-03-05T09:59:00
     url: project-based-diary-study
+  - file: manage-paper-writing.md
+    tags:
+      - Writing
+      - Paper
+      - HCI
+      - Time management
+    title: Paper Writing Management
+    birthdate: 2025-04-10T08:17:00
+    pubdate: 2025-04-10T08:17:00
+    url: paper-writing-management
   # - file: 2018-07-21.md
   #   tags:
   #     - Git

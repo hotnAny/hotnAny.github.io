@@ -1,50 +1,68 @@
 # Paper Writing Management
 
-When I was studying my PhD I had a squash partner who was a PhD student in Physics. I don't remember many of our conversations in between the squash ames but one distinctively stood out. Once we talked about writing papers and he told me for him, once he figured out the math, writing the paper is just filling in the space between equations. My reaction back then (and right now): it's not so the case in HCI, or many computing subfields in general.
+When I was doing my PhD, I had a squash partner who was a Physics PhD student. I don’t remember many of our conversations between games, but one in particular stuck with me. We were talking about writing papers, and he said that for him, once he figured out the math, writing the paper was just about filling in the space between equations.
 
-The purpose of writing an academic paper is to document and present a research project, yet such a process itself contains so many bits and pieces that it almost feels like a project of its own and a successful project needs good management.
+My reaction then (and still now): that’s definitely not the case in HCI—or in many computing subfields, for that matter.
 
-Below is my own recipe in chronological order.
+Writing an academic paper is about documenting and presenting a research project, but the writing process itself is complex and fragmented. In fact, it often feels like a project of its own—and like any good project, it needs proper management.
 
-## Writing the introduction
-I often start writing the introduction early rather than late (I know some people would start writing the introduction a week before the paper deadline).
-The optimal timing is when you feel you have a lot of ideas and know what you need to do but not in a well-organized manner. Then, writing an introduction can help you sort out your thoughts, see what might be off or missing, and lay out your project in a more structured way.
-But don't writing the introduction too early, as you are likely to get stuck because you haven't accumulated sufficient experiences in the project or get tunnel-visioned into the written version of the project, making it difficult for you to expand or pivot later.
-I also revisit, revise, and sometimes rewrite the introduction multiple times throughout the project lifecycle, usually with a few weeks in between each writing iterations. This helps me reflect on how I frame my paper and redirect my actual work to align with the high-level goal.
+Here’s my personal process, in roughly chronological order:
 
-## Writing the overall outline
-write a minimalistic outline
-- should be a very quick task as most of your papers should share a similar overall outline--simply copy and paste the same structure
+## Writing the Introduction
 
-write a detailed outline
-- as detailed as describing each paragraph that will eventually go into the paper
+I usually start writing the introduction earlier rather than later (though I know some people don’t touch it until a week before the deadline). The ideal time is when you have lots of ideas and a good sense of the project, but things still feel messy and unstructured. Writing the introduction can help clarify your thinking, reveal gaps or inconsistencies, and provide a clearer direction.
 
-## Writing the experiment or study (all but results)
-write the experiment or study sections
-- all but results
+But don’t start *too* early. If you haven't gathered enough experience or results, you might get stuck or too attached to a particular framing, making it harder to adapt as the project evolves.
 
-## Writing the related work
-write related work
-- most time-consuming part, as it requires reading literature
+I revisit, revise, and sometimes even rewrite the introduction multiple times throughout the project. Spacing out these iterations—say, every few weeks—helps me reflect on how I’m framing the work and adjust the actual research to better align with the high-level narrative.
 
-## Writing the discussion (throughout)
-write the discussion section throughout
-- don't want to cramp it last minute. it'd look rushed and shallow. it's easy for a reader to see whether you are thoughtfully discussing or just try to fill up a required section.
+## Writing the Overall Outline
 
-## Finishing the first draft
-the milestone for first draft is important
-when should i finish the first draft?
-- depends
-- my personal approach is at least two weeks before ddl
-- some others like to push it towards the last minute and sometimes it works out for them
-- a paper finished ddl-T with T amount of editing time. what is the optimal value of T for you. need to try out different values if you are unsure. it also depends on specific projects as well as how busy you are with other things around that time
+The first outline should be quick. Most of your papers will follow a similar structure, so just copy and tweak a previous one.
 
-## Making it a moderate daily routine
-write as much as possible when you write best
-my approach is to write a little bit every day, distributing the load over a time period as long as possible
-the same amount time close to the ddl is different than time further from it: for some people, they write better with the ddl pressure and for others it's the opposite. be aware of which kind of writer you are.
+Next, try to flesh out subsection (or even sub-subsection) titles. For example, what specific topics will your related work section cover?
 
-can you spend too much time writing the paper?
-the answer is yes if, instead of writing, you should spend more time doing the actual work. in other words, you could spend too much time writing about work that isn't ready to be written, hoping the writing can make up for the work's lack of contribution or rigor. this seldom works.
+Before you write the full text, do one more pass and outline each paragraph with bullet points. This step helps you think at a finer granularity and makes the actual writing much easier.
 
-this does not equate the success of a project or the acceptance of the paper
+## Writing the Experiment (Everything But the Results)
+
+I focus on the experiment section early for two reasons. First, the success of the paper often hinges on the quality and execution of the experiment. Second, writing it helps you design, plan, and reflect on your study.
+
+As with the outline, start with a reusable template: participants, tasks, procedure, design, etc. Then, fill in the details. Think of it like explaining your plan to a reviewer. Often, you’ll notice something doesn’t quite make sense—better to catch it during writing than mid-study.
+
+## Writing the Related Work
+
+I usually tackle the related work section next, because it’s time-consuming and requires a lot of reading. The upside is that it's highly modular—you can write it one paper at a time and slowly shape it into a coherent whole.
+
+## Writing the Discussion (Throughout)
+
+The Discussion section is tricky. It’s not as central as other sections, but it still matters—and it’s easy to mess up.
+
+A common mistake is leaving it until the last minute. Then you’re scrambling to say something insightful, and it ends up sounding shallow. Readers can tell when you’re just filling space.
+
+Instead, I write the Discussion gradually. Whenever an idea comes to mind—something worth reflecting on—jot it down under the Discussion section. By the end, you’ll have a rich set of points to expand into a thoughtful discussion.
+
+## Finishing the First Draft
+
+The “first draft” should be as complete as possible—ideally good enough to submit, though not quite good enough to accept.
+
+Set a firm early deadline for the first draft. This helps you avoid both procrastination and perfectionism, and ensures you and your co-authors have enough time to iterate.
+
+How early? That depends on your work style, the project’s progress, and how long the paper will take to write. A good rule of thumb is to aim for 1–2 weeks before the actual deadline.
+
+## Develop a Moderate Daily Writing Routine
+
+To follow this plan, I find it helpful to maintain a moderate, daily writing habit. Since my PhD days, I’ve written for about 45 minutes each morning with my coffee.
+
+This “little bit every day” approach helps spread out the work, reduce stress, and create more space for reflection and deeper thinking. However, this only works if you start early enough.
+
+## FAQs
+
+**What if you’re deadline-driven and only write well under pressure?**  
+Then maybe these tips aren’t for you (though you might still give them a try). The key is to write when you write best. One hour under deadline pressure might be worth more than three hours weeks earlier. Just know what kind of writer you are.
+
+**Does managing the writing process increase your chance of acceptance?**  
+Not really. Good management won’t save a weak contribution. But it *will* reduce your stress and free up energy for tackling the hard parts of the research.
+
+**Can you spend too much time writing?**  
+Absolutely. Sometimes, instead of writing, you should be doing more research. Writing can't compensate for a lack of contribution or rigor. If the work isn’t ready, trying to write it into shape usually doesn’t work.
