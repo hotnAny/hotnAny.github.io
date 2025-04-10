@@ -32,7 +32,7 @@ As with the outline, start with a reusable template: participants, tasks, proced
 
 ## Writing the Related Work
 
-I usually tackle the related work section next, because it’s time-consuming and requires a lot of reading. The upside is that it's highly modular—you can write it one paper at a time and slowly shape it into a coherent whole.
+I usually tackle the related work section next, because it’s time-consuming and requires a lot of reading. The upside is that it's highly modular—you can write it one paper you review at a time and slowly shape it into a coherent whole.
 
 ## Writing the Discussion (Throughout)
 
@@ -59,9 +59,9 @@ This “little bit every day” approach helps spread out the work, reduce stres
 ## FAQs
 
 **What if you’re deadline-driven and only write well under pressure?**  
-Then maybe these tips aren’t for you (though you might still give them a try). The key is to write when you write best. One hour under deadline pressure might be worth more than three hours weeks earlier. Just know what kind of writer you are.
+Then maybe these tips aren’t for you (though you might still give them a try). The key is to write when you write best. For you, maybe one hour under deadline pressure might be worth more than three hours weeks earlier. Just know what kind of writer you are.
 
-**Does managing the writing process increase your chance of acceptance?**  
+**Does managing the writing process increase your chance of paper acceptance?**  
 Not really. Good management won’t save a weak contribution. But it *will* reduce your stress and free up energy for tackling the hard parts of the research.
 
 **Can you spend too much time writing?**  
