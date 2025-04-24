@@ -377,3 +377,9 @@ reviews:
     author: Bill Gates
     pubdate: 2025-04-10T08:09:00
     url: 2025-source-code
+  - file: 2025-small-is-beautiful.md
+    cover: small-is-beautiful.jpg
+    title: Small Is Beautiful
+    author: E. F. Schumacher
+    pubdate: 2025-04-23T20:57:00
+    url: 2025-small-is-beautiful
