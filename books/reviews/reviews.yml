@@ -383,3 +383,9 @@ reviews:
     author: E. F. Schumacher
     pubdate: 2025-04-23T20:57:00
     url: 2025-small-is-beautiful
+  - file: 2025-genghis-khan.md
+    cover: genghis-khan.jpg
+    title: Genghis Khan
+    author: Jack Weatherford
+    pubdate: 2025-06-17T16:02:00
+    url: 2025-genghis-khan
