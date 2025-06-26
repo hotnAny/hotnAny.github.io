@@ -389,3 +389,9 @@ reviews:
     author: Jack Weatherford
     pubdate: 2025-06-17T16:02:00
     url: 2025-genghis-khan
+  - file: 2025-patterns-of-discovery.md
+    cover: patterns-of-discovery.jpg
+    title: Patterns of Discovery
+    author: Norwood Russell Hanson
+    pubdate: 2025-06-26T15:52:00
+    url: 2025-patterns-of-discovery
