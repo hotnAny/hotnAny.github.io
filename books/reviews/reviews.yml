@@ -395,3 +395,9 @@ reviews:
     author: Norwood Russell Hanson
     pubdate: 2025-06-26T15:52:00
     url: 2025-patterns-of-discovery
+  - file: 2025-benjamin-franklin.md
+    cover: benjamin-franklin.jpg
+    title: Benjamin Franklin
+    author: Walter Isaacson
+    pubdate: 2025-07-25T19:35:00
+    url: 2025-benjamin-franklin
