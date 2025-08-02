@@ -401,3 +401,9 @@ reviews:
     author: Walter Isaacson
     pubdate: 2025-07-25T19:35:00
     url: 2025-benjamin-franklin
+  - file: 2025-little-prince.md
+    cover: little-prince.jpg
+    title: The Little Prince
+    author: Antoine de Saint-Exupéry
+    pubdate: 2025-08-01T19:36:00
+    url: 2025-little-prince
