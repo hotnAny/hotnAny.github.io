@@ -407,3 +407,9 @@ reviews:
     author: Antoine de Saint-Exupéry
     pubdate: 2025-08-01T19:36:00
     url: 2025-little-prince
+  - file: 2025-tacit-dimension.md
+    cover: tacit-dimension.jpg
+    title: The Tacit Dimension
+    author: Michael Polanyi
+    pubdate: 2025-08-3T18:08:00
+    url: 2025-tacit-dimension
