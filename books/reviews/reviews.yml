@@ -371,3 +371,9 @@ reviews:
     author: Clayton M. Christensen
     pubdate: 2025-03-01T10:48:00
     url: 2025-innovators-dilemma
+  - file: 2025-art-of-winning.md
+    cover: art-of-winning.png
+    title: The Art of Winning
+    author: Bill Belichick
+    pubdate: 2025-09-22T16:00:00
+    url: 2025-art-of-winning
