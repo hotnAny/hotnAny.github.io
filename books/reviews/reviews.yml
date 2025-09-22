@@ -377,3 +377,45 @@ reviews:
     author: Bill Belichick
     pubdate: 2025-09-22T16:00:00
     url: 2025-art-of-winning
+  - file: 2025-source-code.md
+    cover: source-code.jpg
+    title: Source Code: My Beginnings
+    author: Bill Gates
+    pubdate: 2025-04-10T08:09:00
+    url: 2025-source-code
+  - file: 2025-small-is-beautiful.md
+    cover: small-is-beautiful.jpg
+    title: Small Is Beautiful
+    author: E. F. Schumacher
+    pubdate: 2025-04-23T20:57:00
+    url: 2025-small-is-beautiful
+  - file: 2025-genghis-khan.md
+    cover: genghis-khan.jpg
+    title: Genghis Khan
+    author: Jack Weatherford
+    pubdate: 2025-06-17T16:02:00
+    url: 2025-genghis-khan
+  - file: 2025-patterns-of-discovery.md
+    cover: patterns-of-discovery.jpg
+    title: Patterns of Discovery
+    author: Norwood Russell Hanson
+    pubdate: 2025-06-26T15:52:00
+    url: 2025-patterns-of-discovery
+  - file: 2025-benjamin-franklin.md
+    cover: benjamin-franklin.jpg
+    title: Benjamin Franklin
+    author: Walter Isaacson
+    pubdate: 2025-07-25T19:35:00
+    url: 2025-benjamin-franklin
+  - file: 2025-little-prince.md
+    cover: little-prince.jpg
+    title: The Little Prince
+    author: Antoine de Saint-Exupéry
+    pubdate: 2025-08-01T19:36:00
+    url: 2025-little-prince
+  - file: 2025-tacit-dimension.md
+    cover: tacit-dimension.jpg
+    title: The Tacit Dimension
+    author: Michael Polanyi
+    pubdate: 2025-08-3T18:08:00
+    url: 2025-tacit-dimension

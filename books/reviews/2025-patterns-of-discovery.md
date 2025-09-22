@@ -1,0 +1,11 @@
+This book was on my "to-read" list as I delved into papers on scientific discovery. I had hoped for a deep, insightful read—something that would enrich my understanding of how science works at a fundamental level.
+
+At first glance, the table of contents was promising. Chapters on Observation, Facts, Causality, and Theories suggested a thoughtful exploration of core philosophical concepts. However, once I began reading, my enthusiasm quickly waned.
+
+The first issue was the writing itself. The book often seemed to labor over points that could have been made more concisely. For instance, the entire chapter on Observation revolves around the idea that people can interpret the same phenomenon differently. While this is a valid and important insight, it felt stretched thin over many pages. A more concise treatment—perhaps even just a few paragraphs—might have conveyed the idea more powerfully.
+
+Second, the writing style lacked clarity and precision. It often felt like I was reading an internal monologue rather than a carefully structured argument. The prose meanders, giving the impression of an unfiltered stream of consciousness rather than a refined presentation of ideas. At times, I felt as though I was doing the work of distillation that the author should have done.
+
+Finally, the book exhibits a common trait of certain intellectual works: over-conceptualization. It constructs a web of terminology, frameworks, and abstract theories that seem more intent on intellectualizing the subject than illuminating it. This creates a cognitive burden for the reader, who must parse the scaffolding of ideas before reaching the core insight—if there is one. In contrast, a more pragmatic approach would strive to clarify rather than complicate, to demystify rather than obscure.
+
+To be fair, this critique may reflect a mismatch between the book’s philosophical orientation and my own expectations. Perhaps, for a certain audience, the book delivers exactly what it promises. But for me, it didn’t offer the kind of clarity or insight I was hoping for. I stopped after the first chapter and skimmed the second and third before setting it aside.
