@@ -431,3 +431,9 @@ reviews:
     author: Karl R. Popper
     pubdate: 2025-12-22T11:09:00
     url: 2025-logic-of-scientific-discovery
+  - file: 2025-kokoro.md
+    cover: kokoro.jpeg
+    title: Kokoro
+    author: Beth Kempton
+    pubdate: 2025-12-08T19:00:00
+    url: 2025-kokoro
