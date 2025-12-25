@@ -437,3 +437,9 @@ reviews:
     author: Beth Kempton
     pubdate: 2025-12-08T19:00:00
     url: 2025-kokoro
+  - file: 2025-scarcity.md
+    cover: scarcity.jpg
+    title: Scarcity
+    author: Sendhil Mullainathan, Eldar Shafir
+    pubdate: 2025-12-25T11:15:00
+    url: 2025-scarcity
