@@ -425,3 +425,21 @@ reviews:
     author: Daniel J. Siegel, Tina Payne Bryson
     pubdate: 2025-10-13T15:13:00
     url: 2025-whole-brain-child
+  - file: 2025-logic-of-scientific-discovery.md
+    cover: logic-of-scientific-discovery.jpeg
+    title: The Logic of Scientific Discovery
+    author: Karl R. Popper
+    pubdate: 2025-12-22T11:09:00
+    url: 2025-logic-of-scientific-discovery
+  - file: 2025-kokoro.md
+    cover: kokoro.jpeg
+    title: Kokoro
+    author: Beth Kempton
+    pubdate: 2025-12-08T19:00:00
+    url: 2025-kokoro
+  - file: 2025-scarcity.md
+    cover: scarcity.jpg
+    title: Scarcity
+    author: Sendhil Mullainathan, Eldar Shafir
+    pubdate: 2025-12-25T11:15:00
+    url: 2025-scarcity
