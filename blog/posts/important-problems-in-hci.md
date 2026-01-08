@@ -1,76 +1,101 @@
-Richard hamming, the famous mathematician and computer scientist in Bell Lab, used to sit at the lunch table of researchers in chemistry and ask them what are the important problems in their field.
-He believed that one ought to work on the important problems in their field to maximize the impact of their work. To do this, one needs to first have a clear understanding of what are the important problems they should work on.
-It is a deceptively simple question that is yet quite challenging to answer.
-Because there are likely many kinds of unimportant problems in a field that people still want to work on for various reasons. Maybe a topic is recently popular and attention-grabbing. Maybe one has already been working on certain topics thus the inertia to continue down that path. Or maybe some are just personally interested on those topics. it’s understandable that one is too pre-occupied to work on any of these kinds of topics while being oblivious of thinking about what are the ones that are really important with respect to the whole field.
+# Important Problems for HCI
 
-## Important Problems for HCI
+Richard Hamming—the mathematician and computer scientist at Bell Labs—had a habit of sitting at lunch tables with chemists and asking a simple question: *What are the important problems in your field?*
 
-So, what are the important problems in HCI?
+He believed that to maximize impact, one must work on important problems. But to do that, you first need clarity on what those problems actually are. That turns out to be deceptively difficult.
 
-I think for HCI, there are two additional difficulties to answer this question. 
+In every field, there are plenty of reasons people end up working on problems that are not especially important in a broader sense. Some topics are trendy. Some are convenient continuations of past work. Some are simply personal interest. All of this is understandable. But it breeds complacency. It’s easy to stay busy without ever stepping back to ask whether the problems we’re working on truly matter to the field.
 
-first, in order for a problem to be an important one of a field, it foremost needs to be this field's problem, which means solving this problem requires this field's intellectual core---something that other fields don't have.
-In physics, one such problem could be unifying gravity with quantum mechanics. In computer science, it could be achieving artificial general intelligence.
-HCI, however, is interdisciplinary. It is symbiotic with other fields, meaning that its intellectual core is (partially) derivative of or dependent on another field's, e.g., user modeling from cognitive science, human subject studies from psychology, ui development from programming language and computer graphics. 
-therefore, it is almost impossible for HCI to claim a problem of its own like what physics and computer science do.
-for HCI to answer hamming's question, there'd be a different interpretation of the term "problem".
+### The Challenge of Identifying Important Problems in HCI
 
-even if we ignore this issue about intellectual core, there is secondary difficulty in identifying important problems in hci.
-for HCI, since the field is very diverse and interdisciplinary, it is likely that different people will identify different important problems. For individual researchers, this might not be an issue but for a field collectively  that presents a fundamental challenge. If everyone is working on different important problems, borrowing Hamming's metaphor, it’s like sailors steering the ship towards different directions. Eventually, efforts get canceled out and the ship is sailing nowhere.
+So what *are* the important problems in HCI?
 
-to overcome these two difficulties, i propose that HCI should expand the scope of problems beyond the field itself, towards adjacent or broader fields.
-For example, one adjacent field of HCI is AI and both are situated in the broader field of CS. People working on “human-AI interaction” (whatever that means) can ask themselves what are the important problems in AI or CS that I, as an HCI researcher, con contribute to solving.
-However, identifying adjacent fields will suffer from the second difficulty (lack of unification)--—for example, people working on design or social computing might not identify AI or CS as their meaningful adjacent fields to solve problems in.
-Perhaps, we need to go broader instead (go broader go home?). How about humanity as a whole? Maybe HCI ought to identify important problems that matter to the entire humanity and ask ourselves, what are a subset of these problems that, we, as HCI researchers, can and should uniquely contribute to solving.
+I think HCI faces two additional challenges in answering Hamming’s question.
 
-But Is it too ambitious for HCI to claim those humanity-level problems—e.g., climate, health, education—as our problems? I don’t think so. First, since solving all these problems will involve humans using some sorts of computing technology (e.g., AI),  HCI seems just the right fit to play a role.
+The first challenge is about intellectual ownership. For a problem to count as a field’s “important problem,” it usually draws on that field’s unique intellectual core—something other fields don’t already have. In physics, this might be unifying gravity and quantum mechanics. In computer science, it might be artificial general intelligence.
 
-## Tackling Problems in an HCI way--the Three Fundamental Questions
+HCI, however, is fundamentally interdisciplinary. It is symbiotic with other fields, borrowing and building on ideas from cognitive science (user modeling), psychology (human-subject studies), programming languages and graphics (UI development), and more. As a result, HCI rarely gets to claim problems that are *exclusively* its own in the way physics or core CS sometimes can.
 
-Then, the next question is, in solving these problems, what are the foundational HCI-related building blocks---things that would require HCI to contribute to? 
-My answers below are biased towards the research I have done with approaches I have deemed appropriate. But here they are.
+This means that to answer Hamming’s question, HCI needs a slightly different interpretation of what counts as a “problem.”
 
+Even if we set this aside, there is a second challenge. HCI is extremely diverse. Different subcommunities are likely to identify very different problems as important. That may be fine at the individual level, but at the field level it's not. To borrow Hamming’s metaphor, if everyone is steering the ship in a different direction, the net result may be that the ship goes nowhere.
 
-In general, any HCI research problem will always involve humans using some sorts of computing technology (hereafter referred to as "technology"), which will be imbued with ever-growing intelligence, thus incurring these three questions:
+### Expanding the Scope of HCI Problems
 
-Q1. The Assimilation problem: How can human and technology fully understand each other?
+One way to address both challenges is to expand the scope of what we consider HCI’s problems.
 
-Q2. The Alignment problem: How can the inner-working of a technology align with users’ values?  
+One option is to look toward adjacent fields. For example, AI is adjacent to HCI and sits within the broader umbrella of computer science. Researchers working on “human–AI interaction” might ask: *What are the important problems in AI or CS that I, as an HCI researcher, can meaningfully contribute to solving?*
 
-Q3. The Augmentation problem: How can a technology be used in a way that augments users’ abilities?
+But this approach will eventually run into the same underlying issue: HCI’s intrinsic diversity, which makes it difficult to reach consensus on what the relevant adjacent fields even are.
 
-i believe these questions are important because they are the foundational building blocks that make up the full cycle of humans interacting with a technology.
+So perhaps we need to go broader. Much broader.
 
-Start from the human expressing their intent (e.g., typing in a command, saying a sentence, making a gesture) in a way that the technology can understand (Q1a---assimilating human intents).
-Once the human intent is understood, the technology will act on it in a way that both achieves the intent (Q3) and conforms to human values (Q2).
-For example, if a user intends for the technology to improve a piece of writing, the technology foremost needs to help them achieve this goal without plagiarizing others’ text, thus aligning with human values of integrity.
-The way technology helps with improving writing can either be a direct rewrite of the original text, or be providing guidance to help the human improves the text on its own (the latter aims to augment the human's ability rather than just augmenting their work).
-Once the technology finishes its work, it needs to presents the results in a way that the human can understand (Q1b---assimilating technology output). For example, it can present an improved version of the input writing with changes highlighted to show how improvements have been made.
+What if HCI oriented itself around problems that matter at the level of humanity as a whole? Problems like climate, health, education, or scientific progress. The question then becomes: *How can HCI uniquely and meaningfully contribute to solving these problems?*
 
+Is this too ambitious? I don’t think so. Nearly all humanity-level problems today involve people interacting with increasingly powerful computing technologies, including AI. If that’s the case, HCI is not just relevant—it’s essential.
 
-to summarize, unlike other fields with an intellectual core, hci's symbiotic and diverse nature suggests that it should seek to contribute to problems that are important in broader context (\eg humanity), by addressing the three fundamental questions that serve as building blocks of how humans interact with computing technology to tackle those problems.
+### Tackling Problems in an HCI Way: Three Fundamental Questions
 
-## A Case Study: HCI for Scientific Discovery
+If HCI is to contribute to these broader problems, what are the foundational building blocks it brings to the table?
 
-to walk the walk rather than just talk the talk, i'd like to show how i came to identify and work on one important problem in an HCI way: supporting scientific discovery
+What follows reflects my own research perspective and biases, but I believe these ideas have broader relevance.
 
+Any HCI problem involves humans using some form of computing technology—technology that is increasingly intelligent, which raises three fundamental questions:
 
-why scientific discovery? first, because it is an important problem. it is the breakthroughs in science that resulted in the quantum leaps in the history of humanity: Newton's laws, Darwanian theory of evolution, penicillin,  Watson and Crick's discovery of DNA, and the recent surge of AI. amidst the massiveness of universe, we are fortunate enough to have been existing as a species and a civilization. we owe it to ourselves to stay ambitious and to never stop expanding the boundary of our knowledge. however, just because we have witnessed so many scientific discoveries in the history of humanity does not mean that scientific discoveries will automatically happen in the future. quite the opposite, as we aim to tackle new scientific challenges (e.g., migrating to Mars, expanding human health span), the work becomes much more challenging. we cannot expect to just repeat what scientists have been doing in the past and new discoveries will come through. we need to ramp up and improve how we do science to a new level in order to have new breakthrough discoveries. to achieve this, it takes more than the scientists themselves. other forces need to join too. now, the advent of AI is joining forces. HCI should too. 
+**Q1. The Assimilation Question:** How can humans and technology assimilate each other's intent and reasoning?
 
-as a concrete example, one of our projects focuses on drug discovery, aiming to support its initial phase of identifying drug target, i.e., which protein is (perhaps indirectly) implicated in a certain disease that a drug can bind to and interact with to inhibit the disease. consider Alzheimer's disease, the type of protein Tau is well-known to be implicated. however, Tau might not necessarily be the best target for a drug, considering the possibilities of drugging a large number of other proteins that can interact with Tau. in other words, target ID is the process of finding possible alternative proteins through which a drug can have an effect on Tau, which is the primary culprit for Alzheimer's disease. 
+**Q2. The Alignment Question:** How can the inner workings of a technology align with humans' values?
 
-in order to find such proteins, scientists have to consider 
+**Q3. The Augmentation Question:** How can technology be instrumented to augment human abilities?
+
+These questions form a full interaction cycle.
+
+It begins with the human expressing intent—through text, speech, gestures, or other means—in a way that technology can take up and reason about (Q1a: assimilating human intent). This is not just a matter of parsing input, but of making the human’s goals legible to the system’s internal reasoning.
+
+Once intent is assimilated, the technology’s reasoning must proceed in a way that both advances that intent and aligns with human values (Q2). For example, if a user wants help improving a piece of writing, the system should pursue that goal without plagiarizing others’ work, thereby respecting values such as integrity.
+
+How the technology is instrumented to act on that reasoning determines whether it merely produces better output or genuinely augments the human (Q3). A system might rewrite the text directly, or it might surface suggestions, alternatives, and explanations that help the user improve the writing themselves. The latter reflects an augmentation-oriented instrumentation, where the goal is to expand the user’s ability rather than replace it.
+
+Finally, the technology must externalize its reasoning and results in a form the human can assimilate (Q1b). This might involve highlighting changes, explaining why certain edits were made, or otherwise making the system’s reasoning legible—so that the exchange between human and technology remains meaningful, not opaque.
 
 
+### A Case Study: HCI for Scientific Discovery
 
+To make this concrete, I’ll briefly describe how I came to work on one such problem: supporting scientific discovery.
 
+Why scientific discovery? Because it is undeniably important. Many of humanity’s biggest leaps—Newton’s laws, Darwin’s theory of evolution, penicillin, the discovery of DNA, and more recently AI—came from scientific breakthroughs. As a species, we owe much of our progress to science.
 
-Back to Richard hamming. It turned out that his simple question annoyed most of the chemistry people and he no long could sit at their lunch table.
-unfornately, i will not have the opportunity to have lunch with Hamming. but assuming i did, i hope i'd be ready to answer this question.
+But past success does not guarantee future discovery. As we take on harder challenges—extending human healthspan, addressing complex diseases, or exploring space—we can’t assume that simply repeating historical scientific practices will suffice. We need to improve how science itself is done.
 
-<!-- RECYCLED -->
+This is not something scientists can solve alone. Other forces need to join in. AI is one of them. HCI should be another.
 
-<!-- But first, let’s unpack this question a bit more. -->
-<!-- while it is up to researchers in each field to decide on what important problems are, there are some implicit requirements for a problem to be qualified as a field's important problem. -->
-<!-- first,  -->
-<!-- here i want to propose a set of problems that i believe are important to HCI. admittedly, these problems are biased towards the research I have done with approaches I have deemed appropriate. neither do this set encompass all important problems nor would everyone in HCI agree that they are important. after all, whoever's answer will always be somewhat religious rather than representative of some universally truth. -->
+<!-- #### Example: Drug Target Identification -->
+
+One of our projects focuses on drug discovery, specifically the early step of target identification—figuring out which proteins are promising places for a drug to intervene.
+
+Take Alzheimer’s disease as an example. The protein Tau is well known to be involved, but it has been difficult to target directly. As a result, researchers often look beyond Tau to other proteins that are biologically related to it—proteins that influence how Tau behaves or how the disease progresses, and that may be easier to target with drugs.
+
+Doing this well requires balancing several considerations at once: whether a protein is relevant to the disease, whether changing its behavior is likely to help, and whether it is practical to design a drug that acts on it. In practice, these questions are often explored using different tools and workflows, making the process fragmented and time-consuming.
+
+In our formative studies, we found that these criteria are typically analyzed in isolation, using different tools. Scientists move back and forth between simulations, databases, and literature searches, manually maintaining a mental or external list of promising targets.
+
+This creates an opportunity for HCI.
+
+Our approach brings these criteria together in a single tool. We use a protein interaction graph as the central representation: edge thickness encodes physical interaction strength, node color encodes docking potential, and additional layers capture therapeutic relevance.
+
+The visualization itself is not revolutionary. It resembles earlier tools for exploring paper citation networks or social graphs. What’s interesting is that drug target identification had not previously been framed this way. Once you see it as a multi-criteria exploration problem, the solution becomes surprisingly straightforward.
+
+We also leverage advances in language models to support the therapeutic criterion. Instead of requiring exhaustive manual literature searches, we use LMs to retrieve and synthesize evidence from research papers about how pairs of proteins interact therapeutically. These pairwise insights are then combined to produce a more holistic assessment.
+
+Crucially, this automation remains grounded in actual evidence. When results are presented to scientists, they are accompanied by references and explanations, not just opaque scores.
+
+This research illustrates how HCI can address the Augmentation Question in the important domain of scientific discovery. The tool instruments AI to augment how scientists reason across multiple criteria, navigate the space of drug targets, and converge on informed decisions.
+
+### Closing Thoughts
+
+Unlike fields with a tightly defined intellectual core, HCI’s symbiotic and interdisciplinary nature calls for a different strategy. Rather than defining “important problems” narrowly within its own boundaries, HCI can contribute by engaging with problems that matter in a broader context—potentially at the scale of humanity—by addressing three foundational questions: Assimilation, Alignment, and Augmentation, which together shape how humans interact with computing technology.
+
+Hamming’s question, simple as it was, reportedly annoyed many of the chemists he asked—so much so that he eventually became unwelcome at their lunch table. The discomfort was understandable. Being asked what truly matters in a field is harder than being busy within it.
+
+I’ll never have the chance to have lunch with Hamming. But if I did, I hope I’d be able to answer his question—not with a single problem, but with a way of thinking about what makes a problem worth working on, and how I’m trying to
+
