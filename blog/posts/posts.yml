@@ -7,168 +7,6 @@ posts:
     birthdate: 2017-12-09T23:18:57.000Z
     pubdate: 2017-12-09T23:18:57.000Z
     url: on-giving-a-good-demo
-  # - file: 2017-05-06.md
-  #   tags:
-  #     - idea
-  #     - thought
-  #     - old
-  #     - new
-  #   title: 'Redo something old, really well'
-  #   birthdate: 2017-05-06T00:38:36.000Z
-  #   pubdate: 2017-05-06T00:39:12.582Z
-  #   url: redo-something-old-really-well
-  # - file: 2017-10-10.md
-  #   tags:
-  #     - hci
-  #     - voice
-  #     - technology
-  #   title: On voice-based user interfaces
-  #   birthdate: 2017-10-10T17:58:30.000Z
-  #   pubdate: 2017-10-10T18:00:42.995Z
-  #   url: on-voice-based-user-interfaces
-  # - file: 2018-01-01.md
-  #   tags:
-  #     - wfh
-  #     - log
-  #     - productivity
-  #   title: 'My work-from-home log book #1'
-  #   birthdate: 2018-01-03T06:04:35.000Z
-  #   pubdate: 2018-01-03T06:25:00.424Z
-  #   url: my-work-from-home-log-book-1
-  # - file: 2018-01-08.md
-  #   tags:
-  #     - fabrication
-  #     - future
-  #     - modeling
-  #     - domain
-  #   title: On modeling domain-specific making
-  #   birthdate: 2018-01-08T19:52:37.000Z
-  #   pubdate: 2018-01-08T19:59:21.405Z
-  #   url: on-modeling-domain-specific-making
-  # - file: 2018-01-10.md
-  #   tags:
-  #     - wfh
-  #     - log
-  #     - productivity
-  #   title: 'My work-from-home log book #2'
-  #   birthdate: 2018-01-09T21:52:40.000Z
-  #   pubdate: 2018-01-11T05:28:02.177Z
-  #   url: my-work-from-home-log-book-2
-  # - file: 2018-01-12.md
-  #   tags:
-  #     - fabrication
-  #     - AI
-  #     - future
-  #     - human-in-the-loop
-  #   title: On human-in-the-loop intelligence
-  #   birthdate: 2018-01-11T19:41:49.000Z
-  #   pubdate: 2018-01-11T20:38:15.800Z
-  #   url: on-human-in-the-loop-intelligence
-  # - file: 2018-01-16.md
-  #   tags:
-  #     - innovation
-  #     - decision
-  #     - responsibility
-  #     - quotes
-  #   title: On deciding what is the right thing to do for an organization
-  #   birthdate: 2018-01-17T02:19:14.000Z
-  #   pubdate: 2018-01-17T02:32:21.491Z
-  #   url: on-deciding-what-is-the-right-thing-to-do-for-an-organization
-  # - file: 2018-01-24.md
-  #   tags:
-  #     - wfh
-  #     - log
-  #     - productivity
-  #   title: 'My work-from-home log book #3'
-  #   birthdate: 2018-01-25T04:26:38.000Z
-  #   pubdate: 2018-01-25T04:59:44.262Z
-  #   url: my-work-from-home-log-book-3
-  # - file: 2018-02-16.md
-  #   tags:
-  #     - IoT
-  #     - data
-  #     - value
-  #   title: On the value of IoT devices
-  #   birthdate: 2018-02-17T02:02:27.000Z
-  #   pubdate: 2018-02-17T02:07:32.017Z
-  #   url: on-the-value-of-iot-devices
-  # - file: 2018-01-29.md
-  #   tags:
-  #     - data
-  #     - AI
-  #     - UX
-  #     - design
-  #   title: On real data first
-  #   birthdate: 2018-01-30T05:16:26.000Z
-  #   pubdate: 2018-02-17T02:08:24.938Z
-  #   url: on-real-data-first
-  # - file: 2018-02-21.md
-  #   tags:
-  #     - AI
-  #     - human-in-the-loop
-  #     - augmenting
-  #     - humans
-  #   title: On how AI should augment human intelligence
-  #   birthdate: 2018-02-22T03:42:03.000Z
-  #   pubdate: 2018-02-22T03:55:56.919Z
-  #   url: on-how-ai-should-augment-human-intelligence
-  # - file: 2018-02-28.md
-  #   tags:
-  #     - hiring
-  #     - interview
-  #     - job
-  #   title: Take-away from sitting in a hiring meeting
-  #   birthdate: 2018-03-21T04:04:08.000Z
-  #   pubdate: 2018-03-21T04:06:32.381Z
-  #   url: take-away-from-sitting-in-a-hiring-meeting
-  # - file: 2018-03-15.md
-  #   tags:
-  #     - hacking
-  #     - research
-  #     - method
-  #   title: On hacking
-  #   birthdate: 2018-03-18T05:32:33.000Z
-  #   pubdate: 2018-03-18T05:35:50.962Z
-  #   url: on-hacking
-  # - file: 2018-04-02.md
-  #   tags:
-  #     - research
-  #     - life
-  #     - success
-  #   title: Research and succeeding in your life
-  #   birthdate: 2018-04-02T04:39:42.000Z
-  #   pubdate: 2018-04-02T04:41:09.860Z
-  #   url: research-and-succeeding-in-your-life
-  # - file: 2018-05-15.md
-  #   tags:
-  #     - Naval
-  #     - Philosophy
-  #     - Wealth
-  #     - Thoughts
-  #   title: Naval's "How to Get Rich (without getting lucky)"
-  #   birthdate: 2018-05-15T22:57:22.000Z
-  #   pubdate: 2018-05-15T22:59:27.278Z
-  #   url: navals-how-to-get-rich-without-getting-lucky
-  # - file: 2018-06-06.md
-  #   tags:
-  #     - Mixed-initiative
-  #     - Google
-  #     - Photos
-  #     - Automation
-  #   title: Another perspective on mixed-initiative interaction
-  #   birthdate: 2018-06-06T05:00:45.000Z
-  #   pubdate: 2018-06-06T05:50:26.105Z
-  #   url: another-perspective-on-mixed-initiative-interaction
-  # - file: 2018-05-28.md
-  #   tags:
-  #     - Change
-  #     - Bill
-  #     - Gates
-  #     - Prediction
-  #   title: Bill Gates on predicting changes
-  #   birthdate: 2018-05-28T05:47:02.000Z
-  #   pubdate: 2018-05-28T05:50:48.313Z
-  #   url: bill-gates-on-predicting-changes
   - file: 2018-07-07.md
     tags:
       - Literature
@@ -184,8 +22,8 @@ posts:
       - HCI
       - Writing
     title: The 5P Approach of Writing the Introduction of an HCI Paper
-    birthdate: 2024-05-30T08:44:00
-    pubdate: 2024-05-30T08:44:00
+    birthdate: 2024-05-30T08:44:00.000Z
+    pubdate: 2024-05-30T08:44:00.000Z
     url: 5p-intro
   - file: 3q_formative_study.md
     tags:
@@ -193,8 +31,8 @@ posts:
       - Formative Study
       - Human-Centered Design
     title: A Minimal Viable Method for Running a Formative Study
-    birthdate: 2024-06-07T09:10:00
-    pubdate: 2024-06-07T09:10:00
+    birthdate: 2024-06-07T09:10:00.000Z
+    pubdate: 2024-06-07T09:10:00.000Z
     url: 3q-formative-study
   - file: technical-hci.md
     tags:
@@ -202,8 +40,8 @@ posts:
       - Technical HCI
       - Inventive HCI
     title: Technical HCI Research
-    birthdate: 2024-07-10T09:31:00
-    pubdate: 2024-07-10T09:31:00
+    birthdate: 2024-07-10T09:31:00.000Z
+    pubdate: 2024-07-10T09:31:00.000Z
     url: technical-hci
   - file: 2024-07-21.md
     tags:
@@ -211,8 +49,8 @@ posts:
       - Thoughts
       - Memoir
     title: Your Moss Garden
-    birthdate: 2024-07-23T03:22:00
-    pubdate: 2024-07-23T03:22:00
+    birthdate: 2024-07-23T03:22:00.000Z
+    pubdate: 2024-07-23T03:22:00.000Z
     url: moss-garden
   - file: research-ideas.md
     tags:
@@ -220,8 +58,8 @@ posts:
       - Creativity
       - Research Ideas
     title: Coming Up with Research Ideas
-    birthdate: 2024-07-27T07:53:00
-    pubdate: 2024-07-27T07:53:00
+    birthdate: 2024-07-27T07:53:00.000Z
+    pubdate: 2024-07-27T07:53:00.000Z
     url: research-ideas
   - file: template-paper-summary.md
     tags:
@@ -229,8 +67,8 @@ posts:
       - Reading
       - Papers
     title: A Template for Writing Paper Reading Summary
-    birthdate: 2024-11-06T08:41:00
-    pubdate: 2024-11-06T08:41:00
+    birthdate: 2024-11-06T08:41:00.000Z
+    pubdate: 2024-11-06T08:41:00.000Z
     url: template-paper-summary
   - file: project-based-diary-study.md
     tags:
@@ -238,8 +76,8 @@ posts:
       - Empirical Study
       - Human-Centered Design
     title: Project-based Diary Study
-    brithdate: 2025-03-05T09:59:00
-    pubdate: 2025-03-05T09:59:00
+    brithdate: 2025-03-05T09:59:00.000Z
+    pubdate: 2025-03-05T09:59:00.000Z
     url: project-based-diary-study
   - file: manage-paper-writing.md
     tags:
@@ -248,73 +86,15 @@ posts:
       - HCI
       - Time Management
     title: Paper Writing Management
-    birthdate: 2025-04-10T08:17:00
-    pubdate: 2025-04-10T08:17:00
+    birthdate: 2025-04-10T08:17:00.000Z
+    pubdate: 2025-04-10T08:17:00.000Z
     url: paper-writing-management
-  # - file: 2018-07-21.md
-  #   tags:
-  #     - Git
-  #     - Course
-  #     - Research
-  #     - Coding
-  #   title: An Extremely Pragmatic Crash Course on Git
-  #   birthdate: 2018-07-21T22:10:19.000Z
-  #   pubdate: 2018-07-21T22:17:04.246Z
-  #   url: a-pragmatic-need-to-know-crash-course-on-git
-  # # - file: 2018-08-13.md
-  # #   tags:
-  # #     - AI
-  # #     - Algorithm
-  # #     - Human
-  # #   title: Some excellent points from Rachel Thomas
-  # #   birthdate: 2018-08-14T05:56:34.000Z
-  # #   pubdate: 2018-08-14T06:00:39.672Z
-  # #   url: some-excellent-points-from-rachel-thomas
-  # - file: 2021-07-18.md
-  #   tags:
-  #     - random
-  #     - thoughts
-  #     - brain
-  #   title: We are controlled by our brain
-  #   birthdate: 2021-12-15T04:06:08.292Z
-  #   pubdate: 2021-12-15T04:10:41.695Z
-  #   url: we-are-controlled-by-our-brain
-  # - file: 2021-12-21.md
-  #   tags:
-  #     - random
-  #     - work
-  #     - heart
-  #     - Cantonese
-  #   title: Returning to work
-  #   birthdate: 2021-12-21T20:21:03.659Z
-  #   pubdate: 2021-12-21T20:22:08.360Z
-  #   url: returning-to-work
-  # - file: 2022-06-17.md
-  #   tags:
-  #     - deep
-  #     - work
-  #     - break
-  #     - reading
-  #   title: A Week of Mostly Reading & Walking and Towards Big Think and Deep Work
-  #   birthdate: 2022-06-17T19:40:15.633Z
-  #   pubdate: 2022-06-17T22:05:37.614Z
-  #   url: a-week-of-mostly-reading--walking-and-towards-big-think-and-deep-work
-  # - file: 2022-07-14.md
-  #   tags:
-  #     - Deep
-  #     - Work
-  #     - Journal
-  #     - Phone
-  #   title: 'Deep Work Journal #1'
-  #   birthdate: 2022-07-14T08:06:03.389Z
-  #   pubdate: 2022-07-14T08:30:14.630Z
-  #   url: deep-work-journal-1
-  # - file: 2022-08-20.md
-  #   tags:
-  #     - Japan
-  #     - Lessons
-  #     - Travel
-  #   title: What I Learned from a Summer Living in Japan
-  #   birthdate: 2022-08-20T05:37:22.500Z
-  #   pubdate: 2022-08-20T06:30:02.143Z
-  #   url: what-i-learned-from-a-summer-living-in-japan
+  - file: important-problems-in-hci.md
+    tags:
+      - HCI
+      - Research
+      - Scientific Discovery
+    title: Important Problems for HCI
+    birthdate: 2026-01-08T17:05:16.601Z
+    pubdate: 2026-01-08T17:12:37.265Z
+    url: important-problems-for-hci
