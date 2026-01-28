@@ -449,3 +449,15 @@ reviews:
     author: Nick Bostrom
     pubdate: 2026-01-02T15:15:00
     url: 2026-superintelligence
+  - file: 2025-how-to-kids.md
+    cover: how-to-kids.jpg
+    title: How to Talk So Kids Will Listen & Listen So Kids Will Talk
+    author: Adele Faber, Elaine Mazlish
+    pubdate: 2026-01-16T20:13:00
+    url: 2026-how-to-kids
+  - file: 2026-empire-of-ai.md
+    cover: empire-of-ai.jpeg
+    title: Empire of AI
+    author: Karen Hao
+    pubdate: 2026-01-23T08:34:00
+    url: 2026-empire-of-ai
