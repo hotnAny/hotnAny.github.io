@@ -459,5 +459,17 @@ reviews:
     cover: empire-of-ai.jpeg
     title: Empire of AI
     author: Karen Hao
-    pubdate: 2026-01-23T08:34:00
+    pubdate: 2026-01-23T20:34:00
     url: 2026-empire-of-ai
+  - file: 2025-body-by-science.md
+    cover: body-by-science.jpg
+    title: Body by Science
+    author: Doug McGuff, John Little
+    pubdate: 2026-01-30T21:57:00
+    url: 2026-body-by-science
+  - file: 2026-saban.md
+    cover: saban.jpg
+    title: The Leadership Secrets of Nick saban
+    author: John Talty
+    pubdate: 2026-02-06T21:19:00
+    url: 2026-saban
