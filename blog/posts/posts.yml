@@ -98,3 +98,12 @@ posts:
     birthdate: 2026-01-08T17:05:16.601Z
     pubdate: 2026-01-08T17:12:37.265Z
     url: important-problems-for-hci
+  - file: agents-ux-design.md
+    tags:
+      - HCI
+      - UX Design
+      - Agents
+    title: Agents, UX, and UX Design: A Co-evolution
+    birthdate: 2026-03-15T12:36:00.601Z
+    pubdate: 2026-03-15T17:12:37.265Z
+    url: agents-ux-design
