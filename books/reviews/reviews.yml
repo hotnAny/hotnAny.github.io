@@ -469,7 +469,19 @@ reviews:
     url: 2026-body-by-science
   - file: 2026-saban.md
     cover: saban.jpg
-    title: The Leadership Secrets of Nick saban
+    title: The Leadership Secrets of Nick Saban
     author: John Talty
     pubdate: 2026-02-06T21:19:00
     url: 2026-saban
+  - file: 2026-society-of-mind.md
+    cover: society-of-mind.jpg
+    title: The Society of Mind
+    author: Marvin Minsky
+    pubdate: 2026-04-3T21:23:00
+    url: 2026-society-of-mind
+  - file: 2026-pale-blue-dot.md
+    cover: pale-blue-dot.jpg
+    title: Pale Blue Dot
+    author: Carl Sagan
+    pubdate: 2026-04-10T21:23:00
+    url: 2026-pale-blue-dot
