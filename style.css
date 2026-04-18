@@ -39,11 +39,15 @@
   max-width: var(--measure);
   width: 100%;
   box-sizing: border-box;
-  padding: 0.75rem clamp(1rem, 4vw, 1.5rem) 2rem;
+  /* Comfortable side margins + safe area (notched phones) */
+  padding-top: max(0.75rem, env(safe-area-inset-top, 0px));
+  padding-bottom: max(2rem, env(safe-area-inset-bottom, 0px));
+  padding-left: calc(max(1.25rem, 5vw) + env(safe-area-inset-left, 0px));
+  padding-right: calc(max(1.25rem, 5vw) + env(safe-area-inset-right, 0px));
   font-size: 1.0625rem;
-  text-align: center;
+  text-align: left;
   font-family: var(--font-serif);
-  line-height: 1.65;
+  line-height: 1.72;
   color: var(--text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -352,9 +356,19 @@ p.statement {
 }
 
 .bodymobile .site-nav {
-  justify-content: center;
-  margin-left: auto;
-  margin-right: auto;
+  justify-content: flex-start;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.bodymobile .hero-top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.bodymobile .hero-top > a {
+  display: block;
 }
 
 .bodymobile .hero-top .imgmobile {
@@ -367,30 +381,34 @@ p.statement {
 }
 
 .bodymobile .hero-meta {
-  margin-top: 0.5rem;
+  align-self: stretch;
+  width: 100%;
+  margin-top: 0.65rem;
+  text-align: left;
 }
 
 .bodymobile #main-content h1 {
-  font-size: 1.45rem;
+  font-size: 1.42rem;
   text-align: left;
 }
 
 .bodymobile #main-content h2,
 .bodymobile .page-main h2 {
-  font-size: 1.2rem;
+  font-size: 1.18rem;
   margin-top: 1.85rem;
   padding-top: 0.75rem;
+  text-align: left;
 }
 
 .bodymobile .site-footer {
-  margin-left: auto;
-  margin-right: auto;
-  text-align: center;
+  margin-left: 0;
+  margin-right: 0;
+  text-align: left;
 }
 
 .bodymobile .footer-links,
 .bodymobile .footer-meta {
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 div.bibyear {
@@ -437,8 +455,12 @@ div.bibauthors a:hover {
 /* --- Responsive (viewport width): matches .bodymobile without User-Agent sniffing --- */
 @media (max-width: 42rem) {
   .bodydesktop {
-    text-align: center;
-    padding: 0.75rem clamp(1rem, 4vw, 1.5rem) 2rem;
+    text-align: left;
+    line-height: 1.72;
+    padding-top: max(0.75rem, env(safe-area-inset-top, 0px));
+    padding-bottom: max(2rem, env(safe-area-inset-bottom, 0px));
+    padding-left: calc(max(1.25rem, 5vw) + env(safe-area-inset-left, 0px));
+    padding-right: calc(max(1.25rem, 5vw) + env(safe-area-inset-right, 0px));
   }
 
   .bodydesktop #main-content p,
@@ -475,9 +497,19 @@ div.bibauthors a:hover {
   }
 
   .bodydesktop .site-nav {
-    justify-content: center;
-    margin-left: auto;
-    margin-right: auto;
+    justify-content: flex-start;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .bodydesktop .hero-top {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .bodydesktop .hero-top > a {
+    display: block;
   }
 
   .bodydesktop .hero-top .imgdesktop {
@@ -490,34 +522,243 @@ div.bibauthors a:hover {
   }
 
   .bodydesktop .hero-meta {
-    margin-top: 0.5rem;
+    align-self: stretch;
+    width: 100%;
+    margin-top: 0.65rem;
+    text-align: left;
   }
 
   .bodydesktop #main-content h1 {
-    font-size: 1.45rem;
+    font-size: 1.42rem;
     text-align: left;
   }
 
   .bodydesktop #main-content h2,
   .bodydesktop .page-main h2 {
-    font-size: 1.2rem;
+    font-size: 1.18rem;
     margin-top: 1.85rem;
     padding-top: 0.75rem;
+    text-align: left;
   }
 
   .bodydesktop .site-footer {
-    margin-left: auto;
-    margin-right: auto;
-    text-align: center;
+    margin-left: 0;
+    margin-right: 0;
+    text-align: left;
   }
 
   .bodydesktop .footer-links,
   .bodydesktop .footer-meta {
-    justify-content: center;
+    justify-content: flex-start;
   }
 
   /* Inner pages: keep article column left-aligned (body may be centered for chrome) */
   .bodydesktop.inner-page #main-content {
     text-align: left;
   }
+}
+
+/*
+ * Homepage only — mobile layout (viewport or UA “mobile”): balanced padding + rhythm.
+ * Desktop width + .page-home unchanged.
+ */
+@media (max-width: 42rem) {
+  body.page-home {
+    font-size: 0.9375rem;
+    line-height: 1.66;
+    padding-left: calc(max(1.45rem, 6vw) + env(safe-area-inset-left, 0px));
+    padding-right: calc(max(1.45rem, 6vw) + env(safe-area-inset-right, 0px));
+  }
+
+  body.page-home .site-header {
+    margin-bottom: 0.85rem;
+  }
+
+  /* Hero: slightly smaller photo so identity column breathes; more gap before headline */
+  body.page-home .hero-top {
+    display: grid;
+    grid-template-columns: 4.25rem minmax(0, 1fr);
+    align-items: start;
+    column-gap: 0.85rem;
+    margin-bottom: 0.95rem;
+  }
+
+  body.page-home .hero-top > a {
+    display: block;
+    align-self: start;
+  }
+
+  body.page-home .hero-top .imgdesktop,
+  body.page-home .hero-top .imgmobile {
+    float: none;
+    width: 4.25rem;
+    max-width: 4.25rem;
+    margin: 0;
+  }
+
+  body.page-home .hero-meta {
+    margin-top: 0;
+    min-width: 0;
+  }
+
+  body.page-home .profile-name {
+    font-size: 1.0625rem;
+    line-height: 1.28;
+    margin: 0 0 0.35rem;
+  }
+
+  body.page-home .affiliation {
+    font-size: 0.8125rem;
+    line-height: 1.52;
+  }
+
+  body.page-home .biotext > h1 {
+    margin-top: 0.65rem;
+    margin-bottom: 0.55rem;
+  }
+
+  body.page-home #main-content h1 {
+    font-size: clamp(1.1rem, 0.42rem + 2.6vw, 1.26rem);
+    font-weight: 700;
+    line-height: 1.22;
+    letter-spacing: -0.02em;
+    max-width: min(100%, 34ch);
+    text-wrap: balance;
+  }
+
+  body.page-home #main-content h2 {
+    font-size: 1.04rem;
+    line-height: 1.28;
+    margin: 1.35rem 0 0.55rem;
+    padding-top: 0.65rem;
+    border-top: 1px solid var(--rule-soft);
+  }
+
+  body.page-home #main-content .biotext > p {
+    margin: 0.58rem 0;
+    max-width: min(100%, 42ch);
+  }
+
+  body.page-home #main-content .biotext > p.hero-hook {
+    margin-top: 0.45rem;
+  }
+
+  body.page-home .section-lead {
+    margin-bottom: 0.55rem;
+  }
+
+  body.page-home .section-support {
+    margin-top: 1.55rem;
+    padding-top: 0.85rem;
+  }
+
+  body.page-home .funding-note {
+    font-size: 0.8125rem;
+    line-height: 1.58;
+    max-width: min(100%, 44ch);
+  }
+
+  body.page-home .site-footer {
+    margin-top: 2.5rem;
+  }
+}
+
+/* Same as @media block when UA switches to .bodymobile (e.g. landscape width > 42rem) */
+.bodymobile.page-home {
+  font-size: 0.9375rem;
+  line-height: 1.66;
+  padding-left: calc(max(1.45rem, 6vw) + env(safe-area-inset-left, 0px));
+  padding-right: calc(max(1.45rem, 6vw) + env(safe-area-inset-right, 0px));
+}
+
+.bodymobile.page-home .site-header {
+  margin-bottom: 0.85rem;
+}
+
+.bodymobile.page-home .hero-top {
+  display: grid;
+  grid-template-columns: 4.25rem minmax(0, 1fr);
+  align-items: start;
+  column-gap: 0.85rem;
+  margin-bottom: 0.95rem;
+}
+
+.bodymobile.page-home .hero-top > a {
+  display: block;
+  align-self: start;
+}
+
+.bodymobile.page-home .hero-top .imgdesktop,
+.bodymobile.page-home .hero-top .imgmobile {
+  float: none;
+  width: 4.25rem;
+  max-width: 4.25rem;
+  margin: 0;
+}
+
+.bodymobile.page-home .hero-meta {
+  margin-top: 0;
+  min-width: 0;
+}
+
+.bodymobile.page-home .profile-name {
+  font-size: 1.0625rem;
+  line-height: 1.28;
+  margin: 0 0 0.35rem;
+}
+
+.bodymobile.page-home .affiliation {
+  font-size: 0.8125rem;
+  line-height: 1.52;
+}
+
+.bodymobile.page-home .biotext > h1 {
+  margin-top: 0.65rem;
+  margin-bottom: 0.55rem;
+}
+
+.bodymobile.page-home #main-content h1 {
+  font-size: clamp(1.1rem, 0.42rem + 2.6vw, 1.26rem);
+  font-weight: 700;
+  line-height: 1.22;
+  letter-spacing: -0.02em;
+  max-width: min(100%, 34ch);
+  text-wrap: balance;
+}
+
+.bodymobile.page-home #main-content h2,
+.bodymobile.page-home .page-main h2 {
+  font-size: 1.04rem;
+  line-height: 1.28;
+  margin: 1.35rem 0 0.55rem;
+  padding-top: 0.65rem;
+  border-top: 1px solid var(--rule-soft);
+}
+
+.bodymobile.page-home #main-content .biotext > p {
+  margin: 0.58rem 0;
+  max-width: min(100%, 42ch);
+}
+
+.bodymobile.page-home #main-content .biotext > p.hero-hook {
+  margin-top: 0.45rem;
+}
+
+.bodymobile.page-home .section-lead {
+  margin-bottom: 0.55rem;
+}
+
+.bodymobile.page-home .section-support {
+  margin-top: 1.55rem;
+  padding-top: 0.85rem;
+}
+
+.bodymobile.page-home .funding-note {
+  font-size: 0.8125rem;
+  line-height: 1.58;
+  max-width: min(100%, 44ch);
+}
+
+.bodymobile.page-home .site-footer {
+  margin-top: 2.5rem;
 }
