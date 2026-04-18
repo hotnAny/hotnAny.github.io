@@ -65,8 +65,13 @@ function compileHomeMd(src) {
       const title = line.slice(3).trim();
       if (title === "Research") {
         current = "research";
-        const html = marked.parse(line + "\n", { async: false }).trim();
-        sections.research.push(html.replace("<h2>", '<h2 id="home-heading-research">'));
+        let html = marked.parse(line + "\n", { async: false }).trim();
+        html = html.replace("<h2>", '<h2 id="home-heading-research">');
+        html = html.replace(
+          "</h2>",
+          '<span class="visually-hidden">: HCI and human–AI interaction</span></h2>'
+        );
+        sections.research.push(html);
         i++;
         continue;
       }
@@ -119,7 +124,7 @@ function compileHomeMd(src) {
         bodyLines.push(lines[i]);
         i++;
       }
-      const inner = parseInline(bodyLines.join("\n"));
+      const inner = relExternal(parseInline(bodyLines.join("\n")));
       sections[current].push(`<p class="${classAttr}">${inner}</p>`);
       continue;
     }
