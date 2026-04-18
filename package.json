@@ -1,0 +1,10 @@
+{
+  "private": true,
+  "scripts": {
+    "build:index": "node scripts/build-index.mjs",
+    "watch:index": "node scripts/watch-index.mjs"
+  },
+  "devDependencies": {
+    "marked": "^15.0.0"
+  }
+}

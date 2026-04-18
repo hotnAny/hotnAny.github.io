@@ -1,0 +1,48 @@
+name: Verify homepage build
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - "content/**"
+      - "scripts/build-index.mjs"
+      - "package.json"
+      - "package-lock.json"
+      - "index.html"
+      - ".github/workflows/verify-homepage-build.yml"
+  pull_request:
+    branches: [main, master]
+    paths:
+      - "content/**"
+      - "scripts/build-index.mjs"
+      - "package.json"
+      - "package-lock.json"
+      - "index.html"
+      - ".github/workflows/verify-homepage-build.yml"
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Regenerate index.html from content/index.md
+        run: npm run build:index
+
+      - name: Check that index.html matches the build output
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "::error title=Out of sync::content/index.md was edited without committing the result of npm run build:index. Run it locally and commit the updated index.html."
+            git status
+            git diff
+            exit 1
+          fi
+          echo "Generated index.html matches committed files."
