@@ -1,6 +1,7 @@
 <!--
-  Syntax: # / ## headings; @p [extra-classes] then paragraph (**bold**, [text](url));
-  @section-support … @end for funding (markdown links); then: npm run build:index
+  Syntax: # / ## headings (Research, Collaborate); @p [extra-classes] then paragraph;
+  @section-support … @end for funding; output splits into overview / research / collaborate in index.html.
+  Then: npm run build:index
 -->
 
 # Symbiotic Computing to Augment Expert Workflows

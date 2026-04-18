@@ -1,5 +1,5 @@
 /**
- * Watches content/index.md (and the build script) and runs npm run build:index on change.
+ * Watches content/index.md (and scripts/build-index.mjs) and runs npm run build:index on change.
  * No git involved — keep this running while you edit locally.
  *
  *   npm run watch:index
