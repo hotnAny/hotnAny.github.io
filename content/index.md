@@ -9,10 +9,10 @@
   Computing that merely automates expert work risks bypassing the human thinking that makes it valuable.
 
 @p hero-lead
-I study, design, and build interactive systems that embed computing **symbiotically** into **expert workflows** to augment human creativity and discovery.
+I study, design, and build interactive systems that embed computing **symbiotically** into expert workflows to augment human creativity and discovery.
 
 @p
-These systems support how experts **reframe problems**, **form hypotheses**, and **explore alternatives**—rather than replacing those processes.
+These systems support how experts reframe problems, form hypotheses, and explore alternatives—rather than replacing those processes.
 
 ## Research
 
@@ -26,7 +26,7 @@ Currently my work focuses on two domains: creativity and scientific discovery.
 **Discovery.** Systems for navigating hypothesis spaces and coordinating validation—supporting how scientists generate, test, and refine ideas across digital and physical workflows.
 
 @p
-Methodology: I **study** real expert workflows, **build** systems grounded in them, and **evaluate** how they change process and outcome.
+Methodology: I study real expert workflows, build systems grounded in them, and evaluate how they change process and outcome.
 
 ## Collaborate
 
