@@ -47,9 +47,12 @@
   text-rendering: optimizeLegibility;
 }
 
-/* Homepage bottom inset (desktop / narrow viewports). */
+/*
+ * Homepage on .bodydesktop: keep a real bottom band on large screens (env(safe-area) is usually 0,
+ * so calc(env * 0.5) alone wiped the 1.25rem from .bodydesktop). Phones use .bodymobile.page-home instead.
+ */
 .bodydesktop.page-home {
-  padding-bottom: calc(env(safe-area-inset-bottom, 0px) * 0.5);
+  padding-bottom: max(1.25rem, calc(env(safe-area-inset-bottom, 0px) * 0.5));
 }
 
 .bodymobile {
@@ -364,7 +367,7 @@ p.statement {
   font-size: 0.9rem;
   line-height: 1.55;
   color: var(--text-muted);
-  margin-bottom: 0;
+  margin-bottom: 1.75rem;
 }
 
 .section-lead {
