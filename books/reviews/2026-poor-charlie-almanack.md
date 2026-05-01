@@ -1,6 +1,6 @@
 This book is a collection of speeches by Charlie Munger delivered on various occasions, such as college commencements and philanthropic gatherings.
 
-One of the key takeaways is the use of checklists. People might assume that Munger and his partner-in-crime Warren Buffett rely on some special, complicated scheme to achieve their success. In reality, what Munger practices is maintaining a checklist of “rules of thumb.” For example, when assessing whether a company is worth investing in, he goes through this checklist, which I imagine systematically (albeit empirically) identifies reasons to invest or not.
+One key takeaway is the use of checklists. People might assume that Munger and his partner-in-crime Warren Buffett rely on some special, complicated scheme to achieve their success. In reality, what Munger practices is maintaining a checklist of “rules of thumb.” For example, when assessing whether a company is worth investing in, he goes through this checklist, which I imagine systematically (albeit empirically) identifies reasons to invest or not.
 
 This checklist strategy is quite compelling. It suggests that life does not require a complex model, but rather a curated set of simple, atomic models that consistently work.
 
