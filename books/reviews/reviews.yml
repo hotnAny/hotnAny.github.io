@@ -485,3 +485,9 @@ reviews:
     author: Carl Sagan
     pubdate: 2026-04-10T21:23:00
     url: 2026-pale-blue-dot
+  - file: 2026-poor-charlie-almanack.md
+    cover: poor-charlie-almanack.jpg
+    title: Poor Charlie's Almanack
+    author: Charlie Munger, Peter D. Kaufman
+    pubdate: 2026-04-30T21:23:00
+    url: 2026-poor-charlie-almanack
