@@ -491,3 +491,9 @@ reviews:
     author: Charlie Munger, Peter D. Kaufman
     pubdate: 2026-04-30T21:23:00
     url: 2026-poor-charlie-almanack
+  - file: 2026-theory-and-reality.md
+    cover: theory-and-reality.jpg
+    title: Theory and Reality
+    author: Peter Godfrey-Smith
+    pubdate: 2026-06-01T21:26:00
+    url: 2026-theory-and-reality
