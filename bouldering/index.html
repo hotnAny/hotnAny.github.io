@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bouldering Analysis</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  :root { --bg:#0f1117; --card:#191c24; --ink:#e7e9ee; --muted:#9aa1ae; --accent:#5b9dff; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family:-apple-system,Segoe UI,Roboto,sans-serif; background:var(--bg); color:var(--ink); }
+  header { padding:28px 32px 8px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; }
+  h1 { margin:0; font-size:22px; }
+  .sub { color:var(--muted); font-size:13px; margin-top:4px; }
+  .picker { display:flex; align-items:center; gap:8px; font-size:13px; color:var(--muted); }
+  select { background:var(--card); color:var(--ink); border:1px solid rgba(255,255,255,0.12);
+           border-radius:8px; padding:8px 12px; font-size:14px; }
+  .kpis { display:flex; flex-wrap:wrap; gap:14px; padding:16px 32px; }
+  .kpi { background:var(--card); border-radius:12px; padding:14px 18px; min-width:130px; }
+  .kpi .v { font-size:26px; font-weight:700; }
+  .kpi .l { color:var(--muted); font-size:12px; margin-top:2px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(380px,1fr)); gap:18px; padding:16px 32px 40px; }
+  .card { background:var(--card); border-radius:14px; padding:16px 18px; }
+  .card h3 { margin:0 0 4px; font-size:15px; }
+  .card .note { color:var(--muted); font-size:12px; margin:0 0 10px; }
+  canvas { max-height:300px; }
+  footer { color:var(--muted); font-size:12px; padding:0 32px 32px; }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>🧗 Bouldering Analysis</h1>
+    <div class="sub" id="range"></div>
+  </div>
+  <label class="picker">Window <select id="window"></select></label>
+</header>
+<div class="kpis" id="kpis"></div>
+<div class="grid" id="grid"></div>
+<footer>Charts are interactive — hover for values, click legend entries to toggle series. Switch the window at the top to recompute everything.</footer>
+
+<script>
+const DOC = {"order": ["3 months", "6 months", "12 months", "All time"], "default": "6 months", "windows": {"3 months": {"kpis": {"window": "3 months", "range": "2026-03-29 \u2192 2026-06-28", "sessions": 24, "problems_logged": 540, "overall_send_rate": 15.2, "total_sends": 82, "highest_send": "V7", "avg_session_min": 69.0}, "trends": {"months": ["26-03", "26-04", "26-05", "26-06"], "sessions_per_month": [1, 6, 9, 8], "attempts_per_session": [25, 20.83, 21.56, 24.5], "minutes_per_session": [68.12, 67.85, 68.69, 71.3], "target_sends_per_session": [3, 1.83, 2.44, 3.38], "attempts_per_target_send": [2.0, 1.56, 2.63, 2.65], "send_quality": [6.25, 6.25, 6.26, 6.5], "send_rate": [16.0, 12.0, 14.9, 17.3]}, "pyramid": {"grades": ["V4", "V5", "V6", "V7", "V8"], "attempts": [41, 88, 224, 173, 14], "sends": [19, 30, 29, 4, 0], "flash_rate": [60.0, 43.2, 22.2, 4.5, 0.0]}, "problem": {"types": ["Vertical", "Roof", "Overhang", "Ar\u00eate", "Slab"], "rate": [19.4, 13.3, 15.3, 9.1, 15.9], "n": [155, 128, 111, 77, 69]}, "holds": {"types": ["Side-pull", "Crimp", "Sloper", "Jug", "Edge", "Undercling", "Pinch", "Pocket", "Horn"], "n": [516, 255, 239, 158, 95, 93, 72, 28, 1], "rate": [14.9, 13.7, 18.0, 22.8, 14.7, 20.4, 29.2, 17.9, 100.0]}, "issues": {"labels": ["Beta to the next move", "Suboptimal sequence", "Cannot grab on to the hold", "Lack familiarity with the move", "Too tired", "Footwork issue", "Wrong body position", "Dry fire", "Too nervous", "Dab"], "counts": [381, 82, 76, 75, 53, 31, 9, 7, 5, 1]}, "technique": [{"name": "Breathing", "counts": [15, 138, 387], "send_rate": [53.3, 25.4, 10.1]}, {"name": "Body close to wall", "counts": [81, 278, 181], "send_rate": [35.8, 11.5, 11.6]}, {"name": "Shifting weight", "counts": [160, 218, 162], "send_rate": [31.2, 11.0, 4.9]}, {"name": "Silent feet", "counts": [235, 284, 21], "send_rate": [28.5, 5.3, 0.0]}, {"name": "Body awareness", "counts": [118, 368, 54], "send_rate": [36.4, 10.6, 0.0]}]}, "6 months": {"kpis": {"window": "6 months", "range": "2025-12-28 \u2192 2026-06-28", "sessions": 46, "problems_logged": 1138, "overall_send_rate": 14.8, "total_sends": 168, "highest_send": "V8", "avg_session_min": 76.0}, "trends": {"months": ["25-12", "26-01", "26-02", "26-03", "26-04", "26-05", "26-06"], "sessions_per_month": [1, 7, 7, 8, 6, 9, 8], "attempts_per_session": [18, 26.29, 28.43, 27.75, 20.83, 21.56, 24.5], "minutes_per_session": [52.45, 86.16, 86.13, 81.19, 67.85, 68.69, 71.3], "target_sends_per_session": [2, 3.43, 2.57, 3.12, 1.83, 2.44, 3.38], "attempts_per_target_send": [2.0, 3.14, 3.73, 2.81, 1.56, 2.63, 2.65], "send_quality": [7.0, 6.27, 6.65, 6.23, 6.25, 6.26, 6.5], "send_rate": [11.1, 17.4, 12.1, 14.4, 12.0, 14.9, 17.3]}, "pyramid": {"grades": ["V4", "V5", "V6", "V7", "V8"], "attempts": [78, 208, 445, 339, 68], "sends": [39, 63, 55, 10, 1], "flash_rate": [64.6, 39.2, 20.0, 3.5, 4.2]}, "problem": {"types": ["Vertical", "Overhang", "Roof", "Ar\u00eate", "Slab"], "rate": [17.1, 16.7, 13.2, 9.9, 13.9], "n": [357, 252, 220, 172, 137]}, "holds": {"types": ["Side-pull", "Crimp", "Sloper", "Jug", "Pinch", "Undercling", "Edge", "Pocket", "Horn"], "n": [1095, 546, 497, 289, 207, 184, 171, 49, 1], "rate": [14.8, 13.9, 16.1, 22.8, 18.4, 16.3, 18.1, 18.4, 100.0]}, "issues": {"labels": ["Beta to the next move", "Cannot grab on to the hold", "Suboptimal sequence", "Lack familiarity with the move", "Too tired", "Footwork issue", "Dry fire", "Wrong body position", "Too nervous", "Finished second half"], "counts": [838, 153, 152, 120, 80, 62, 12, 11, 5, 1]}, "technique": [{"name": "Breathing", "counts": [29, 271, 838], "send_rate": [51.7, 30.3, 8.5]}, {"name": "Body close to wall", "counts": [150, 572, 416], "send_rate": [33.3, 13.3, 10.1]}, {"name": "Shifting weight", "counts": [342, 436, 360], "send_rate": [30.7, 10.1, 5.3]}, {"name": "Silent feet", "counts": [445, 628, 65], "send_rate": [29.9, 5.6, 0.0]}, {"name": "Body awareness", "counts": [196, 759, 183], "send_rate": [33.7, 12.4, 4.4]}]}, "12 months": {"kpis": {"window": "12 months", "range": "2025-06-28 \u2192 2026-06-28", "sessions": 88, "problems_logged": 1894, "overall_send_rate": 14.8, "total_sends": 281, "highest_send": "V8", "avg_session_min": 70.0}, "trends": {"months": ["25-07", "25-08", "25-09", "25-10", "25-11", "25-12", "26-01", "26-02", "26-03", "26-04", "26-05", "26-06"], "sessions_per_month": [9, 6, 8, 3, 8, 9, 7, 7, 8, 6, 9, 8], "attempts_per_session": [25.33, 26.67, 19.5, 17.33, 10, 10.89, 26.29, 28.43, 27.75, 20.83, 21.56, 24.5], "minutes_per_session": [77.35, 75.85, 48.2, 55.77, 64.4, 52.11, 86.16, 86.13, 81.19, 67.85, 68.69, 71.3], "target_sends_per_session": [2.78, 2.5, 1.12, 2, 1.38, 1.56, 3.43, 2.57, 3.12, 1.83, 2.44, 3.38], "attempts_per_target_send": [2.77, 2.72, 3.71, 4.5, 2.83, 2.04, 3.14, 3.73, 2.81, 1.56, 2.63, 2.65], "send_quality": [6.23, 6.44, 6.1, 6.11, 5.93, 5.7, 6.27, 6.65, 6.23, 6.25, 6.26, 6.5], "send_rate": [14.9, 13.1, 12.2, 15.4, 20.0, 17.3, 17.4, 12.1, 14.4, 12.0, 14.9, 17.3]}, "pyramid": {"grades": ["V4", "V5", "V6", "V7", "V8"], "attempts": [181, 381, 659, 536, 137], "sends": [74, 98, 84, 22, 3], "flash_rate": [59.6, 36.0, 18.8, 4.4, 2.5]}, "problem": {"types": ["Vertical", "Overhang", "Roof", "Ar\u00eate", "Slab"], "rate": [17.4, 15.6, 12.8, 12.1, 12.8], "n": [634, 418, 328, 272, 242]}, "holds": {"types": ["Side-pull", "Crimp", "Sloper", "Jug", "Pinch", "Edge", "Undercling", "Pocket", "Horn"], "n": [1811, 897, 844, 506, 384, 361, 288, 99, 9], "rate": [15.0, 14.0, 15.3, 21.5, 17.4, 16.6, 16.0, 17.2, 11.1]}, "issues": {"labels": ["Beta to the next move", "Cannot grab on to the hold", "Suboptimal sequence", "Lack familiarity with the move", "Too tired", "Footwork issue", "Wrong body position", "Dry fire", "Too nervous", "Finished second half"], "counts": [1407, 268, 264, 189, 117, 97, 23, 22, 14, 2]}, "technique": [{"name": "Breathing", "counts": [43, 373, 1478], "send_rate": [46.5, 31.4, 9.7]}, {"name": "Body close to wall", "counts": [266, 796, 832], "send_rate": [31.6, 13.9, 10.3]}, {"name": "Shifting weight", "counts": [571, 642, 681], "send_rate": [29.1, 11.5, 6.0]}, {"name": "Silent feet", "counts": [766, 999, 129], "send_rate": [28.7, 6.1, 0.0]}, {"name": "Body awareness", "counts": [296, 1151, 447], "send_rate": [35.8, 13.2, 5.1]}]}, "All time": {"kpis": {"window": "All time", "range": "2021-11-04 \u2192 2026-06-28", "sessions": 406, "problems_logged": 9802, "overall_send_rate": 14.6, "total_sends": 1433, "highest_send": "V8", "avg_session_min": 82.0}, "trends": {"months": ["21-11", "21-12", "22-01", "22-02", "22-03", "22-04", "22-05", "22-06", "22-07", "22-08", "22-09", "22-10", "22-11", "22-12", "23-01", "23-02", "23-03", "23-04", "23-05", "23-06", "23-07", "23-08", "23-09", "23-10", "23-11", "23-12", "24-01", "24-02", "24-03", "24-04", "24-05", "24-06", "24-07", "24-08", "24-09", "24-10", "24-11", "24-12", "25-01", "25-02", "25-03", "25-04", "25-05", "25-06", "25-07", "25-08", "25-09", "25-10", "25-11", "25-12", "26-01", "26-02", "26-03", "26-04", "26-05", "26-06"], "sessions_per_month": [4, 6, 6, 8, 7, 9, 8, 6, 10, 14, 5, 7, 8, 5, 7, 6, 6, 6, 6, 7, 6, 5, 8, 8, 5, 8, 9, 7, 9, 8, 7, 9, 5, 8, 6, 8, 8, 9, 9, 6, 8, 7, 7, 7, 9, 6, 8, 3, 8, 9, 7, 7, 8, 6, 9, 8], "attempts_per_session": [21.75, 23.83, 21.5, 18.5, 22.43, 23.33, 23.5, 21.5, 21.3, 21.79, 27, 22.86, 21.62, 21.2, 22.57, 25, 24.83, 28.83, 25.67, 30.29, 22.33, 31, 21.62, 24.38, 27.2, 24.5, 26.22, 25.86, 28.67, 26.12, 26.86, 29.89, 31.8, 25.88, 26.33, 24.88, 28.5, 25, 26.89, 26.67, 24.75, 23.57, 25.86, 25.29, 25.33, 26.67, 19.5, 17.33, 10, 10.89, 26.29, 28.43, 27.75, 20.83, 21.56, 24.5], "minutes_per_session": [113.22, 109.36, 101.06, 82.07, 108.56, 101.62, 92.92, 90.87, 76.51, 74.22, 84.9, 79.69, 77.56, 76.61, 73.9, 76.83, 94.59, 97.59, 85.42, 106.95, 84.65, 89.26, 75.91, 79.94, 97.66, 80.87, 76.76, 78.53, 85.6, 83.98, 82.93, 101.56, 96.81, 82.27, 77.67, 79.47, 84.92, 88.08, 82.31, 84.84, 78.46, 74.2, 73.03, 78.89, 77.35, 75.85, 48.2, 55.77, 64.4, 52.11, 86.16, 86.13, 81.19, 67.85, 68.69, 71.3], "target_sends_per_session": [0.75, 1.33, 1.67, 2, 1.86, 1.78, 2.12, 1.83, 1.5, 1.07, 1.6, 1.43, 1.12, 2, 1.57, 2.5, 2, 2.5, 3, 2.71, 2.83, 2.2, 3.12, 2.5, 1.8, 2.25, 2.11, 2.14, 4.11, 3.25, 3.57, 2.78, 3.2, 4.5, 4, 3.25, 2.88, 3.78, 3.33, 3.17, 3.12, 2.14, 3.57, 4, 2.78, 2.5, 1.12, 2, 1.38, 1.56, 3.43, 2.57, 3.12, 1.83, 2.44, 3.38], "attempts_per_target_send": [3.75, 4.8, 2.77, 3.28, 4.08, 3.79, 4.6, 1.65, 3.44, 3.5, 3.12, 3.21, 2.9, 2.7, 3.24, 2.85, 1.83, 3.74, 3.28, 3.68, 3.43, 3.17, 2.51, 3.54, 2.7, 3.43, 2.15, 1.92, 2.66, 2.11, 3.0, 3.78, 3.6, 2.11, 2.63, 2.54, 3.01, 2.56, 2.97, 2.67, 2.76, 2.1, 3.71, 2.42, 2.77, 2.72, 3.71, 4.5, 2.83, 2.04, 3.14, 3.73, 2.81, 1.56, 2.63, 2.65], "send_quality": [5.71, 5.6, 5.83, 4.96, 5.62, 5.41, 5.38, 5.0, 5.66, 5.64, 5.63, 6.01, 5.59, 5.6, 5.83, 5.76, 6.03, 5.67, 5.61, 6.02, 5.96, 6.09, 6.44, 6.05, 6.35, 6.29, 6.11, 6.02, 6.18, 6.26, 6.16, 6.25, 5.94, 6.42, 6.17, 6.58, 6.48, 6.28, 6.41, 6.15, 6.34, 5.96, 6.37, 6.31, 6.23, 6.44, 6.1, 6.11, 5.93, 5.7, 6.27, 6.65, 6.23, 6.25, 6.26, 6.5], "send_rate": [19.5, 14.0, 14.0, 16.2, 12.1, 13.3, 14.9, 13.2, 11.7, 8.5, 8.9, 11.2, 10.4, 15.1, 13.3, 13.3, 13.4, 12.1, 15.6, 13.7, 16.4, 11.6, 19.1, 14.9, 10.3, 13.8, 12.3, 12.7, 18.6, 16.3, 17.0, 13.0, 12.6, 22.2, 18.4, 17.1, 13.6, 18.7, 15.7, 15.6, 17.7, 13.3, 16.6, 19.8, 14.9, 13.1, 12.2, 15.4, 20.0, 17.3, 17.4, 12.1, 14.4, 12.0, 14.9, 17.3]}, "pyramid": {"grades": ["V4", "V5", "V6", "V7", "V8"], "attempts": [1066, 3065, 3319, 1918, 434], "sends": [427, 572, 335, 94, 5], "flash_rate": [61.0, 29.5, 12.9, 4.3, 0.9]}, "problem": {"types": ["Vertical", "Roof", "Overhang", "Ar\u00eate", "Slab", "Laid back", "Vertical side pull", "Technical verical", "Technical vertical", "Vertical balanced"], "rate": [15.6, 12.2, 16.2, 14.1, 14.0, 33.3, 0.0, 0.0, 0.0, 0.0], "n": [3554, 1923, 1782, 1296, 1239, 3, 2, 1, 1, 1]}, "holds": {"types": ["Side-pull", "Sloper", "Crimp", "Jug", "Pinch", "Edge", "Undercling", "Pocket", "Horn", "Flake"], "n": [6561, 4600, 4513, 2935, 2153, 1940, 1817, 441, 20, 8], "rate": [16.0, 14.5, 15.1, 20.1, 15.7, 14.4, 14.1, 17.5, 5.0, 25.0]}, "issues": {"labels": ["Beta to the next move", "Suboptimal sequence", "Cannot grab on to the hold", "Lack familiarity with the move", "Too tired", "Footwork issue", "Wrong body position", "Dry fire", "Too nervous", "Finished second half"], "counts": [6214, 2108, 1782, 1406, 918, 795, 283, 131, 118, 25]}, "technique": [{"name": "Breathing", "counts": [253, 1478, 7984], "send_rate": [39.1, 32.0, 10.6]}, {"name": "Body close to wall", "counts": [1096, 3542, 5077], "send_rate": [27.3, 17.0, 10.1]}, {"name": "Shifting weight", "counts": [3108, 2660, 3922], "send_rate": [25.6, 14.1, 6.1]}, {"name": "Silent feet", "counts": [2739, 5054, 1269], "send_rate": [32.4, 7.9, 3.2]}, {"name": "Body awareness", "counts": [1069, 4212, 3781], "send_rate": [38.3, 16.1, 6.3]}]}}};
+Chart.defaults.color = "#9aa1ae";
+Chart.defaults.borderColor = "rgba(255,255,255,0.06)";
+const PALETTE = ["#5b9dff","#57d9a3","#f2c94c","#eb5757","#bb6bd9","#f2994a","#56ccf2","#a0aec0"];
+
+let charts = [];
+const grid = document.getElementById("grid");
+
+function card(title, note) {
+  const el = document.createElement("div");
+  el.className = "card";
+  el.innerHTML = `<h3>${title}</h3><p class="note">${note}</p><canvas></canvas>`;
+  grid.appendChild(el);
+  return el.querySelector("canvas");
+}
+function chart(cfg) { charts.push(new Chart(card(cfg._t, cfg._n), cfg)); }
+
+function render(data) {
+  charts.forEach(c => c.destroy());
+  charts = [];
+  grid.innerHTML = "";
+
+  const k = data.kpis;
+  document.getElementById("range").textContent = "Window: " + k.range;
+  const kpiDefs = [
+    [k.sessions, "sessions"],
+    [k.problems_logged, "problems logged"],
+    [k.overall_send_rate + "%", "overall send rate"],
+    [k.total_sends, "total sends"],
+    [k.highest_send, "highest send"],
+    [k.avg_session_min + " min", "avg session length"],
+  ];
+  document.getElementById("kpis").innerHTML = kpiDefs.map(
+    ([v, l]) => `<div class="kpi"><div class="v">${v}</div><div class="l">${l}</div></div>`
+  ).join("");
+
+  const t = data.trends;
+  const line = (title, note, series, color) => chart({
+    _t: title, _n: note, type: "line",
+    data: { labels: t.months, datasets: [{ data: series, borderColor: color,
+      backgroundColor: "transparent", tension: 0.3, spanGaps: true, pointRadius: 3 }] },
+    options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+  });
+
+  line("Sessions per month", "Training frequency", t.sessions_per_month, PALETTE[0]);
+  line("Send rate", "% of logged problems sent", t.send_rate, PALETTE[1]);
+  line("V5+ sends per session", "Hard-problem output", t.target_sends_per_session, PALETTE[2]);
+  line("Attempts per V5+ send", "Projecting efficiency (lower = better)", t.attempts_per_target_send, PALETTE[3]);
+  line("Session length", "Minutes per session", t.minutes_per_session, PALETTE[4]);
+  line("Send quality", "Self-rated quality of sends", t.send_quality, PALETTE[5]);
+
+  chart({ _t: "Grade pyramid", _n: "Attempts vs. sends by grade", type: "bar",
+    data: { labels: data.pyramid.grades, datasets: [
+      { label: "Attempts", data: data.pyramid.attempts, backgroundColor: PALETTE[7] },
+      { label: "Sends", data: data.pyramid.sends, backgroundColor: PALETTE[1] } ] },
+    options: { scales: { y: { beginAtZero: true } } } });
+
+  chart({ _t: "Flash rate by grade", _n: "% sent on the first attempt", type: "bar",
+    data: { labels: data.pyramid.grades, datasets: [{ data: data.pyramid.flash_rate, backgroundColor: PALETTE[0] }] },
+    options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, max: 100 } } } });
+
+  data.technique.forEach(tech => chart({
+    _t: "Send rate when: " + tech.name + "?",
+    _n: "Does self-reported " + tech.name.toLowerCase() + " track with sending?",
+    type: "bar",
+    data: { labels: ["Yes", "Maybe", "No"], datasets: [{ data: tech.send_rate,
+      backgroundColor: [PALETTE[1], PALETTE[2], PALETTE[3]] }] },
+    options: { plugins: { legend: { display: false },
+      tooltip: { callbacks: { afterLabel: (c) => "n = " + tech.counts[c.dataIndex] } } },
+      scales: { y: { beginAtZero: true, title: { display: true, text: "send rate %" } } } }
+  }));
+
+  chart({ _t: "Send rate by problem type", _n: "Hover for volume", type: "bar",
+    data: { labels: data.problem.types, datasets: [{ data: data.problem.rate,
+      backgroundColor: PALETTE.slice(0, data.problem.types.length) }] },
+    options: { plugins: { legend: { display: false },
+      tooltip: { callbacks: { afterLabel: (c) => "n = " + data.problem.n[c.dataIndex] } } },
+      scales: { y: { beginAtZero: true } } } });
+
+  chart({ _t: "Hold types", _n: "How often each hold type appears", type: "bar",
+    data: { labels: data.holds.types, datasets: [{ data: data.holds.n, backgroundColor: PALETTE[5] }] },
+    options: { indexAxis: "y", plugins: { legend: { display: false } } } });
+
+  chart({ _t: "Send rate by hold type", _n: "Where the weaknesses are", type: "bar",
+    data: { labels: data.holds.types, datasets: [{ data: data.holds.rate, backgroundColor: PALETTE[0] }] },
+    options: { indexAxis: "y", plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true } } } });
+
+  chart({ _t: "Fall causes", _n: "Most common reasons a problem wasn't sent", type: "bar",
+    data: { labels: data.issues.labels, datasets: [{ data: data.issues.counts, backgroundColor: PALETTE[3] }] },
+    options: { indexAxis: "y", plugins: { legend: { display: false } } } });
+}
+
+const sel = document.getElementById("window");
+DOC.order.forEach(label => {
+  const o = document.createElement("option");
+  o.value = label; o.textContent = label;
+  if (label === DOC.default) o.selected = true;
+  sel.appendChild(o);
+});
+sel.addEventListener("change", () => render(DOC.windows[sel.value]));
+render(DOC.windows[DOC.default]);
+</script>
+</body>
+</html>
