@@ -485,3 +485,21 @@ reviews:
     author: Carl Sagan
     pubdate: 2026-04-10T21:23:00
     url: 2026-pale-blue-dot
+  - file: 2026-poor-charlie-almanack.md
+    cover: poor-charlie-almanack.jpg
+    title: Poor Charlie's Almanack
+    author: Charlie Munger, Peter D. Kaufman
+    pubdate: 2026-04-30T21:23:00
+    url: 2026-poor-charlie-almanack
+  - file: 2026-the-alchemist.md
+    cover: the-alchemist.jpg
+    title: The Alchemist
+    author: Paulo Coelho
+    pubdate: 2026-06-20T03:59:00Z
+    url: 2026-the-alchemist
+  - file: 2026-theory-and-reality.md
+    cover: theory-and-reality.jpg
+    title: Theory and Reality
+    author: Peter Godfrey-Smith
+    pubdate: 2026-06-01T21:26:00
+    url: 2026-theory-and-reality
