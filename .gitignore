@@ -5,3 +5,7 @@ node_modules
 recycle
 sandbox
 _old
+
+# Claude Code: keep shared skills, ignore machine-local files
+.claude/settings.local.json
+CLAUDE.local.md
