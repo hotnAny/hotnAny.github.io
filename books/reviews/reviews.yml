@@ -503,3 +503,21 @@ reviews:
     author: Peter Godfrey-Smith
     pubdate: 2026-06-01T21:26:00
     url: 2026-theory-and-reality
+  - file: 2026-iacocca.md
+    cover: iacocca.jpg
+    title: "Iacocca: An Autobiography"
+    author: Lee Iacocca, William Novak
+    pubdate: 2026-07-01T21:56:00
+    url: 2026-iacocca
+  - file: 2026-influence.md
+    cover: influence.jpg
+    title: "Influence: The Psychology of Persuasion"
+    author: Robert B. Cialdini
+    pubdate: 2026-07-01T21:57:00
+    url: 2026-influence
+  - file: 2026-positioning.md
+    cover: positioning.jpg
+    title: "Positioning: The Battle for Your Mind"
+    author: Al Ries, Jack Trout
+    pubdate: 2026-07-01T21:58:00
+    url: 2026-positioning
