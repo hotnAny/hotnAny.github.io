@@ -72,7 +72,7 @@
           id="home-chunks"
           tabindex="-1"
           role="region"
-          aria-label="Home page: overview, research, and collaborate"
+          aria-label="Home page: overview and research"
         >
           <section
             class="home-chunk home-chunk--overview"
@@ -126,31 +126,12 @@
           <p class="statement">Methodology: I <strong>study</strong> real expert workflows, <strong>build</strong> systems grounded in them, and <strong>evaluate</strong> how they change process and outcome.</p>
           <!-- AUTO-GENERATED:index-research:END -->
           </section>
-
-          <section
-            class="home-chunk home-chunk--collaborate"
-            id="home-chunk-collaborate"
-            aria-labelledby="home-heading-collaborate"
-          >
-            <!-- AUTO-GENERATED:index-collaborate:BEGIN -->
-          <h2 id="home-heading-collaborate">Collaborate</h2>
-          <p class="statement">I collaborate with research groups and product teams. Typical engagements include invited talks, small-group workshops, and research collaborations—focused on how systems should support expert workflow, not just automate it.</p>
-          <p class="statement">For collaboration or speaking inquiries, email <a href="mailto:xac@ucla.edu">xac@ucla.edu</a>.</p>
-          <p class="statement">For academic advising or internship opportunities, see <a href="https://hci.ucla.edu" target="_blank" rel="noopener">UCLA HCI</a>.</p>
-          <div class="section-support">
-            <p class="statement funding-note">
-              Support includes <a href="https://nsf.gov/awardsearch/showAward?AWD_ID=2047297" target="_blank" rel="noopener">NSF CAREER</a>, <a href="https://www.nre.navy.mil/education-outreach/sponsored-research/yip/2021-young-investigators" target="_blank" rel="noopener">ONR YIP</a>, <a href="https://research.google/outreach/research-scholar-program/recipients/" target="_blank" rel="noopener">Google Research Scholar Award</a>, <a href="https://www.intel.com/content/www/us/en/research/blogs/intel-rising-stars-awards-2022.html" target="_blank" rel="noopener">Intel Rising Star Award</a>, <a href="https://www.universityofcalifornia.edu/sites/default/files/hellman-fellows-2020.pdf" target="_blank" rel="noopener">Hellman Fellowship</a>, and <a href="https://www.nsf.gov/awardsearch/showAward?AWD_ID=1850183" target="_blank" rel="noopener">NSF CRII</a>.
-            </p>
-          </div>
-          <!-- AUTO-GENERATED:index-collaborate:END -->
-          </section>
         </div>
       </div>
     </main>
 
     <footer class="site-footer">
       <p class="footer-links">
-        <a href="/collaborate.html">Collaborate</a>
         <a href="cv.pdf">CV</a>
         <a
           href="https://scholar.google.com/citations?hl=en&amp;user=I2W13z0AAAAJ&amp;view_op=list_works&amp;sortby=pubdate"
@@ -209,11 +190,11 @@
         }
 
         function activeIndex() {
-          return Math.min(2, Math.max(0, Math.round(chunksEl.scrollTop / chunkH())));
+          return Math.min(1, Math.max(0, Math.round(chunksEl.scrollTop / chunkH())));
         }
 
         function goTo(index) {
-          var clamped = Math.min(2, Math.max(0, index));
+          var clamped = Math.min(1, Math.max(0, index));
           var behavior = reduceMotion.matches ? "auto" : "smooth";
           chunksEl.scrollTo({ top: clamped * chunkH(), behavior: behavior });
         }

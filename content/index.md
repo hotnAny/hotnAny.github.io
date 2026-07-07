@@ -1,6 +1,6 @@
 <!--
-  Syntax: # / ## headings (Research, Collaborate); @p [extra-classes] then paragraph;
-  @section-support … @end for funding; output splits into overview / research / collaborate in index.html.
+  Syntax: # / ## headings (Research); @p [extra-classes] then paragraph;
+  @section-support … @end for funding; output splits into overview / research in index.html.
   Then: npm run build:index
 -->
 
@@ -28,18 +28,3 @@ Currently my work focuses on two domains: creativity and scientific discovery.
 
 @p
 Methodology: I **study** real expert workflows, **build** systems grounded in them, and **evaluate** how they change process and outcome.
-
-## Collaborate
-
-@p
-I collaborate with research groups and product teams. Typical engagements include invited talks, small-group workshops, and research collaborations—focused on how systems should support expert workflow, not just automate it.
-
-@p
-For collaboration or speaking inquiries, email [xac@ucla.edu](mailto:xac@ucla.edu).  
-
-@p
-For academic advising or internship opportunities, see [UCLA HCI](https://hci.ucla.edu).
-
-@section-support
-Support includes [NSF CAREER](https://nsf.gov/awardsearch/showAward?AWD_ID=2047297), [ONR YIP](https://www.nre.navy.mil/education-outreach/sponsored-research/yip/2021-young-investigators), [Google Research Scholar Award](https://research.google/outreach/research-scholar-program/recipients/), [Intel Rising Star Award](https://www.intel.com/content/www/us/en/research/blogs/intel-rising-stars-awards-2022.html), [Hellman Fellowship](https://www.universityofcalifornia.edu/sites/default/files/hellman-fellows-2020.pdf), and [NSF CRII](https://www.nsf.gov/awardsearch/showAward?AWD_ID=1850183).
-@end
