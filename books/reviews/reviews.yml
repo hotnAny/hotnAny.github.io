@@ -521,3 +521,9 @@ reviews:
     author: Al Ries, Jack Trout
     pubdate: 2026-07-01T21:58:00
     url: 2026-positioning
+  - file: 2026-titan.md
+    cover: titan.jpg
+    title: "Titan: The Life of John D. Rockefeller, Sr."
+    author: Ron Chernow
+    pubdate: 2026-07-09T00:00:00
+    url: 2026-titan
