@@ -1,4 +1,46 @@
 /* Minimal academic site — restrained palette, clear hierarchy */
+
+/* IBM Plex Mono, self-hosted (latin subset; homepage mono theme) */
+@font-face {
+  font-family: "IBM Plex Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/ibm-plex-mono-latin-400.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304,
+    U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "IBM Plex Mono";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/ibm-plex-mono-latin-400italic.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304,
+    U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "IBM Plex Mono";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("fonts/ibm-plex-mono-latin-600.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304,
+    U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "IBM Plex Mono";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/ibm-plex-mono-latin-700.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304,
+    U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 :root {
   --text: #1c1c1c;
   --text-muted: #5c5c5c;
@@ -11,6 +53,7 @@
   --rule-soft: #efefef;
   --font-serif: "Playfair Display", Georgia, "Times New Roman", serif;
   --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   --measure: 42rem;
   --measure-wide: 52rem;
   --page-gutter: max(1.25rem, 5.5vw);
@@ -870,4 +913,83 @@ div.bibauthors a:hover {
 .bodymobile.page-home .site-footer {
   margin-top: 0.85rem;
   padding-top: 0.3rem;
+}
+
+/* --- Homepage mono theme: IBM Plex Mono to match the CV; other pages keep serif. --- */
+body.page-home {
+  --measure-wide: 44rem;
+  --hero-portrait-max: 120px;
+  --home-hero-img-size: clamp(3.75rem, 18vw, 5rem);
+  --home-compact-font-size: 0.9375rem;
+  --home-compact-line-height: 1.85;
+  --home-overview-h1-size: clamp(1.05rem, 3.8vw, 1.2rem);
+  --home-chunk-h2-size: 0.8125rem;
+  --home-profile-name-size: 0.875rem;
+  --home-affiliation-size: 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.9375rem;
+  line-height: 1.85;
+  letter-spacing: -0.01em;
+}
+
+body.page-home #main-content h1 {
+  font-family: var(--font-mono);
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.5;
+}
+
+/* Section headings as small uppercase labels */
+body.page-home #main-content h2 {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--text-muted);
+}
+
+/* Uppercase name, echoing the CV header */
+body.page-home .profile-name {
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+}
+
+body.page-home .affiliation {
+  font-size: 0.8125rem;
+  line-height: 1.7;
+}
+
+/* Plex Mono 700 is heavy inline; 600 keeps emphasis without clotting */
+body.page-home #main-content strong {
+  font-weight: 600;
+}
+
+body.page-home .hero-hook {
+  font-style: italic;
+  color: var(--text-muted);
+}
+
+body.page-home .site-footer {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+}
+
+@media (max-width: 42rem) {
+  body.page-home #main-content .home-chunk--overview h1 {
+    letter-spacing: -0.01em;
+    line-height: 1.5;
+  }
+
+  body.page-home .home-chunk h2,
+  .bodymobile.page-home #main-content .home-chunk h2 {
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--text-muted);
+  }
 }
