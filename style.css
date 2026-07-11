@@ -194,7 +194,7 @@ p.statement {
   margin-right: auto;
 }
 
-/* Homepage: two sections — desktop stacks; narrow viewports use vertical scroll-snap */
+/* Homepage: three sections — desktop stacks; narrow viewports use vertical scroll-snap */
 .page-home .home-chunks {
   display: block;
   overflow: visible;
