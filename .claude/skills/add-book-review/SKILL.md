@@ -5,9 +5,9 @@ description: Refine a book review draft, download the book cover image, and regi
 
 TASK 1: refine the book review draft
 REQUIREMENTS:
-- fix spelling, grammatical, and language issues
+- fix spelling, grammatical, and language issues; apply standard English capitalization: first word of every sentence, the pronoun "I", and other words that are normally capitalized (e.g. "Chapter 6" when followed by a number)
 - try to stay as close as possible to the original style and tone
-- only if necessary, rearrange/reorganize/restructure the contents
+- the draft likely contains randomly ordered, scattered thoughts — actively propose a reorganization and restructuring that gives the review a clear flow, then apply it
 - when finished, save the refined version in books/reviews/ with a filename format of "yyyy-title.md" where yyyy is the current year and the book title is contained in the draft file name. if unsure, ask for the title info.
 
 TASK 2: download a book cover image
