@@ -420,6 +420,20 @@ div.bibauthors a:hover {
   }
 }
 
+/* Narrow screens: keep the footer link row on a single line — no wrap, tighter
+   gap, and a fluid font-size that shrinks the row to fit down to small phones. */
+@media (max-width: 42rem) {
+  .footer-links {
+    flex-wrap: nowrap;
+    gap: 0.4rem 0.85rem;
+    font-size: clamp(0.62rem, 3vw, 0.8125rem);
+  }
+
+  .footer-links a {
+    white-space: nowrap;
+  }
+}
+
 /* --- Responsive (≤42rem): compact single-column layout; homepage scroll-snap + compact type follow. --- */
 @media (max-width: 42rem) {
   .bodydesktop {
