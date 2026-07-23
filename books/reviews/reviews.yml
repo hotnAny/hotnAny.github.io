@@ -527,3 +527,9 @@ reviews:
     author: Ron Chernow
     pubdate: 2026-07-09T00:00:00
     url: 2026-titan
+  - file: 2026-little-book-of-ikigai.md
+    cover: little-book-of-ikigai.jpg
+    title: "The Little Book of Ikigai"
+    author: Ken Mogi
+    pubdate: 2026-07-22T21:00:00
+    url: 2026-little-book-of-ikigai
