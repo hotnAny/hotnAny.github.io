@@ -527,3 +527,15 @@ reviews:
     author: Ron Chernow
     pubdate: 2026-07-09T00:00:00
     url: 2026-titan
+  - file: 2026-little-book-of-ikigai.md
+    cover: little-book-of-ikigai.jpg
+    title: "The Little Book of Ikigai"
+    author: Ken Mogi
+    pubdate: 2026-07-22T21:00:00
+    url: 2026-little-book-of-ikigai
+  - file: 2026-scientific-discovery.md
+    cover: scientific-discovery.jpg
+    title: "Scientific Discovery"
+    author: Pat Langley, Herbert A. Simon, Gary L. Bradshaw, Jan M. Zytkow
+    pubdate: 2026-07-31T22:08:00
+    url: 2026-scientific-discovery
