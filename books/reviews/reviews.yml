@@ -539,3 +539,9 @@ reviews:
     author: Pat Langley, Herbert A. Simon, Gary L. Bradshaw, Jan M. Zytkow
     pubdate: 2026-07-31T22:08:00
     url: 2026-scientific-discovery
+  - file: 2026-the-infinity-machine.md
+    cover: the-infinity-machine.jpg
+    title: "The Infinity Machine"
+    author: Sebastian Mallaby
+    pubdate: 2026-08-13T21:50:00
+    url: 2026-the-infinity-machine
