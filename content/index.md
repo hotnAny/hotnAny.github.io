@@ -1,6 +1,7 @@
 <!--
-  Syntax: # / ## headings (Research, Collaborate); @p [extra-classes] then paragraph;
-  @section-support … @end for funding; output splits into overview / research / collaborate in index.html.
+  Syntax: # heading; plain paragraphs need no marker; @p [extra-classes] before a
+  paragraph when it needs a class; @section-support … @end for funding.
+  Output goes into the single index-main region of index.html.
   Then: npm run build:index
 -->
 

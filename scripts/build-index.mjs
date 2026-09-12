@@ -1,13 +1,14 @@
 /**
- * Merges content/index.md into index.html between AUTO-GENERATED markers.
+ * Merges content/index.md into index.html between the AUTO-GENERATED markers.
  *
- * index.md uses directives (no raw HTML):
- *   # Title  /  ## Section (Research | Collaborate)
- *   @p [extra-classes]     → <p class="statement [extra-classes]">
- *   …paragraph text, **bold**, [links](url)…
- *   @section-support … @end   → funding block (inline markdown inside)
+ * index.md uses plain markdown plus a few directives (no raw HTML):
+ *   # Title                  → <h1 id="home-heading-main">
+ *   ## Section               → <h2 id="home-heading-section">
+ *   a bare paragraph         → <p class="statement">
+ *   @p [extra-classes]       → <p class="statement [extra-classes]">  (only when you need a class)
+ *   @section-support … @end  → funding block (inline markdown inside)
  *
- * Output is split into three regions: overview, research, collaborate.
+ * Everything lands in one region: index-main.
  *
  * Run: npm run build:index
  */
@@ -21,23 +22,28 @@ const root = path.join(__dirname, "..");
 const mdPath = path.join(root, "content", "index.md");
 const htmlPath = path.join(root, "index.html");
 
-const BEGIN_OVERVIEW = "<!-- AUTO-GENERATED:index-overview:BEGIN -->";
-const END_OVERVIEW = "<!-- AUTO-GENERATED:index-overview:END -->";
-const BEGIN_RESEARCH = "<!-- AUTO-GENERATED:index-research:BEGIN -->";
-const END_RESEARCH = "<!-- AUTO-GENERATED:index-research:END -->";
-const BEGIN_COLLABORATE = "<!-- AUTO-GENERATED:index-collaborate:BEGIN -->";
-const END_COLLABORATE = "<!-- AUTO-GENERATED:index-collaborate:END -->";
+const BEGIN_MAIN = "<!-- AUTO-GENERATED:index-main:BEGIN -->";
+const END_MAIN = "<!-- AUTO-GENERATED:index-main:END -->";
+
+/** True for lines that start a directive or heading, so a bare paragraph knows where to stop. */
+function isDirective(line) {
+  return (
+    line.startsWith("#") ||
+    line.startsWith("@p") ||
+    line === "@section-support" ||
+    line === "@end" ||
+    line.startsWith("<!--")
+  );
+}
 
 /**
  * @param {string} src
- * @returns {{ overview: string; research: string; collaborate: string }}
+ * @returns {string}
  */
 function compileHomeMd(src) {
   const lines = src.split(/\r?\n/);
-  /** @type {{ overview: string[]; research: string[]; collaborate: string[] }} */
-  const sections = { overview: [], research: [], collaborate: [] };
-  /** @type {'overview' | 'research' | 'collaborate'} */
-  let current = "overview";
+  /** @type {string[]} */
+  const out = [];
   let i = 0;
 
   const parseInline = (text) => marked.parseInline(text.trim(), { async: false });
@@ -46,9 +52,26 @@ function compileHomeMd(src) {
   const relExternal = (html) =>
     html.replace(/<a href="(https?:\/\/[^"]+)"/g, '<a href="$1" target="_blank" rel="noopener"');
 
+  const slug = (text) =>
+    text
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, "");
+
+  /** Collect the lines of one paragraph, stopping at a blank line or the next directive. */
+  const takeParagraph = () => {
+    const bodyLines = [];
+    while (i < lines.length) {
+      const t = lines[i].trim();
+      if (!t || isDirective(t)) break;
+      bodyLines.push(lines[i]);
+      i++;
+    }
+    return bodyLines.join("\n");
+  };
+
   while (i < lines.length) {
-    const raw = lines[i];
-    const line = raw.trim();
+    const line = lines[i].trim();
 
     if (!line) {
       i++;
@@ -63,40 +86,19 @@ function compileHomeMd(src) {
 
     if (line.startsWith("## ")) {
       const title = line.slice(3).trim();
-      if (title === "Research") {
-        current = "research";
-        let html = marked.parse(line + "\n", { async: false }).trim();
-        html = html.replace("<h2>", '<h2 id="home-heading-research">');
-        html = html.replace(
-          "</h2>",
-          '<span class="visually-hidden">: HCI and human–AI interaction</span></h2>'
-        );
-        sections.research.push(html);
-        i++;
-        continue;
-      }
-      if (title === "Collaborate") {
-        current = "collaborate";
-        const html = marked.parse(line + "\n", { async: false }).trim();
-        sections.collaborate.push(html.replace("<h2>", '<h2 id="home-heading-collaborate">'));
-        i++;
-        continue;
-      }
-      console.warn(`build-index: unexpected ## heading "${title}", appending to ${current}`);
-      sections[current].push(marked.parse(line + "\n", { async: false }).trim());
+      out.push(`<h2 id="home-heading-${slug(title)}">${parseInline(title)}</h2>`);
       i++;
       continue;
     }
 
-    if (line.startsWith("# ") && !line.startsWith("## ")) {
-      const html = marked.parse(line + "\n", { async: false }).trim();
-      sections.overview.push(html.replace("<h1>", '<h1 id="home-heading-overview">'));
+    if (line.startsWith("# ")) {
+      const title = line.slice(2).trim();
+      out.push(`<h1 id="home-heading-main">${parseInline(title)}</h1>`);
       i++;
       continue;
     }
 
     if (line === "@section-support") {
-      current = "collaborate";
       i++;
       const bodyLines = [];
       while (i < lines.length && lines[i].trim() !== "@end") {
@@ -105,7 +107,7 @@ function compileHomeMd(src) {
       }
       if (i < lines.length) i++;
       const inner = relExternal(parseInline(bodyLines.join("\n")));
-      sections.collaborate.push(
+      out.push(
         `<div class="section-support">\n  <p class="statement funding-note">\n    ${inner}\n  </p>\n</div>`
       );
       continue;
@@ -115,29 +117,18 @@ function compileHomeMd(src) {
       const extra = line.slice(2).trim();
       const classAttr = extra ? `statement ${extra}` : "statement";
       i++;
-      const bodyLines = [];
-      while (i < lines.length) {
-        const t = lines[i].trim();
-        if (t.startsWith("@p") || t === "@section-support" || t === "@end") break;
-        if (t.startsWith("# ")) break;
-        if (t.startsWith("## ")) break;
-        bodyLines.push(lines[i]);
-        i++;
-      }
-      const inner = relExternal(parseInline(bodyLines.join("\n")));
-      sections[current].push(`<p class="${classAttr}">${inner}</p>`);
+      // Skip a blank line between the directive and its text.
+      while (i < lines.length && !lines[i].trim()) i++;
+      const inner = relExternal(parseInline(takeParagraph()));
+      out.push(`<p class="${classAttr}">${inner}</p>`);
       continue;
     }
 
-    console.warn(`build-index: skipping unrecognized line ${i + 1}: ${line.slice(0, 40)}…`);
-    i++;
+    // Anything else is a plain paragraph.
+    out.push(`<p class="statement">${relExternal(parseInline(takeParagraph()))}</p>`);
   }
 
-  return {
-    overview: sections.overview.join("\n"),
-    research: sections.research.join("\n"),
-    collaborate: sections.collaborate.join("\n"),
-  };
+  return out.join("\n");
 }
 
 /**
@@ -168,12 +159,10 @@ function replaceSection(html, begin, end, fragment) {
 
 const md = fs.readFileSync(mdPath, "utf8");
 marked.setOptions({ gfm: true });
-const fragments = compileHomeMd(md);
+const fragment = compileHomeMd(md);
 
 let index = fs.readFileSync(htmlPath, "utf8");
-index = replaceSection(index, BEGIN_OVERVIEW, END_OVERVIEW, fragments.overview.trim());
-index = replaceSection(index, BEGIN_RESEARCH, END_RESEARCH, fragments.research.trim());
-index = replaceSection(index, BEGIN_COLLABORATE, END_COLLABORATE, fragments.collaborate.trim());
+index = replaceSection(index, BEGIN_MAIN, END_MAIN, fragment.trim());
 
 fs.writeFileSync(htmlPath, index);
 console.log("build-index: updated index.html from content/index.md");
