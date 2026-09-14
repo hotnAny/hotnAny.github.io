@@ -14,6 +14,7 @@ const root = path.join(__dirname, "..");
 const buildScript = path.join(root, "scripts", "build-index.mjs");
 const watched = [
   path.join(root, "content", "index.md"),
+  path.join(root, "content", "selected-research.yml"),
   buildScript,
 ];
 
@@ -38,4 +39,4 @@ for (const file of watched) {
   watch(file, { persistent: true }, schedule);
 }
 
-console.log("[watch:index] watching content/index.md and scripts/build-index.mjs (Ctrl+C to stop)");
+console.log("[watch:index] watching content/index.md, content/selected-research.yml and scripts/build-index.mjs (Ctrl+C to stop)");

@@ -108,6 +108,30 @@
           <h1 id="home-heading-main">Symbiotic Computing to Augment Human Intelligence</h1>
           <p class="statement">I work on <strong>symbiotic computing</strong>: systems that embed computing into expert workflows to overcome <strong>humans’ cognitive limitations</strong> while <strong>closing AI’s potential-to-practice gap</strong>.</p>
           <p class="statement">I <strong>study</strong> how experts work and where they struggle, then combine <strong>empirical data</strong> and <strong>human-factors theory</strong> to identify <strong>design patterns</strong> for building symbiotic systems in domains such as scientific discovery and creativity.</p>
+          <h2 id="home-heading-selected-projects">Selected Projects</h2>
+          <div class="video-row">
+            <figure class="video-card">
+              <div class="video-frame"><button class="video-poster" type="button" data-src="https://drive.google.com/file/d/1xaOMo9IGruh8L9eoAcBL4ouyZBvbYJd7/preview" data-title="HALO" aria-label="Play HALO video" style="background-image: url('content/halo.png')"><span class="video-play" aria-hidden="true"></span></button></div>
+              <figcaption>
+                <h3 class="video-title">HALO</h3>
+                <div class="video-text">Help scientists abductively discover and distill molecular editing strategies from generative examples</div>
+              </figcaption>
+            </figure>
+            <figure class="video-card">
+              <div class="video-frame"><button class="video-poster" type="button" data-src="https://drive.google.com/file/d/1wmDhQijzs1q4a05lIUnh6tXnUVrgeJUz/preview" data-title="PerspectEvolver" aria-label="Play PerspectEvolver video" style="background-image: url('content/perspectevolver.png')"><span class="video-play" aria-hidden="true"></span></button></div>
+              <figcaption>
+                <h3 class="video-title">PerspectEvolver</h3>
+                <div class="video-text">Multiple agents carry different perspectives to deliberate and jointly develop a research hypothesis</div>
+              </figcaption>
+            </figure>
+            <figure class="video-card">
+              <div class="video-frame"><button class="video-poster" type="button" data-src="https://drive.google.com/file/d/1h1k3h9tMIrRclrAO2dBWUmtIcSovjOVO/preview" data-title="THESEUS" aria-label="Play THESEUS video" style="background-image: url('content/theseus.png')"><span class="video-play" aria-hidden="true"></span></button></div>
+              <figcaption>
+                <h3 class="video-title">THESEUS</h3>
+                <div class="video-text">Iterative hypothesis validation with evolving branch structures, traceable rationale, &amp; researcher-steered replanning</div>
+              </figcaption>
+            </figure>
+          </div>
           <h2 id="home-heading-collaborate">Collaborate</h2>
           <p class="statement">I work with research groups and product teams—talks, workshops, and joint projects. Email <a href="mailto:xac@ucla.edu">xac@ucla.edu</a> or book <a href="https://oh.hci.prof" target="_blank" rel="noopener">office hours</a>. For advising and internships, see <a href="https://hci.ucla.edu" target="_blank" rel="noopener">UCLA HCI</a>.</p>
           <div class="section-support">
@@ -135,5 +159,35 @@
         <a href="https://oh.hci.prof" target="_blank" rel="noopener">Office hours</a>
       </p>
     </footer>
+
+    <script>
+      // Selected projects: open the Drive player in a lightbox when a thumbnail is clicked.
+      // Closing (×, Esc, or clicking the dimmed backdrop) removes the player, which stops playback.
+      const lightbox = document.createElement("dialog");
+      lightbox.className = "video-lightbox";
+      lightbox.innerHTML =
+        '<button class="video-lightbox-close" type="button" aria-label="Close video">&times;</button>' +
+        '<div class="video-lightbox-frame"></div>';
+      document.body.append(lightbox);
+      const lightboxFrame = lightbox.querySelector(".video-lightbox-frame");
+
+      document.querySelectorAll(".video-poster").forEach((poster) => {
+        poster.addEventListener("click", () => {
+          const frame = document.createElement("iframe");
+          frame.src = poster.dataset.src;
+          frame.title = poster.dataset.title;
+          frame.allow = "autoplay; fullscreen";
+          frame.allowFullscreen = true;
+          lightboxFrame.replaceChildren(frame);
+          lightbox.showModal();
+        });
+      });
+
+      lightbox.querySelector(".video-lightbox-close").addEventListener("click", () => lightbox.close());
+      lightbox.addEventListener("click", (e) => {
+        if (e.target === lightbox) lightbox.close();
+      });
+      lightbox.addEventListener("close", () => lightboxFrame.replaceChildren());
+    </script>
   </body>
 </html>

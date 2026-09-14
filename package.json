@@ -5,6 +5,7 @@
     "watch:index": "node scripts/watch-index.mjs"
   },
   "devDependencies": {
+    "js-yaml": "^4.3.2",
     "marked": "^15.0.0"
   }
 }

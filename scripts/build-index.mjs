@@ -7,6 +7,7 @@
  *   a bare paragraph         → <p class="statement">
  *   @p [extra-classes]       → <p class="statement [extra-classes]">  (only when you need a class)
  *   @section-support … @end  → funding block (inline markdown inside)
+ *   @videos                  → row of video cards from content/selected-research.yml
  *
  * Everything lands in one region: index-main.
  *
@@ -16,11 +17,13 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { marked } from "marked";
+import yaml from "js-yaml";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
 const mdPath = path.join(root, "content", "index.md");
 const htmlPath = path.join(root, "index.html");
+const projectsPath = path.join(root, "content", "selected-research.yml");
 
 const BEGIN_MAIN = "<!-- AUTO-GENERATED:index-main:BEGIN -->";
 const END_MAIN = "<!-- AUTO-GENERATED:index-main:END -->";
@@ -31,6 +34,7 @@ function isDirective(line) {
     line.startsWith("#") ||
     line.startsWith("@p") ||
     line === "@section-support" ||
+    line === "@videos" ||
     line === "@end" ||
     line.startsWith("<!--")
   );
@@ -110,6 +114,41 @@ function compileHomeMd(src) {
       out.push(
         `<div class="section-support">\n  <p class="statement funding-note">\n    ${inner}\n  </p>\n</div>`
       );
+      continue;
+    }
+
+    if (line === "@videos") {
+      i++;
+      /** @type {{title?: string, video?: string, text?: string}[]} */
+      const projects = yaml.load(fs.readFileSync(projectsPath, "utf8")) || [];
+      const cards = projects.map((p) => {
+        const f = Object.fromEntries(
+          Object.entries(p).map(([k, v]) => [k, v == null ? "" : String(v).trim()])
+        );
+        // Any Drive share link (…/file/d/<id>/view?…) becomes a thumbnail + play button;
+        // clicking opens the Drive player in a lightbox (see the script at the end of index.html).
+        // The thumbnail is `image` (path from the site root) or, if absent, Drive's own.
+        const id = f.video?.match(/\/d\/([\w-]{20,})/)?.[1];
+        const title = (f.title || "").replace(/"/g, "&quot;");
+        const thumb = f.image
+          ? encodeURI(f.image)
+          : `https://drive.google.com/thumbnail?id=${id}&amp;sz=w800`;
+        const frame = id
+          ? `<button class="video-poster" type="button" data-src="https://drive.google.com/file/d/${id}/preview" data-title="${title}" aria-label="Play ${title} video" style="background-image: url('${thumb}')"><span class="video-play" aria-hidden="true"></span></button>`
+          : `<span class="video-play" aria-hidden="true"></span>`;
+        return [
+          `  <figure class="video-card">`,
+          `    <div class="video-frame">${frame}</div>`,
+          `    <figcaption>`,
+          `      <h3 class="video-title">${parseInline(f.title || "")}</h3>`,
+          f.text ? `      <div class="video-text">${relExternal(parseInline(f.text))}</div>` : "",
+          `    </figcaption>`,
+          `  </figure>`,
+        ]
+          .filter(Boolean)
+          .join("\n");
+      });
+      out.push(`<div class="video-row">\n${cards.join("\n")}\n</div>`);
       continue;
     }
 

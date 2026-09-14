@@ -1,6 +1,7 @@
 <!--
   Syntax: # heading; plain paragraphs need no marker; @p [extra-classes] before a
-  paragraph when it needs a class; @section-support … @end for funding.
+  paragraph when it needs a class; @section-support … @end for funding;
+  @videos for the video row (data lives in content/selected-research.yml).
   Output goes into the single index-main region of index.html.
   Then: npm run build:index
 -->
@@ -10,6 +11,10 @@
 I work on **symbiotic computing**: systems that embed computing into expert workflows to overcome **humans’ cognitive limitations** while **closing AI’s potential-to-practice gap**.
 
 I **study** how experts work and where they struggle, then combine **empirical data** and **human-factors theory** to identify **design patterns** for building symbiotic systems in domains such as scientific discovery and creativity.
+
+## Selected Projects
+
+@videos
 
 ## Collaborate
 
