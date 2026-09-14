@@ -638,7 +638,7 @@ div.bibauthors a:hover {
 
 /* --- Homepage mono theme: IBM Plex Mono to match the CV; other pages keep serif. --- */
 body.page-home {
-  --measure-wide: 44rem;
+  --measure-wide: 58.5rem;
   --hero-portrait-max: 120px;
   --home-hero-img-size: clamp(3.75rem, 18vw, 5rem);
   --home-compact-font-size: 0.9375rem;
