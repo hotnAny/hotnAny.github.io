@@ -8,9 +8,11 @@
 
 # Symbiotic Computing to Augment Human Intelligence
 
-I work on **symbiotic computing**: systems that embed computing into expert workflows to overcome **humans’ cognitive limitations** while **closing AI’s potential-to-practice gap**.
+I work on **symbiotic computing**: systems that embed computing into expert workflows to overcome **humans’ cognitive limitations** while **closing AI’s [capability-deployment gap](https://arxiv.org/abs/2311.02462)**.
 
-I **study** how experts work and where they struggle, then combine **empirical data** and **human-factors theory** to identify **design patterns** for building symbiotic systems in domains such as scientific discovery and creativity.
+## Methodology
+
+I **study** how experts work and where they struggle, then combine **empirical data** and **human-factors theory** to identify **interaction design patterns** for building symbiotic systems in domains such as scientific discovery and creativity.
 
 ## Selected Projects
 
