@@ -25,6 +25,8 @@ const mdPath = path.join(root, "content", "index.md");
 const htmlPath = path.join(root, "index.html");
 const projectsPath = path.join(root, "content", "selected-research.yml");
 
+const BEGIN_INTRO = "<!-- AUTO-GENERATED:index-intro:BEGIN -->";
+const END_INTRO = "<!-- AUTO-GENERATED:index-intro:END -->";
 const BEGIN_MAIN = "<!-- AUTO-GENERATED:index-main:BEGIN -->";
 const END_MAIN = "<!-- AUTO-GENERATED:index-main:END -->";
 
@@ -32,6 +34,7 @@ const END_MAIN = "<!-- AUTO-GENERATED:index-main:END -->";
 function isDirective(line) {
   return (
     line.startsWith("#") ||
+    /^---\s*$/.test(line) ||
     line.startsWith("@p") ||
     line === "@section-support" ||
     line === "@videos" ||
@@ -182,8 +185,9 @@ function escapeRegex(s) {
  * @param {string} begin
  * @param {string} end
  * @param {string} fragment
+ * @param {string} [indent] leading whitespace of the marker lines
  */
-function replaceSection(html, begin, end, fragment) {
+function replaceSection(html, begin, end, fragment, indent = " ".repeat(10)) {
   const re = new RegExp(`${escapeRegex(begin)}[\\s\\S]*?${escapeRegex(end)}`, "m");
   if (!re.test(html)) {
     console.error(`build-index: markers not found: ${begin}`);
@@ -191,17 +195,26 @@ function replaceSection(html, begin, end, fragment) {
   }
   const indented = fragment
     .split("\n")
-    .map((line) => "          " + line)
+    .map((line) => indent + line)
     .join("\n");
-  return html.replace(re, `${begin}\n${indented}\n          ${end}`);
+  return html.replace(re, `${begin}\n${indented}\n${indent}${end}`);
 }
 
 const md = fs.readFileSync(mdPath, "utf8");
 marked.setOptions({ gfm: true });
-const fragment = compileHomeMd(md);
+
+// The first `---` line splits the intro (beside the portrait) from the rest of the page.
+const split = md.match(/^---[ \t]*$/m);
+if (!split) {
+  console.error("build-index: content/index.md needs a --- line to end the intro");
+  process.exit(1);
+}
+const introFragment = compileHomeMd(md.slice(0, split.index));
+const mainFragment = compileHomeMd(md.slice(split.index + split[0].length));
 
 let index = fs.readFileSync(htmlPath, "utf8");
-index = replaceSection(index, BEGIN_MAIN, END_MAIN, fragment.trim());
+index = replaceSection(index, BEGIN_INTRO, END_INTRO, introFragment.trim(), " ".repeat(14));
+index = replaceSection(index, BEGIN_MAIN, END_MAIN, mainFragment.trim());
 
 fs.writeFileSync(htmlPath, index);
 console.log("build-index: updated index.html from content/index.md");

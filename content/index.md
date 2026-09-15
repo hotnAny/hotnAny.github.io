@@ -2,7 +2,8 @@
   Syntax: # heading; plain paragraphs need no marker; @p [extra-classes] before a
   paragraph when it needs a class; @section-support … @end for funding;
   @videos for the video row (data lives in content/selected-research.yml).
-  Output goes into the single index-main region of index.html.
+  A line of --- splits the page: everything above it sits beside the portrait
+  (index-intro region), everything below runs full width (index-main region).
   Then: npm run build:index
 -->
 
@@ -13,6 +14,8 @@ I work on **symbiotic computing**: systems that embed computing into expert work
 ## Methodology
 
 I **study** how experts work and where they struggle, then combine **empirical data** and **human-factors theory** to identify **interaction design patterns** for building symbiotic systems in domains such as scientific discovery and creativity.
+
+---
 
 ## Selected Projects
 
