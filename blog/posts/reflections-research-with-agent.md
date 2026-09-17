@@ -1,4 +1,4 @@
-# Reflections and Lessons from Working on a Research Project with Agents
+# Research with Agents: Reflections and Lessons
 
 I worked with agents alone on a research project. My set-up was VS Code, with the agents running as extensions in a side panel. The collaboration ran for about three months. One agent did most of the work; a second took on a few tasks. No humans other than me were involved.
 
