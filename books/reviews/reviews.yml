@@ -545,3 +545,9 @@ reviews:
     author: Sebastian Mallaby
     pubdate: 2026-08-13T21:50:00
     url: 2026-the-infinity-machine
+  - file: 2026-gift-from-the-sea.md
+    cover: gift-from-the-sea.jpg
+    title: "Gift from the Sea"
+    author: Anne Morrow Lindbergh
+    pubdate: 2026-09-23T00:00:00
+    url: 2026-gift-from-the-sea
