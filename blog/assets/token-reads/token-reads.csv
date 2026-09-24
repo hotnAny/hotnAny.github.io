@@ -1,0 +1,19 @@
+id,era,work,unit,tokens,reads_low,reads_mid,reads_high,token_basis,reads_basis,kind
+poem,pre,寻隐者不遇 (Tang poem),poem,20,1e9,1e10,5e10,measured o200k (no punctuation),"~700M PRC pupils since textbook inclusion x ~15 recitations; plus pre-modern readers. Order-of-magnitude estimate",canon
+birthday,pre,Happy Birthday to You (lyrics),song,20,1e11,5e11,2e12,measured o200k,"Guinness: most recognised English song; ~1e9 sung birthdays/yr x ~100 yrs x a few listeners each. Speculative",canon
+bach,pre,Bach Cello Suite No.1 Prelude,piece,672,5e8,2e9,1e10,"note events (~42 bars x 16 sixteenths), not text tokens","Yo-Yo Ma recording alone ~411M Spotify streams; x all recordings, platforms, film, live",canon
+hamlet,pre,Hamlet,play,47663,1e8,3e8,1e9,measured o200k (Gutenberg #1524),"school reading + performances + screen adaptations over 400 yrs. Estimate",canon
+pp,pre,Pride and Prejudice,novel,170260,2e7,6e7,2e8,measured o200k (Gutenberg #1342),">20M copies sold x ~3 readers/copy (libraries, re-reads)",canon
+hp1,pre,Harry Potter and the Philosopher's Stone,novel,103105,1.2e8,2.4e8,5e8,"76,944 words x 1.34 tokens/word","~120M copies x ~2 readers/copy",canon
+bible,pre,Bible (KJV),book,1144344,1e8,5e8,2e9,measured o200k (Gutenberg #10),"5-7B copies printed (Guinness); counted as full-read equivalents assuming a few % of each copy is read",canon
+letter,pre,Personal letter (counterpoint),letter,400,1,2,5,~300 words,"recipient + a re-read or two; shows pre-LLM ephemera existed too",typical
+tang,pre,Typical Tang poem (median of 全唐诗),poem,40,1e2,1e3,1e4,"律诗 40-56 chars, ~1 token/char","~48,900 poems in 全唐诗; most outside anthologies/textbooks. Speculative",typical
+novel,pre,Typical 19th-c. novel (Moretti's great unread),novel,230000,5e2,5e3,2e4,"three-decker ~170k words x 1.34","print runs <=1,000 copies, read via circulating libraries (~5-10 readers/copy)",typical
+news,pre,Newspaper article (typical daily),article,1070,1e3,1.5e4,1e5,~800 words,"30k circulation x ~2.5 readers/copy x ~20% read a given article. Estimate",typical
+email,post,AI-drafted email,email,200,0.2,0.7,1,~150 words,"1 recipient; ~43% avg marketing open rate (HubSpot), ~100% for 1:1 work mail",ai
+chat,post,Chatbot answer,reply,400,0.1,0.5,1,~300 words (assumed typical),"read at most once by the asker, often skimmed; ChatGPT ~2.5B prompts/day",ai
+reasoning,post,Reasoning trace (chain-of-thought),trace,2000,0.001,0.01,0.05,assumed typical,"hidden or summarized by default; almost never read in full",ai
+tweet,post,AI-written X post/reply,post,40,5,20,60,~30 words,"free accounts ~60 impressions/post (1/10 of Premium's ~600); impressions > reads",ai
+linkedin,post,AI-written LinkedIn post,post,260,30,150,840,~200 words,"median 840 impressions (AuthoredUp 2026), 225 for <1k followers; assume ~20% of impressions are reads",ai
+blog,post,AI SEO blog post,article,1800,0.1,3,50,"~1,400 words x 1.34","96.55% of pages get zero Google traffic (Ahrefs); lifetime reads mostly from direct/social",ai
+kdp,post,AI-generated Kindle book,book,40000,1,10,200,"~30,000 words x 1.34","AI-heavy titles: 20% of catalogue, 12% of sales (arXiv 2607.20349); per-title median not reported, estimate",ai

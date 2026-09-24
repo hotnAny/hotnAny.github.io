@@ -117,3 +117,12 @@ posts:
     birthdate: 2026-09-17T11:01:28.000Z
     pubdate: 2026-09-17T18:54:54.000Z
     url: reflections-research-with-agents
+  - file: tokens-written-tokens-read.md
+    tags:
+      - AI
+      - Writing
+      - Attention
+    title: Tokens Written, Tokens Read
+    birthdate: 2026-09-24T17:40:00.000Z
+    pubdate: 2026-09-24T17:40:00.000Z
+    url: tokens-written-tokens-read
