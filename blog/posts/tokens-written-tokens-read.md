@@ -1,6 +1,6 @@
 # Tokens Written, Tokens Read
 
-Language models have made tokens extremely cheap. An email, a blog post, a poem, a screenplay, even a whole book can now be generated in seconds. At Google I/O in May 2026, Google said it was processing [over 3.2 quadrillion tokens a month](https://blog.google/innovation-and-ai/sundar-pichai-io-2026/), seven times more than a year earlier.
+Language models have made tokens extremely cheap. An email, a blog post, a poem, a screenplay, even a whole book can now be generated in seconds or minutes. At Google I/O in May 2026, Google said it was processing [over 3.2 quadrillion tokens a month](https://blog.google/innovation-and-ai/sundar-pichai-io-2026/), seven times more than a year earlier.
 
 I suspect that a large portion of those tokens are never read by a fellow human.
 
@@ -22,27 +22,29 @@ It contains only 20 characters. That comes to 20 tokens under GPT-4o's tokenizer
 
 Those 20 characters paint a rich image in the reader's mind. I often picture a three-dimensional 水墨画 (ink-wash painting): pine trees, clouds, the poet and the child in the foreground, and the reclusive master somewhere in the background, deep in the woods, hidden by trees and clouds, never seen.
 
-By my rough estimate, the poem has been read or recited on the order of **ten billion times**.
+By my rough estimate (see the method at the end), the poem has been read or recited on the order of **ten billion times**.
 
 ---
 
-## A Unit: Token-Reads
+## Estimating Token-Reads
 
 To compare a 20-character poem with a 1,000-token email, I use a simple unit:
 
 **token-reads = tokens authored × the number of times a human has read them**
 
-I first called this "token impressions", borrowing from web analytics. But in advertising, an [impression](https://en.wikipedia.org/wiki/Impression_(online_media)) is counted when content is *served*, whether or not anyone sees it, let alone reads it. That is exactly the gap I want to measure, so "reads" is the better word.
+<!-- I first called this "token impressions", borrowing from web analytics. But in advertising, an [impression](https://en.wikipedia.org/wiki/Impression_(online_media)) is counted when content is *served*, whether or not anyone sees it, let alone reads it. That is exactly the gap I want to measure, so "reads" is the better word. -->
 
 Token-reads divided by tokens gives the number of times each token has been read. On a log-log plot, works with the same read count fall on the same diagonal line. That makes it easy to put a poem and a novel on one chart.
 
----
+<!-- ---
 
-## The Chart
+## The Chart -->
 
 <iframe src="assets/token-reads/chart.html" title="Log-log scatter of tokens authored versus lifetime token-reads for pre-LLM and AI-generated works" loading="lazy" style="width:100%; aspect-ratio: 960 / 680; min-height: 380px; border: 0;"></iframe>
 
+
 *Hover over a dot for its estimate and source. Filled blue dots are canonical pre-LLM works. Hollow blue dots are typical pre-LLM works. Orange dots are everyday AI output. Whiskers show low–high estimates. The data, sources, and method are in the appendix below.*
+
 
 The canonical works cluster at the top. The Bible, *Harry Potter*, *Hamlet*, a Bach prelude, "Happy Birthday", and the twenty-character poem all sit between the "read 1M×" and "read 1T×" lines. AI output sits between the "read 0.01×" and "read 1K×" lines: emails, chatbot answers, LinkedIn posts, SEO blog posts, Kindle books. The two groups are **6 to 12 orders of magnitude apart**.
 
@@ -50,13 +52,13 @@ The lowest dot is the reasoning trace, the chain of thought a model writes befor
 
 ---
 
-## But That Comparison Is Unfair
+## Wait, That Comparison Is Unfair ...
 
-When I first sketched this, I compared the *best* of the past with the *median* of the present. That comparison is unfair. Most writing from before language models was never read much either. The [《全唐诗》](https://baike.baidu.com/item/%E5%85%A8%E5%94%90%E8%AF%97/498420) collects about 48,900 Tang poems, and most of them never made it into an anthology or a textbook. The typical 19th-century novel had a print run of a thousand copies or fewer, and Franco Moretti called that forgotten majority ["the great unread"](https://en.wikipedia.org/wiki/Distant_reading). Even Bach was largely neglected for about 80 years after his death, until [Mendelssohn revived the *St Matthew Passion* in 1829](https://www.classical-music.com/features/composers/how-mendelssohn-helped-bring-bachs-st-matthew-passion-back-to-life).
+It's unfair because it compared the *best* of the past with the *median* of the present. Most (human) writing from before language models was never read much either. The [《全唐诗》](https://baike.baidu.com/item/%E5%85%A8%E5%94%90%E8%AF%97/498420) collects about 48,900 Tang poems, and most of them never made it into an anthology or a textbook. The typical 19th-century novel had a print run of a thousand copies or fewer, and Franco Moretti called that forgotten majority ["the great unread"](https://en.wikipedia.org/wiki/Distant_reading). Even Bach was largely neglected for about 80 years after his death, until [Mendelssohn revived the *St Matthew Passion* in 1829](https://www.classical-music.com/features/composers/how-mendelssohn-helped-bring-bachs-st-matthew-passion-back-to-life).
 
-So the chart also includes typical pre-LLM works, drawn as hollow dots. With those, the picture changes:
+So the chart also includes typical pre-LLM works, drawn as hollow dots:
 
-- A personal letter reaches about as many readers as an AI-drafted email. Both have roughly one reader.
+- A personal letter reaches about as many readers as an AI-drafted email---mostly one reader.
 - A typical Tang poem sits about two orders of magnitude above an AI-written post on X.
 - A typical novel sits about 3.5 orders of magnitude above an AI-generated Kindle book, and a typical newspaper article about 3.5 orders above an AI SEO blog post.
 
@@ -68,7 +70,7 @@ The gap is real, but most of the dramatic 6-to-12-order gap comes from the canon
 
 Two things seem to be going on.
 
-**Authorship used to be a filter.** Writing a novel took a year. Printing it cost money, and so did distributing it. By the time a text reached a reader, several people had already bet that it was worth reading. That cost is now close to zero, so nothing filters the text before it reaches a reader.
+**Writing used to be self-filtering.** Writing was never meant to be cheap, easy, or fast. For most of history, the tools and media for writing, and even more so for publishing, were scarce and expensive, so writers had to be careful about how much they wrote and how they wrote it. I suspect that constraint was a virtue. Having to keep things short forced writers to refine their message and boil it down to its essence. A Tang poem's twenty characters hide the thinking and the rounds of revision that went into them. As Blaise Pascal put it in one of his letters, "I have made this longer than usual because I have not had time to make it shorter." Writing used to involve a great deal of self-filtering. Technology that lets us write fast, or not write at all, may have taken that step away.
 
 **Attention is fixed while supply is not.** Humans read at roughly the same speed they always have, and there are only so many hours in a day. When the supply of tokens grows sevenfold in a year, the reads per token must fall. Social-media data already shows this pressure. By one estimate, a post gets half of its lifetime engagement within [52 minutes on X, and within about a day on Instagram and LinkedIn](https://www.scottgraffius.com/blog/files/lifespan-halflife-of-social-media-posts-update-2026.html). On the web, [96.55% of pages](https://ahrefs.com/blog/search-traffic-study/) get no traffic from Google at all.
 
@@ -76,25 +78,27 @@ One caveat. Many AI tokens are addressed to machines, not people: tool calls, ag
 
 ---
 
-## So What?
+## Conclusion: So What?
 
-Creating art used to be arduous. The result was a small number of tokens, and the successful ones made a long-lasting impression. Now creation is cheap and easy. The result is a virtually unlimited supply of tokens, and few of them will be read by anyone at all, let alone for long.
+Creating art used to be arduous. The result was a small number of tokens, and the successful ones made a lasting impression. Now creation is cheap and easy. The result is a virtually unlimited supply of tokens, few of which will be read by anyone at all, let alone for long.
 
-I don't think the lesson is to stop generating. But when I write, I now ask a different question. Not "how quickly can I produce this?" but "how many times will each of these tokens be read?" Twenty characters under a pine tree have been read ten billion times. It is worth asking what it would take to write something that is read even twice.
+So one grand challenge for AI, and for the people who write with it, is not what it can write, how fast, or how cheaply. It is not even quality, if quality means resemblance to some golden examples. I believe a big part of it is bringing back the self-filtering loop: writing under the constraint that human attention is scarce, and making every token worth a reader's time.
 
 ---
 
 ## Appendix: Research Method
 
-**Scope.** Each dot is one work. For pre-LLM works, I picked canonical examples across forms (a poem, a song, a piece of music, a play, novels, scripture) and typical examples of the same forms (a letter, a median Tang poem, a median 19th-century novel, a newspaper article). For AI output, I picked things people commonly generate with language models today: emails, chatbot answers, reasoning traces, posts on X and LinkedIn, SEO blog posts, and self-published Kindle books.
+I did the research for this post with Claude (in Claude Code). I gave it my rough notes and the question. Claude fact-checked the notes, chose the works, counted tokens, gathered sources, estimated read counts, and built the chart. The steps below describe what it did.
 
-**Tokens.** I counted tokens with OpenAI's `o200k_base` tokenizer (the GPT-4o family) through `tiktoken`. Claude's tokenizer is not public.
+**Scope.** Each dot is one work. For pre-LLM works, Claude picked canonical examples across forms (a poem, a song, a piece of music, a play, novels, scripture) and typical examples of the same forms (a letter, a median Tang poem, a median 19th-century novel, a newspaper article). For AI output, it picked things people commonly generate with language models today: emails, chatbot answers, reasoning traces, posts on X and LinkedIn, SEO blog posts, and self-published Kindle books.
 
-- For *Hamlet*, *Pride and Prejudice*, and the King James Bible, I tokenized the full [Project Gutenberg](https://www.gutenberg.org/) texts (#1524, #1342, and #10). They came to 47,663, 170,260, and 1,144,344 tokens.
-- English prose averaged about 1.34 tokens per word. I used that ratio for works I didn't tokenize directly, such as *Harry Potter* (76,944 words).
+**Tokens.** Claude counted tokens with OpenAI's `o200k_base` tokenizer (the GPT-4o family) through `tiktoken`. Claude's tokenizer is not public.
+
+- For *Hamlet*, *Pride and Prejudice*, and the King James Bible, it tokenized the full [Project Gutenberg](https://www.gutenberg.org/) texts (#1524, #1342, and #10). They came to 47,663, 170,260, and 1,144,344 tokens.
+- English prose averaged about 1.34 tokens per word. Claude used that ratio for works it didn't tokenize directly, such as *Harry Potter* (76,944 words).
 - The poem is 20 tokens, or 24 with punctuation. Under the older GPT-4 tokenizer (`cl100k_base`), it is 27.
-- Bach's prelude has no text, so I counted note events instead: about 42 bars of 16 sixteenth notes, or 672 notes.
-- For AI output, I assumed typical lengths, e.g. about 150 words for an email and about 1,400 for an SEO blog post.
+- Bach's prelude has no text, so Claude counted note events instead: about 42 bars of 16 sixteenth notes, or 672 notes.
+- For AI output, it assumed typical lengths, e.g. about 150 words for an email and about 1,400 for an SEO blog post.
 
 **Reads.** A "read" is one full reading, listening, or viewing by a human, or its equivalent in partial reads. Each estimate has a low, mid, and high value. The dot is at the mid value, and the whisker spans low to high. Most of these are **order-of-magnitude estimates**.
 
