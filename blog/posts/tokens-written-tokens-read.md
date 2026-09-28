@@ -37,11 +37,9 @@ To compare a 20-character poem with a 1,000-token email, I use a simple unit:
 Token-reads divided by tokens gives the number of times each token has been read. On a log-log plot, works with the same read count fall on the same diagonal line. That makes it easy to put a poem and a novel on one chart.
 
 <!-- ---
-
 ## The Chart -->
 
 <iframe src="assets/token-reads/chart.html" title="Log-log scatter of tokens authored versus lifetime token-reads for pre-LLM and AI-generated works" loading="lazy" style="width:100%; aspect-ratio: 960 / 680; min-height: 380px; border: 0;"></iframe>
-
 
 *Hover over a dot for its estimate and source. Filled blue dots are canonical pre-LLM works. Hollow blue dots are typical pre-LLM works. Orange dots are everyday AI output. Whiskers show low–high estimates. The data, sources, and method are in the appendix below.*
 
