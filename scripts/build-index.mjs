@@ -136,8 +136,11 @@ function compileHomeMd(src) {
         const thumb = f.image
           ? encodeURI(f.image)
           : `https://drive.google.com/thumbnail?id=${id}&amp;sz=w800`;
+        // Optional `start` (m:ss or seconds) → Drive's undocumented ?t=<seconds> start offset.
+        const start = f.start ? f.start.split(":").reduce((s, n) => s * 60 + Number(n), 0) : 0;
+        const startParam = start > 0 ? `?t=${start}` : "";
         const frame = id
-          ? `<button class="video-poster" type="button" data-src="https://drive.google.com/file/d/${id}/preview" data-title="${title}" aria-label="Play ${title} video" style="background-image: url('${thumb}')"><span class="video-play" aria-hidden="true"></span></button>`
+          ? `<button class="video-poster" type="button" data-src="https://drive.google.com/file/d/${id}/preview${startParam}" data-title="${title}" aria-label="Play ${title} video" style="background-image: url('${thumb}')"><span class="video-play" aria-hidden="true"></span></button>`
           : `<span class="video-play" aria-hidden="true"></span>`;
         return [
           `  <figure class="video-card">`,

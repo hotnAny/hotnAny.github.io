@@ -7,6 +7,7 @@
 #          leave empty to show a placeholder. Share as "Anyone with the link".
 #   image  optional thumbnail, path from the site root (e.g. content/halo.png);
 #          without it, Drive's own thumbnail is used
+#   start  optional start time as m:ss (e.g. 1:37), where playback begins
 #   text   one or two sentences; inline markdown (**bold**, [link](url)) works
 #
 # A value containing ": " (colon + space) breaks YAML. Quote it, or for text use:
@@ -15,15 +16,18 @@
 
 - title: HALO
   video: https://drive.google.com/file/d/1xaOMo9IGruh8L9eoAcBL4ouyZBvbYJd7/view?usp=sharing
+  start: "1:37"
   image: content/halo.png
   text: Help scientists abductively discover and distill molecular editing strategies from generative examples
 
 - title: PerspectEvolver
   video: https://drive.google.com/file/d/1wmDhQijzs1q4a05lIUnh6tXnUVrgeJUz/view?usp=sharing
+  start: "1:20"
   image: content/perspectevolver.png
   text: Multiple agents carry different perspectives to deliberate and jointly develop a research hypothesis
 
 - title: THESEUS
   video: https://drive.google.com/file/d/1h1k3h9tMIrRclrAO2dBWUmtIcSovjOVO/view?usp=sharing
+  start: "1:37"
   image: content/theseus.png
   text: Iterative hypothesis validation with evolving branch structures, traceable rationale, & researcher-steered replanning
