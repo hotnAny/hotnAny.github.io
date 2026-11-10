@@ -843,7 +843,8 @@ body.page-home #main-content .home-main h2 {
 
 /* Lightbox: the Drive player, large and centered over a dimmed page */
 .video-lightbox {
-  width: min(92vw, 60rem, calc(80vh * 16 / 9));
+  /* ~90% of the viewport; height leaves 3rem for the close button above the frame */
+  width: min(90vw, calc((90vh - 3rem) * 16 / 9));
   max-width: none;
   padding: 0;
   border: 0;
